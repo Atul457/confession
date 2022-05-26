@@ -36,7 +36,7 @@ export default function Category(props) {
                 <div className="container px-2 px-0">
                     <div className="row">
                         <div className={`col-12 categoryHead ${props.hideHead && "d-none"}`}>
-                            Choose categories to filter confession
+                            Choose a Category to filter posts
                         </div>
                         <div className="categoriesContainer w-100">
                             {categories && categories.map((element, index) => {

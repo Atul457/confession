@@ -685,7 +685,7 @@ export default function Chat() {
 
                                         <InfiniteScroll
                                             scrollableTarget={`${((window.innerWidth - 13) > 768) ? 'style-2' : ''}`}
-                                            endMessage={<div className="endListMessage chatEndListMessage mt-4">End of FriendList</div>}
+                                            endMessage={<div className="endListMessage chatEndListMessage mt-4">End of Friend List</div>}
                                             dataLength={myFriends.data.count}
                                             next={fetchMoreFriends}
                                             hasMore={myFriends.data.friends.length < myFriends.data.count}

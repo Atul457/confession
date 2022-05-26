@@ -2,6 +2,8 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom'
+import AppLogo from '../AppLogo'
+
 
 export default function LgSidebar(props) {
     return (
@@ -9,7 +11,8 @@ export default function LgSidebar(props) {
             <div className="leftColumnWrapper">
                 <div className="appLogo">
                     <Link to="/home">
-                        <img src={props.logo} alt="" />
+                        {/* <img src={props.logo} alt="" /> */}
+                        <AppLogo />
                     </Link>
                 </div>
 

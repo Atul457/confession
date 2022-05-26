@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import userIcon from '../../../images/userAcc.svg'
 import logoutIcon from '../../../images/logoutIcon.svg'
 import profileIcon from '../../../images/profileIcon.svg'
-import mobileProfileIcon from '../../../images/mobileProfileIcon.png'
-import logo from '../../../images/appLogo.svg';
+import mobileProfileIcon from '../../../images/mobileProfileIcon.svg'
 import homeIconActive from '../../../images/homeIcon.svg'
 import homeIcon from '../../../images/homeIconActive.svg'
 import confessIcon from '../../../images/confessIcon.svg'
@@ -21,6 +20,7 @@ import contactUsActiveIcon from '../../../images/contactUsIconActive.png';
 import contactUsIcon from '../../../images/contactUsIcon.png';
 import VerifyEmailModal from '../Modals/VerifyEmailModal';
 import { useDispatch, useSelector } from 'react-redux';
+import AppLogo from "../components/AppLogo";
 
 
 export default function Header(props) {
@@ -178,7 +178,8 @@ export default function Header(props) {
                 <div className="insideHeader">
                     <div className="headerLeftCol pl-0">
                         <Link to="/home" className="homeHeaderLink">
-                            <img src={logo} alt="" className="appLogo" />
+                            {/* <img src={logo} alt="" className="appLogo" /> */}
+                            <AppLogo/>
                         </Link>
                     </div>
                     <div className="viewProfileIcon pr-md-0 pr-lg-4">

@@ -283,6 +283,37 @@ export default function Post(props) {
         return profileBPlate;
     }
 
+
+    const visitePrevilage = (creatorId, isAnonymous) => {
+        let isMyProfile = false;
+        let isUserProfile = false;
+        let isMyPost = false;
+        let linkToVisit = "#";
+        let html = ""; 
+
+        if (auth()) {
+            isMyPost = userDetails.profile.user_id === creatorId
+        }
+
+        isMyProfile = isMyPost && isAnonymous === 0;
+        isUserProfile = creatorId && isAnonymous === 0 && !isMyPost;
+
+        if (isMyProfile)
+            linkToVisit = "/profile"
+        if (isUserProfile)
+            linkToVisit = `/userProfile/${creatorId}`
+
+        html = <Link className={`textDecNone postUserName`}
+            to={linkToVisit}>
+            <span className="userName">
+                {props.userName}
+            </span>
+        </Link>
+
+        return html;
+    }
+
+
     return (
         <div className="postCont" index={props.index}>
             <span
@@ -355,14 +386,15 @@ export default function Post(props) {
                     
                 ANONYMOUS :: WILL NOT DO ANY THING
                 */}
-                    <Link className={`textDecNone postUserName`}
-                        to={props.curid ?
+                    {visitePrevilage(props.curid, props.post_as_anonymous)}
+                    {/* <Link className={`textDecNone postUserName`}
+                        to={props.curid && props.post_as_anonymous === 0 ?
                             (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
                             : ''}>
                         <span className="userName">
                             {props.userName}
                         </span>
-                    </Link>
+                    </Link> */}
 
                     {props.isRegistered === 1 ?
                         <span className='registeredUserIcon'>

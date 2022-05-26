@@ -10,7 +10,7 @@ import { fetchData } from '../../../../commonApi';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import logo from '../../../../images/appLogo.svg';
-import registerLogo from '../../../../images/registerLogo.png';
+import registerLogo from '../../../../images/registerLogo.svg';
 import googleIcon from '../../../../images/googleIcon.png';
 import fbIcon from '../../../../images/fbIcon.png';
 import LgSidebar from '../../components/common/LgSidebar';

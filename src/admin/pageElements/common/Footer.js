@@ -24,7 +24,7 @@ export default function Footer() {
                 <div className="linkBtns">
                     <Link to="/admin/users" className="linkBtnsAnchor headerLinks">
 
-                        <i className={`fa fa-user moveABit adminHeaderIcons ${currentUrl === "admin/users" ? "oColor" : "lablesColor"}`} aria-hidden="true"></i>
+                        <i className={`fa fa-user moveABit adminHeaderIcons ${currentUrl === "admin/users" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
                         <span
                             className={`footLinkName ${currentUrl === "admin/users" ? "activeLinkOfHeader" : ""}`}>Users
                         </span>
@@ -34,7 +34,7 @@ export default function Footer() {
                 <div className="linkBtns">
                     <Link to="/admin/reported" className="linkBtnsAnchor">
 
-                        <i className={`fa fa-flag-o moveABit adminHeaderIcons  ${currentUrl === "admin/reported" ? "oColor" : "lablesColor"}`} aria-hidden="true"></i>
+                        <i className={`fa fa-flag-o moveABit adminHeaderIcons  ${currentUrl === "admin/reported" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
                         <span className={`footLinkName ${currentUrl === "admin/reported" ? "activeLinkOfHeader" :
                             ""}`}>Reported Users</span>
 
@@ -43,7 +43,7 @@ export default function Footer() {
                 <div className="linkBtns">
                     <Link to="/admin/complaints" className="linkBtnsAnchor">
 
-                        <i className={`fa fa-align-justify adminHeaderIcons  ${currentUrl === "admin/complaints" ? "oColor" : "lablesColor"}`} aria-hidden="true" style={{fontSize : "15px"}}></i>
+                        <i className={`fa fa-align-justify adminHeaderIcons  ${currentUrl === "admin/complaints" ? "oColor" : "text-white"}`} aria-hidden="true" style={{fontSize : "15px"}}></i>
                         <span className={`footLinkName ${currentUrl === "admin/complaints" ? "activeLinkOfHeader" : ""}`}>Complaints</span>
 
                     </Link>

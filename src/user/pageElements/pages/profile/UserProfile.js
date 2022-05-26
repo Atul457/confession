@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import userIcon from '../../../../images/userAcc.png';
-// import requestsIcon from '../../../../images/requestsIcon.png';
 import { useParams } from 'react-router';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import SiteLoader from '../../components/SiteLoader';
@@ -13,8 +12,9 @@ import { fetchData } from '../../../../commonApi';
 import InfiniteScroll from "react-infinite-scroll-component";
 import useCommentsModal from '../../../utilities/useCommentsModal';
 import logo from '../../../../images/appLogo.svg'
-
 import RefreshButton from '../../../refreshButton/RefreshButton';
+import AppLogo from '../../components/AppLogo';
+// import requestsIcon from '../../../../images/requestsIcon.png';
 
 
 export default function UserProfile() {
@@ -252,9 +252,10 @@ export default function UserProfile() {
 
                     <div className="leftColumn leftColumnFeed mypriflelocc profileSidebar">
                         <div className="leftColumnWrapper">
-                            <div className="appLogo">
+                            {/* <div className="appLogo">
                                 <img src={logo} alt="" />
-                            </div>
+                            </div> */}
+                            <AppLogo/>
 
                             <div className="middleContLoginReg feedMiddleCont profile">
                                 {/* CATEGORYCONT */}
@@ -367,11 +368,13 @@ export default function UserProfile() {
                                                 {(conf.confDetails).map((post, index) => {
                                                     return <Post
                                                         index={index}
+                                                        post_as_anonymous={false}
                                                         viewcount={post.viewcount}
                                                         updateConfessionData={updateConfessionData}
                                                         handleCommentsModal={handleCommentsModal}
                                                         createdAt={post.created_at}
-                                                        curid={profile.profileData.profile_id}
+                                                        // curid={profile.profileData.profile_id}
+                                                        curid={null}
                                                         category_id={post.category_id}
                                                         key={index}
                                                         profileImg={profile.profileDetails.image}
@@ -386,7 +389,7 @@ export default function UserProfile() {
 
 
 
-                                            : "no confessons to show")
+                                            : <div className='endListMessage userProfileNoConf'>no confessons to show</div>)
                                             :
                                             (<div className="text-center">
                                                 <div className="spinner-border pColor mt-4 text-center" role="status">

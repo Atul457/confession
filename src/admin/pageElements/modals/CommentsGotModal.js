@@ -12,6 +12,8 @@ import Footer from '../../pageElements/common/Footer';
 import Comments from '../Comments';
 import useShareKit from '../../utilities/useShareKit';
 import TextareaAutosize from 'react-textarea-autosize';
+import timeAgoConverter from '../../../helpers/timeAgoConverter';
+
 
 
 export default function CommentGotModal({ state, categories, ...rest }) {
@@ -23,7 +25,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
             "postId": null,
             "visibility": false,
             "index": state.index,
-            "viewcount": (state.viewcount+1)
+            "viewcount": (state.viewcount + 1)
         }
         rest.handleCommentsModal(data);
     }
@@ -82,7 +84,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
             history("/login");
             return false;
         }
-        
+
         userData = JSON.parse(userData).token;
         let arr = {
             "confession_id": postId,
@@ -285,7 +287,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
         }
     }
 
-    console.log({confessionData});
+    // console.log({confessionData});
 
 
     return (
@@ -359,7 +361,8 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                     <div className="categoryOfUser" type="button">{(confessionData.category_name).charAt(0) + (confessionData.category_name).slice(1).toLowerCase()}</div>
                                                                 </span>
                                                                 <span className="postCreatedTime">
-                                                                    {confessionData.created_at}
+                                                                    {/* {confessionData.created_at} */}
+                                                                    {timeAgoConverter(confessionData.created_at)}
                                                                 </span>
                                                             </div>
                                                             <div className="postBody">
@@ -369,14 +372,15 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                     </pre>
                                                                 </div>
 
-
                                                                 {(confessionData.image !== null && (confessionData.image).length > 0)
                                                                     &&
                                                                     (
                                                                         <div className="form-group imgPreviewCont my-2 mb-0">
-                                                                            <div className="imgContForPreviewImg" type="button" onClick={() => { setLightBox(true) }} >
+                                                                            <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
                                                                                 {(confessionData.image).map((src) => {
-                                                                                    return <img src={src} alt="" />
+                                                                                    return (<span className='uploadeImgWrapper fetched'>
+                                                                                        <img src={src} alt="" className="previewImg" />
+                                                                                    </span>)
 
                                                                                 })}
                                                                             </div>
@@ -389,11 +393,11 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 {auth()
                                                                     ?
                                                                     <div className="container-fluid inputWithForwardCont">
-                                                                        <div className="col-10 inputToAddComment textAreaToComment">
-                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control my-3"></TextareaAutosize>
+                                                                        <div className="inputToAddComment textAreaToComment mb-1 my-md-0">
+                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control mt-0 mb-2 mb-md-3"></TextareaAutosize>
 
                                                                         </div>
-                                                                        <div className="col-2" type="button" id="commentsModalDoCommentAd" onClick={() => { doComment(state.postId) }}>
+                                                                        <div className="arrowToAddComment" type="button" id="commentsModalDoCommentAd" onClick={() => { doComment(state.postId) }}>
                                                                             <img src={forwardIcon} alt="" className="forwardIconContImg" />
                                                                         </div>
                                                                     </div>
@@ -426,7 +430,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 <InfiniteScroll
                                                                     onScroll={handleScrollTo}
                                                                     scrollableTarget="postsMainCont"
-                                                                    endMessage={<div className="endListMessage mt-4 pb-3">End of Comments</div>}
+                                                                    endMessage={<div className="endListMessage mt-2 pb-0">End of Comments</div>}
                                                                     dataLength={commentsArr.length}
                                                                     next={fetchMoreComments}
                                                                     hasMore={commentsArr.length < commentsCount}

@@ -14,7 +14,7 @@ export default function ShareRequestPopUp({ toggleSharekit, isNotFriend, openFrR
     <div className='shareReqCont'>
       {isNotFriend === 1 && 
       <>
-        <div className="shareReqRows" type="button" onClick={do_}>
+        <div className="shareReqRows user" type="button" onClick={do_}>
           <img src={addFriend}/>
           <span>
             Friend Request
@@ -26,7 +26,7 @@ export default function ShareRequestPopUp({ toggleSharekit, isNotFriend, openFrR
 
       {isNotFriend === 2 &&
         <>
-          <div className="shareReqRows" type="button" onClick={do_}>
+          <div className="shareReqRows user" type="button" onClick={do_}>
           <img src={cancelFriend} className="cancelFriend"/>
             <span>
               Cancel Request
@@ -35,7 +35,7 @@ export default function ShareRequestPopUp({ toggleSharekit, isNotFriend, openFrR
           <div className='shareReqDivider'></div>
         </>
       }
-      <div className="shareReqRows" type="button" onClick={toggleSharekit}>
+      <div className="shareReqRows user" type="button" onClick={toggleSharekit}>
         <i className="fa fa-share-alt" aria-hidden="true"></i>
         <span>
           Share

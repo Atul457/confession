@@ -17,6 +17,7 @@ import RefreshButton from '../../../refreshButton/RefreshButton';
 import TextareaAutosize from 'react-textarea-autosize';
 import useFeaturesModal from '../../../utilities/useFeaturesModal';
 import AdMob from '../../components/AdMob';
+import AppLogo from '../../components/AppLogo';
 
 
 export default function Feed(props) {
@@ -128,6 +129,8 @@ export default function Feed(props) {
                     setConfCount(response.data.count);
                     setConfessions(response.data.confessions);
                 }
+
+                // console.table(response.data.confessions);
 
             } else {
                 setConfessions(false);
@@ -245,8 +248,8 @@ export default function Feed(props) {
                         // }
                         // setRecaptchaKey("");
                         // if (selectedCat === activeCategory.toString()) {
-                            getConfessions(false, activeCategory, 1);
-                            // console.log({selectedCat,activeCategory})
+                        getConfessions(false, activeCategory, 1);
+                        // console.log({selectedCat,activeCategory})
                         // }
 
                         // else {
@@ -381,9 +384,11 @@ export default function Feed(props) {
 
                 <div className="leftColumn leftColumnFeed">
                     <div className="leftColumnWrapper">
-                        <div className="appLogo">
+                        {/* <div className="appLogo">
                             <img src={logo} alt="" />
-                        </div>
+                            <span className='betaLogo'>BETA</span>
+                        </div> */}
+                        <AppLogo />
 
                         <div className="middleContLoginReg feedMiddleCont">
                             {/* CATEGORYCONT */}
@@ -394,7 +399,6 @@ export default function Feed(props) {
                         </div>
                     </div>
                 </div>
-
 
 
                 <div className="rightColumn rightColumnFeed">
@@ -415,7 +419,7 @@ export default function Feed(props) {
                                                     <img src={manWithHorn} alt="" />
                                                 </span>
                                                 <div className="doCommentTitle col-12 col-md-9">
-                                                    <div>Confess or share your thoughts anonymously</div>
+                                                    {/* <div>Confess or share your thoughts anonymously</div>
                                                     <ul className="bulletsOnFeed w-100 pl-3">
                                                         <li>It's simple; say what's on your mind, choose a category - and if you're not a robot, Post. Done!</li>
 
@@ -424,6 +428,7 @@ export default function Feed(props) {
                                                         <li>If you want to respond and help someone, please log in. Yes, you can still POST ANONYMOUSLY!</li>
 
                                                         <li>If you like this app, please let others know about it! Thank you!</li>
+                                                        
 
                                                         <li>You can toggle anonymous and not anonymous from following 2 sections:
                                                             <ol className='toggleAnonymousVerbiage' type="a">
@@ -431,8 +436,20 @@ export default function Feed(props) {
                                                                 <li>While making post in confess/share tab!</li>
                                                             </ol>
                                                         </li>
-                                                    </ul>
+                                                    </ul> */}
+                                                    <div>What's The Talk Place About?</div>
+                                                    <div className='mainParafeed'>
+                                                        It's a safe space to share your thoughts ANONYMOUSLY.<br /> It's our contribution to mental health and the fight against the growing rate of depression.<br /> To get stuff off your chest, just select a Category and POST.<br />
+                                                        Create an account to make ANONYMOUS friends, comment on posts, and get notified when people respond or send friend requests.<br />
+                                                        Be honest and authentic; we're not afraid of crazy.<br /> Just be KIND with your responses. 😊
 
+                                                    </div>
+                                                    <div className='mainParafeed mt-0'>
+                                                        Love the app? Don't forget to share!
+                                                    </div>
+                                                    <div className='mainParafeed mt-1 font-weight-bold'>
+                                                        You're anonymous.
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="postBody">
@@ -507,7 +524,7 @@ export default function Feed(props) {
 
                                             <div className="expandableCategory d-none">
                                                 <div className="head" onClick={() => setCategoryShow(!categoryShow)}>
-                                                    Choose categories to filter confession
+                                                    Choose a Category to filter posts
                                                     <span>
                                                         <i aria-hidden="true" className={`fa fa-chevron-down categoryDownIcon ${categoryShow ? "rotateUpsideDown" : ""}`}></i>
                                                     </span>

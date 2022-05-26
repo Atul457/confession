@@ -42,10 +42,10 @@ export default function Category(props) {
       <div className="row">
         <div className="container px-2 px-0">
           <div className="row px-lg-2 px-0">
-            <div className="col-12 categoryHead">
-              Choose categories to filter confession
+            <div className={`col-12 categoryHead ${props.hideHead && "d-none"}`}>
+              Choose a Category to filter posts
             </div>
-            <div className="categoriesContainer w-100 px-3">
+            <div className="categoriesContainer w-100">
               {props.categories.isLoading ? (
                 <div>
                   <div className="spinner-border pColor" role="status">
@@ -78,7 +78,7 @@ export default function Category(props) {
                               {/* HIDES EDIT BUTTON AND STATUS FROM CATEGORIES */}
                               {props.editVisible === true ?
                                 <>
-                                  <i className="fa fa-pencil categoryEditIcon"
+                                  <i className="fa fa-pencil categoryEditIcon adminCats"
                                     onClick={() => {
                                       openEditCategoriesModalFunc({
                                         id: element.id,

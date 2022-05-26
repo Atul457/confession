@@ -21,6 +21,7 @@ import RefreshButton from '../../../refreshButton/RefreshButton';
 import DeleteConfessionModal from '../../Modals/DeleteConfessionModal';
 import editCommentIcon from '../../../../images/editCommentIcon.png';
 import PofileModal from '../../Modals/PofileModal';
+import AppLogo from '../../components/AppLogo';
 
 
 const deletePostModalIniVal = { visible: false, data: { postId: null, index: null } };
@@ -493,9 +494,10 @@ export default function Profile() {
                     <Header links={true} hideRound={true} />
                     <div className="leftColumn leftColumnFeed mypriflelocc profileSidebar">
                         <div className="leftColumnWrapper">
-                            <div className="appLogo">
+                            {/* <div className="appLogo">
                                 <img src={logo} alt="" />
-                            </div>
+                            </div> */}
+                            <AppLogo />
 
                             <div className="middleContLoginReg feedMiddleCont profile">
                                 {/* CATEGORYCONT */}
@@ -583,7 +585,7 @@ export default function Profile() {
                                                 onChange={(e) => handleProfile(e.target)} />
                                         </div>
                                         <div className="form-group mb-0 radioCont wProfile mx-auto mtProfile withInfo">
-                                            <label htmlFor="postAnanonymsly" className="labelForToggle profilePageLabels">View Previous Post</label>
+                                            <label htmlFor="postAnanonymsly" className="labelForToggle profilePageLabels">Show Posts</label>
                                             <input
                                                 type="checkbox"
                                                 className="switch12 profile"
@@ -597,13 +599,13 @@ export default function Profile() {
                                                 aria-hidden="true"></i>
 
                                             <div className="ljkdjfkl">
-                                               Enabling this will show or hide your posts to users visiting your profile.
+                                                Enabling this will show or hide your posts to users visiting your profile.
                                             </div>
                                         </div>
 
                                         <Link to="/report" className="w-100">
                                             <div className="form-group wProfile contantSupportCont mtProfile d-flex">
-                                                <label className="profilePageLabels">Contact Support Center</label>
+                                                <label className="profilePageLabels">Contact Support</label>
                                                 <span className="callingImgSpan">
                                                     <img src={supportIcon} alt="" className="callingImg" />
                                                 </span>
@@ -781,6 +783,7 @@ export default function Profile() {
                                                                 isNotFriend={post.isNotFriend}
                                                                 key={index}
                                                                 deletable={deletable}
+                                                                post_as_anonymous={false}
                                                                 deletePostModal={deletePostModal}
                                                                 index={index}
                                                                 viewcount={post.viewcount}

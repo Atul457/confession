@@ -6,8 +6,6 @@ import auth from '../../behindScenes/Auth/AuthCheck';
 
 export default function FriendReqModal({ userId, friendReqState, closeFrReqModalFn, toggleLoadingFn, changeRequested, _updateCanBeRequested, cancelReq, changeCancelled }) {
 
-    // console.log(cancelReq);
-
     const sendFriendRequest = async (is_cancelled = 0) => {
 
         let token;
@@ -65,7 +63,7 @@ export default function FriendReqModal({ userId, friendReqState, closeFrReqModal
                 ?
                 <Modal show={friendReqState.visible} onHide={closeFrReqModalFn} size="md">
                     <Modal.Header>
-                        <h6>Send Request</h6>
+                        <h6>Send a Friend Request</h6>
                         <span onClick={closeFrReqModalFn} type="button">
                             <i className="fa fa-times" aria-hidden="true"></i>
                         </span>
@@ -78,7 +76,7 @@ export default function FriendReqModal({ userId, friendReqState, closeFrReqModal
                             <div className="body">
                                 {friendReqState.requested === true ?
                                     "Friend Request Sent Successfully!" :
-                                    "Are You sure you want to send friend request to this User?"
+                                    "Are you sure you want to send a friend request to this user?"
                                 }
                             </div>
                         </div>

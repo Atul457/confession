@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import twoPersonIcon from '../../images/twoPersonIcon.png';
-import userIcon from '../../images/userBlack.png';
-import userIconI from '../../images/userGray.png';
-import lockIconI from '../../images/lockOGray.png';
-import lockIcon from '../../images/lockOBlue.png';
-import Header from "./common/Header";
+import logo from '../../images/appLogo.svg';
+// import userIcon from '../../images/userBlack.png';
+import loginLogo from '../../images/loginLogo.svg';
+// import userIconI from '../../images/userGray.png';
+// import lockIconI from '../../images/lockOGray.png';
+// import lockIcon from '../../images/lockOBlue.png';
 import Footer from "./common/Footer";
 import auth from '../behindScenes/Auth/AuthCheck';
 import { useNavigate } from "react-router-dom";
 import SiteLoader from '../../user/pageElements/components/SiteLoader';
-import LgSidebar from "../../user/pageElements/components/common/LgSidebar";
 import SetAuth from '../behindScenes/Auth/SetAuth';
 import { fetchData } from '../../commonApi';
+import LgSidebar from '../../user/pageElements/components/common/LgSidebar';
 
 
 export default function Login(props) {
@@ -97,15 +97,21 @@ export default function Login(props) {
             {
                 !authenticated
                     ?
-                    (<div className="row">
+                    (<div className="row outerContWrapper">
 
-                        {/* Adds Header Component */}
-                        <Header/>
+                        {/* SIDEBAR */}
+                        <LgSidebar
+                            logo={logo}
+                            middleTitle="Admin Login"
+                            middleTextBody=" Login with your account to Manage confessions, manage categories,
+                            manage reported post..."
+                            bottomLogo={loginLogo}
+                        />
 
-                        <div className="preventHeader">preventHead</div>
-                        <div className="container py-md-4 p-3 preventFooter">
-                            <div className="row py-md-2 py-0 loginPageBoxShadow boxShadow">
-                                <div className="col-12 col-md-6 loginPageLeftOuterCont loginPageLeftOuterContAdmin">
+
+                        {/* <div className="container py-md-4 p-3 preventFooter">
+                            <div className="row py-md-2 py-0 loginPageBoxShadow boxShadow"> */}
+                        {/* <div className="col-12 col-md-6 loginPageLeftOuterCont loginPageLeftOuterContAdmin">
                                     <div className="container-fluid pb-4">
                                         <div className="col-9 mx-auto">
                                             <div className="row">
@@ -126,55 +132,55 @@ export default function Login(props) {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="col-12 col-md-6 px-0">
-                                    <div className="container-fluid rightMainFormCont">
+                        <div className="rightColumn">
+                            <div className="container-fluid rightMainFormCont">
 
-                                        {/* Login form */}
-                                        <form className="col-md-8 col-12 px-0" id="loginForm">
-                                            <div className="secCheckText">Login to proceed</div>
-                                            <div className="form-group">
-                                                <label htmlFor="userName" className="loginPageFields">Email</label>
-                                                <div className="refreshBtnDiv loginEmailField">
-                                                    <input type="email" className="form-control" name="email" value={email} id="userName" placeholder="e,g. JohDoe123" onChange={(e) => setEmail(e.target.value)} />
-                                                    <span className="fieldIcon">
-                                                        <img src={userIcon} alt="" className="blueIcon" />
-                                                        <img src={userIconI} alt="" className="grayIcon" />
-                                                    </span>
+                                {/* Login form */}
+                                <form className="formLoginNregister" id="loginForm">
+                                    <div className="secCheckText">Login to proceed</div>
+                                    <div className="form-group">
+                                        <label htmlFor="userName" className="loginPageFields">Email</label>
+                                        <div className="refreshBtnDiv loginEmailField">
+                                            <input type="email" className="form-control" name="email" value={email} id="userName" placeholder="e,g. JohDoe123" onChange={(e) => setEmail(e.target.value)} />
+                                            {/* <span className="fieldIcon">
+                                                <img src={userIcon} alt="" className="blueIcon" />
+                                                <img src={userIconI} alt="" className="grayIcon" />
+                                            </span> */}
 
-                                                </div>
-                                                <div className="errorCont" id="loginEmail"></div>
-                                            </div>
-
-                                            <div className="form-group">
-                                                <label htmlFor="password" className="loginPageFields">Password</label>
-                                                <div className="refreshBtnDiv loginPassField">
-                                                    <input type="password" name="password" className="form-control" id="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                                                    <span className="fieldIcon">
-                                                        <img src={lockIcon} alt="" className="blueIcon" />
-                                                        <img src={lockIconI} alt="" className="grayIcon" />
-                                                    </span>
-                                                </div>
-                                                <div className="errorCont" id="loginPassword"></div>
-                                            </div>
-
-                                            <button type="button" className="btn submitButton" onClick={() => validateForm()}>{isLoading ? <div className="spinnerSizePost spinner-border text-white" role="status">
-                                                <span className="sr-only">Loading...</span>
-                                            </div> : "Submit"}</button>
-
-
-                                            <div className={`responseCont ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="loginResponseCont"></div>
-
-                                        </form>
-                                        {/* End of Login form */}
-
+                                        </div>
+                                        <div className="errorCont" id="loginEmail"></div>
                                     </div>
-                                </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="password" className="loginPageFields">Password</label>
+                                        <div className="refreshBtnDiv loginPassField">
+                                            <input type="password" name="password" className="form-control" id="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                            {/* <span className="fieldIcon">
+                                                <img src={lockIcon} alt="" className="blueIcon" />
+                                                <img src={lockIconI} alt="" className="grayIcon" />
+                                            </span> */}
+                                        </div>
+                                        <div className="errorCont" id="loginPassword"></div>
+                                    </div>
+
+                                    <button type="button" className="btn submitButton" onClick={() => validateForm()}>{isLoading ? <div className="spinnerSizePost spinner-border text-white" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div> : "Submit"}</button>
+
+
+                                    <div className={`responseCont ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="loginResponseCont"></div>
+
+                                </form>
+                                {/* End of Login form */}
+
                             </div>
                         </div>
+                        {/* </div>
+                        </div> */}
 
-                        <Footer />
+                        {/* <Footer /> */}
                     </div>)
                     : <SiteLoader />
             }

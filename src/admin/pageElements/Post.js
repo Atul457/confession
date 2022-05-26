@@ -10,6 +10,8 @@ import SetAuth from '../behindScenes/Auth/SetAuth';
 import { useNavigate } from "react-router-dom";
 import useShareKit from '../utilities/useShareKit';
 import TextareaAutosize from 'react-textarea-autosize';
+import timeAgoConverter from '../../helpers/timeAgoConverter';
+
 
 
 export default function Post(props) {
@@ -85,7 +87,7 @@ export default function Post(props) {
 
         let _comment = comment;
         setComment("");
-        
+
         let userData = localStorage.getItem("adminDetails");
         if (userData === "" || userData === null) {
             SetAuth(0);
@@ -145,7 +147,7 @@ export default function Post(props) {
     return (
         <div className="postCont" index={props.index}>
 
-            <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
+            <span type="button" className={`sharekitdots admin ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
                 {sharekit && <ShareKit postData={confessionData} />}
                 <i className="fa fa-share-alt" aria-hidden="true"></i>
             </span>
@@ -182,12 +184,12 @@ export default function Post(props) {
                     <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>
                 </span>
                 <span className={`postCreatedTime ${(props.userName.length + props.category.length) > 10 ? "postCreatedTimeAdmin" : ""}`}>
-                    {props.createdAt}
+                    {timeAgoConverter(props.createdAt)}
                 </span>
                 <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}>
                     {deleteConfession === true
                         ?
-                        <div className="spinnerSizePost spinner-border pColor text-white" role="status">
+                        <div className="spinnerSizePost spinner-border text-white" role="status">
                             <span className="sr-only">Loading...</span>
                         </div>
                         :
@@ -199,21 +201,37 @@ export default function Post(props) {
             <div className="postBody">
                 <div className="postedPost" onClick={handleCommentsModal}>
                     {/* <Link className="links text-dark" to={`confession/${props.postId}`}> */}
-                    <Link className="links text-dark" to={`#`}>
+                    {/* <Link className="links text-dark" to={`#`}>
                         <pre className="preToNormal">
                             {props.postedComment.substr(0, noOfWords[0])}
                         </pre>
                         {((props.postedComment).split("")).length >= noOfWords[0] ? <span toberedirectedto={props.postId} className="viewMoreBtn pl-1">View More</span> : ''}
+                    </Link> */}
+                    
+                    <Link className="links text-dark" to="#">
+                        <pre className="preToNormal post">
+                            {props.postedComment}
+                        </pre>
+                        {
+                            ((props.postedComment).split("")).length >= noOfWords[0]
+                                ||
+                                (props.postedComment).split("\n").length > 5 ?
+                                <>
+                                    {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} className="viewMoreBtn pl-1">view more</span>
+                                </> : ''
+                        }
                     </Link>
                 </div>
 
                 {/* IF IMG URL WILL BE STRING THEN IMAGES WILL NOT BE SHOWN */}
                 {(props.imgUrl !== null && (props.imgUrl).length > 0 && typeof (props.imgUrl) !== 'string')
                     &&
-                    <div className="form-group imgPreviewCont my-2 mb-0">
-                        <div className="imgContForPreviewImg" type="button" onClick={() => { setLightBox(true) }}>
+                    <div className="form-group imgPreviewCont mt-2 mb-0">
+                        <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }}>
                             {(props.imgUrl).map((srcg, index) => {
-                                return <img key={"srcg" + index} src={srcg} alt="" />
+                                return <span className="uploadeImgWrapper fetched" key={`uploadeImgWrapper${index}`}>
+                                    <img key={"srcg" + index} src={srcg} alt="" className='previewImg' />
+                                </span>
                             })}
                         </div>
                     </div>
@@ -238,14 +256,11 @@ export default function Post(props) {
                 <div className="totalComments underlineShareCount pr-2">
                     <span className="sharedCount">{props.viewcount ? props.viewcount : 0}</span> - Views
                 </div>
-                <span className='totalComments'>
-                    |
-                </span>
-                <Link to={`#`} className="links pl-2">
-                    <div className="totalComments">
-                        <span className="sharedCount">{props.sharedBy}</span> - Comments
-                    </div>
-                </Link>
+                {/* <Link to={`#`} className="links pl-2"> */}
+                <div className="totalComments ml-2">
+                    <span className="sharedCount">{props.sharedBy}</span> - Comments
+                </div>
+                {/* </Link> */}
             </div>
 
         </div>

@@ -1,13 +1,16 @@
 import React, { useState, useReducer } from 'react';
-import logo from '../../../images/appLogo.svg';
-import userIcon from '../../../images/userAcc.png';
-import { Link } from "react-router-dom";
+import userIcon from '../../../images/userAcc.svg';
+import mobileProfileIcon from '../../../images/mobileProfileIcon.svg';
+import { Link, NavLink } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/Auth/SetAuth';
 import { useLocation } from 'react-router';
 import Button from '@restart/ui/esm/Button';
 import { Modal } from 'react-bootstrap';
 import { fetchData } from '../../../commonApi';
+import AppLogo from '../../../user/pageElements/components/AppLogo';
+
+// import logo from '../../../images/appLogo.svg';
 
 let initialTypeState = {
     "old": "password",
@@ -83,7 +86,7 @@ export default function Header(props) {
             new: '',
             confirm: ''
         });
-        typeDispatch({type:"reset"});
+        typeDispatch({ type: "reset" });
         setReportModal({ ...reportModal, isVisible: false });
     }
 
@@ -137,42 +140,43 @@ export default function Header(props) {
 
     return (
         <>
-            <header className="mainHead col-12 posFixedForHeader">
-                <div className="insideHeader container">
-                    <div className="col-md-6 col-lg-7 headerLeftCol pl-0">
+            <header className={`mainHead col-12 posFixedForHeader ${props.fullWidth ? "fullWidthHeader" : ''} ${props.hideRound ? "hideHeaderProfile" : ""}`}>
+                <div className="insideHeader">
+                    <div className="headerLeftCol pl-0">
                         <Link to="/dashboard" className="homeHeaderLink">
-                            <img src={logo} alt="" className="appLogo" />
+                            {/* <img src={logo} alt="" className="appLogo" /> */}
+                            <AppLogo />
                         </Link>
                     </div>
-                    <div className="col-md-6 col-lg-5 text-right container-fluid px-0">
-                        <div className="row align-items-center justify-content-end">
+                    <div className="viewProfileIcon pr-md-0 pr-lg-4">
+                        <div className="row align-items-center justify-content-end m-0 navigationIcons">
                             {props.links ?
 
-                                <div className={`col-${authenticated[0] ? 10 : 8} d-none d-md-block pr-0`}>
-                                    <div className={`linksCont container-fluid  ${auth() ? " justify-content-between" : "justify-content-around"}`}>
+                                <div className={` d-none d-md-block pr-0`}>
+                                    <div className={`linksCont container-fluid`}>
                                         <div className="linkBtns">
-                                            <Link to="/admin/users" className="headerLinks">
+                                            <NavLink to="/admin/users" className="headerNavLinks">
 
                                                 <i className={`fa fa-user moveABit adminHeaderIcons  ${currentUrl === "admin/users" ? "oColor" : ""}`} aria-hidden="true"></i>
                                                 <span
                                                     className={`headLinkName ${currentUrl === "admin/users" ? "activeLinkOfHeader" : ""}`}>Users</span>
-                                            </Link>
+                                            </NavLink>
                                         </div>
 
                                         <div className="linkBtns">
-                                            <Link to="/admin/reported" className="headerLinks">
+                                            <NavLink to="/admin/reported" className="headerNavLinks">
                                                 <i className={`fa fa-flag-o moveABit adminHeaderIcons  ${currentUrl === "admin/reported" ? "oColor" : ""}`} aria-hidden="true"></i>
                                                 <span className={`headLinkName ${currentUrl === "admin/reported" ? "activeLinkOfHeader" :
                                                     ""}`}>Reported Users</span>
-                                            </Link>
+                                            </NavLink>
                                         </div>
 
                                         {
                                             authenticated[0] ? <div className="linkBtns">
-                                                <Link to="/admin/complaints" className="headerLinks">
+                                                <NavLink to="/admin/complaints" className="headerNavLinks">
                                                     <i className={`fa fa-align-justify adminHeaderIcons  ${currentUrl === "admin/complaints" ? "oColor" : ""}`} aria-hidden="true"></i>
                                                     <span className={`headLinkName ${currentUrl === "admin/complaints" ? "activeLinkOfHeader" : ""}`}>Complaints</span>
-                                                </Link>
+                                                </NavLink>
                                             </div> : ''
                                         }
 
@@ -183,14 +187,16 @@ export default function Header(props) {
 
                             {auth() ?
                                 (
-                                    <div className="col-md-2 col-12 authProfileIcon" onClick={() => { showProfileOption ? setShowProfileOption(false) : setShowProfileOption(true) }}>
-                                        <img src={userIcon} alt="" className="userAccIcon headerUserAccIcon" />
-
+                                    <div className="authProfileIcon" onClick={() => { showProfileOption ? setShowProfileOption(false) : setShowProfileOption(true) }}>
+                                        <span className="requestsIndicatorNuserIconCont" type="button">
+                                            <img src={userIcon} alt="" className="userAccIcon headerUserAccIcon" />
+                                            <img src={mobileProfileIcon} alt="" className="userAccIcon headerUserAccIcon mobIcon" />
+                                        </span>
                                         {showProfileOption && <div className="takeAction wFitContent p-1 pb-0 d-block">
 
                                             <div type="button" className="profileImgWithEmail takeActionOptions d-flex align-items-center mt-2 textDecNone">
                                                 <span className="profileHeaderImage mr-2 ml-2">
-                                                    <img src={(adminDetails).profile.image === '' || !(adminDetails).profile.image ? userIcon : (adminDetails).profile.image} alt="" />
+                                                    <img src={(adminDetails).profile.image === '' || !(adminDetails).profile.image ? mobileProfileIcon : (adminDetails).profile.image} alt="" />
                                                 </span>
                                                 <div className="nameEmailWrapperHeader">
                                                     <span className="font-weight-bold">{(adminDetails).profile.first_name}</span>
@@ -204,7 +210,7 @@ export default function Header(props) {
                                             </div>
 
                                             <hr className="m-0" />
-                                            <div type="button" className="takeActionOptions py-2 takeActionOptionsOnHov textDecNone mb-0" onClick={()=>logout()}>
+                                            <div type="button" className="takeActionOptions py-2 takeActionOptionsOnHov textDecNone mb-0" onClick={() => logout()}>
                                                 <i className="fa fa-power-off pl-2" aria-hidden="true"></i>Logout
                                             </div>
                                         </div>
@@ -222,6 +228,7 @@ export default function Header(props) {
                         </div>
                     </div>
                 </div>
+                <div className={`roundCorners ${props.hideRound ? "d-none" : ""}`}>__</div>
             </header>
             {/* REPORT USER MODAL */}
             <Modal show={reportModal.isVisible}>
@@ -234,7 +241,7 @@ export default function Header(props) {
                     <form>
                         <span className="eyeNinputCont">
                             <input type={type.old} name="old" value={modalFieldsData.old} onChange={(e) => { handleModalFieldsData(e.target) }} className="form-control mb-2" placeholder="Old password" />
-                            <i className={`eyeIcon ${type.old === 'text' ? ' fa fa-eye' : ' fa fa-eye-slash'}`}  aria-hidden="true" type="button" onClick={() => typeDispatch({ type: "old" })}></i>
+                            <i className={`eyeIcon ${type.old === 'text' ? ' fa fa-eye' : ' fa fa-eye-slash'}`} aria-hidden="true" type="button" onClick={() => typeDispatch({ type: "old" })}></i>
                         </span>
 
                         <span className="eyeNinputCont">
@@ -244,7 +251,7 @@ export default function Header(props) {
 
                         <span className="eyeNinputCont">
                             <input type={type.confirm} name="confirm" value={modalFieldsData.confirm} onChange={(e) => { handleModalFieldsData(e.target) }} className="form-control mb-2" placeholder="Confirm password" />
-                            <i className={`eyeIcon ${type.confirm === 'text' ? ' fa fa-eye' : ' fa fa-eye-slash'}`}  aria-hidden="true" type="button" onClick={() => typeDispatch({ type: "confirm" })}></i>
+                            <i className={`eyeIcon ${type.confirm === 'text' ? ' fa fa-eye' : ' fa fa-eye-slash'}`} aria-hidden="true" type="button" onClick={() => typeDispatch({ type: "confirm" })}></i>
                         </span>
                     </form>
 

@@ -120,6 +120,9 @@ border: 1px solid #E4EBF6;width:32px;}
 .sharekitWrapper{position:relative;}
 .sharekitdots {font-size: 20px;font-weight: bold;position: absolute;top: 13px;right: 55px;height: 37px;
 color: var(--primaryColor);z-index:5;display: flex;align-items: center;justify-content: space-between;}
+.sharekitdots.admin {
+    right: 95px;
+}
 .resetRightModal{right:40px;}
 .postWrapperCommentsModal{position: relative;}
 .shareKitButtonsMainCont button {height: 27px;width: 27px;border-radius: 5px;margin:5px;}
@@ -651,7 +654,14 @@ display: -webkit-box;
     color: var(--primaryColor);
 }
 .commentsGotProfileImg {width: 30px;height: 30px;border-radius: 50%;overflow: hidden;}
-.appLogo {max-width: 170px;width: 100%;}
+.appLogo {max-width: 170px;width: 100%;position: relative;}
+.appLogo .betaLogo {
+    position: absolute;
+    color: #fff;
+    font-weight: 500;
+    top: -20px;
+    right: -29px;
+}
 .commentsGotProfileImg img{object-fit: cover;width: 100%;height: 100%;}
 .takeActionOptionsOnHov {padding: 0px 27px;display: flex;align-items: center;}
 .takeActionOptionsOnHov  i{font-size: 16px;padding-right: 17px !important;}
@@ -714,6 +724,21 @@ top: -2px;left: 19px;}
 .adminCategorySidebar{display: flex;justify-content: flex-start;align-items: center;padding-left: 20px;position: relative;}
 .innerAdminCatName {max-width: 70px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;pointer-events: none;}
 .categoryEditIcon{color: var(--primaryColor);position: absolute;right: 4px;top: 4px;}
+.categoryEditIcon.adminCats {
+    color: var(--primaryColor);
+    position: absolute;
+    right: 11px;
+    top: 4px;
+    font-size: 18px;
+}
+.backtoHome {
+    font-size: 14px;
+    color: var(--primaryColor) !important;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-decoration: none !important;
+    cursor: pointer;
+}
 .deleteCategory {float: right;position: absolute;right: 0px;min-width: 61px;display: flex;justify-content: center;
 align-items: center;height: 30.25px;}
 .adminUsersPageHead{padding: 10px 15px;background-color: var(--primaryColor);color: #fff;margin: 10px 0px;}
@@ -788,6 +813,7 @@ content: "";display: block;position: absolute;width: 100%;bottom: -12px;}
 .deleteCommentIcon {
     font-size: 21px !important;
     color: var(--primaryColor);
+    width: 17px;margin-right: 10px;
 }
 .editCommentIcon.profile{position: unset;margin-left: 5px;}
 .height0{height: 0px !important;overflow: hidden;padding:0px !important}
@@ -813,11 +839,18 @@ padding: 0px 30px;min-width: 590px;align-items: center;margin-left: 310px;}
 .userProfileSubHeadings{font-size: 10px;}
 .shareReqCont {background-color: var(--primaryColor);color: #fff;border-radius: 22px;position: relative;
 padding: 15px;font-size: 14px;font-weight: 600;right: 34px;top: 35px;z-index: 1;position: absolute;width:170px;}
-.shareReqRows{display: flex;align-items: center;}
-.shareReqRows span{font-size: 13px;}
-.shareReqRows img, i{width: 18px;margin-right: 10px;font-size: 18px !important;}
-.shareReqRows img.cancelFriend,
-i {width: 17px;}
+.shareReqRows.user{display: flex;align-items: center;}
+.shareReqRows.user span{font-size: 13px;}
+.shareReqRows.user img,
+.shareReqRows.user i {
+    width: 18px;
+    margin-right: 10px;
+    font-size: 18px !important;
+}
+.shareReqRows.user img.cancelFriend,
+.shareReqRows.user i {
+    width: 17px;
+}
 .shareReqDivider {border:1px solid #fff;margin: 8px 0px;}
 .reqModalImgCont {display: flex;flex-direction: column;align-items: center;justify-content: center;
 max-width: 300px;margin: 0 auto;width: 100%;padding: 0px 30px;}
@@ -953,6 +986,13 @@ input.switch12.profile:checked {
 .scrollbar {
     max-height: 50vh;
 }
+.mainParafeed{
+    color: var(--primaryColor);
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    font-size: 14px;
+}
 
 .allChatsCont {
     background-color: #FFFFFF;
@@ -994,102 +1034,36 @@ input.switch12.profile:checked {
     border-radius: 0px;
 }
 
-/* .deletePostIcon {
-    font-size: 22px !important;
-    top: 19px;
-} */
 
 .penImg {
     margin-right: 5px;
     width: 13px;
 }
 
-.wProfile {
-    max-width: 100%;
-}
-
-.round33 {
-    border: 1px solid #fff;
-    border-radius: 100%;
-    padding: 10px;
-    display: flex;
-    width: 120px;
-    height: 120px;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
-
-.round22 {
-    border: 1px solid #ffffff73;
-    border-radius: 100%;
-    padding: 10px;
-    display: flex;
-    width: 130px;
-    height: 130px;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
-
-.round11 {
-    border: 1px solid #ffffff4d;
-    border-radius: 100%;
-    padding: 10px;
-    display: flex;
-    width: 140px;
-    height: 140px;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
-.postsHeadingProfile {
-    display: block;
-    margin: 20px 0px;
-    padding: 0 20px;
-    font-weight: 600;
-    color: var(--primaryColor);
-    font-size: 21px;
-}
-.friendRequestsHeader.toggleModal {
-    display: none;
-}
+.wProfile {max-width: 100%;min-width: 230px;}
+.round33 {border: 1px solid #fff;border-radius: 100%;padding: 10px;display: flex;width: 120px;height: 120px;
+justify-content: center;align-items: center;margin: 0 auto;}
+.round22 {border: 1px solid #ffffff73;border-radius: 100%;padding: 10px;display: flex;width: 130px;
+height: 130px;justify-content: center;align-items: center;margin: 0 auto;}
+.round11 {border: 1px solid #ffffff4d;border-radius: 100%;padding: 10px;display: flex;width: 140px;
+height: 140px;justify-content: center;align-items: center;margin: 0 auto;}
+.postsHeadingProfile {display: block;margin: 20px 0px;padding: 0 20px;font-weight: 600;color: var(--primaryColor);
+font-size: 21px;}
+.friendRequestsHeader.toggleModal {display: none;}
 input.switch12.profile{margin-right: 0px;}
 /*****Vishal Css End*****/
 
-.openedChat {
-    background-color: rgba(46, 76, 109, 0.18);
-}
-
-.registeredUserIcon {
-    width: 23px;
-    margin-right: 10px;display: flex;justify-content: center;align-items: center;
-    box-sizing: border-box;
-}
+.openedChat {background-color: rgba(46, 76, 109, 0.18);}
+.registeredUserIcon {width: 23px;margin-right: 10px;display: flex;justify-content: center;align-items: center;
+box-sizing: border-box;}
 .ljkdjfkl{display: none;}
 .registeredUserIcon img{width: 100%;}
-i.viewPrevPostIn{
-    color: #fff;
-    position: absolute;
-    margin-right: 0px;
-    right: -44px;
-    width: 30px;
-}
+i.viewPrevPostIn{color: #fff;position: absolute;margin-right: 0px;right: -44px;width: 30px;}
 .withInfo{position: relative;}
-i.viewPrevPostIn:hover + .ljkdjfkl{
-display: block;
-position: absolute;
-background-color: #fff;
-background: #fff;
-color: var(--primaryColor);
-font-weight: 500;
-font-size: 12px;
-padding: 5px 10px;
-border-radius: 8px;
-right: 0px;
-bottom: -4px;
-}
-
+i.viewPrevPostIn:hover + .ljkdjfkl{display: block;position: absolute;background-color: #fff;background: #fff;
+color: var(--primaryColor);font-weight: 500;font-size: 12px;padding: 5px 10px;border-radius: 8px;right: 0px;
+bottom: -4px;}
+.userProfileNoConf {padding-left: 5px;}
 
 
 
@@ -1186,8 +1160,9 @@ bottom: -4px;
     .recaptchaFeed{position: unset;}
     .editProfileCont{display: flex;justify-content: center;flex-direction: column;}
     .profileDetailsCont .editProfile{margin: 0px;margin-top: 5px;}
-    
-    
+    .wProfile{min-width: unset;}
+    i.viewPrevPostIn{right: 35px;}
+   
     
 }
 
@@ -1542,9 +1517,20 @@ bottom: -4px;
     .profileFriendsContModal{height: 400px;}
     .postsHeadingProfile{font-size: 18px;margin-bottom: 0px;}
     .thoughtsNrequestsCont.profile .infinite-scroll-component__outerdiv{padding: 20px 10px;}
-    .shareReqRows img, i {
+    .shareReqRows img,
+    .shareReqRows.user i {
         width: 17px;
         font-size: 19px !important;
+    }
+    .appLogo .betaLogo {
+            top: -20px;
+            right: -26px;
+            font-size: 14px;
+    }
+    .userProfileNoConf {
+        margin-top: 10px;
+        text-align: left;
+        padding: 0px 20px;
     }
     }
 

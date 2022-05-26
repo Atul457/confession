@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import loginLogo from '../../../../images/loginLogo.png';
+import loginLogo from '../../../../images/loginLogo.svg';
 import googleIcon from '../../../../images/googleIcon.png';
 import fbIcon from '../../../../images/fbIcon.png';
 import { Link, useSearchParams } from "react-router-dom";

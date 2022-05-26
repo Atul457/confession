@@ -13,6 +13,7 @@ import { useLocation } from 'react-router';
 import useCommentsModal from '../utilities/useCommentsModal';
 import RefreshButton from '../../user/refreshButton/RefreshButton';
 import _ from "lodash"
+import AppLogo from '../../user/pageElements/components/AppLogo';
 
 
 export default function Dashboard() {
@@ -40,6 +41,7 @@ export default function Dashboard() {
 
 
   const editCategorySelect = useRef(null);
+  const [categoryShow, setCategoryShow] = useState(false);
   const createCategorySelect = useRef(null);
   const [goDownArrow, setGoDownArrow] = useState(false);
   const [pageNo, setPageNo] = useState(1);
@@ -442,89 +444,136 @@ export default function Dashboard() {
                 handleChanges={handleChanges}
                 state={commentsModal}
                 handleCommentsModal={handleCommentsModal} />}
-            <div className="row">
+            <div className="row outerContWrapper">
+
               {/* Adds Header Component */}
               <Header links={true} />
-              <div className="preventHeader">preventHead</div>
-              <div className="container py-md-4 px-md-5 p-3 preventFooter">
-                <div className="row forPosSticky">
 
-                  {/* MIDDLECONTAINER */}
-                  <section className="col-lg-12 col-12 mt-3 mt-lg-0">
-                    <div className="postsMainCont">
 
-                      <div className="row mx-0">
-                        {/* CATEGORYCONT */}
-                        <aside className="col-12 col-md-4 posSticky">
-                          <Category editVisible={true} openEditCategoriesModalFunc={openEditCategoriesModalFunc} openAddCategoriesModalFunc={openAddCategoriesModalFunc} categories={categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
-                        </aside>
-                        {/* CATEGORYCONT */}
+              <div className="leftColumn leftColumnFeed">
+                <div className="leftColumnWrapper">
+                  <AppLogo />
 
-                        {/* CONFESSIONS CONT */}
-                        <div className="postsWrapperFeed col-md-8 col-12 px-0">
-                          {confessions
-                            ?
-                            <InfiniteScroll
-                              scrollThreshold="80%"
-                              endMessage={
-                                <div className="text-center endListMessage pb-0 mt-4">
-                                  {confessions.length === 0 ? "No confessions found" : "End of Confessions"}</div>}
-                              dataLength={confessions.length}
-                              next={fetchMoreData}
-                              hasMore={confessions.length < confCount}
-                              loader={
-                                <div className="spinner-border pColor" role="status">
-                                  <span className="sr-only">Loading...</span>
-                                </div>
-                              }
-                            >
-                              {confessions.map((post, index) => {
-                                return (<>
-                                  <Post
-                                    key={`dashBoardPost${index}`}
-                                    index={index}
-                                    viewcount={post.viewcount}
-                                    handleCommentsModal={handleCommentsModal}
-                                    updateConfessions={updateConfessions}
-                                    updateConfessionData={updateConfessionData}
-                                    createdAt={post.created_at}
-                                    post_as_anonymous={post.post_as_anonymous}
-                                    curid={post.user_id === '0' ? false : post.user_id}
-                                    category_id={post.category_id}
-                                    profileImg={post.profile_image}
-                                    postId={post.confession_id} imgUrl={post.image === '' ? '' : post.image}
-                                    userName={post.created_by}
-                                    category={post.category_name}
-                                    postedComment={post.description}
-                                    updateData={post.description}
-                                    sharedBy={post.no_of_comments} />
-                                </>)
-                              })}
-                            </InfiniteScroll>
-
-                            :
-                            (
-                              confessionResults
-                                ?
-                                (<div className="spinner-border pColor" role="status">
-                                  <span className="sr-only">Loading...</span>
-                                </div>)
-                                :
-                                (<div className="alert alert-danger" role="alert">
-                                  Unable to get confessions
-                                </div>)
-
-                            )
-                          }
-                        </div>
-                        {/* CONFESSIONS CONT */}
-                      </div>
-                    </div>
-
-                  </section>
-                  {/* MIDDLECONTAINER */}
+                  <div className="middleContLoginReg feedMiddleCont">
+                    {/* CATEGORYCONT */}
+                    <aside className="posSticky">
+                      {/* <Category categories={props.categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} /> */}
+                      <Category editVisible={true} openEditCategoriesModalFunc={openEditCategoriesModalFunc} openAddCategoriesModalFunc={openAddCategoriesModalFunc} categories={categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
+                    </aside>
+                    {/* CATEGORYCONT */}
+                  </div>
                 </div>
               </div>
+
+
+
+              <div className="rightColumn rightColumnFeed">
+                <div className="rightMainFormCont rightMainFormContFeed p-0">
+                  <div className="preventHeader">preventHead</div>
+                  <div className="w-100 py-md-4 p-0 p-md-3 preventFooter">
+                    <div className="row forPosSticky">
+
+                      {/* MIDDLECONTAINER */}
+                      <section className="col-lg-12 col-12 mt-0 mt-lg-0 px-0 px-md-3">
+                        <div className="postsMainCont">
+
+                          <div className="row mx-0">
+                            <div className="expandableCategory d-none">
+                              <div className="head" onClick={() => setCategoryShow(!categoryShow)}>
+                                Choose a Category to filter posts
+                                <span>
+                                  <i aria-hidden="true" className={`fa fa-chevron-down categoryDownIcon ${categoryShow ? "rotateUpsideDown" : ""}`}></i>
+                                </span>
+                              </div>
+                              {categoryShow && <div className="body">
+                                {/* CATEGORYCONT */}
+                                <aside className="col-12 col-md-4 posSticky mobileViewCategories d-none">
+                                  <Category hideHead={true} categories={categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
+                                </aside>
+                                {/* CATEGORYCONT */}
+                              </div>}
+                            </div>
+
+                            <div className="filterVerbiage foot">
+                              * Filter out posts by clicking on the categories above. Unselect the category to remove the filter.
+                            </div>
+
+
+
+                            {/* CATEGORYCONT */}
+                            {/* <aside className="col-12 col-md-4 posSticky">
+                              <Category editVisible={true} openEditCategoriesModalFunc={openEditCategoriesModalFunc} openAddCategoriesModalFunc={openAddCategoriesModalFunc} categories={categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
+                            </aside> */}
+                            {/* CATEGORYCONT */}
+
+                            {/* CONFESSIONS CONT */}
+                            <div className="postsWrapperFeed col-12 px-0">
+                              {confessions
+                                ?
+                                <InfiniteScroll
+                                  scrollThreshold="80%"
+                                  endMessage={
+                                    <div className="text-center endListMessage pb-0 mt-4">
+                                      {confessions.length === 0 ? "No confessions found" : "End of Confessions"}</div>}
+                                  dataLength={confessions.length}
+                                  next={fetchMoreData}
+                                  hasMore={confessions.length < confCount}
+                                  loader={
+                                    <div className="spinner-border pColor" role="status">
+                                      <span className="sr-only">Loading...</span>
+                                    </div>
+                                  }
+                                >
+                                  {confessions.map((post, index) => {
+                                    return (<>
+                                      <Post
+                                        key={`dashBoardPost${index}`}
+                                        index={index}
+                                        viewcount={post.viewcount}
+                                        handleCommentsModal={handleCommentsModal}
+                                        updateConfessions={updateConfessions}
+                                        updateConfessionData={updateConfessionData}
+                                        createdAt={post.created_at}
+                                        post_as_anonymous={post.post_as_anonymous}
+                                        curid={post.user_id === '0' ? false : post.user_id}
+                                        category_id={post.category_id}
+                                        profileImg={post.profile_image}
+                                        postId={post.confession_id} imgUrl={post.image === '' ? '' : post.image}
+                                        userName={post.created_by}
+                                        category={post.category_name}
+                                        postedComment={post.description}
+                                        updateData={post.description}
+                                        sharedBy={post.no_of_comments} />
+                                    </>)
+                                  })}
+                                </InfiniteScroll>
+
+                                :
+                                (
+                                  confessionResults
+                                    ?
+                                    (<div className="spinner-border pColor" role="status">
+                                      <span className="sr-only">Loading...</span>
+                                    </div>)
+                                    :
+                                    (<div className="alert alert-danger" role="alert">
+                                      Unable to get confessions
+                                    </div>)
+
+                                )
+                              }
+                            </div>
+                            {/* CONFESSIONS CONT */}
+                          </div>
+                        </div>
+
+                      </section>
+                      {/* MIDDLECONTAINER */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
 
               {/* ADD CATEGORIES MODAL */}
               <Modal show={addNewCategory.visible}>
