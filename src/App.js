@@ -20,7 +20,7 @@ import Privacy from '../src/user/pageElements/pages/privacyPolicy/Privacy';
 import Dashboard from './admin/pageElements/Dashboard';
 import { fetchData } from './commonApi';
 import { Users } from './admin/pageElements/Users';
-import {BrowserRouter as Router,Routes as Switch,Route,} from "react-router-dom";
+import { BrowserRouter as Router, Routes as Switch, Route, } from "react-router-dom";
 import { ReportedUsers } from './admin/pageElements/ReportedUsers';
 import { Complaints } from './admin/pageElements/Complaints';
 import FbLogin from './user/pageElements/components/FbLogin';
@@ -29,6 +29,7 @@ import VerifyEmail from './user/pageElements/components/VerifyEmail';
 import Terms from './user/pageElements/pages/terms';
 import CookiePolicy from './user/pageElements/pages/cookie';
 import Recapv3 from './user/pageElements/components/Recapv3';
+import AuthCheck from "./user/behindScenes/Auth/AuthCheck"
 // import ReactPixel from 'react-facebook-pixel';
 
 
@@ -56,7 +57,7 @@ function App() {
   useEffect(() => {
     auth();
     var token = "";
-    if (userDetails){
+    if (userDetails) {
       token = userDetails.token;
     }
     async function getData() {
@@ -73,13 +74,37 @@ function App() {
         } else {
           setCategories(false);   //HANDLES APP IN CASE OF NO API RESPONSE
         }
-      } catch(err) {
+      } catch (err) {
         setCategories(false);
         setCategoriesResults(false);
         console.log(err);
       }
     }
     getData();
+
+    const getProfileData = async () => {
+      if (AuthCheck()) {
+        let obj = {
+          data: {},
+          token: token,
+          method: "get",
+          url: "getprofile"
+        }
+        try {
+          const res = await fetchData(obj)
+          if (res.data.status === true) {
+            if(userDetails !== '')
+            {
+              let freshUserDetails = { ...userDetails, profile: res.data.user};
+              localStorage.setItem("userDetails", JSON.stringify(freshUserDetails))
+            }
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+    getProfileData();
 
     //LOAD RECAPTCHA V3
     const loadScriptByURL = (id, url, callback) => {
@@ -103,7 +128,7 @@ function App() {
       console.log("V3 loaded!");
     })
 
-        //END OF LOAD RECAPTCHA V3
+    //END OF LOAD RECAPTCHA V3
 
   }, [])
 
@@ -114,7 +139,7 @@ function App() {
           <Switch>
 
             {/* ADMIN ROUTES */}
-            <Route path="talkplacepanel" element={<AdminLogin />}/>
+            <Route path="talkplacepanel" element={<AdminLogin />} />
 
             {/* DASHBOARD */}
             <Route path="dashboard" element={<Dashboard categories={categories} />} />
@@ -149,7 +174,7 @@ function App() {
 
 
             {/* FBLOGIN PAGE */}
-            <Route path="fblogin" element={<FbLogin/>}>
+            <Route path="fblogin" element={<FbLogin />}>
             </Route>
             {/* FBLOGIN PAGE */}
 
@@ -176,7 +201,7 @@ function App() {
             <Route path="recap" element={<Recapv3 />}>
             </Route>
             {/* PRIVACY PAGE */}
-            
+
 
 
             {/* TERMS PAGE */}
@@ -227,10 +252,10 @@ function App() {
             <Route path="login" element={<Login />}>
             </Route>
             {/* LOGIN PAGE */}
-            
-            
+
+
             {/* VERIFYEMAIL PAGE */}
-            <Route path="verifyemail/:userId/:token" element={<VerifyEmail/>}>
+            <Route path="verifyemail/:userId/:token" element={<VerifyEmail />}>
             </Route>
             {/* VERIFYEMAIL PAGE */}
 

@@ -72,6 +72,7 @@ export default function Feed(props) {
         setPrivacyModal({ ...privacyModal, visible: false });
         localStorage.setItem("privacyAccepted", 1);
     }
+    
 
     useEffect(() => {
         if (!auth()) {
