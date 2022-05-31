@@ -685,7 +685,7 @@ export default function Chat() {
 
                                         <InfiniteScroll
                                             scrollableTarget={`${((window.innerWidth - 13) > 768) ? 'style-2' : ''}`}
-                                            endMessage={<div className="endListMessage chatEndListMessage mt-4">End of Friend List</div>}
+                                            endMessage={<div className="endListMessage chatEndListMessage mt-2">End of Chat List</div>}
                                             dataLength={myFriends.data.count}
                                             next={fetchMoreFriends}
                                             hasMore={myFriends.data.friends.length < myFriends.data.count}
@@ -709,21 +709,21 @@ export default function Chat() {
                                                         (<div className="alert alert-danger" role="alert">
                                                             Something went wrong
                                                         </div>) :
-                                                        (myFriends.data.friends.length ?
-                                                            (myFriends.data.friends).map((user, index) => {
-                                                                return <Chatter
-                                                                    updated_at={user.updated_at}
-                                                                    key={`${index}${user.imgUrl}${user.name}${user.chatterDesc}`}
-                                                                    is_userreport={user.is_userreport}
-                                                                    is_online={user.is_online}
-                                                                    channel_id={user.channel_id}
-                                                                    friend_id={user.friend_id}
-                                                                    openChat={openChat}
-                                                                    chatIndex={index}
-                                                                    chatterDetails={chatterDetails}
-                                                                    imgUrl={user.image === '' ? userIcon : user.image}
-                                                                    chatterName={user.name} chatterDesc={!user.last_messsage ? "No Messages found" : user.last_messsage} />
-                                                            }) : <span className="endListMessage">No Friends Available</span>)
+
+                                                        (myFriends.data.friends).map((user, index) => {
+                                                            return <Chatter
+                                                                updated_at={user.updated_at}
+                                                                key={`${index}${user.imgUrl}${user.name}${user.chatterDesc}`}
+                                                                is_userreport={user.is_userreport}
+                                                                is_online={user.is_online}
+                                                                channel_id={user.channel_id}
+                                                                friend_id={user.friend_id}
+                                                                openChat={openChat}
+                                                                chatIndex={index}
+                                                                chatterDetails={chatterDetails}
+                                                                imgUrl={user.image === '' ? userIcon : user.image}
+                                                                chatterName={user.name} chatterDesc={!user.last_messsage ? "No Messages found" : user.last_messsage} />
+                                                        })
                                                     )
                                             }
                                         </InfiniteScroll>
@@ -731,37 +731,37 @@ export default function Chat() {
                                     </div>
                                 </div>
 
-                                <div className={`${myRequests.data.count && toggleView.requests ? "d-block" : "d-none"} requestsCont d-md-block`}>
+                                <div className={`${myRequests.data && toggleView.requests ? "d-block" : "d-none"} requestsCont d-md-block`}>
                                     {
                                         !myRequests.isLoading ? (myRequests.isError ? (<div className="alert alert-danger" role="alert">
                                             Something went wrong
                                         </div>) :
-                                            ((myRequests.data.count)
-                                                ?
-                                                <div className="friendsRequestsMainCont">
-                                                    <Link to="/requests" className="w-100">
-                                                        <span className="chatPageHeaders">
-                                                            Friend Requests
-                                                        </span>
-                                                    </Link>
 
-                                                    {/* SHOWS ALL THE USERS WHO HAVE REQUESTED TO YOU */}
-                                                    {
-                                                        (myRequests.data.requests && (myRequests.data.requests).map((requester, index) => {
-                                                            return index < 2 && <Requests
-                                                                key={`${index}${requester.imgUrl}${requester.requesterName}${requester.requestersTotalSharedConf}`}
-                                                                updateFriendCount={updateFriendCount}
-                                                                request_id={requester.request_id}
-                                                                imgUrl={requester.image === '' ? userIcon : requester.image}
-                                                                requesterName={requester.name}
-                                                                requestersTotalSharedConf={requester.no_of_confessions} />
-                                                        }))}
+                                            <div className="friendsRequestsMainCont">
+                                                <Link to="/requests" className="w-100">
+                                                    <span className="chatPageHeaders">
+                                                        Friend Requests
+                                                    </span>
+                                                </Link>
 
-                                                </div> : <div className="endListMessage px-0 px-md-2">No Requests</div>)) : (<div className="text-center">
-                                                    <div className="spinner-border pColor text-center" role="status">
-                                                        <span className="sr-only">Loading...</span>
-                                                    </div>
-                                                </div>)}
+                                                {/* SHOWS ALL THE USERS WHO HAVE REQUESTED TO YOU */}
+                                                {((myRequests.data.count)
+                                                    ?
+                                                    (myRequests.data.requests && (myRequests.data.requests).map((requester, index) => {
+                                                        return index < 2 && <Requests
+                                                            key={`${index}${requester.imgUrl}${requester.requesterName}${requester.requestersTotalSharedConf}`}
+                                                            updateFriendCount={updateFriendCount}
+                                                            request_id={requester.request_id}
+                                                            imgUrl={requester.image === '' ? userIcon : requester.image}
+                                                            requesterName={requester.name}
+                                                            requestersTotalSharedConf={requester.no_of_confessions} />
+                                                    }))
+                                                    : <div className="endListMessage px-0 px-md-2">End of requests</div>)}
+                                            </div>) : (<div className="text-center">
+                                                <div className="spinner-border pColor text-center" role="status">
+                                                    <span className="sr-only">Loading...</span>
+                                                </div>
+                                            </div>)}
                                 </div>
                             </div>
 
