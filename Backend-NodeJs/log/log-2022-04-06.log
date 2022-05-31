@@ -1,0 +1,18 @@
+Wed Apr 06 2022 06:21:53 GMT+0000 (Coordinated Universal Time) sendmessage
+update `friends` set `last_messsage` = 'Can you help me out regarding life motivation tips 🌺', `updated_at` = '2022-04-06 06:21:53.962' where `id` = 4 - Incorrect string value: '\xF0\x9F\x8C\xBA' for column 'last_messsage' at row 1
+
+Wed Apr 06 2022 06:22:03 GMT+0000 (Coordinated Universal Time) sendmessage
+update `friends` set `last_messsage` = '🌺🌺🌺🌺', `updated_at` = '2022-04-06 06:22:03.172' where `id` = 4 - Incorrect string value: '\xF0\x9F\x8C\xBA\xF0\x9F...' for column 'last_messsage' at row 1
+
+Wed Apr 06 2022 06:22:50 GMT+0000 (Coordinated Universal Time) sendmessage
+update `friends` set `last_messsage` = 'this helps me out 🌴', `updated_at` = '2022-04-06 06:22:50.112' where `id` = 4 - Incorrect string value: '\xF0\x9F\x8C\xB4' for column 'last_messsage' at row 1
+
+Wed Apr 06 2022 06:23:12 GMT+0000 (Coordinated Universal Time) sendmessage
+update `friends` set `last_messsage` = '🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴 sure', `updated_at` = '2022-04-06 06:23:12.514' where `id` = 4 - Incorrect string value: '\xF0\x9F\x8C\xB4\xF0\x9F...' for column 'last_messsage' at row 1
+
+Wed Apr 06 2022 06:24:24 GMT+0000 (Coordinated Universal Time) sendmessage
+update `friends` set `last_messsage` = '🌴🌴🌴', `updated_at` = '2022-04-06 06:24:24.044' where `id` = 4 - Incorrect string value: '\xF0\x9F\x8C\xB4\xF0\x9F...' for column 'last_messsage' at row 1
+
+Wed Apr 06 2022 06:25:53 GMT+0000 (Coordinated Universal Time) sendmessage
+update `friends` set `last_messsage` = '🌴🌴🌴🌴', `updated_at` = '2022-04-06 06:25:53.142' where `id` = 4 - Incorrect string value: '\xF0\x9F\x8C\xB4\xF0\x9F...' for column 'last_messsage' at row 1
+

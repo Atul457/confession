@@ -1,0 +1,6 @@
+Tue Apr 05 2022 03:18:24 GMT+0000 (Coordinated Universal Time) postcomment
+insert into `confession_thoughts_comments` (`comment`, `confession_id`, `created_at`, `post_as_anonymous`, `temp_name`, `updated_at`, `user_id`) values ('Testing! Testing! Testing! 😆', '65', '2022-04-05 03:18:24.120', 0, 'Silver Maple', '2022-04-05 03:18:24.120', 30) - Incorrect string value: '\xF0\x9F\x98\x86' for column 'comment' at row 1
+
+Tue Apr 05 2022 03:18:26 GMT+0000 (Coordinated Universal Time) postcomment
+insert into `confession_thoughts_comments` (`comment`, `confession_id`, `created_at`, `post_as_anonymous`, `temp_name`, `updated_at`, `user_id`) values ('Testing! Testing! Testing! 😆', '65', '2022-04-05 03:18:26.299', 0, 'Black Locust', '2022-04-05 03:18:26.299', 30) - Incorrect string value: '\xF0\x9F\x98\x86' for column 'comment' at row 1
+

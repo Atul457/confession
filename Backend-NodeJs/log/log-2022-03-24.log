@@ -1,0 +1,3 @@
+Thu Mar 24 2022 21:57:52 GMT+0000 (Coordinated Universal Time) postcomment
+insert into `confession_thoughts_comments` (`comment`, `confession_id`, `created_at`, `post_as_anonymous`, `updated_at`, `user_id`) values ('Makes a lot of sense! 🤔', '31', '2022-03-24 21:57:52.660', 0, '2022-03-24 21:57:52.660', 11) - Incorrect string value: '\xF0\x9F\xA4\x94' for column 'comment' at row 1
+
