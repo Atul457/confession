@@ -21,10 +21,12 @@ import contactUsIcon from '../../../images/contactUsIcon.png';
 import VerifyEmailModal from '../Modals/VerifyEmailModal';
 import { useDispatch, useSelector } from 'react-redux';
 import AppLogo from "../components/AppLogo";
+import { togglemenu } from '../../../redux/actions/share';
 
 
 export default function Header(props) {
-
+    
+    const ShareReducer = useSelector(store => store.ShareReducer);
     const verifyEState = useSelector(store => store.VerifyEmail);
     const dispatch = useDispatch();
     const [profile] = useState(() => {
@@ -95,6 +97,25 @@ export default function Header(props) {
             getUnreadCommentsCount();
         }
     }, [localStorage.getItem("requestsCount")])
+
+
+    const catchEvent2 = (e) => {
+        var classes = e.target.classList;
+        if (!classes.contains("shareReqCont") && !classes.contains("shareReqRows") && !classes.contains("shareKitImgIcon") && !classes.contains("sharekitdots")) {
+            dispatch(togglemenu({
+                id: null, value: false
+            }))
+        }
+    }
+
+    useEffect(() => {
+        if (ShareReducer.selectedPost?.value) {
+            document.addEventListener("click", catchEvent2);
+        }
+        return () => {
+            document.removeEventListener("click", catchEvent2);
+        }
+    }, [ShareReducer.selectedPost?.value])
 
 
 

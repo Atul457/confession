@@ -5,8 +5,8 @@ import { ShareButtonRoundSquare, ShareBlockStandard } from 'react-custom-share';
 const ShareKit = (props) => {
 
     var data = props.postData;
-    // var origin = window.location.origin;
-    var origin = "https://cloudart.com.au";
+    var origin = window.location.origin;
+    // var origin = "https://cloudart.com.au";
 
     // CREATE OBJECT WITH PROPS FOR SHAREBLOCK
     const shareBlockProps = {
@@ -18,7 +18,7 @@ const ShareKit = (props) => {
             { network: 'Email', icon: FaEnvelope },
             { network: 'Linkedin', icon: FaLinkedinIn },
         ],
-        text: `Post Anonymously - www.thetalkplace.com`,
+        text: `Check out this anonymous post! - www.thetalkplace.com`,
         longtext: `${data.description.substr(0,500)}${(data.description).length > 500 ? "..." : ""}`,
     };
 

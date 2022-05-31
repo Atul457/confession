@@ -7,7 +7,7 @@ import downArrowIcon from '../../../../images/downArrow.png';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import { useNavigate } from "react-router-dom";
 import { fetchData } from '../../../../commonApi';
-import ReCAPTCHA from 'react-google-recaptcha';
+// import ReCAPTCHA from 'react-google-recaptcha';
 import ExtValidator from '../../../../extensionValidator/ExtValidator';
 import contactUsLogo from '../../../../images/contactUsLogo.svg';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -26,7 +26,7 @@ export default function Report() {
     const [base64Src, setBase64Src] = useState([]);
     const [imgPathArr, setImgPathArr] = useState([]);
     const [isImgLoading, setIsImgLoading] = useState(false);
-    const [recaptchaKey, setRecaptchaKey] = useState("");
+    // const [recaptchaKey, setRecaptchaKey] = useState("");
     let noOfChar = 2000;
 
     let fs = 1024; //SETS THE MAX FILE SIZE THAT CAN BE SENT

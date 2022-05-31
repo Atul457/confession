@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import Post from '../../components/Post';
-import logo from '../../../../images/appLogo.svg'
+// import logo from '../../../../images/appLogo.svg'
 import Requests from '../../components/Requests';
 import pen from '../../../../images/whitepen.png';
-import requestsIcon from '../../../../images/contactUsIconActive.png';
+// import requestsIcon from '../../../../images/contactUsIconActive.png';
 import supportIcon from '../../../../images/contactUsIconActive.png';
 import { Link } from "react-router-dom";
 import SiteLoader from '../../components/SiteLoader';
@@ -46,7 +46,7 @@ export default function Profile() {
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
     const [runOrNot, setRunOrNot] = useState(false);
-    const [enterName, setEnterName] = useState(false);
+    // const [enterName, setEnterName] = useState(false);
     const [displayName, setDisplayName] = useState(false);
     const [profile, setProfile] = useState(userDetails.profile);
     const [myConfession, setMyConfession] = useState([]);
@@ -57,7 +57,7 @@ export default function Profile() {
     const [myRequests, setMyRequests] = useState({ count: 0 });   //TO MAINTAIN THE DESIGN
     const [isReqLoading, setIsReqLoading] = useState(true);
     const [isReqError, setIsReqError] = useState(false);
-    const [lastName, setLastName] = useState(false);
+    // const [lastName, setLastName] = useState(false);
     const [confCount, setConfCount] = useState(0);
     const [confData, setConfData] = useState(1);
     const [deletable, setDeletable] = useState(false);
@@ -804,7 +804,7 @@ export default function Profile() {
                                                         )}
                                                     </InfiniteScroll>
 
-                                                    : <div className="noConfessions endListMessage">No Posts Found</div>)
+                                                    : <div className="profile noConfessions endListMessage">You haven't created any post</div>)
                                                     :
                                                     (<div className="text-center">
                                                         <div className="spinner-border pColor mt-4 text-center" role="status">

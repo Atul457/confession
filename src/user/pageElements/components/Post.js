@@ -206,6 +206,8 @@ export default function Post(props) {
         hideShareKit();
     }
 
+    
+
     const closeShareMenu = () => {
         dispatch(togglemenu({
             id: null, value: false

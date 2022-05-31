@@ -30,18 +30,18 @@ import Terms from './user/pageElements/pages/terms';
 import CookiePolicy from './user/pageElements/pages/cookie';
 import Recapv3 from './user/pageElements/components/Recapv3';
 import AuthCheck from "./user/behindScenes/Auth/AuthCheck"
-// import ReactPixel from 'react-facebook-pixel';
+import ReactPixel from 'react-facebook-pixel';
+// import AdSense_ from './user/pageElements/components/AdSense';
 
 
 //GOOGLE TAG MANAGER
-// const tagManagerArgs = { gtmId: 'GTM-KKNFBVT' }  //LIVE
 const tagManagerArgs = { gtmId: 'GTM-WP65TWC' }  //DEV
-TagManager.initialize(tagManagerArgs)
+// const tagManagerArgs = { gtmId: 'GTM-KKNFBVT' }  //LIVE
+TagManager.initialize(tagManagerArgs);
 
-// const advancedMatching = {};
-// const options = {autoConfig: true,debug: false,};
-// ReactPixel.init('292411919748752', advancedMatching, options);
-// ReactPixel.pageView(); 
+//META-PIXEL	
+// const options = { autoConfig: true, debug: false, };
+// ReactPixel.init('1638738963149766', null, options);
 // ReactPixel.fbq('track', 'PageView');
 
 
@@ -240,6 +240,12 @@ function App() {
             <Route path="report" element={<Report />}>
             </Route>
             {/* REPORT PAGE */}
+
+
+            {/* admob PAGE */}
+            {/* <Route path="add" element={<AdSense_ />}>
+            </Route> */}
+            {/* admob PAGE */}
 
 
             {/* CREATEPOST PAGE */}

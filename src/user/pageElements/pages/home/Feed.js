@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import Post from '../../components/Post';
-import logo from '../../../../images/appLogo.svg'
+// import logo from '../../../../images/appLogo.svg'
 import Category from '../../components/Category';
 // import ReCAPTCHA from 'react-google-recaptcha';
 import manWithHorn from '../../../../images/manWithHorn.png';

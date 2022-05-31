@@ -118,7 +118,7 @@ color: var(--skyColor);}
 background: var(--primaryColor);padding: 7px;border-radius: 8px;box-shadow: 4px 12px 11px rgb(0 0 0 / 6%);
 border: 1px solid #E4EBF6;width:32px;}
 .sharekitWrapper{position:relative;}
-.sharekitdots {font-size: 20px;font-weight: bold;position: absolute;top: 13px;right: 55px;height: 37px;
+.sharekitdots {font-size: 20px;font-weight: bold;position: absolute;top: 13px;right: 39px;height: 37px;
 color: var(--primaryColor);z-index:5;display: flex;align-items: center;justify-content: space-between;}
 .sharekitdots.admin {
     right: 95px;
@@ -145,10 +145,21 @@ overflow: hidden;text-overflow: ellipsis;font-family: 'Poppins', sans-serif;widt
 color: #A8A9A8;float: left;font-size: 14px;margin-right: 10px;font-weight: 600;margin-bottom: 15px;}
 .lablesColor{color: var(--labelsColor);}
 .categoriesCont {display: flex;padding-top: 20px;justify-content: space-between;}
-.categoriesContainer {display: flex;flex-wrap: wrap;justify-content: center;}
+.categoriesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: center; */
+    height: 350px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 0px 0px 0px 15px;
+}
 .activeCategory {background: var(--orangeColor);color: var(--whiteColor);}
 .postCont {box-shadow: var(--postBoxShadow);border: 1px solid #E4EBF6;padding: 15px 20px;margin-bottom: 28px;border-radius: 20px;position: relative;background-color: var(--whiteColor);}
-.postCont .sharekitdots{z-index:9;}
+.postCont .sharekitdots {
+    z-index: 9;
+    padding: 0px 10px;
+}
 /* .gptAdd{
     width: 320px;
     
@@ -309,6 +320,15 @@ box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);border-radius: 10px;background-colo
 #style-2::-webkit-scrollbar {width: 5px;background-color: #F5F5F5;}
 #style-2::-webkit-scrollbar-thumb {border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
 box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);background-color: var(--primaryColor);}
+
+
+.categoriesContainer::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);border-radius: 10px;background-color: #F5F5F5;}
+.categoriesContainer::-webkit-scrollbar {width: 5px;background-color: #F5F5F5;}
+.categoriesContainer::-webkit-scrollbar-thumb {border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);background-color: var(--primaryColor);}
+
+
 
 
 .scrollbar {padding: 0px;max-height: 33vh;width: 100%;overflow-y: auto;}
@@ -614,7 +634,7 @@ border-radius: 8px;max-width: 730px;margin: 0 auto;width: 100%;}
 .profilePicCont {width: 100px;height: 100px;border-radius: 50%;overflow: hidden;display: flex;justify-content: center;
 align-items: center;}
 .outerLookChat{width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;}
-.endListMessage {color: var(--primaryColor);font-size: 10px;font-weight: bold;margin-bottom: 10px;}
+.endListMessage {color: var(--primaryColor);font-size: 14px;font-weight: bold;margin-bottom: 10px;}
 .uploadeImgWrapper{float: left;width: 205px;height: 100%;margin-right: 15px;margin-bottom: 15px;position: relative;border:1px solid var(--primaryColor);border-radius: 5px;height: 90px;}
 .uploadeImgWrapper .removeImgIcon {border:0px !important;right: -6px;color: var(--primaryColor);top: -9px;position: absolute;}
 .userImageContChatCont{min-width: 50px;max-width:50px;width: 100%;  height: 50px;margin-right: 10px;border-radius: 50%;overflow: hidden;}
@@ -698,7 +718,7 @@ top: -2px;left: 19px;}
 .toggleAnonymousVerbiage {padding-left: 15px;}
 /* .underlineShareCount:hover .sharedCount{text-decoration: underline;} */
 .otherProfileVerbiage {color: var(--orangeColor);font-size: 13px;font-weight: 600;width: 100%;}
-.deletePostIcon {position: absolute;top: 22px;right: 0px;font-size: 22px !important;height: 37px;color: var(--primaryColor);}
+.deletePostIcon {position: absolute;top: 12px;right: 0px;font-size: 22px !important;height: 37px;color: var(--primaryColor);z-index: 9;padding-top: 8px;}
 .editDelComment {
     position: absolute;
     top: 4px;
@@ -802,7 +822,7 @@ border-radius: 50%;margin-right: 10px;}
 .navigationIcons{padding: 5px 0px;}
 a.headerNavLinks.active::after {border-bottom: 5px solid var(--orangeColor);
 content: "";display: block;position: absolute;width: 100%;bottom: -12px;}
-.shareKitImgIcon{width: 5.5px;}
+.shareKitImgIcon{width: 3.9px;}
 .registeredUserIndicator {
     position: absolute;
     width: 13px;
@@ -1064,6 +1084,13 @@ i.viewPrevPostIn:hover + .ljkdjfkl{display: block;position: absolute;background-
 color: var(--primaryColor);font-weight: 500;font-size: 12px;padding: 5px 10px;border-radius: 8px;right: 0px;
 bottom: -4px;}
 .userProfileNoConf {padding-left: 5px;}
+.noConfessions {
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+}
 
 
 
@@ -1071,7 +1098,14 @@ bottom: -4px;}
 
 
 /* MEDIAS */
-@media(min-width:1400px){
+@media(min-width:1600px) {
+    .categoriesContainer {
+        height: unset;
+        overflow: unset;
+    }
+}
+
+@media(min-width:1400px) {
     .registeredUserIndicator {
         width: 12px;
         top: -2px;
@@ -1269,7 +1303,7 @@ bottom: -4px;}
     .commentsModal .modal-dialog {margin-bottom: 100px;}
     /* .sharekitdots{width: 180px;} */
     .commentsModalGoUpArrow{right: 15px;}
-    .postUserName {max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+    .postUserName {max-width: 60px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 
 
     /* new design css */
@@ -1320,6 +1354,8 @@ bottom: -4px;}
     .categoriesContainer {
         padding: 20px 0px 0px;
         justify-content: start;
+        height:unset;
+        overflow: initial;
     }
     .category{margin-right: 10px;margin-bottom: 15px;}
     .createInputSelect{display: flex;justify-content: center;}
@@ -1509,7 +1545,7 @@ bottom: -4px;}
     .hideHeaderProfile{display: none;}
     .mtProfile input{width: unset;margin: unset;}
     .mtProfile input.dname{width: 228px;margin: unset;}
-    .deletePostIcon{top:19px;}
+    .deletePostIcon{top:12px;}
     .profileModal .modal-dialog{margin: 0px !important;}
     .profileModal .modal-content {
         margin-top: 150px !important;
@@ -1531,6 +1567,10 @@ bottom: -4px;}
         margin-top: 10px;
         text-align: left;
         padding: 0px 20px;
+    }
+    .unreadPostCommentCount{top: 29px;}
+    .noConfessions {
+        font-size: 19px;
     }
     }
 

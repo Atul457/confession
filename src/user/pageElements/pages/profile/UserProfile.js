@@ -11,7 +11,7 @@ import rejectRequest from '../../../../images/friendsAl.png';
 import { fetchData } from '../../../../commonApi';
 import InfiniteScroll from "react-infinite-scroll-component";
 import useCommentsModal from '../../../utilities/useCommentsModal';
-import logo from '../../../../images/appLogo.svg'
+// import logo from '../../../../images/appLogo.svg'
 import RefreshButton from '../../../refreshButton/RefreshButton';
 import AppLogo from '../../components/AppLogo';
 // import requestsIcon from '../../../../images/requestsIcon.png';
