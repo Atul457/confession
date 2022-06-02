@@ -2,11 +2,11 @@ import React, { useRef, useState, useEffect } from 'react';
 import userIcon from '../../../images/userAcc.png';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
-import timeAgoConverter from '../../../helpers/timeAgoConverter';
 import forwardIcon from '../../../images/forwardIcon.png';
 import editCommentIcon from '../../../images/editCommentIcon.png';
 import TextareaAutosize from 'react-textarea-autosize';
 import { fetchData } from '../../../commonApi';
+import DateConverter from '../../../helpers/DateConverter';
 
 
 export default function Comments(props) {
@@ -114,7 +114,7 @@ export default function Comments(props) {
 
                 <span className="postCreatedTime">
                     {/* {props.created_at} */}
-                    {timeAgoConverter(props.created_at)}
+                    {DateConverter(props.created_at)}
                 </span>
 
                 {props.is_editable === 1  &&

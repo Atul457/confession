@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import auth from '../behindScenes/Auth/AuthCheck';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { fetchData } from '../../commonApi';
-import timeAgoConverter from '../../helpers/timeAgoConverter';
+import DateConverter from '../../helpers/DateConverter';
 
 
 export default function Comments(props) {
@@ -69,7 +69,7 @@ export default function Comments(props) {
 
                 <span className="postCreatedTime">
                     {/* {props.created_at} */}
-                    {timeAgoConverter(props.created_at)}
+                    {DateConverter(props.created_at)}
                 </span>
 
                 <span type="button" className="categoryOfUser deleteCategory" onClick={deleteCommentFunc}>

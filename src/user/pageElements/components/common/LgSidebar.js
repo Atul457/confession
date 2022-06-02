@@ -10,10 +10,7 @@ export default function LgSidebar(props) {
         <div className="leftColumn">
             <div className="leftColumnWrapper">
                 <div className="appLogo">
-                    <Link to="/home">
-                        {/* <img src={props.logo} alt="" /> */}
-                        <AppLogo />
-                    </Link>
+                    <AppLogo />
                 </div>
 
                 <Link to="/home" className='textDecNone'>

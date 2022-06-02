@@ -14,9 +14,9 @@ import { Modal } from 'react-bootstrap';
 import userIcon from '../../../../images/userAcc.svg';
 import { fetchData } from '../../../../commonApi';
 import { useSelector } from 'react-redux';
-import timeAgoConverter from '../../../../helpers/timeAgoConverter';
 import _ from 'lodash';
 import TextareaAutosize from 'react-textarea-autosize';
+import DateConverter from '../../../../helpers/DateConverter';
 
 
 export default function Chat() {
@@ -673,6 +673,7 @@ export default function Chat() {
                                     <div className="chatPageHeaders">
                                         Chat
                                     </div>
+
                                     <div className={`chatPageHeaders mobile ${toggleView.messages === false ? "d-flex" : "d-none"}`}>
                                         <div className={`regions ${toggleView.chat === true ? "active" : ""}`} onClick={showChat}>
                                             Chat
@@ -680,6 +681,10 @@ export default function Chat() {
                                         <div className={`regions ${toggleView.requests === true ? "active" : ""}`} onClick={showRequests}>
                                             Friend Request
                                         </div>
+                                    </div>
+
+
+                                    <div className={`chatPageHeaders mobile prvnt ${toggleView.messages === false ? "d-flex" : "d-none"}`}>
                                     </div>
                                     <div className={`allChatsCont scrollbar ${toggleView.chat ? "d-block" : " d-none"} d-md-block`} id="style-2" height={`${window.innerWidth - 13}`}>
 
@@ -842,7 +847,7 @@ export default function Chat() {
                                                                     <pre className="preToNormal">{message.message}</pre>
                                                                     <span className="messagedAt">
                                                                         {/* {message.created_at} */}
-                                                                        {timeAgoConverter(message.created_at)}
+                                                                        {DateConverter(message.created_at)}
                                                                     </span>
                                                                 </div>
                                                             </div>)
@@ -853,7 +858,7 @@ export default function Chat() {
                                                                     <pre className="preToNormal">{message.message}</pre>
                                                                     <span className="messagedAt">
                                                                         {/* {message.created_at} */}
-                                                                        {timeAgoConverter(message.created_at)}
+                                                                        {DateConverter(message.created_at)}
                                                                     </span>
                                                                 </div>
                                                             </div>)

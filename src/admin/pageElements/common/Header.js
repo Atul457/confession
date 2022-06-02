@@ -143,10 +143,10 @@ export default function Header(props) {
             <header className={`mainHead col-12 posFixedForHeader ${props.fullWidth ? "fullWidthHeader" : ''} ${props.hideRound ? "hideHeaderProfile" : ""}`}>
                 <div className="insideHeader">
                     <div className="headerLeftCol pl-0">
-                        <Link to="/dashboard" className="homeHeaderLink">
+                        <span to="/dashboard" className="homeHeaderLink">
                             {/* <img src={logo} alt="" className="appLogo" /> */}
                             <AppLogo />
-                        </Link>
+                        </span>
                     </div>
                     <div className="viewProfileIcon pr-md-0 pr-lg-4">
                         <div className="row align-items-center justify-content-end m-0 navigationIcons">

@@ -10,8 +10,7 @@ import SetAuth from '../behindScenes/Auth/SetAuth';
 import { useNavigate } from "react-router-dom";
 import useShareKit from '../utilities/useShareKit';
 import TextareaAutosize from 'react-textarea-autosize';
-import timeAgoConverter from '../../helpers/timeAgoConverter';
-
+import DateConverter from '../../helpers/DateConverter';
 
 
 export default function Post(props) {
@@ -184,7 +183,7 @@ export default function Post(props) {
                     <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>
                 </span>
                 <span className={`postCreatedTime ${(props.userName.length + props.category.length) > 10 ? "postCreatedTimeAdmin" : ""}`}>
-                    {timeAgoConverter(props.createdAt)}
+                    {DateConverter(props.createdAt)}
                 </span>
                 <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}>
                     {deleteConfession === true

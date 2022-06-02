@@ -11,7 +11,6 @@ import Lightbox from "react-awesome-lightbox";
 import "react-awesome-lightbox/build/style.css";
 import { fetchData } from '../../../commonApi';
 import useShareKit from '../../utilities/useShareKit';
-import timeAgoConverter from '../../../helpers/timeAgoConverter';
 import TextareaAutosize from 'react-textarea-autosize';
 import shareKitIcon from "../../../images/shareKitIcon.png";
 import canBeRequested from "../../../images/canBeRequested.svg";
@@ -21,8 +20,7 @@ import useShareRequestPopUp from '../../utilities/useShareRequestPopUp';
 import useFriendReqModal from '../../utilities/useFriendReqModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
-
-
+import DateConverter from '../../../helpers/DateConverter';
 
 
 export default function Post(props) {
@@ -206,7 +204,7 @@ export default function Post(props) {
         hideShareKit();
     }
 
-    
+
 
     const closeShareMenu = () => {
         dispatch(togglemenu({
@@ -291,7 +289,7 @@ export default function Post(props) {
         let isUserProfile = false;
         let isMyPost = false;
         let linkToVisit = "#";
-        let html = ""; 
+        let html = "";
 
         if (auth()) {
             isMyPost = userDetails.profile.user_id === creatorId
@@ -409,7 +407,7 @@ export default function Post(props) {
                     </span>
 
                     <span className="postCreatedTime">
-                        {timeAgoConverter(props.createdAt)}
+                        {DateConverter(props.createdAt)}
                     </span>
 
                 </span>

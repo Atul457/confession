@@ -12,7 +12,8 @@ import Footer from '../../pageElements/common/Footer';
 import Comments from '../Comments';
 import useShareKit from '../../utilities/useShareKit';
 import TextareaAutosize from 'react-textarea-autosize';
-import timeAgoConverter from '../../../helpers/timeAgoConverter';
+import DateConverter from '../../../helpers/DateConverter';
+
 
 
 
@@ -362,7 +363,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 </span>
                                                                 <span className="postCreatedTime">
                                                                     {/* {confessionData.created_at} */}
-                                                                    {timeAgoConverter(confessionData.created_at)}
+                                                                    {DateConverter(confessionData.created_at)}
                                                                 </span>
                                                             </div>
                                                             <div className="postBody">
@@ -430,7 +431,15 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 <InfiniteScroll
                                                                     onScroll={handleScrollTo}
                                                                     scrollableTarget="postsMainCont"
-                                                                    endMessage={<div className="endListMessage mt-2 pb-0">End of Comments</div>}
+                                                                    endMessage={
+                                                                        <div className="endListMessage mt-2 pb-0">
+                                                                            End of Comments,
+                                                                            <span
+                                                                                className='closeBackButton'
+                                                                                onClick={handleCommentsModal}>
+                                                                                Go back
+                                                                            </span>
+                                                                        </div>}
                                                                     dataLength={commentsArr.length}
                                                                     next={fetchMoreComments}
                                                                     hasMore={commentsArr.length < commentsCount}
@@ -456,7 +465,14 @@ export default function CommentGotModal({ state, categories, ...rest }) {
 
                                                                     })}
                                                                 </InfiniteScroll>
-                                                                : <div className="endListMessage m-0 pb-1">End of Comments</div>}
+                                                                : <div className="endListMessage m-0 pb-1">
+                                                                    End of Comments,
+                                                                    <span
+                                                                        className='closeBackButton'
+                                                                        onClick={handleCommentsModal}>
+                                                                        Go back
+                                                                    </span>
+                                                                </div>}
 
                                                         </div>}
 

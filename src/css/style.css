@@ -3516,6 +3516,14 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
     font-size: 25px;
 }
 
+.closeBackButton{
+    cursor: pointer;
+    text-decoration: underline;
+    padding-left : 5px;
+}
+
+
+
 
 
 
@@ -4625,6 +4633,17 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
 
     .chatPageHeaders.mobile.d-flex {
         display: flex !important;
+        
+        position: fixed;
+        z-index: 9;
+        top: 122px;
+        width: calc(100% - 30px);
+    }
+    
+    .chatPageHeaders.mobile.d-flex.prvnt {
+        position: unset;
+        height: 41px;
+        background: #fff;
     }
 
     .friendRequestsHeader,
@@ -4747,6 +4766,7 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
     .noConfessions {
         font-size: 19px;
     }
+    
 }
 
 

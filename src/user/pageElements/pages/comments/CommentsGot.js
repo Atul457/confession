@@ -15,9 +15,9 @@ import { fetchData } from '../../../../commonApi';
 import "react-awesome-lightbox/build/style.css";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams } from "react-router-dom";
-import timeAgoConverter from '../../../../helpers/timeAgoConverter';
 import TextareaAutosize from 'react-textarea-autosize';
 import logo from '../../../../images/appLogo.svg'
+import DateConverter from '../../../../helpers/DateConverter';
 
 
 
@@ -372,7 +372,7 @@ export default function CommentsGot(props) {
                                                             </span>
                                                             <span className="postCreatedTime">
                                                                 {/* {confessionData.created_at} */}
-                                                                {timeAgoConverter(confessionData.created_at)}
+                                                                {DateConverter(confessionData.created_at)}
                                                             </span>
                                                         </div>
                                                         <div className="postBody">

@@ -1,5 +1,5 @@
 import React from 'react'
-import timeAgoConverter from '../../../helpers/timeAgoConverter';
+import DateConverter from '../../../helpers/DateConverter';
 
 
 export default function Chatter(props) {
@@ -44,7 +44,7 @@ export default function Chatter(props) {
 
                 <span className="timeStamp">
                     {/* {props.updated_at} */}
-                    {timeAgoConverter(props.updated_at)}
+                    {DateConverter(props.updated_at)}
                     {/* 04:52 AM */}
                 </span>
             </div>

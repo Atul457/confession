@@ -10,10 +10,11 @@ import forwardIcon from '../../../images/forwardIcon.png';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Comments from '../../pageElements/components/Comments';
 import useShareKit from '../../utilities/useShareKit';
-import timeAgoConverter from '../../../helpers/timeAgoConverter';
 import _ from 'lodash';
 import TextareaAutosize from 'react-textarea-autosize';
 import shareKitIcon from "../../../images/shareKitIcon.png";
+import DateConverter from '../../../helpers/DateConverter';
+
 
 
 
@@ -371,7 +372,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 </span>
                                                                 <span className="postCreatedTime">
                                                                     {/* {confessionData.created_at} */}
-                                                                    {timeAgoConverter(confessionData.created_at)}
+                                                                    {DateConverter(confessionData.created_at)}
 
                                                                 </span>
                                                             </div>
@@ -390,8 +391,8 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                             <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
                                                                                 {(confessionData.image).map((src) => {
                                                                                     return (<span className='uploadeImgWrapper fetched'>
-                                                                                        <img src={src} alt="" className="previewImg"/>
-                                                                                        </span>)
+                                                                                        <img src={src} alt="" className="previewImg" />
+                                                                                    </span>)
 
                                                                                 })}
                                                                             </div>
@@ -441,7 +442,16 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                     onScroll={handleScrollTo}
                                                                     className="commentsModalIscroll"
                                                                     scrollableTarget="postsMainCont"
-                                                                    endMessage={<div className="endListMessage mt-2 pb-0">End of Comments</div>}
+                                                                    endMessage={
+                                                                        <div className="endListMessage mt-2 pb-0">
+                                                                            End of Comments,
+                                                                            <span
+                                                                                className='closeBackButton'
+                                                                                onClick={handleCommentsModal}>
+                                                                                Go back
+                                                                            </span>
+                                                                        </div>
+                                                                    }
                                                                     dataLength={commentsArr.length}
                                                                     next={fetchMoreComments}
                                                                     hasMore={commentsArr.length < commentsCount}
@@ -469,7 +479,13 @@ export default function CommentGotModal({ state, categories, ...rest }) {
 
                                                                     })}
                                                                 </InfiniteScroll>
-                                                                : <div className="endListMessage m-0 pb-1">End of Comments</div>}
+                                                                : <div className="endListMessage m-0 pb-1">End of Comments,
+                                                                    <span
+                                                                        className='closeBackButton'
+                                                                        onClick={handleCommentsModal}>
+                                                                        Go back
+                                                                    </span>
+                                                                </div>}
 
                                                         </div>}
 

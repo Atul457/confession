@@ -198,10 +198,10 @@ export default function Header(props) {
                 {verifyEState && verifyEState.verified === false && <VerifyEmailModal showEModal={showEModal} />}
                 <div className="insideHeader">
                     <div className="headerLeftCol pl-0">
-                        <Link to="/home" className="homeHeaderLink">
+                        <span to="/home" className="homeHeaderLink">
                             {/* <img src={logo} alt="" className="appLogo" /> */}
                             <AppLogo/>
-                        </Link>
+                        </span>
                     </div>
                     <div className="viewProfileIcon pr-md-0 pr-lg-4">
                         <div className="row align-items-center justify-content-end m-0 navigationIcons">
