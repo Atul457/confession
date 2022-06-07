@@ -31,6 +31,7 @@ import CookiePolicy from './user/pageElements/pages/cookie';
 import Recapv3 from './user/pageElements/components/Recapv3';
 import AuthCheck from "./user/behindScenes/Auth/AuthCheck"
 import ReactPixel from 'react-facebook-pixel';
+import ProtectedRoute from './user/ProtectedRoute';
 // import AdSense_ from './user/pageElements/components/AdSense';
 
 
@@ -93,9 +94,8 @@ function App() {
         try {
           const res = await fetchData(obj)
           if (res.data.status === true) {
-            if(userDetails !== '')
-            {
-              let freshUserDetails = { ...userDetails, profile: res.data.user};
+            if (userDetails !== '') {
+              let freshUserDetails = { ...userDetails, profile: res.data.user };
               localStorage.setItem("userDetails", JSON.stringify(freshUserDetails))
             }
           }
@@ -285,7 +285,8 @@ function App() {
 
 
             {/* REQUESTSGOT PAGE */}
-            <Route path="requests" element={<RequestsGot />}>
+            <Route path="requests" element={<ProtectedRoute><RequestsGot /></ProtectedRoute>}>
+              <Route index element={<RequestsGot />} />
             </Route>
             {/* REQUESTSGOT PAGE */}
 

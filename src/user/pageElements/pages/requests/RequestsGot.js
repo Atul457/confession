@@ -22,6 +22,7 @@ export default function RequestsGot() {
         }
     }, [history])
 
+
     if (auth()) {
         token = JSON.parse(localStorage.getItem("userDetails"));
         token = token.token;
@@ -36,8 +37,14 @@ export default function RequestsGot() {
             token: token
         }
     });
+
     const [requestPage, setRequestPage] = useState(1);
     const [requestCount, setRequestCount] = useState(0);
+
+    //GET FRIEND REQUESTS
+    useEffect(() => {
+        getRequests();
+    }, [])
 
 
     const getRequests = async (page = 1, append = false) => {
@@ -98,12 +105,6 @@ export default function RequestsGot() {
     }
 
 
-    //GET FRIEND REQUESTS
-    useEffect(() => {
-        getRequests();
-    }, [])
-
-
     //ACCEPTS OR REJECTS REQUEST
     const updateFriendCount = async (status, request_id) => {
 
@@ -141,7 +142,7 @@ export default function RequestsGot() {
                         <div className="row">
 
                             {/* Adds Header Component */}
-                            <Header links={true} fullWidth={true}/>
+                            <Header links={true} fullWidth={true} />
 
                             <div className="preventHeader">preventHead</div>
                             <div className="container py-md-4 p-3 preventFooter">

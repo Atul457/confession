@@ -7,7 +7,6 @@ import downArrowIcon from '../../../../images/downArrow.png';
 import createPostLogo from '../../../../images/createPostLogo.svg';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import { useNavigate } from "react-router-dom";
-// import ReCAPTCHA from 'react-google-recaptcha';
 import { fetchData } from '../../../../commonApi';
 import ExtValidator from '../../../../extensionValidator/ExtValidator';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -74,7 +73,7 @@ export default function CreatePost(props) {
                 });
             });
 
-            const executePostConfession = async() => {
+            const executePostConfession = async () => {
 
                 if (auth()) {
                     loggedInUserData = localStorage.getItem("userDetails");
@@ -90,7 +89,7 @@ export default function CreatePost(props) {
 
                 if (description.trim() === '') {
                     // console.log("empty");
-                    descErrorCont.innerHTML = 'Confession is a required field.';
+                    descErrorCont.innerHTML = 'Comment required.';
                     preventDoubleClick(false);
                     return false;
                 } else {
@@ -167,11 +166,13 @@ export default function CreatePost(props) {
             setSubmittable(false);
             let fileSize = parseInt(e.target.files[0].size / 1000);
             responseCont.innerHTML = '';
-
+            
             if (fileSize > fs) {
                 responseCont.innerHTML = '[Max FileSize: 1000KB], No file selected';
+                setIsImgLoading(false);
                 setSelectedFile('');
                 setErrorOrSuccess(false);
+                setSubmittable(true);
                 return false;
             }
             setSubmittable(false);
@@ -304,17 +305,40 @@ export default function CreatePost(props) {
                                     />
                                     <label htmlFor="uploadImages" className="createPostLabels">Upload Images if there are any</label>
                                 </div>
-
                             </div>
 
+                            <div className="imgNerrorWrapper">
 
+                                {/* UPLOAD IMAGES MOBILE PREVIEW CONTAINER */}
+                                {base64Src.length > 0 &&
+                                    <div className="createPostImgPrev mobileView">
+                                        <div className="form-group imgPreviewCont">
+                                            <div className="imgContForPreviewImg">
+                                                {base64Src.map((elem, index) => {
+                                                    return (<span className="uploadeImgWrapper" key={"imgPreviewCont9" + index} value={index} onClick={() => { removeImg(index) }}>
+                                                        <img src={elem.toString()} alt="" className='previewImg' />
+                                                        <img src={removeImgIcon} alt="" className='removeImgIcon' type="button" />
+                                                    </span>)
+                                                })}
 
+                                                {isImgLoading &&
+                                                    <div className="imgLoader">
+                                                        <div className="spinner-border pColor imgLoaderInner" role="status">
+                                                            <span className="sr-only">Loading...</span>
+                                                        </div>
+                                                    </div>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                {/* END OF UPLOAD IMAGES MOBILE PREVIEW CONTAINER */}
 
-                            <div className="w-100 mt-3 errorFieldsCPost">
-                                <div className={`responseCont mt-0 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="responseCont"></div>
-                                <span className="errorCont text-danger text-center" id="capthaErrorCont"></span>
-                                <span className="d-block errorCont text-danger" id="descErrorCont"></span>
-                                <span className="errorCont text-danger" id="catErrorCont"></span>
+                                <div className="w-100 errorFieldsCPost mb-2">
+                                    <div className={`responseCont mt-0 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="responseCont"></div>
+                                    <span className="errorCont text-danger text-center" id="capthaErrorCont"></span>
+                                    <span className="d-block errorCont text-danger" id="descErrorCont"></span>
+                                    <span className="errorCont text-danger" id="catErrorCont"></span>
+                                </div>
 
                             </div>
 
@@ -323,12 +347,12 @@ export default function CreatePost(props) {
                                 <div className="container-fluid rightMainCreatePostFormCont px-0">
                                     <div className="head">
 
-                                        <div className="recaptchaFeed text-right justify-content-center mb-2">
-                                            {/* {!auth() && <ReCAPTCHA
+                                        {/* <div className="recaptchaFeed text-right justify-content-center mb-2"> */}
+                                        {/* {!auth() && <ReCAPTCHA
                                                 sitekey="6LfOYpAeAAAAACg8L8vo8s7U1keZJwF_xrlfN-o9"
                                                 onChange={verifyRecaptcha}
                                             />} */}
-                                        </div>
+                                        {/* </div> */}
 
 
                                         <div className='exceptRecap'>

@@ -230,8 +230,9 @@ export default function Profile() {
 
     // HANDLES SCROLL TO TOP BUTTON
     useEffect(() => {
-        document.addEventListener("scroll", () => {
-            let scroll = document.querySelector("html").scrollTop;
+        let ref = document.getElementById("postsWrapper");
+        ref.addEventListener("scroll", () => {
+            let scroll = document.querySelector("#postsWrapper").scrollTop;
             if (scroll > 1000) {
                 setGoDownArrow(true);
             } else {
@@ -243,7 +244,8 @@ export default function Profile() {
 
     //SCROLLS TO BOTTOM
     const goUp = () => {
-        window.scrollTo({ top: "0px", behavior: "smooth" });
+        let ref = document.getElementById("postsWrapper");
+        ref.scrollTo({ top: "0px", behavior: "smooth" });
     }
 
 

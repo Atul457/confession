@@ -344,10 +344,14 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                 :
                                                 (
                                                     <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0 px-0 px-md-3">
+
                                                         <span type="button" className={`sharekitdots resetRightModal ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
                                                             {sharekit && <ShareKit postData={confessionData} />}
                                                             <img src={shareKitIcon} className="shareKitImgIcon" /></span>
+
                                                         {isValidPost ? <div className="postCont modalPostCont">
+                                                            {sharekit &&
+                                                                <div className="shareKitSpace"></div>}
                                                             <div className="postContHeader justify-content-start">
                                                                 <span className="userImage userImageFeed">
                                                                     <img src={confessionData.profile_image === '' ? userIcon : confessionData.profile_image} className="userAccIcon" alt="" />

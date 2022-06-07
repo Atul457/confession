@@ -14,6 +14,9 @@ import PrivacyModal from './../../Modals/PrivacyModal';
 import logo from '../../../../images/appLogo.svg'
 import LgSidebar from '../../components/common/LgSidebar';
 import googleIconM from '../../../../images/googleIcon.svg';
+import ForgotPassModal from '../../Modals/ForgotPassModal';
+import { forgotUPassActionCreators } from '../../../../redux/actions/forgotUPassword';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -21,6 +24,7 @@ export default function Login() {
 
     let [mess] = useSearchParams();
     mess = mess.get("message");
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (parseInt(mess) === 1) {
@@ -411,6 +415,14 @@ export default function Login() {
                                             <input type="password" name="password" className="form-control" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="off" />
                                         </div>
                                         <div className="errorCont" id="loginPassword"></div>
+                                        <div
+                                            className="form-group RegisterNowLinkCont text-right"
+                                            type="button"
+                                            onClick={() => dispatch(forgotUPassActionCreators.openChangePassModal())}>
+                                            <span>
+                                                Forgot Password ?
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <button
@@ -479,6 +491,10 @@ export default function Login() {
                         {/* PRIVACY MODAL */}
                         <PrivacyModal privacyModal={privacyModal} acceptPrivacy={acceptPrivacy} handlePrivacyModal={handlePrivacyModal} />
                         {/* PRIVACY MODAL */}
+
+                        {/* FORGOT PASSWORD MODAL */}
+                        <ForgotPassModal />
+                        {/* FORGOT PASSWORD MODAL */}
 
                     </div>)
                     : <SiteLoader />

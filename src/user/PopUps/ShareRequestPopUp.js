@@ -1,33 +1,39 @@
 import React from 'react';
 import addFriend from "../../images/addFriend.svg";
 import cancelFriend from "../../images/cancelFriendPop.svg";
- 
+
 
 export default function ShareRequestPopUp({ toggleSharekit, isNotFriend, openFrReqModalFn, closeShareMenu }) {
+
+  var classToAdd = ''
 
   const do_ = () => {
     openFrReqModalFn();
     closeShareMenu();
   }
 
+  if (isNotFriend !== 1 && isNotFriend !== 2) {
+    classToAdd = 'available'
+  }
+
   return (
     <div className='shareReqCont'>
-      {isNotFriend === 1 && 
-      <>
-        <div className="shareReqRows user" type="button" onClick={do_}>
-          <img src={addFriend}/>
-          <span>
-            Friend Request
-          </span>
-        </div>
-        <div className='shareReqDivider'></div>
-      </>
+      {isNotFriend === 1 &&
+        <>
+          <div className="shareReqRows user" type="button" onClick={do_}>
+            <img src={addFriend} />
+            <span>
+              Friend Request
+            </span>
+          </div>
+          <div className='shareReqDivider'></div>
+        </>
       }
 
       {isNotFriend === 2 &&
         <>
           <div className="shareReqRows user" type="button" onClick={do_}>
-          <img src={cancelFriend} className="cancelFriend"/>
+            <img src={cancelFriend} className="cancelFriend" />
             <span>
               Cancel Request
             </span>
@@ -35,9 +41,9 @@ export default function ShareRequestPopUp({ toggleSharekit, isNotFriend, openFrR
           <div className='shareReqDivider'></div>
         </>
       }
-      <div className="shareReqRows user" type="button" onClick={toggleSharekit}>
-        <i className="fa fa-share-alt" aria-hidden="true"></i>
-        <span>
+      <div className={`shareReqRows ${classToAdd} user w-100`} type="button" onClick={toggleSharekit}>
+        <i className="fa fa-share-alt dontHide" aria-hidden="true"></i>
+        <span className='dontHide'>
           Share
         </span>
       </div>

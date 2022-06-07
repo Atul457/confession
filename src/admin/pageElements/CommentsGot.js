@@ -207,22 +207,21 @@ export default function CommentsGot(props) {
 
     // UPDATES THE COMMENTS
     const updateComments = (commentId) => {
-        setCommentsCount((prevState)=>prevState - 1);
-        let newCommentsArr = commentsArr.filter((current)=>{
-            if (commentId !== current.comment_id)
-            {
+        setCommentsCount((prevState) => prevState - 1);
+        let newCommentsArr = commentsArr.filter((current) => {
+            if (commentId !== current.comment_id) {
                 return current;
             }
         })
 
         setCommentsArr(newCommentsArr);
-        setSharedBy((prevState)=>prevState-1);
+        setSharedBy((prevState) => prevState - 1);
     }
 
 
     return (
         <div className="container-fluid">
-            { (auth() && confessionData)
+            {(auth() && confessionData)
                 ?
                 <div className="row">
                     <Header links={true} />
@@ -304,12 +303,17 @@ export default function CommentsGot(props) {
                                                                 {(confessionData.image !== null && (confessionData.image).length > 0)
                                                                     &&
                                                                     (
-                                                                        <div className="form-group imgPreviewCont my-2 mb-0">
-                                                                            <div className="imgContForPreviewImg" type="button" onClick={() => { setLightBox(true) }} >
-                                                                                {(confessionData.image).map((src) => {
-                                                                                    return <img
-                                                                                        key={src + "imgContForPreviewImg"} src={src}
-                                                                                        alt="" />
+                                                                        <div className="form-group imgPreviewCont mt-2 mb-0">
+                                                                            <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
+                                                                                {(confessionData.image).map((src, index) => {
+                                                                                    return (
+                                                                                        <span className="uploadeImgWrapper fetched"
+                                                                                            key={`uploadeImgWrapper${index}`}>
+                                                                                            <img
+                                                                                                className='previewImg'
+                                                                                                key={src + "imgContForPreviewImg"} src={src}
+                                                                                                alt="" />
+                                                                                        </span>)
 
                                                                                 })}
                                                                             </div>
@@ -350,8 +354,8 @@ export default function CommentsGot(props) {
                                                                     {commentsArr.map((post, index) => {
                                                                         return <Comments
                                                                             updateComments={updateComments}
-                                                                            comment_id = {post.comment_id}
-                                                                            created_at ={post.created_at}
+                                                                            comment_id={post.comment_id}
+                                                                            created_at={post.created_at}
                                                                             curid={(post.user_id === '' || post.user_id === 0) ? false : post.user_id}
                                                                             key={"Arr" + index + "dp"}
                                                                             imgUrl={post.profile_image} userName={post.comment_by}

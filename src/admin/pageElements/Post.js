@@ -147,7 +147,10 @@ export default function Post(props) {
         <div className="postCont" index={props.index}>
 
             <span type="button" className={`sharekitdots admin ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
-                {sharekit && <ShareKit postData={confessionData} />}
+                {sharekit && <ShareKit postData={{
+                    confession_id: props.postId,
+                    description: props.postedComment,
+                }} />}
                 <i className="fa fa-share-alt" aria-hidden="true"></i>
             </span>
 
@@ -206,7 +209,7 @@ export default function Post(props) {
                         </pre>
                         {((props.postedComment).split("")).length >= noOfWords[0] ? <span toberedirectedto={props.postId} className="viewMoreBtn pl-1">View More</span> : ''}
                     </Link> */}
-                    
+
                     <Link className="links text-dark" to="#">
                         <pre className="preToNormal post">
                             {props.postedComment}

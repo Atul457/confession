@@ -23,6 +23,8 @@ import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
 import DateConverter from '../../../helpers/DateConverter';
 
 
+
+
 export default function Post(props) {
 
     let history = useNavigate();
@@ -204,8 +206,6 @@ export default function Post(props) {
         hideShareKit();
     }
 
-
-
     const closeShareMenu = () => {
         dispatch(togglemenu({
             id: null, value: false
@@ -316,6 +316,10 @@ export default function Post(props) {
 
     return (
         <div className="postCont" index={props.index}>
+            {ShareReducer &&
+                ShareReducer.selectedPost?.id === props.postId &&
+                ShareReducer.sharekitShow &&
+                <div className="shareKitSpace"></div>}
             <span
                 type="button"
                 className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""} ${!props.deletable ? "resetRight" : ""}`}
@@ -324,7 +328,10 @@ export default function Post(props) {
                     ShareReducer.selectedPost?.id === props.postId &&
                     ShareReducer.sharekitShow &&
                     <ShareKit
-                        postData={confessionData}
+                        postData={{
+                            confession_id: props.postId,
+                            description: props.postedComment,
+                        }}
                         closeShareReqPopUp={closeShareReqPopUp} />}
                 <img src={shareKitIcon} className="shareKitImgIcon" />
             </span>
@@ -387,14 +394,6 @@ export default function Post(props) {
                 ANONYMOUS :: WILL NOT DO ANY THING
                 */}
                     {visitePrevilage(props.curid, props.post_as_anonymous)}
-                    {/* <Link className={`textDecNone postUserName`}
-                        to={props.curid && props.post_as_anonymous === 0 ?
-                            (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
-                            : ''}>
-                        <span className="userName">
-                            {props.userName}
-                        </span>
-                    </Link> */}
 
                     {props.isRegistered === 1 ?
                         <span className='registeredUserIcon'>

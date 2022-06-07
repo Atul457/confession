@@ -386,16 +386,19 @@ export default function CommentsGot(props) {
                                                             {(confessionData.image !== null && (confessionData.image).length > 0)
                                                                 &&
                                                                 (
-                                                                    <div className="form-group imgPreviewCont my-2 mb-0">
-                                                                        <div className="imgContForPreviewImg" type="button" onClick={() => { setLightBox(true) }} >
-                                                                            {(confessionData.image).map((src) => {
-                                                                                return <img src={src} alt="" />
-
+                                                                    <div className="form-group imgPreviewCont mt-2 mb-0">
+                                                                        <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
+                                                                            {(confessionData.image).map((src, index) => {
+                                                                                return (
+                                                                                    <span
+                                                                                        className="uploadeImgWrapper fetched"
+                                                                                        key={`uploadeImgWrapper${index}`}>
+                                                                                        <img src={src} alt="" className='previewImg' />
+                                                                                    </span>)
                                                                             })}
                                                                         </div>
                                                                     </div>
                                                                 )
-
                                                             }
 
 

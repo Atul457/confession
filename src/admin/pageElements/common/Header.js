@@ -230,7 +230,9 @@ export default function Header(props) {
                 </div>
                 <div className={`roundCorners ${props.hideRound ? "d-none" : ""}`}>__</div>
             </header>
-            {/* REPORT USER MODAL */}
+
+
+            {/* CHANGE PASSWORD MODAL */}
             <Modal show={reportModal.isVisible}>
                 <Modal.Header>
                     <h6>Change Password</h6>
@@ -272,7 +274,8 @@ export default function Header(props) {
 
                 </Modal.Footer>
             </Modal>
-            {/* REPORT USER MODAL */}
+            {/* CHANGE PASSWORD MODAL */}
+
         </>
     );
 }

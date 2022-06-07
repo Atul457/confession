@@ -335,10 +335,14 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                 :
                                                 (
                                                     <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0">
+
                                                         <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
                                                             {sharekit && <ShareKit postData={confessionData} />}
                                                             <i className="fa fa-share-alt" aria-hidden="true"></i></span>
+
                                                         {isValidPost ? <div className="postCont">
+                                                            {sharekit &&
+                                                                <div className="shareKitSpace"></div>}
                                                             <div className="postContHeader justify-content-start">
                                                                 <span className="userImage userImageFeed">
                                                                     <img src={confessionData.profile_image === '' ? userIcon : confessionData.profile_image} className="userAccIcon" alt="" />
