@@ -48,7 +48,7 @@ export default function Comments(props) {
 
 
     return (
-        <div className="postCont overWritePostWithComment">
+        <div className="postCont overWritePostWithComment admin">
             <div className="postContHeader justifyContentInitial">
                 <span className="commentsGotProfileImg">
                     <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
@@ -72,7 +72,7 @@ export default function Comments(props) {
                     {DateConverter(props.created_at)}
                 </span>
 
-                <span type="button" className="categoryOfUser deleteCategory" onClick={deleteCommentFunc}>
+                <span type="button" className="categoryOfUser deleteCategory admin" onClick={deleteCommentFunc}>
                     {deleteComment === true
                         ?
                         <div className="spinnerSizePost spinner-border text-white" role="status">

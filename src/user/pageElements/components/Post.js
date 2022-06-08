@@ -316,10 +316,12 @@ export default function Post(props) {
 
     return (
         <div className="postCont" index={props.index}>
+
             {ShareReducer &&
                 ShareReducer.selectedPost?.id === props.postId &&
                 ShareReducer.sharekitShow &&
                 <div className="shareKitSpace"></div>}
+
             <span
                 type="button"
                 className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""} ${!props.deletable ? "resetRight" : ""}`}

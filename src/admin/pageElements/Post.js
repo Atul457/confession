@@ -144,7 +144,7 @@ export default function Post(props) {
 
 
     return (
-        <div className="postCont" index={props.index}>
+        <div className="postCont admin" index={props.index}>
 
             <span type="button" className={`sharekitdots admin ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
                 {sharekit && <ShareKit postData={{
@@ -153,6 +153,19 @@ export default function Post(props) {
                 }} />}
                 <i className="fa fa-share-alt" aria-hidden="true"></i>
             </span>
+
+            <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}>
+                {deleteConfession === true
+                    ?
+                    <div className="spinnerSizePost spinner-border text-white" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                    :
+                    "Delete"}
+            </span>
+
+            {sharekit &&
+                <div className="shareKitSpace"></div>}
 
             <div className="postContHeader justifyContentInitial">
                 {lightBox && (
@@ -173,7 +186,7 @@ export default function Post(props) {
                     
                 ANONYMOUS :: WILL NOT DO ANY THING
                 */}
-                <Link className={`textDecNone userNameCont`}
+                <Link className={`textDecNone postUserName`}
                     to={props.curid ?
                         `/userProfile/${props.curid}`
                         : ''}>
@@ -188,7 +201,7 @@ export default function Post(props) {
                 <span className={`postCreatedTime ${(props.userName.length + props.category.length) > 10 ? "postCreatedTimeAdmin" : ""}`}>
                     {DateConverter(props.createdAt)}
                 </span>
-                <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}>
+                {/* <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}>
                     {deleteConfession === true
                         ?
                         <div className="spinnerSizePost spinner-border text-white" role="status">
@@ -196,7 +209,7 @@ export default function Post(props) {
                         </div>
                         :
                         "Delete"}
-                </span>
+                </span> */}
             </div>
 
 

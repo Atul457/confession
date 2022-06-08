@@ -334,9 +334,9 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                 </section>)
                                                 :
                                                 (
-                                                    <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0">
+                                                    <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0 px-0 px-md-3">
 
-                                                        <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
+                                                        <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""} resetRightModal`} onClick={toggleSharekit}>
                                                             {sharekit && <ShareKit postData={confessionData} />}
                                                             <i className="fa fa-share-alt" aria-hidden="true"></i></span>
 
@@ -349,7 +349,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 </span>
 
                                                                 {confessionData.post_as_anonymous === 1
-                                                                    ? <span className="userName">
+                                                                    ? <span className="userName postUserName">
                                                                         {confessionData.created_by}
                                                                     </span> :
                                                                     <Link className={`textDecNone `}

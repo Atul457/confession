@@ -358,7 +358,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 </span>
 
                                                                 {confessionData.post_as_anonymous === 1
-                                                                    ? <span className="userName">
+                                                                    ? <span className="userName postUserName">
                                                                         {confessionData.created_by}
                                                                     </span> :
                                                                     <Link className={`textDecNone `}
