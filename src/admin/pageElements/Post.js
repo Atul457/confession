@@ -146,7 +146,7 @@ export default function Post(props) {
     return (
         <div className="postCont admin" index={props.index}>
 
-            <span type="button" className={`sharekitdots admin ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
+            <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
                 {sharekit && <ShareKit postData={{
                     confession_id: props.postId,
                     description: props.postedComment,
@@ -154,15 +154,17 @@ export default function Post(props) {
                 <i className="fa fa-share-alt" aria-hidden="true"></i>
             </span>
 
-            <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}>
-                {deleteConfession === true
+            {/* <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}> */}
+            {/* {deleteConfession === true
                     ?
                     <div className="spinnerSizePost spinner-border text-white" role="status">
                         <span className="sr-only">Loading...</span>
                     </div>
                     :
-                    "Delete"}
-            </span>
+                    "Delete"} */}
+
+            <i className="fa fa-trash pr-3 deletePostIcon" type="button" aria-hidden="true" onClick={deleteConfessionFunc}></i>
+            {/* </span> */}
 
             {sharekit &&
                 <div className="shareKitSpace"></div>}
@@ -187,9 +189,11 @@ export default function Post(props) {
                 ANONYMOUS :: WILL NOT DO ANY THING
                 */}
                 <Link className={`textDecNone postUserName`}
-                    to={props.curid ?
-                        `/userProfile/${props.curid}`
-                        : ''}>
+                    // to={props.curid ?
+                    //     `/userProfile/${props.curid}`
+                    //     : ''}
+                    to="#"
+                >
                     <span className="userName">
                         {props.userName}
                     </span>
@@ -198,7 +202,7 @@ export default function Post(props) {
                 <span className="catCommentBtnCont">
                     <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>
                 </span>
-                <span className={`postCreatedTime ${(props.userName.length + props.category.length) > 10 ? "postCreatedTimeAdmin" : ""}`}>
+                <span className={`postCreatedTime`}>
                     {DateConverter(props.createdAt)}
                 </span>
                 {/* <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}>

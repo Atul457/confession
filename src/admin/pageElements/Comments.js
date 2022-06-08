@@ -72,7 +72,7 @@ export default function Comments(props) {
                     {DateConverter(props.created_at)}
                 </span>
 
-                <span type="button" className="categoryOfUser deleteCategory admin" onClick={deleteCommentFunc}>
+                {/* <span type="button" className="categoryOfUser deleteCategory admin" onClick={deleteCommentFunc}>
                     {deleteComment === true
                         ?
                         <div className="spinnerSizePost spinner-border text-white" role="status">
@@ -80,7 +80,11 @@ export default function Comments(props) {
                         </div>
                         :
                         "Delete"}
-                </span>
+                </span> */}
+
+                <div className='editDelComment'>
+                    <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
+                </div>
 
             </div>
             <div className="postBody">

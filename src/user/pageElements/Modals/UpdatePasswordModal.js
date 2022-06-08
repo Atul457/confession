@@ -122,7 +122,7 @@ const UpdatePasswordModal = () => {
             {/* CHANGE PASSWORD MODAL */}
             <Modal show={updateUserPassReducer.modal.isOpen} onHide={closeModal}>
                 <Modal.Header>
-                    <h6>Change Password</h6>
+                    <h6>Reset Password</h6>
                 </Modal.Header>
 
                 <Modal.Body className="privacyBody">

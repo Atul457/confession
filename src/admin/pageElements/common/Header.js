@@ -144,7 +144,6 @@ export default function Header(props) {
                 <div className="insideHeader">
                     <div className="headerLeftCol pl-0">
                         <span to="/dashboard" className="homeHeaderLink">
-                            {/* <img src={logo} alt="" className="appLogo" /> */}
                             <AppLogo />
                         </span>
                     </div>
@@ -271,11 +270,9 @@ export default function Header(props) {
                         </div> : "Save"}
                     </Button>
 
-
                 </Modal.Footer>
             </Modal>
             {/* CHANGE PASSWORD MODAL */}
-
         </>
     );
 }

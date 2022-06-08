@@ -38,12 +38,19 @@ export const forgotUserPassReducer = (state = initialState, action) => {
             }
 
         case forgotUPassActions.UPDATEERROR:
-            return {
-                ...state,
-                message: action.payload,
-                status: statuses.STOP
+            if (action.payload.isError) {
+                return {
+                    ...state,
+                    message: action.payload.message,
+                    status: statuses.ERROR
+                }
+            } else {
+                return {
+                    ...state,
+                    message: action.payload.message,
+                    status: statuses.STOP
+                }
             }
-
         default: return state
     }
 }

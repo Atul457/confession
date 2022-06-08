@@ -352,10 +352,12 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                     ? <span className="userName postUserName">
                                                                         {confessionData.created_by}
                                                                     </span> :
-                                                                    <Link className={`textDecNone `}
-                                                                        to={confessionData.post_as_anonymous === 0 &&
-                                                                            (auth() ? (userDetails.profile.user_id === confessionData.user_id ? `/profile` : `/userProfile?user=${confessionData.user_id}`) : `/userProfile?user=${confessionData.user_id}`)
-                                                                        }>
+                                                                    <Link className={`textDecNone postUserName`}
+                                                                        // to={confessionData.post_as_anonymous === 0 &&
+                                                                        //     (auth() ? (userDetails.profile.user_id === confessionData.user_id ? `/profile` : `/userProfile?user=${confessionData.user_id}`) : `/userProfile?user=${confessionData.user_id}`)
+                                                                        // }
+                                                                        to="#"
+                                                                        >
                                                                         <span className="userName removeElipses">
                                                                             {confessionData.post_as_anonymous === 1 ? "Anonymous ." : confessionData.created_by}
                                                                         </span>

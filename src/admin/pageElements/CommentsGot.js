@@ -314,12 +314,10 @@ export default function CommentsGot(props) {
                                                                                                 key={src + "imgContForPreviewImg"} src={src}
                                                                                                 alt="" />
                                                                                         </span>)
-
                                                                                 })}
                                                                             </div>
                                                                         </div>
                                                                     )
-
                                                                 }
                                                                 <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
                                                             </div>

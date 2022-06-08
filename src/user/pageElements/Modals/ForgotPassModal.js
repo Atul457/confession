@@ -27,38 +27,39 @@ const ForgotPassModal = () => {
     const changePass = async () => {
 
         let token = '';
+        let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
 
-        if (email === '') {
-            return dispatch(forgotUPassActionCreators.updateErrorUpassModal("Email is a required field"));
+        if (email.trim() === '') {
+            return dispatch(forgotUPassActionCreators.updateErrorUpassModal({ isError: true, message: "Email is a required field" }));
         }
 
-
-        if (email.length < 6) {
-            return dispatch(forgotUPassActionCreators.updateErrorUpassModal("Please enter a valid email"));
+        if (!regex.test(email.trim())) {
+            return dispatch(forgotUPassActionCreators.updateErrorUpassModal({ isError: true, message: "Please enter a valid email" }));
         }
 
-        let data = {
-            // password: password.cpass.value,
-            // old_password: password.old.value
-        }
-
+        let data = { email };
         let obj = {
             data,
             token: token,
             method: "post",
-            url: "updatepassword"
+            url: "forgotpassword"
         }
+
         try {
             dispatch(forgotUPassActionCreators.changeStatusUPassModal(statuses.LOADING))
             const res = await fetchData(obj)
             if (res.data.status === true) {
-                closeModal();
+                dispatch(forgotUPassActionCreators.updateErrorUpassModal({ isError: false, message: res.data?.message }));
+                setTimeout(() => {
+                    closeModal();
+                }, 2000);
             } else {
-                return dispatch(forgotUPassActionCreators.updateErrorUpassModal(res.data?.message));
+                return dispatch(forgotUPassActionCreators.updateErrorUpassModal({ isError: true, message: res.data?.message }));
             }
         } catch (err) {
-            return dispatch(forgotUPassActionCreators.updateErrorUpassModal("Something went wrong."));
+            console.log(err);
+            return dispatch(forgotUPassActionCreators.updateErrorUpassModal({ isError: true, message: "Something went wrong" }));
         }
 
 
@@ -89,7 +90,7 @@ const ForgotPassModal = () => {
                         </span>
                     </form>
 
-                    <div className="responseCont text-left text-danger">{forgotUserPassReducer.message}</div>
+                    <div className={`responseCont text-left ${forgotUserPassReducer.status === statuses.ERROR ? "text-danger" : "text-success"}`}>{forgotUserPassReducer.message}</div>
 
                 </Modal.Body>
 

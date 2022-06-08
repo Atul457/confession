@@ -311,7 +311,7 @@ export default function Header(props) {
                                                     <div type="button"
                                                         onClick={openUpdatePassModal} className="takeActionOptions  userProfileHeading takeActionOptionsOnHov userProfileHeading textDecNone py-2">
                                                         <img src={profileIcon} alt="" className='profilePopUpIcons' />
-                                                        Change Password
+                                                        Reset Password
                                                     </div>
                                                 </>}
 
