@@ -21,6 +21,8 @@ import useFriendReqModal from '../../utilities/useFriendReqModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
 import DateConverter from '../../../helpers/DateConverter';
+import { useMediaQuery } from 'react-responsive';
+import ShareReqModal from '../Modals/ShareReqModal';
 
 
 
@@ -28,6 +30,8 @@ import DateConverter from '../../../helpers/DateConverter';
 export default function Post(props) {
 
     let history = useNavigate();
+    // let isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+    let isMobile = false;
     let maxChar = 2000;
     const dispatch = useDispatch();
     const ShareReducer = useSelector(store => store.ShareReducer);
@@ -339,7 +343,24 @@ export default function Post(props) {
             </span>
 
             {/* SHARE/REQUEST POPUP */}
-            {ShareReducer &&
+            {isMobile
+                ?
+                <>
+                    {
+                        ShareReducer &&
+                        ShareReducer.selectedPost?.id === props.postId &&
+                        ShareReducer.selectedPost?.value === true &&
+                        <ShareReqModal toggleSharekit={
+                            () => _toggleSharekit(props.postId, !ShareReducer.sharekitShow?.value)
+                        }
+                            isNotFriend={props.isNotFriend}
+                            openFrReqModalFn={openFrReqModalFn_Post}
+                            closeShareMenu={closeShareMenu} />
+                    }
+                </>
+                :
+
+                ShareReducer &&
                 ShareReducer.selectedPost?.id === props.postId &&
                 ShareReducer.selectedPost?.value === true &&
                 <ShareRequestPopUp

@@ -5,7 +5,8 @@ import cancelFriend from "../../images/cancelFriendPop.svg";
 
 export default function ShareRequestPopUp({ toggleSharekit, isNotFriend, openFrReqModalFn, closeShareMenu }) {
 
-  var classToAdd = ''
+  var classToAdd = '';
+  var moveABitUp = '';
 
   const do_ = () => {
     openFrReqModalFn();
@@ -16,8 +17,12 @@ export default function ShareRequestPopUp({ toggleSharekit, isNotFriend, openFrR
     classToAdd = 'available'
   }
 
+  if(isNotFriend === 1 || isNotFriend === 2){
+    moveABitUp = 'moveABitUp'
+  }
+
   return (
-    <div className='shareReqCont'>
+    <div className={`shareReqCont ${moveABitUp}`}>
       {isNotFriend === 1 &&
         <>
           <div className="shareReqRows user" type="button" onClick={do_}>
