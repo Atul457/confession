@@ -3152,8 +3152,8 @@ a.headerNavLinks.active::after {
     position: relative;
     font-size: 14px;
     font-weight: 600;
-    right: 40px;
-    top: 8px;
+    right: 4px;
+    top: 5px;
     z-index: 1;
     position: absolute;
     width: 170px;
@@ -4865,10 +4865,9 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
         font-size: 19px;
     }
 
-    .shareReqCont {
+    /* .shareReqCont {
         right: 45px;
-        top: 21px;
-    }
+    } */
 
     .shareKitSpace {
         height: 40px;

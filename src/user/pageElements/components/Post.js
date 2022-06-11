@@ -30,8 +30,6 @@ import ShareReqModal from '../Modals/ShareReqModal';
 export default function Post(props) {
 
     let history = useNavigate();
-    // let isMobile = useMediaQuery({ query: '(max-width: 768px)' });
-    let isMobile = false;
     let maxChar = 2000;
     const dispatch = useDispatch();
     const ShareReducer = useSelector(store => store.ShareReducer);
@@ -70,6 +68,7 @@ export default function Post(props) {
             "profile_image": props.profileImg,
             "user_id": props.curid,
             "image": props.imgUrl,
+            "isNotFriend": props.isNotFriend
         });
     }
 
@@ -343,24 +342,8 @@ export default function Post(props) {
             </span>
 
             {/* SHARE/REQUEST POPUP */}
-            {isMobile
-                ?
-                <>
-                    {
-                        ShareReducer &&
-                        ShareReducer.selectedPost?.id === props.postId &&
-                        ShareReducer.selectedPost?.value === true &&
-                        <ShareReqModal toggleSharekit={
-                            () => _toggleSharekit(props.postId, !ShareReducer.sharekitShow?.value)
-                        }
-                            isNotFriend={props.isNotFriend}
-                            openFrReqModalFn={openFrReqModalFn_Post}
-                            closeShareMenu={closeShareMenu} />
-                    }
-                </>
-                :
 
-                ShareReducer &&
+            {ShareReducer &&
                 ShareReducer.selectedPost?.id === props.postId &&
                 ShareReducer.selectedPost?.value === true &&
                 <ShareRequestPopUp
