@@ -5,6 +5,8 @@ import VerifyEmail from './eVerifyReducer';
 import ShareReducer from './shareReducer';
 import { updateUserPassReducer } from './updateUserPassReducer';
 import { forgotUserPassReducer } from './forgotUpReducer';
+import commentsModalReducer from './commentsModalReducer';
+import friendReqModalReducer from './friendReqModalReducer';
 
 const rootReducer = combineReducers({
     Terms,
@@ -12,7 +14,9 @@ const rootReducer = combineReducers({
     VerifyEmail,
     ShareReducer,
     updateUserPassReducer,
-    forgotUserPassReducer
+    forgotUserPassReducer,
+    commentsModalReducer,
+    friendReqModalReducer
 })
 
 export default rootReducer

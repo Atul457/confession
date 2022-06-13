@@ -3163,6 +3163,16 @@ a.headerNavLinks.active::after {
     top: -40px;
 }
 
+.postWrapperCommentsModal .shareReqCont {
+    top: 10px !important;
+    z-index: 10;
+    right: 26px;
+}
+
+.postWrapperCommentsModal .shareReqCont .shareReqRows.available {
+    padding: 12px 15px !important;
+}
+
 .shareReqRows.user {
     display: flex;
     align-items: center;
@@ -4900,6 +4910,10 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
 
     .feedRefreshBtn {
         font-size: 18px;
+    }
+
+    .postWrapperCommentsModal .shareReqCont {
+        right: 10px;
     }
 
 }

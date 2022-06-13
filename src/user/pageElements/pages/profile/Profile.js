@@ -22,6 +22,7 @@ import DeleteConfessionModal from '../../Modals/DeleteConfessionModal';
 import editCommentIcon from '../../../../images/editCommentIcon.png';
 import PofileModal from '../../Modals/PofileModal';
 import AppLogo from '../../components/AppLogo';
+import { useSelector } from 'react-redux';
 
 
 const deletePostModalIniVal = { visible: false, data: { postId: null, index: null } };
@@ -45,6 +46,7 @@ export default function Profile() {
     let maxRequestsToshow = 5;
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
+    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const [runOrNot, setRunOrNot] = useState(false);
     // const [enterName, setEnterName] = useState(false);
     const [displayName, setDisplayName] = useState(false);
@@ -477,10 +479,15 @@ export default function Profile() {
                 <div className="row">
 
                     {/* POPUP MODAL TO SHOW COMMENTS */}
-                    {commentsModalRun && <CommentGotModal
+                    {/* {commentsModalRun && <CommentGotModal
                         handleChanges={handleChanges}
                         state={commentsModal}
                         updateConfessionData={updateConfessionData}
+                        handleCommentsModal={handleCommentsModal} />} */}
+                    {commentsModalReducer.visible && <CommentGotModal
+                        handleChanges={handleChanges}
+                        updateConfessionData={updateConfessionData}
+                        state={commentsModal}
                         handleCommentsModal={handleCommentsModal} />}
 
                     {/* DELETECONFESSIONMODAL */}

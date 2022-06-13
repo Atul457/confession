@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import FriendReqModal from '../pageElements/Modals/FriendReqModal';
+import { FriendReqModal } from '../pageElements/Modals/FriendReqModal';
 
 const initialState = {
     visible: false,
     loading: false,
-    requested : false,
-    cancelled : false
+    requested: false,
+    cancelled: false
 }
 
 export default function useFriendReqModal() {
 
-    
+
     const [friendReqState, setFriendReqState] = useState(initialState);
 
     const closeFrReqModalFn = () => {
@@ -18,11 +18,11 @@ export default function useFriendReqModal() {
     }
 
     const changeRequested = () => {
-        setFriendReqState({ ...friendReqState, requested: true, loading : false , cancelled : false});
+        setFriendReqState({ ...friendReqState, requested: true, loading: false, cancelled: false });
     }
 
     const changeCancelled = () => {
-        setFriendReqState({ ...friendReqState, cancelled: true, loading: false, requested : false });
+        setFriendReqState({ ...friendReqState, cancelled: true, loading: false, requested: false });
     }
 
     const openFrReqModalFn = () => {

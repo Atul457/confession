@@ -1,57 +1,20 @@
-// export const Share = (index) => {
-//     return dispatch => {
-//         dispatch({
-//             type: 'SHARE',
-//             index
-//         })
-//     };
-// }
-
-
-// export const shareKitAc = (index) => {
-//     return dispatch => {
-//         dispatch({
-//             type: 'SHAREKIT',
-//             index
-//         })
-//     };
-// }
-
-
-// export const reset = () => {
-//     return dispatch => {
-//         dispatch({
-//             type: 'RESET'
-//         })
-//     };
-// }
-
-
-// export const toggleShare = (index) => {
-    
-//     return dispatch => {
-//         dispatch({
-//             type: 'TOGGLESHARE',
-//             index
-//         })
-//     };
-// }
-
-export const togglemenu = (id, value) => {
+export const togglemenu = (id, value, post = false) => {
         return dispatch => {
             dispatch({
                 type: 'TOGGLEMENU',
                 postid: id,
-                menuShow : value
+                menuShow : value,
+                isPost : post
             })
         }
 }
 
-export const toggleSharekitMenu = (value) => {
+export const toggleSharekitMenu = (value, isPost = false) => {
     return dispatch => {
         dispatch({
             type: 'TOGGLESHAREKIT',
-            sharekitShow : value
+            sharekitShow : value,
+            isPost: isPost
         })
     }
 }
