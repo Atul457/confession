@@ -32,6 +32,7 @@ import Recapv3 from './user/pageElements/components/Recapv3';
 import AuthCheck from "./user/behindScenes/Auth/AuthCheck"
 import ReactPixel from 'react-facebook-pixel';
 import ProtectedRoute from './user/ProtectedRoute';
+import getIP from './helpers/getIP';
 // import AdSense_ from './user/pageElements/components/AdSense';
 
 
@@ -45,8 +46,10 @@ TagManager.initialize(tagManagerArgs);
 // ReactPixel.init('1638738963149766', null, options);
 // ReactPixel.fbq('track', 'PageView');
 
+getIP()
 
 function App() {
+
   window.dataLayer.push({
     event: 'pageview'
   });
@@ -127,7 +130,6 @@ function App() {
     loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=6LcFvPEfAAAAAL7pDU8PGSIvTJfysBDrXlBRMWgt`, function () {
       console.log("V3 loaded!");
     })
-
     //END OF LOAD RECAPTCHA V3
 
   }, [])

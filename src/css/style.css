@@ -3606,6 +3606,27 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
     display: none;
 }
 
+.carousel_item_feature .carouselImage {
+    max-width: 200px !important;
+    width: 100% !important;
+}
+
+.featuresModal .control-dots .dot{
+    background-color: var(--primaryColor) !important;
+    box-shadow: none;
+}
+
+.featuresModal .carousel.carousel-slider {
+    padding-bottom: 30px;
+}
+
+button.modalFootBtns.btn a {
+    color: #fff;
+}
+
+button.modalFootBtns.btn a:hover{
+    text-decoration: none;
+}
 
 
 
