@@ -53,7 +53,7 @@ const ForgotPassModal = () => {
                 dispatch(forgotUPassActionCreators.updateErrorUpassModal({ isError: false, message: res.data?.message }));
                 setTimeout(() => {
                     closeModal();
-                }, 2000);
+                }, 4000);
             } else {
                 return dispatch(forgotUPassActionCreators.updateErrorUpassModal({ isError: true, message: res.data?.message }));
             }

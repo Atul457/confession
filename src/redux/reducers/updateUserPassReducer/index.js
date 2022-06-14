@@ -4,15 +4,18 @@ import UpdateUPassActions from "../../actions/updateUserPassword";
 const statuses = {
     LOADING: "LOADING",
     ERROR: "ERROR",
-    STOP: "STOP"
+    STOP: "STOP",
+    SUCCESS : "SUCCESS",
+    PASSWORDCHANGED: "PASSWORDCHANGED"
 }
 
 const initialState = {
     status: statuses.STOP,
+    bodyStatus: statuses.STOP,
     modal: {
         isOpen: false
     },
-    message: ''
+    message: '',
 }
 
 
@@ -41,6 +44,38 @@ export const updateUserPassReducer = (state = initialState, action) => {
                 ...state,
                 message: action.payload,
                 status: statuses.STOP
+            }
+
+        // Used in reset password
+        case UpdateUPassActions.HIDEFIELDS:
+            return {
+                ...state,
+                hideFields: true,
+                message : action.payload,
+                status : statuses.STOP,
+                bodyStatus : statuses.STOP
+            }
+
+        // Used in reset password
+        case UpdateUPassActions.UPDATEBODYSTATUS:
+            return {
+                ...state,
+                bodyStatus: action.payload,
+            }
+
+        // Used in reset password
+        case UpdateUPassActions.STATUSNMESSAGE:
+            return {
+                ...state,
+                status: action.payload.status,
+                message: action.payload.message,
+            }
+
+        // Used in reset password
+        case UpdateUPassActions.UPDATEBODYSTATUS:
+            return {
+                ...state,
+                bodyStatus: action.payload,
             }
 
         default: return state

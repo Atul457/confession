@@ -33,6 +33,7 @@ import AuthCheck from "./user/behindScenes/Auth/AuthCheck"
 import ReactPixel from 'react-facebook-pixel';
 import ProtectedRoute from './user/ProtectedRoute';
 import getIP from './helpers/getIP';
+import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
 // import AdSense_ from './user/pageElements/components/AdSense';
 
 
@@ -266,6 +267,12 @@ function App() {
             <Route path="verifyemail/:userId/:token" element={<VerifyEmail />}>
             </Route>
             {/* VERIFYEMAIL PAGE */}
+
+
+            {/* RESETPASSWORD PAGE */}
+            <Route path="resetpassword/:userId/:token" element={<ResetPassword />}>
+            </Route>
+            {/* RESETPASSWORD PAGE */}
 
 
             {/* REGISTER PAGE */}

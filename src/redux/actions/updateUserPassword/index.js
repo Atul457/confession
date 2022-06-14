@@ -5,7 +5,11 @@ const UpdateUPassActions = {
     OPENMODAL: 'OPENMODAL',
     CLOSEMODAL: 'CLOSEMODAL',
     CHANGESTATUS: 'CHANGESTATUS',
-    UPDATEERROR: 'UPDATEERROR'
+    UPDATEERROR: 'UPDATEERROR',
+    HIDEFIELDS: 'HIDEFIELDS',
+    UPDATEBODYSTATUS: "UPDATEBODYSTATUS",
+    RESETMODAL: "RESETUPDATEPASSWORDMODAL",
+    STATUSNMESSAGE: "CHANGESTATUSANDMESSAGE"
 }
 
 
@@ -35,12 +39,36 @@ const updateErrorUpassModal = (payload) => {
     }
 }
 
+const hideFieldsUpassModal = (payload) => {
+    return {
+        type: UpdateUPassActions.HIDEFIELDS,
+        payload
+    }
+}
+
+const changeBodyStatusUpassModal = (payload = statuses.STOP) => {
+    return {
+        type: UpdateUPassActions.UPDATEBODYSTATUS,
+        payload
+    }
+}
+
+const changeMessageNstatus = payload => {
+    return {
+        type: UpdateUPassActions.STATUSNMESSAGE,
+        payload
+    }
+}
+
 
 export const UpdateUPassActionCreators = {
     openChangePassModal,
     closeChangePassModal,
     changeStatusUPassModal,
-    updateErrorUpassModal
+    updateErrorUpassModal,
+    hideFieldsUpassModal,
+    changeBodyStatusUpassModal,
+    changeMessageNstatus
 }
 
 
