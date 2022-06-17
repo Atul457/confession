@@ -4,7 +4,6 @@ import { ShareButtonRoundSquare, ShareBlockStandard } from 'react-custom-share';
 
 const ShareKit = (props) => {
 
-    
     var data = props.postData;
     var origin = window.location.origin;
     // var origin = "https://cloudart.com.au";

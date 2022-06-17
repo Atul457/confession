@@ -10,7 +10,7 @@ const convert = (convertedDate, originalDate) => {
         return convertedDate = "Just now"
     }
 
-    if (convertedDate === "in a few seconds"){
+    if (convertedDate === "in a few seconds") {
         return convertedDate = "A few seconds ago"
     }
 

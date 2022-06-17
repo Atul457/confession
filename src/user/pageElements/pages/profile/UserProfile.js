@@ -11,9 +11,10 @@ import rejectRequest from '../../../../images/friendsAl.png';
 import { fetchData } from '../../../../commonApi';
 import InfiniteScroll from "react-infinite-scroll-component";
 import useCommentsModal from '../../../utilities/useCommentsModal';
+// import logo from '../../../../images/appLogo.svg'
 import RefreshButton from '../../../refreshButton/RefreshButton';
 import AppLogo from '../../components/AppLogo';
-import { useSelector } from 'react-redux';
+// import requestsIcon from '../../../../images/requestsIcon.png';
 
 
 export default function UserProfile() {
@@ -37,8 +38,6 @@ export default function UserProfile() {
 
     //CUSTOM HOOK
     const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal();
-
-    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
 
 
     const [conf, setConf] = useState({
@@ -241,18 +240,12 @@ export default function UserProfile() {
             {!profile.isProfileLoading ?
                 <div className="row">
 
-                    {/* {commentsModalRun &&
+                    {commentsModalRun &&
                         <CommentGotModal
                             handleChanges={handleChanges}
                             state={commentsModal}
                             updateConfessionData={updateConfessionData}
-                            handleCommentsModal={handleCommentsModal} />} */}
-
-                    {commentsModalReducer.visible && <CommentGotModal
-                        handleChanges={handleChanges}
-                        updateConfessionData={updateConfessionData}
-                        state={commentsModal}
-                        handleCommentsModal={handleCommentsModal} />}
+                            handleCommentsModal={handleCommentsModal} />}
 
                     {/* Adds Header Component */}
                     <Header links={true} hideRound={true} />
@@ -262,7 +255,7 @@ export default function UserProfile() {
                             {/* <div className="appLogo">
                                 <img src={logo} alt="" />
                             </div> */}
-                            <AppLogo />
+                            <AppLogo/>
 
                             <div className="middleContLoginReg feedMiddleCont profile">
                                 {/* CATEGORYCONT */}

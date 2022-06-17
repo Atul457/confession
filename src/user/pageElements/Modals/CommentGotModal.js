@@ -14,21 +14,11 @@ import _ from 'lodash';
 import TextareaAutosize from 'react-textarea-autosize';
 import shareKitIcon from "../../../images/shareKitIcon.png";
 import DateConverter from '../../../helpers/DateConverter';
-import { useDispatch, useSelector } from 'react-redux';
-import { closeCModal, resetCModal } from '../../../redux/actions/commentsModal';
-// import { ProfileIcon } from '../../../helpers/getProfileimg';
-import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
-
-import canBeRequested from "../../../images/canBeRequested.svg";
-import alRequested from "../../../images/alRequested.svg";
-import alFriends from "../../../images/alFriends.svg";
-import useShareRequestPopUp from '../../utilities/useShareRequestPopUp';
-import { openCFRModal } from '../../../redux/actions/friendReqModal';
 
 
 
-// export default function CommentGotModal({ state, categories, ...rest }) {
-export default function CommentGotModal({ states, categories, ...rest }) {
+
+export default function CommentGotModal({ state, categories, ...rest }) {
 
     //ON THE BASIS OF THIS ID THE POST DATA RELATED TO THIS MODAL POST WILL BE CHANGED
     const handleCommentsModal = () => {
@@ -42,17 +32,11 @@ export default function CommentGotModal({ states, categories, ...rest }) {
         rest.handleCommentsModal(data);
     }
 
-    
-    const dispatch = useDispatch();
-
     let history = useNavigate();
     let maxChar = 2000;
-    const { state } = useSelector(state => state.commentsModalReducer);
-    // console.log({ state });
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [confessionData, setConfessionData] = useState(false);
-    const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
-    const [sharekit, toggleSharekit, ShareKit, hideShareKit] = useShareKit();
+    const [sharekit, toggleSharekit, ShareKit] = useShareKit();
     const [isWaitingRes, setIsWaitingRes] = useState(true);
     const [isServerErr, setIsServerErr] = useState(false);
     const [isValidPost, setIsValidPost] = useState(true);   //MEANS STATUS IS OK BUT GOT NO RES
@@ -66,8 +50,6 @@ export default function CommentGotModal({ states, categories, ...rest }) {
     const [changeState, setChangeState] = useState(true);
     const [commentsCount, setCommentsCount] = useState(0);
     const [goDownArrow, setGoDownArrow] = useState(false);
-    const ShareReducer = useSelector(store => store.ShareReducer);
-
 
     const preventDoubleClick = (runOrNot) => {
         var elem = document.querySelector('#commentsModalDoComment');
@@ -318,145 +300,12 @@ export default function CommentGotModal({ states, categories, ...rest }) {
         setSharedBy((prevState) => prevState - 1);
     }
 
-    const closeModal = () => {
-        handleCommentsModal();
-        dispatch(resetCModal())
-    }
-
-    const ProfileIcon = (profileImg, isNotFriend) => {
-
-        // isNotFriend :
-        // 0 : SHOW NOTHING
-        // 1 : SHOW REQUEST
-        // 2: SHOW CANCEL 
-        // 3: ALREADY FRIEND
-
-        let profileImage, profileBPlate;
-
-        profileImage = profileImg !== '' ? profileImg : userIcon;
-
-        const getHtml = () => {
-
-            if (isNotFriend === 1) {
-                return <>
-                    <img
-                        src={canBeRequested}
-                        type="button"
-                        alt=""
-                        onClick={openFrReqModalFn_Post}
-                        className='registeredUserIndicator' />
-                    <img
-                        src={profileImg !== '' ? profileImg : userIcon}
-                        className="userAccIcon generated"
-                        onClick={openFrReqModalFn_Post}
-                        alt=""
-                    />
-                </>
-            }
-
-            if (isNotFriend === 2) {
-                return <>
-                    <img
-                        src={alFriends}
-                        onClick={openFrReqModalFn_Post}
-                        type="button"
-                        alt=""
-                        className='registeredUserIndicator' />
-                    <img
-                        src={profileImg !== '' ? profileImg : userIcon}
-                        onClick={openFrReqModalFn_Post}
-                        className="userAccIcon"
-                        alt=""
-                    />
-                </>
-            }
-
-            if (isNotFriend === 3) {
-                return <>
-                    <img
-                        src={alRequested}
-                        type="button"
-                        alt=""
-                        className='registeredUserIndicator' />
-                    <img
-                        src={profileImg !== '' ? profileImg : userIcon}
-                        className="userAccIcon"
-                        alt=""
-                    />
-                </>
-            }
-
-            return <img src={profileImage} className="userAccIcon" alt="" />
-        }
-
-
-        profileBPlate = getHtml();
-        return profileBPlate;
-    }
-
-
-    const _toggleShareReqPopUp = (id, value) => {
-
-        dispatch(togglemenu({
-            id, value,
-        }))
-
-        dispatch(
-            toggleSharekitMenu(false)
-        )
-
-        if (sharekit) {
-            hideShareKit();
-        } else {
-            toggleShareReqPopUp();
-
-            if (shareReqPopUp === true) {
-                hideShareKit();
-            }
-        }
-
-    }
-
-    const _toggleSharekit = (id, value) => {
-        dispatch(
-            toggleSharekitMenu(value)
-        )
-        dispatch(togglemenu({
-            id, value: false
-        }))
-
-        if (shareReqPopUp) {
-            closeShareReqPopUp();
-        }
-        toggleSharekit();
-
-    }
-
-    const closeShareMenu = () => {
-        dispatch(togglemenu({
-            id: null, value: false
-        }))
-    }
-
-
-    const openFrReqModalFn_Post = () => {
-        // console.log({
-        //     cancelReq: state.isNotFriend === 2 ? true : false,
-        //     userId: state.user_id
-        // });
-        dispatch(openCFRModal({
-            cancelReq: state.isNotFriend === 2 ? true : false,
-            userId: state.user_id
-        }))
-        dispatch(closeCModal())
-    }
-
     return (
         <>
-            <Modal show={state.visibility} size="lg" className="commentsModal" onHide={closeModal}>
+            <Modal show={state.visibility} size="lg" className="commentsModal" onHide={handleCommentsModal}>
                 <Modal.Header className='justify-content-between'>
                     <h6>Comments</h6>
-                    <span onClick={closeModal} type="button">
+                    <span onClick={handleCommentsModal} type="button">
                         <i className="fa fa-times" aria-hidden="true"></i>
                     </span>
                 </Modal.Header>
@@ -496,50 +345,16 @@ export default function CommentGotModal({ states, categories, ...rest }) {
                                                 (
                                                     <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0 px-0 px-md-3">
 
-                                                        {/* <span type="button" className={`sharekitdots resetRightModal ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
+                                                        <span type="button" className={`sharekitdots resetRightModal ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
                                                             {sharekit && <ShareKit postData={confessionData} />}
-                                                            <img src={shareKitIcon} className="shareKitImgIcon" />
-                                                        </span> */}
-
-
-                                                        {/* new code  */}
-                                                        <span
-                                                            type="button"
-                                                            className={`sharekitdots resetRightModal ${sharekit === false ? "justify-content-end" : ""}`}
-                                                            onClick={() => _toggleShareReqPopUp(state.postId, ShareReducer.selectedPost?.id === state.postId ? !ShareReducer.selectedPost?.value : true)}>
-                                                            {ShareReducer &&
-                                                                ShareReducer.selectedPost?.id === state.postId &&
-                                                                ShareReducer.sharekitShow &&
-                                                                <ShareKit
-                                                                    postData={{
-                                                                        confession_id: state.postId,
-                                                                        description: state.postedComment,
-                                                                    }}
-                                                                    closeShareReqPopUp={closeShareReqPopUp} />}
-                                                            <img src={shareKitIcon} className="shareKitImgIcon" />
-                                                        </span>
-
-                                                        {ShareReducer &&
-                                                            ShareReducer.selectedPost?.id === state.postId &&
-                                                            ShareReducer.selectedPost?.value === true &&
-                                                            <ShareRequestPopUp
-                                                                toggleSharekit={
-                                                                    () => _toggleSharekit(state.postId, !ShareReducer.sharekitShow?.value)
-                                                                }
-                                                                isNotFriend={state.isNotFriend}
-                                                                openFrReqModalFn={openFrReqModalFn_Post}
-                                                                closeShareMenu={closeShareMenu}
-                                                            />}
-                                                        {/* new code  */}
+                                                            <img src={shareKitIcon} className="shareKitImgIcon" /></span>
 
                                                         {isValidPost ? <div className="postCont modalPostCont">
                                                             {sharekit &&
                                                                 <div className="shareKitSpace"></div>}
                                                             <div className="postContHeader justify-content-start">
                                                                 <span className="userImage userImageFeed">
-                                                                    {/* <img src={confessionData.profile_image === '' ? userIcon : confessionData.profile_image} className="userAccIcon" alt="" /> */}
-
-                                                                    {ProfileIcon(state.profile_image, state.isNotFriend)}
+                                                                    <img src={confessionData.profile_image === '' ? userIcon : confessionData.profile_image} className="userAccIcon" alt="" />
                                                                 </span>
 
                                                                 {confessionData.post_as_anonymous === 1
@@ -636,7 +451,7 @@ export default function CommentGotModal({ states, categories, ...rest }) {
                                                                             End of Comments,
                                                                             <span
                                                                                 className='closeBackButton'
-                                                                                onClick={closeModal}>
+                                                                                onClick={handleCommentsModal}>
                                                                                 Go back
                                                                             </span>
                                                                         </div>

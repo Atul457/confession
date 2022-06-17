@@ -21,10 +21,6 @@ import useFriendReqModal from '../../utilities/useFriendReqModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
 import DateConverter from '../../../helpers/DateConverter';
-// import { useMediaQuery } from 'react-responsive';
-import ShareReqModal from '../Modals/ShareReqModal';
-import { closeModal, commentsModActions, openCModal as openCommentsModalFn } from '../../../redux/actions/commentsModal';
-import { openCFRModal } from '../../../redux/actions/friendReqModal';
 
 
 
@@ -49,10 +45,10 @@ export default function Post(props) {
     // CUSTOM HOOKS
     const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
     const [sharekit, toggleSharekit, ShareKit, hideShareKit] = useShareKit();
-    // const [friendReqState, closeFrReqModalFn, openFrReqModalFn, toggleLoadingFn, FriendReqModal, changeRequested, changeCancelled] = useFriendReqModal();
+    const [friendReqState, closeFrReqModalFn, openFrReqModalFn, toggleLoadingFn, FriendReqModal, changeRequested, changeCancelled] = useFriendReqModal();
 
-    const openCommentsModal = () => {
-        dispatch(openCommentsModalFn({
+    const handleCommentsModal = () => {
+        props.handleCommentsModal({
             "postId": props.postId,
             "viewcount": props.viewcount,
             "visibility": true,
@@ -70,12 +66,7 @@ export default function Post(props) {
             "profile_image": props.profileImg,
             "user_id": props.curid,
             "image": props.imgUrl,
-            "isNotFriend": props.isNotFriend
-        }))
-
-        dispatch(togglemenu({
-            id: null, value: false, isPost: true
-        }))
+        });
     }
 
     const preventDoubleClick = (runOrNot) => {
@@ -160,15 +151,16 @@ export default function Post(props) {
     const _toggleShareReqPopUp = (id, value) => {
 
         dispatch(togglemenu({
-            id, value, "isPost": true
+            id, value
         }))
 
         dispatch(
-            toggleSharekitMenu(false, true)
+            toggleSharekitMenu(false)
         )
 
         if (sharekit) {
             hideShareKit();
+            // dispatch(reset());
         } else {
             toggleShareReqPopUp();
 
@@ -181,10 +173,10 @@ export default function Post(props) {
 
     const _toggleSharekit = (id, value) => {
         dispatch(
-            toggleSharekitMenu(value, true)
+            toggleSharekitMenu(value)
         )
         dispatch(togglemenu({
-            id, value: false, isPost: true
+            id, value: false
         }))
 
         if (shareReqPopUp) {
@@ -194,35 +186,29 @@ export default function Post(props) {
 
     }
 
-    // const _updateCanBeRequested = (action) => {
-    //     closeFrReqModalFn();
-    //     setTimeout(() => {
-    //         props.updateCanBeRequested(props.curid, action);
-    //     }, 300);
-    // }
+    const _updateCanBeRequested = (action) => {
+        closeFrReqModalFn();
+        setTimeout(() => {
+            props.updateCanBeRequested(props.curid, action);
+        }, 300);
+    }
 
     const openFrReqModalFn_Post = () => {
-        dispatch(openCFRModal({
-            cancelReq: props.isNotFriend === 2 ? true : false,
-            userId: props.curid
-        }))
-
-        // openFrReqModalFn();
+        openFrReqModalFn();
         dispatch(togglemenu({
-            id: null, value: false, isPost: true
+            id: null, value: false
         }))
 
         dispatch(
-            toggleSharekitMenu(false, true)
+            toggleSharekitMenu(false)
         )
         toggleShareReqPopUp();
         hideShareKit();
     }
 
-
     const closeShareMenu = () => {
         dispatch(togglemenu({
-            id: null, value: false, isPost: false
+            id: null, value: false
         }))
     }
 
@@ -335,14 +321,13 @@ export default function Post(props) {
                 ShareReducer.selectedPost?.id === props.postId &&
                 ShareReducer.sharekitShow &&
                 <div className="shareKitSpace"></div>}
-
+                
             <span
                 type="button"
                 className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""} ${!props.deletable ? "resetRight" : ""}`}
                 onClick={() => _toggleShareReqPopUp(props.postId, ShareReducer.selectedPost?.id === props.postId ? !ShareReducer.selectedPost?.value : true)}>
                 {ShareReducer &&
                     ShareReducer.selectedPost?.id === props.postId &&
-                    ShareReducer.selectedPost?.isPost === true &&
                     ShareReducer.sharekitShow &&
                     <ShareKit
                         postData={{
@@ -354,11 +339,9 @@ export default function Post(props) {
             </span>
 
             {/* SHARE/REQUEST POPUP */}
-
             {ShareReducer &&
                 ShareReducer.selectedPost?.id === props.postId &&
                 ShareReducer.selectedPost?.value === true &&
-                ShareReducer.selectedPost?.isPost === true &&
                 <ShareRequestPopUp
                     toggleSharekit={
                         () => _toggleSharekit(props.postId, !ShareReducer.sharekitShow?.value)
@@ -375,7 +358,7 @@ export default function Post(props) {
                 2: SHOW CANCEL 
                 3: ALREADY FRIEND
             */}
-            {/* <FriendReqModal
+            <FriendReqModal
                 cancelReq={props.isNotFriend === 2 ? true : false}
                 changeCancelled={changeCancelled}
                 userId={props.curid}
@@ -384,8 +367,7 @@ export default function Post(props) {
                 toggleLoadingFn={toggleLoadingFn}
                 changeRequested={changeRequested}
                 _updateCanBeRequested={_updateCanBeRequested}
-            /> */}
-
+            />
 
 
             {/* IF POST IS DELETABLE THE DELETE ICON WILL BE SHOWN */}
@@ -442,9 +424,11 @@ export default function Post(props) {
 
 
             <div className="postBody">
-                <div className="postedPost mb-2" onClick={openCommentsModal}>
+                <div className="postedPost mb-2" onClick={handleCommentsModal}>
                     <Link className="links text-dark" to="#">
                         <pre className="preToNormal post">
+                            {/* {props.postedComment.substr(0, noOfWords[0])} */}
+                            {/* {props.postedComment.substr(0, noOfWords[0])} */}
                             {props.postedComment}
                         </pre>
                         {
@@ -454,6 +438,9 @@ export default function Post(props) {
                                 <>
                                     {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} className="viewMoreBtn pl-1">view more</span>
                                 </> : ''
+                            // <>
+                            //     {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>...</span>}<span toberedirectedto={props.postId} className="viewMoreBtn pl-1">view more</span>
+                            // </> : ''
                         }
                     </Link>
                 </div>
@@ -500,7 +487,7 @@ export default function Post(props) {
             </div>
 
 
-            <div className="postFoot d-flex justify-content-start" onClick={openCommentsModal}>
+            <div className="postFoot d-flex justify-content-start" onClick={handleCommentsModal}>
                 {/* <Link to={`/confession/${props.postId}`} className="links"> */}
                 <div className="totalComments underlineShareCount pr-2">
                     <span className="sharedCount">{props.viewcount ? props.viewcount : 0}</span> Views

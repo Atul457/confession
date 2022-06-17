@@ -22,7 +22,6 @@ import DeleteConfessionModal from '../../Modals/DeleteConfessionModal';
 import editCommentIcon from '../../../../images/editCommentIcon.png';
 import PofileModal from '../../Modals/PofileModal';
 import AppLogo from '../../components/AppLogo';
-import { useSelector } from 'react-redux';
 
 
 const deletePostModalIniVal = { visible: false, data: { postId: null, index: null } };
@@ -46,7 +45,6 @@ export default function Profile() {
     let maxRequestsToshow = 5;
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
-    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const [runOrNot, setRunOrNot] = useState(false);
     // const [enterName, setEnterName] = useState(false);
     const [displayName, setDisplayName] = useState(false);
@@ -232,9 +230,8 @@ export default function Profile() {
 
     // HANDLES SCROLL TO TOP BUTTON
     useEffect(() => {
-        let ref = document.getElementById("postsWrapper");
-        ref.addEventListener("scroll", () => {
-            let scroll = document.querySelector("#postsWrapper").scrollTop;
+        document.addEventListener("scroll", () => {
+            let scroll = document.querySelector("html").scrollTop;
             if (scroll > 1000) {
                 setGoDownArrow(true);
             } else {
@@ -246,8 +243,7 @@ export default function Profile() {
 
     //SCROLLS TO BOTTOM
     const goUp = () => {
-        let ref = document.getElementById("postsWrapper");
-        ref.scrollTo({ top: "0px", behavior: "smooth" });
+        window.scrollTo({ top: "0px", behavior: "smooth" });
     }
 
 
@@ -479,15 +475,10 @@ export default function Profile() {
                 <div className="row">
 
                     {/* POPUP MODAL TO SHOW COMMENTS */}
-                    {/* {commentsModalRun && <CommentGotModal
+                    {commentsModalRun && <CommentGotModal
                         handleChanges={handleChanges}
                         state={commentsModal}
                         updateConfessionData={updateConfessionData}
-                        handleCommentsModal={handleCommentsModal} />} */}
-                    {commentsModalReducer.visible && <CommentGotModal
-                        handleChanges={handleChanges}
-                        updateConfessionData={updateConfessionData}
-                        state={commentsModal}
                         handleCommentsModal={handleCommentsModal} />}
 
                     {/* DELETECONFESSIONMODAL */}
@@ -813,7 +804,7 @@ export default function Profile() {
                                                         )}
                                                     </InfiniteScroll>
 
-                                                    : <div className="profile noConfessions endListMessage">You haven't created any post</div>)
+                                                    : <div className="noConfessions endListMessage">You haven't created any post</div>)
                                                     :
                                                     (<div className="text-center">
                                                         <div className="spinner-border pColor mt-4 text-center" role="status">

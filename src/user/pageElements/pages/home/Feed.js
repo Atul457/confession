@@ -16,13 +16,9 @@ import useCommentsModal from "../../../utilities/useCommentsModal";
 import RefreshButton from '../../../refreshButton/RefreshButton';
 import TextareaAutosize from 'react-textarea-autosize';
 import useFeaturesModal from '../../../utilities/useFeaturesModal';
-import AdMob from '../../components/AdMob';
+// import AdMob from '../../components/AdMob';
 import AppLogo from '../../components/AppLogo';
-import { commentsModActions } from '../../../../redux/actions/commentsModal';
-import { useDispatch, useSelector } from 'react-redux';
-import { FriendReqModal } from '../../Modals/FriendReqModal';
-import { changeCancelled, changeRequested, closeFRModal, toggleLoadingFn } from '../../../../redux/actions/friendReqModal';
-
+import AdSense_ from '../../components/AdSense';
 
 
 export default function Feed(props) {
@@ -37,13 +33,10 @@ export default function Feed(props) {
 
 
     // SETS INITIAL CATEGORY ON WHICH THE API WILL GET HIT TO GET CONFESSIONS
-
     let noOfChar = 2000;
     // const [changes, setChanges] = useState(false);
     const [pageNo, setPageNo] = useState(1);
     const [confCount, setConfCount] = useState(0);
-    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
-    const friendReqModalReducer = useSelector(state => state.friendReqModalReducer);
     const [AC2S, setAC2] = useState(() => {
         if (actCategory.state)
             return actCategory.state.active;
@@ -80,7 +73,7 @@ export default function Feed(props) {
         setPrivacyModal({ ...privacyModal, visible: false });
         localStorage.setItem("privacyAccepted", 1);
     }
-
+    
 
     useEffect(() => {
         if (!auth()) {
@@ -162,6 +155,13 @@ export default function Feed(props) {
         setPageNo(1);
         setAC2(activeCat);
         setActiveCategory(`${activeCat}`);
+    }
+
+    //DELAY
+    const openFeaturesDelay = () => {
+        setTimeout(() => {
+            openFeatures();
+        }, 25 * 1000)
     }
 
 
@@ -382,12 +382,7 @@ export default function Feed(props) {
 
     return (
         <div className="container-fluid">
-            {/* {commentsModalRun && <CommentGotModal
-                handleChanges={handleChanges}
-                updateConfessionData={updateConfessionData}
-                state={commentsModal}
-                handleCommentsModal={handleCommentsModal} />} */}
-            {commentsModalReducer.visible && <CommentGotModal
+            {commentsModalRun && <CommentGotModal
                 handleChanges={handleChanges}
                 updateConfessionData={updateConfessionData}
                 state={commentsModal}
@@ -597,7 +592,8 @@ export default function Feed(props) {
 
                                                                 {((index + 1) % 10 === 0) &&
                                                                     <div className="mb-4">
-                                                                        <AdMob mainContId={`adIndex${index}`} setAddSlots={setAdSlots} slots={adSlots} />
+                                                                        <AdSense_/>
+                                                                        {/* <AdMob mainContId={`adIndex${index}`} setAddSlots={setAdSlots} slots={adSlots} /> */}
                                                                     </div>
                                                                 }
                                                             </>)
@@ -639,7 +635,7 @@ export default function Feed(props) {
                     privacyModal={privacyModal}
                     acceptPrivacy={acceptPrivacy}
                     handlePrivacyModal={handlePrivacyModal}
-                    openFeatures={openFeatures}
+                    openFeatures={openFeaturesDelay}
                 />
                 {/* PRIVACY MODAL */}
 
@@ -656,19 +652,6 @@ export default function Feed(props) {
                 {commentsModal.visibility === false && changes && <RefreshButton />}
 
             </div>
-
-            {/* {console.log(friendReqModalReducer)} */}
-
-            {friendReqModalReducer.visible === true &&
-                <FriendReqModal
-                    cancelReq={props.isNotFriend === 2 ? true : false}
-                    changeCancelled={changeCancelled}
-                    userId={props.curid}
-                    closeFrReqModalFn={closeFRModal}
-                    toggleLoadingFn={toggleLoadingFn}
-                    changeRequested={changeRequested}
-                    _updateCanBeRequested={updateCanBeRequested}
-                />}
         </div>
     );
 }

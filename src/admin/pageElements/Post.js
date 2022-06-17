@@ -13,6 +13,8 @@ import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../helpers/DateConverter';
 
 
+
+
 export default function Post(props) {
 
     let maxChar = 2000;
@@ -147,10 +149,11 @@ export default function Post(props) {
         <div className="postCont admin" index={props.index}>
 
             <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
-                {sharekit && <ShareKit postData={{
-                    confession_id: props.postId,
-                    description: props.postedComment,
-                }} />}
+                {sharekit && <ShareKit
+                    postData={{
+                        confession_id: props.postId,
+                        description: props.postedComment,
+                    }} />}
                 <i className="fa fa-share-alt" aria-hidden="true"></i>
             </span>
 
@@ -162,10 +165,8 @@ export default function Post(props) {
                     </div>
                     :
                     "Delete"} */}
-
             <i className="fa fa-trash pr-3 deletePostIcon" type="button" aria-hidden="true" onClick={deleteConfessionFunc}></i>
             {/* </span> */}
-
             {sharekit &&
                 <div className="shareKitSpace"></div>}
 

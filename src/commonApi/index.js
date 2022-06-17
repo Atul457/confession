@@ -1,8 +1,8 @@
 import axios from "axios";
 
 
-let live = "https://cloudart.com.au:3235/api/";
-// let live = "https://apis.thetalkplace.com:3235/api/";
+// let live = "https://cloudart.com.au:3235/api/";
+let live = "https://apis.thetalkplace.com:3235/api/";
 
 export const fetchData = async (props) => {
 

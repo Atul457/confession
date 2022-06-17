@@ -31,26 +31,23 @@ import CookiePolicy from './user/pageElements/pages/cookie';
 import Recapv3 from './user/pageElements/components/Recapv3';
 import AuthCheck from "./user/behindScenes/Auth/AuthCheck"
 import ReactPixel from 'react-facebook-pixel';
-import ProtectedRoute from './user/ProtectedRoute';
-import getIP from './helpers/getIP';
-import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
+import ProtectedRoute from "./user/ProtectedRoute/index"
 // import AdSense_ from './user/pageElements/components/AdSense';
 
 
+
 //GOOGLE TAG MANAGER
-const tagManagerArgs = { gtmId: 'GTM-WP65TWC' }  //DEV
-// const tagManagerArgs = { gtmId: 'GTM-KKNFBVT' }  //LIVE
+// const tagManagerArgs = { gtmId: 'GTM-WP65TWC' }  //DEV
+const tagManagerArgs = { gtmId: 'GTM-KKNFBVT' }  //LIVE
 TagManager.initialize(tagManagerArgs);
 
 //META-PIXEL	
-// const options = { autoConfig: true, debug: false, };
-// ReactPixel.init('1638738963149766', null, options);
-// ReactPixel.fbq('track', 'PageView');
+const options = { autoConfig: true, debug: false, };
+ReactPixel.init('1638738963149766', null, options);
+ReactPixel.fbq('track', 'PageView');
 
-getIP()
 
 function App() {
-
   window.dataLayer.push({
     event: 'pageview'
   });
@@ -131,6 +128,7 @@ function App() {
     loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=6LcFvPEfAAAAAL7pDU8PGSIvTJfysBDrXlBRMWgt`, function () {
       console.log("V3 loaded!");
     })
+
     //END OF LOAD RECAPTCHA V3
 
   }, [])
@@ -174,6 +172,11 @@ function App() {
             {/* <Route path="admob" element={<AdMob />}>
             </Route> */}
             {/* ADMOB PAGE */}
+
+            {/* admob PAGE */}
+            {/* <Route path="add" element={<AdSense_ />}>
+            </Route> */}
+            {/* admob PAGE */}
 
 
             {/* FBLOGIN PAGE */}
@@ -245,12 +248,6 @@ function App() {
             {/* REPORT PAGE */}
 
 
-            {/* admob PAGE */}
-            {/* <Route path="add" element={<AdSense_ />}>
-            </Route> */}
-            {/* admob PAGE */}
-
-
             {/* CREATEPOST PAGE */}
             <Route path="createPost" element={<CreatePost categories={categories} />}>
             </Route>
@@ -267,12 +264,6 @@ function App() {
             <Route path="verifyemail/:userId/:token" element={<VerifyEmail />}>
             </Route>
             {/* VERIFYEMAIL PAGE */}
-
-
-            {/* RESETPASSWORD PAGE */}
-            <Route path="resetpassword/:userId/:token" element={<ResetPassword />}>
-            </Route>
-            {/* RESETPASSWORD PAGE */}
 
 
             {/* REGISTER PAGE */}

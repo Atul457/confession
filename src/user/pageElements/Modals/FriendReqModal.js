@@ -1,19 +1,10 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../commonApi';
 import requestModalImg from '../../../images/requestModalImg.png';
-import { reOpenCModal, updateCModal } from '../../../redux/actions/commentsModal';
-import { changeCancelled, changeRequested, closeFRModal } from '../../../redux/actions/friendReqModal';
 import auth from '../../behindScenes/Auth/AuthCheck';
 
-
-export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _updateCanBeRequested, cancelReq, chaneCancelled }) => {
-
-    const friendReqState = useSelector(state => state.friendReqModalReducer)
-    const commentsModalReducer = useSelector(state => state.commentsModalReducer)
-    const dispatch = useDispatch();
-
+export default function FriendReqModal({ userId, friendReqState, closeFrReqModalFn, toggleLoadingFn, changeRequested, _updateCanBeRequested, cancelReq, changeCancelled }) {
 
     const sendFriendRequest = async (is_cancelled = 0) => {
 
@@ -25,7 +16,7 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
         }
 
         let data = {
-            friend_id: friendReqState.data.userId,
+            friend_id: userId,
             is_cancelled: is_cancelled,
         }
 
@@ -38,12 +29,13 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
             url: "sendfriendrequest"
         }
 
-        // console.log(obj);
+        console.log(obj);
+
 
         try {
             const res = await fetchData(obj)
             if (res.data.status === true) {
-                is_cancelled === 0 ? dispatch(changeRequested()) : dispatch(changeCancelled());
+                is_cancelled === 0 ? changeRequested() : changeCancelled();
             } else {
                 console.log(res);
             }
@@ -53,30 +45,11 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
     }
 
     const sendRequest = () => {
-        _updateCanBeRequested(friendReqState.data.userId, 2);
-        dispatch(closeFRModal())
-        reOpenCommentsModal(2);
+        _updateCanBeRequested(2);
     }
 
     const cancelRequest = () => {
-        _updateCanBeRequested(friendReqState.data.userId, 1);
-        dispatch(closeFRModal())
-        reOpenCommentsModal(1);
-    }
-
-    const closeModal = () => {
-        dispatch(closeFRModal())
-        reOpenCommentsModal();
-    }
-
-    const reOpenCommentsModal = (isNotFriend) => {
-        if (isNotFriend) {
-            dispatch(updateCModal(isNotFriend))
-        }
-
-        if (commentsModalReducer.state?.postId && commentsModalReducer.state?.postId !== null) {
-            dispatch(reOpenCModal())
-        }
+        _updateCanBeRequested(1);
     }
 
     return (
@@ -86,13 +59,12 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
                 TRUE : SHOW CANCEL MODAL
                 FALSE : SHOW REQUEST MODAL
             */}
-
-            {friendReqState?.data?.cancelReq === false
+            {cancelReq === false
                 ?
-                <Modal show={friendReqState.visible} onHide={closeModal} size="md">
+                <Modal show={friendReqState.visible} onHide={closeFrReqModalFn} size="md">
                     <Modal.Header>
                         <h6>Send a Friend Request</h6>
-                        <span onClick={closeModal} type="button">
+                        <span onClick={closeFrReqModalFn} type="button">
                             <i className="fa fa-times" aria-hidden="true"></i>
                         </span>
                     </Modal.Header>
@@ -124,7 +96,7 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
                                 <Button
                                     className="reqModalFootBtns cancel"
                                     variant="primary"
-                                    onClick={closeModal}
+                                    onClick={closeFrReqModalFn}
                                 >
                                     Cancel
                                 </Button>
@@ -144,10 +116,10 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
 
                 :
 
-                <Modal show={friendReqState.visible} onHide={closeModal} size="md">
+                <Modal show={friendReqState.visible} onHide={closeFrReqModalFn} size="md">
                     <Modal.Header>
                         <h6>Cancel Request</h6>
-                        <span onClick={closeModal} type="button">
+                        <span onClick={closeFrReqModalFn} type="button">
                             <i className="fa fa-times" aria-hidden="true"></i>
                         </span>
                     </Modal.Header>
@@ -179,7 +151,7 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
                                 <Button
                                     className="reqModalFootBtns cancel"
                                     variant="primary"
-                                    onClick={closeModal}
+                                    onClick={closeFrReqModalFn}
                                 >
                                     No
                                 </Button>
