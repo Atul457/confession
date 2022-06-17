@@ -314,6 +314,7 @@ export default function CommentGotModal({ categories, ...rest }) {
     }
 
     const closeModal = () => {
+        // Working
         let upvoteDownvoteData = {}, viewData, likeDislikeCheck, isViewedCheck, data;
         // CHECKS CHANGES IN UPVOTE AND DOWNVOTE
         likeDislikeCheck = state.is_liked_prev === 0 && state.is_liked_prev !== state.is_liked;
