@@ -11,7 +11,6 @@ import { EVerifyModal } from '../../../redux/actions/everify';
 
 export default function VerifyEmailModal(props) {
 
-    // console.log("redirect");
     const verifyEState = useSelector(store => store.VerifyEmail);
     const dispatch = useDispatch();
 

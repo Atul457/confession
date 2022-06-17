@@ -10,15 +10,12 @@ const AdSense_ = () => {
     }, [])
 
     return (
-        <div className="addWrapper">
-            <ins className="adsbygoogle"
-                style={{ "display": "block" }}
-                data-ad-client="ca-pub-7031631451622714"
-                data-ad-slot="6867532774"
-                data-ad-format="auto"
-                data-full-width-responsive="true">
-            </ins>
-        </div>
+        <ins className="adsbygoogle"
+            style={{ "display": "block" }}
+            data-ad-client="ca-pub-7031631451622714"
+            data-ad-slot="6867532774"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
     )
 }
 

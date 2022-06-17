@@ -30,7 +30,7 @@ const PofileModal = (props) => {
                                     key={`${index}${requester.image}${requester.name}${requester.no_of_confessions}`}
                                     imgUrl={requester.image === '' ? userIcon : requester.image} requesterName={requester.name}
                                     requestersTotalSharedConf={requester.no_of_confessions} />)
-                        }) : <div className="endListMessage pb-0">No Requests to show</div>)}
+                        }) : null)}
 
                         {(props.myFriends.isError ?
                             (<div className="alert alert-danger" role="alert">

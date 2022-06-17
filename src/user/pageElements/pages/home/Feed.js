@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import Post from '../../components/Post';
-// import logo from '../../../../images/appLogo.svg'
 import Category from '../../components/Category';
-// import ReCAPTCHA from 'react-google-recaptcha';
 import manWithHorn from '../../../../images/manWithHorn.png';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import downArrowIcon from '../../../../images/downArrow.png';
@@ -16,9 +14,13 @@ import useCommentsModal from "../../../utilities/useCommentsModal";
 import RefreshButton from '../../../refreshButton/RefreshButton';
 import TextareaAutosize from 'react-textarea-autosize';
 import useFeaturesModal from '../../../utilities/useFeaturesModal';
-// import AdMob from '../../components/AdMob';
+import AdMob from '../../components/AdMob';
 import AppLogo from '../../components/AppLogo';
-import AdSense_ from '../../components/AdSense';
+import { useDispatch, useSelector } from 'react-redux';
+import { FriendReqModal } from '../../Modals/FriendReqModal';
+import postAlertActionCreators from '../../../../redux/actions/postAlert';
+import PostAlertModal from '../../Modals/PostAlertModal';
+import { changeCancelled, changeRequested, closeFRModal, toggleLoadingFn } from '../../../../redux/actions/friendReqModal';
 
 
 export default function Feed(props) {
@@ -33,10 +35,14 @@ export default function Feed(props) {
 
 
     // SETS INITIAL CATEGORY ON WHICH THE API WILL GET HIT TO GET CONFESSIONS
+
     let noOfChar = 2000;
-    // const [changes, setChanges] = useState(false);
     const [pageNo, setPageNo] = useState(1);
+    const dispatch = useDispatch();
     const [confCount, setConfCount] = useState(0);
+    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
+    const friendReqModalReducer = useSelector(state => state.friendReqModalReducer);
+    const postAlertReducer = useSelector(state => state.postAlertReducer);
     const [AC2S, setAC2] = useState(() => {
         if (actCategory.state)
             return actCategory.state.active;
@@ -51,7 +57,6 @@ export default function Feed(props) {
     const [description, setDescription] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [errorOrSuccess, setErrorOrSuccess] = useState(true);
-    // const [recaptchaKey, setRecaptchaKey] = useState("");
     const [selectedCat, setSelectedCat] = useState("");
     const [categoryShow, setCategoryShow] = useState(false);
     const recaptchaRef = useRef(null);
@@ -73,7 +78,7 @@ export default function Feed(props) {
         setPrivacyModal({ ...privacyModal, visible: false });
         localStorage.setItem("privacyAccepted", 1);
     }
-    
+
 
     useEffect(() => {
         if (!auth()) {
@@ -157,13 +162,6 @@ export default function Feed(props) {
         setActiveCategory(`${activeCat}`);
     }
 
-    //DELAY
-    const openFeaturesDelay = () => {
-        setTimeout(() => {
-            openFeatures();
-        }, 25 * 1000)
-    }
-
 
     //PREVENTS DOUBLE POST
     const preventDoubleClick = (runOrNot) => {
@@ -174,15 +172,16 @@ export default function Feed(props) {
 
     //POSTS CONFESSION FROM FEED PAGE
     const postConfession = async () => {
-
-
+        console.log("postConfession");
+        
+        
         let postConfessionArr,
             token = '',
             loggedInUserData,
             post_as_anonymous = 1,
             feedDescErrorCont = document.getElementById("feedDescErrorCont"),
             feedPostConfResponseCont = document.getElementById("feedPostConfResponseCont");
-
+            
         let recapToken = ""
 
         window.grecaptcha.ready(() => {
@@ -193,6 +192,7 @@ export default function Feed(props) {
         });
 
         const executePostConfession = async () => {
+            console.log("postConfession");
 
             if (description.trim() !== '') {
 
@@ -204,7 +204,6 @@ export default function Feed(props) {
                     loggedInUserData = JSON.parse(loggedInUserData);
                     post_as_anonymous = loggedInUserData.profile.post_as_anonymous;
                     token = loggedInUserData.token;
-                    // setRecaptchaKey("");
                     recapToken = "";
                 }
                 else if (recapToken === '') {
@@ -217,6 +216,17 @@ export default function Feed(props) {
                     feedDescErrorCont.innerText = "Please select a category";
                     preventDoubleClick(false);
                     return false;
+                }
+
+                if (auth() && post_as_anonymous === 0) {
+                    console.log({postanyway : postAlertReducer.postAnyway, "insideiffeed" : true});
+                    if (postAlertReducer.postAnyway === false) {
+                        preventDoubleClick(false);
+                        let data = { visible: true };
+                        dispatch(postAlertActionCreators.openModal(data));
+                        console.log({ state: postAlertReducer, action: "openmodal" });
+                        return
+                    }
                 }
 
                 postConfessionArr = {
@@ -252,18 +262,7 @@ export default function Feed(props) {
                         setErrorOrSuccess(true);
                         setDescription("");
                         setSelectedCat("");
-                        // if (!auth()) {
-                        //     recaptchaRef.current.reset();
-                        // }
-                        // setRecaptchaKey("");
-                        // if (selectedCat === activeCategory.toString()) {
                         getConfessions(false, activeCategory, 1);
-                        // console.log({selectedCat,activeCategory})
-                        // }
-
-                        // else {
-                        //     updateActiveCategory(selectedCat);
-                        // }
                         feedPostConfResponseCont.innerHTML = response.data.message;
                     } else {
                         setErrorOrSuccess(false);
@@ -289,7 +288,11 @@ export default function Feed(props) {
                     selectRef.selectedIndex = 0;
                     feedPostConfResponseCont.innerHTML = "Server Error, Please try again after some time...";
                 }
-
+                
+                if(postAlertReducer.visible === true)
+                {
+                    dispatch(postAlertActionCreators.closeModal())
+                }
                 preventDoubleClick(false);
             }
             else {
@@ -344,7 +347,7 @@ export default function Feed(props) {
         updatedConfessionNode = {
             ...updatedConfessionNode,
             "no_of_comments": shared,
-            "viewcount": _viewcount
+            "viewcount": _viewcount,
         };
         updatedConfessionArray[index] = updatedConfessionNode;
         setConfessions([...updatedConfessionArray]);
@@ -365,6 +368,19 @@ export default function Feed(props) {
         setConfessions([...updatedConfessionArray]);
     }
 
+    const updatedConfessions = (index, data) => {
+        let updatedConfessionArray;
+        let updatedConfessionNode;
+        updatedConfessionArray = [...confessions];
+        updatedConfessionNode = updatedConfessionArray[index];
+        updatedConfessionNode = {
+            ...updatedConfessionNode,
+            ...data
+        };
+        updatedConfessionArray[index] = updatedConfessionNode;
+        setConfessions([...updatedConfessionArray]);
+    }
+
 
     //SCROLLS TO BOTTOM
     const goUp = () => {
@@ -380,11 +396,20 @@ export default function Feed(props) {
         }
     }
 
+    //DELAY
+    const openFeaturesDelay = () => {
+        setTimeout(() => {
+            openFeatures();
+        }, 25 * 1000)
+    }
+
+
     return (
         <div className="container-fluid">
-            {commentsModalRun && <CommentGotModal
+            {commentsModalReducer.visible && <CommentGotModal
                 handleChanges={handleChanges}
                 updateConfessionData={updateConfessionData}
+                updatedConfessions={updatedConfessions}
                 state={commentsModal}
                 handleCommentsModal={handleCommentsModal} />}
             <div className="row outerContWrapper">
@@ -393,10 +418,6 @@ export default function Feed(props) {
 
                 <div className="leftColumn leftColumnFeed">
                     <div className="leftColumnWrapper">
-                        {/* <div className="appLogo">
-                            <img src={logo} alt="" />
-                            <span className='betaLogo'>BETA</span>
-                        </div> */}
                         <AppLogo />
 
                         <div className="middleContLoginReg feedMiddleCont">
@@ -414,7 +435,6 @@ export default function Feed(props) {
                     <div className="rightMainFormCont rightMainFormContFeed p-0">
                         <div className="preventHeader">preventHead</div>
                         <div className="w-100 py-md-4 p-0 p-md-3 preventFooter">
-                            {/* <div className="container py-md-4 p-0 p-md-3 preventFooter"> */}
                             <div className="row forPosSticky">
 
                                 {/* MIDDLECONTAINER */}
@@ -428,24 +448,6 @@ export default function Feed(props) {
                                                     <img src={manWithHorn} alt="" />
                                                 </span>
                                                 <div className="doCommentTitle col-12 col-md-9">
-                                                    {/* <div>Confess or share your thoughts anonymously</div>
-                                                    <ul className="bulletsOnFeed w-100 pl-3">
-                                                        <li>It's simple; say what's on your mind, choose a category - and if you're not a robot, Post. Done!</li>
-
-                                                        <li>If you want to get notifications when someone responds, log in. You can still POST ANONYMOUSLY!</li>
-
-                                                        <li>If you want to respond and help someone, please log in. Yes, you can still POST ANONYMOUSLY!</li>
-
-                                                        <li>If you like this app, please let others know about it! Thank you!</li>
-                                                        
-
-                                                        <li>You can toggle anonymous and not anonymous from following 2 sections:
-                                                            <ol className='toggleAnonymousVerbiage' type="a">
-                                                                <li>Profile page</li>
-                                                                <li>While making post in confess/share tab!</li>
-                                                            </ol>
-                                                        </li>
-                                                    </ul> */}
                                                     <div>What's The Talk Place About?</div>
                                                     <div className='mainParafeed'>
                                                         It's a safe space to share your thoughts ANONYMOUSLY.<br /> It's our contribution to mental health and the fight against the growing rate of depression.<br /> To get stuff off your chest, just select a Category and POST.<br />
@@ -516,11 +518,6 @@ export default function Feed(props) {
                                                         </div>
                                                     </div>
 
-                                                    {/* {!auth() && <ReCAPTCHA
-                                                        ref={recaptchaRef}
-                                                        sitekey="6LfOYpAeAAAAACg8L8vo8s7U1keZJwF_xrlfN-o9"
-                                                        onChange={verifyRecaptcha}
-                                                    />} */}
                                                 </div>
 
                                                 <div className={`responseCont mb-2 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="feedPostConfResponseCont"></div>
@@ -573,6 +570,7 @@ export default function Feed(props) {
                                                             return (<>
                                                                 <Post
                                                                     index={index}
+                                                                    is_viewed={post.is_viewed}
                                                                     isRegistered={post.isRegistered}
                                                                     updateCanBeRequested={updateCanBeRequested}
                                                                     viewcount={post.viewcount}
@@ -586,14 +584,17 @@ export default function Feed(props) {
                                                                     imgUrl={post.image === '' ? '' : post.image}
                                                                     userName={post.created_by}
                                                                     category={post.category_name}
+                                                                    updatedConfessions={updatedConfessions}
                                                                     postedComment={post.description}
                                                                     isNotFriend={post.isNotFriend}
+                                                                    like={post.like}
+                                                                    dislike={post.dislike}
+                                                                    is_liked={post.is_liked}
                                                                     sharedBy={post.no_of_comments} />
 
                                                                 {((index + 1) % 10 === 0) &&
                                                                     <div className="mb-4">
-                                                                        <AdSense_/>
-                                                                        {/* <AdMob mainContId={`adIndex${index}`} setAddSlots={setAdSlots} slots={adSlots} /> */}
+                                                                        <AdMob mainContId={`adIndex${index}`} setAddSlots={setAdSlots} slots={adSlots} />
                                                                     </div>
                                                                 }
                                                             </>)
@@ -652,6 +653,22 @@ export default function Feed(props) {
                 {commentsModal.visibility === false && changes && <RefreshButton />}
 
             </div>
+
+            {friendReqModalReducer.visible === true &&
+                <FriendReqModal
+                    cancelReq={props.isNotFriend === 2 ? true : false}
+                    changeCancelled={changeCancelled}
+                    userId={props.curid}
+                    closeFrReqModalFn={closeFRModal}
+                    toggleLoadingFn={toggleLoadingFn}
+                    changeRequested={changeRequested}
+                    _updateCanBeRequested={updateCanBeRequested}
+                />}
+
+            {postAlertReducer.visible === true &&
+                <PostAlertModal
+                    postConfession={postConfession}
+                />}
         </div>
     );
 }

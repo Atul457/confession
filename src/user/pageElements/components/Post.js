@@ -1,6 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import forwardIcon from '../../../images/forwardIcon.svg';
+import upvote from '../../../images/upvote.svg';
+import downvote from '../../../images/downvote.svg';
+import downvoted from '../../../images/downvoted.svg';
+import upvoted from '../../../images/upvoted.svg';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/SetAuth';
@@ -17,10 +21,11 @@ import canBeRequested from "../../../images/canBeRequested.svg";
 import alRequested from "../../../images/alRequested.svg";
 import alFriends from "../../../images/alFriends.svg";
 import useShareRequestPopUp from '../../utilities/useShareRequestPopUp';
-import useFriendReqModal from '../../utilities/useFriendReqModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
 import DateConverter from '../../../helpers/DateConverter';
+import { openCModal as openCommentsModalFn } from '../../../redux/actions/commentsModal';
+import { openCFRModal } from '../../../redux/actions/friendReqModal';
 
 
 
@@ -32,10 +37,6 @@ export default function Post(props) {
     const dispatch = useDispatch();
     const ShareReducer = useSelector(store => store.ShareReducer);
     const [requiredError, setRequiredError] = useState('');
-    const [confessionData] = useState({
-        confession_id: props.postId,
-        description: props.postedComment,
-    });
     const authenticated = useState(auth());
     const noOfWords = useState(200);    //IN POST AFTER THESE MUCH CHARACTERS SHOWS VIEWMORE BUTTON
     const [comment, setComment] = useState('');
@@ -45,10 +46,9 @@ export default function Post(props) {
     // CUSTOM HOOKS
     const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
     const [sharekit, toggleSharekit, ShareKit, hideShareKit] = useShareKit();
-    const [friendReqState, closeFrReqModalFn, openFrReqModalFn, toggleLoadingFn, FriendReqModal, changeRequested, changeCancelled] = useFriendReqModal();
 
-    const handleCommentsModal = () => {
-        props.handleCommentsModal({
+    const openCommentsModal = () => {
+        dispatch(openCommentsModalFn({
             "postId": props.postId,
             "viewcount": props.viewcount,
             "visibility": true,
@@ -66,7 +66,19 @@ export default function Post(props) {
             "profile_image": props.profileImg,
             "user_id": props.curid,
             "image": props.imgUrl,
-        });
+            "isNotFriend": props.isNotFriend,
+            "is_viewed": props.is_viewed,
+            "updatedConfessions": props.updatedConfessions,
+            "like": props.like,
+            "dislike": props.dislike,
+            "is_liked": props.is_liked,
+            "is_liked_prev": props.is_liked,
+            "updateConfessionData": updateConfessionData
+        }))
+
+        dispatch(togglemenu({
+            id: null, value: false, isPost: true
+        }))
     }
 
     const preventDoubleClick = (runOrNot) => {
@@ -151,16 +163,15 @@ export default function Post(props) {
     const _toggleShareReqPopUp = (id, value) => {
 
         dispatch(togglemenu({
-            id, value
+            id, value, "isPost": true
         }))
 
         dispatch(
-            toggleSharekitMenu(false)
+            toggleSharekitMenu(false, true)
         )
 
         if (sharekit) {
             hideShareKit();
-            // dispatch(reset());
         } else {
             toggleShareReqPopUp();
 
@@ -173,42 +184,40 @@ export default function Post(props) {
 
     const _toggleSharekit = (id, value) => {
         dispatch(
-            toggleSharekitMenu(value)
+            toggleSharekitMenu(value, true)
         )
         dispatch(togglemenu({
-            id, value: false
+            id, value: false, isPost: true
         }))
 
         if (shareReqPopUp) {
             closeShareReqPopUp();
         }
         toggleSharekit();
-
-    }
-
-    const _updateCanBeRequested = (action) => {
-        closeFrReqModalFn();
-        setTimeout(() => {
-            props.updateCanBeRequested(props.curid, action);
-        }, 300);
     }
 
     const openFrReqModalFn_Post = () => {
-        openFrReqModalFn();
+        dispatch(openCFRModal({
+            cancelReq: props.isNotFriend === 2 ? true : false,
+            userId: props.curid
+        }))
+
+        // openFrReqModalFn();
         dispatch(togglemenu({
-            id: null, value: false
+            id: null, value: false, isPost: true
         }))
 
         dispatch(
-            toggleSharekitMenu(false)
+            toggleSharekitMenu(false, true)
         )
         toggleShareReqPopUp();
         hideShareKit();
     }
 
+
     const closeShareMenu = () => {
         dispatch(togglemenu({
-            id: null, value: false
+            id: null, value: false, isPost: false
         }))
     }
 
@@ -314,6 +323,49 @@ export default function Post(props) {
     }
 
 
+    const upvoteOrDownvote = async (isLiked) => {
+
+        let is_liked, ip_address, check_ip, token = '', data;
+        is_liked = isLiked ? 1 : 2;
+        ip_address = localStorage.getItem("ip")
+        check_ip = ip_address.split(".").length
+        if (auth()) {
+            token = localStorage.getItem("userDetails");
+            token = JSON.parse(token).token;
+        }
+
+        if (check_ip === 4) {
+            let obj = {
+                data: { is_liked, ip_address },
+                token: token,
+                method: "post",
+                url: `likedislike/${props.postId}`
+            }
+            try {
+                const res = await fetchData(obj)
+                if (res.data.status === true) {
+                    data = {
+                        [isLiked ? "like" : "dislike"]: isLiked ? props.like + 1 : props.dislike + 1,
+                        is_liked
+                    }
+                    updateConfessionData(props.index, data)
+                } else {
+                    console.log(res);
+                }
+            } catch (error) {
+                console.log(error);
+                console.log("Some error occured");
+            }
+        } else {
+            console.log("Invalid ip");
+        }
+    }
+
+    const updateConfessionData = (index, data) => {
+        props.updatedConfessions(index, data)
+    }
+
+
     return (
         <div className="postCont" index={props.index}>
 
@@ -321,13 +373,14 @@ export default function Post(props) {
                 ShareReducer.selectedPost?.id === props.postId &&
                 ShareReducer.sharekitShow &&
                 <div className="shareKitSpace"></div>}
-                
+
             <span
                 type="button"
                 className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""} ${!props.deletable ? "resetRight" : ""}`}
                 onClick={() => _toggleShareReqPopUp(props.postId, ShareReducer.selectedPost?.id === props.postId ? !ShareReducer.selectedPost?.value : true)}>
                 {ShareReducer &&
                     ShareReducer.selectedPost?.id === props.postId &&
+                    ShareReducer.selectedPost?.isPost === true &&
                     ShareReducer.sharekitShow &&
                     <ShareKit
                         postData={{
@@ -339,9 +392,11 @@ export default function Post(props) {
             </span>
 
             {/* SHARE/REQUEST POPUP */}
+
             {ShareReducer &&
                 ShareReducer.selectedPost?.id === props.postId &&
                 ShareReducer.selectedPost?.value === true &&
+                ShareReducer.selectedPost?.isPost === true &&
                 <ShareRequestPopUp
                     toggleSharekit={
                         () => _toggleSharekit(props.postId, !ShareReducer.sharekitShow?.value)
@@ -358,17 +413,6 @@ export default function Post(props) {
                 2: SHOW CANCEL 
                 3: ALREADY FRIEND
             */}
-            <FriendReqModal
-                cancelReq={props.isNotFriend === 2 ? true : false}
-                changeCancelled={changeCancelled}
-                userId={props.curid}
-                friendReqState={friendReqState}
-                closeFrReqModalFn={closeFrReqModalFn}
-                toggleLoadingFn={toggleLoadingFn}
-                changeRequested={changeRequested}
-                _updateCanBeRequested={_updateCanBeRequested}
-            />
-
 
             {/* IF POST IS DELETABLE THE DELETE ICON WILL BE SHOWN */}
             {props.deletable === true && <i className="fa fa-trash pr-3 deletePostIcon" type="button" aria-hidden="true" onClick={deletePost}></i>}
@@ -397,11 +441,11 @@ export default function Post(props) {
                 */}
                     {visitePrevilage(props.curid, props.post_as_anonymous)}
 
-                    {props.isRegistered === 1 ?
+                    {/* {props.isRegistered === 1 ?
                         <span className='registeredUserIcon'>
                             <img src={registeredUser} alt="" />
                         </span>
-                        : ""}
+                        : ""} */}
 
                     <span className="catCommentBtnCont">
                         <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>
@@ -424,11 +468,9 @@ export default function Post(props) {
 
 
             <div className="postBody">
-                <div className="postedPost mb-2" onClick={handleCommentsModal}>
+                <div className="postedPost mb-2" onClick={openCommentsModal}>
                     <Link className="links text-dark" to="#">
                         <pre className="preToNormal post">
-                            {/* {props.postedComment.substr(0, noOfWords[0])} */}
-                            {/* {props.postedComment.substr(0, noOfWords[0])} */}
                             {props.postedComment}
                         </pre>
                         {
@@ -438,9 +480,6 @@ export default function Post(props) {
                                 <>
                                     {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} className="viewMoreBtn pl-1">view more</span>
                                 </> : ''
-                            // <>
-                            //     {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>...</span>}<span toberedirectedto={props.postId} className="viewMoreBtn pl-1">view more</span>
-                            // </> : ''
                         }
                     </Link>
                 </div>
@@ -487,16 +526,37 @@ export default function Post(props) {
             </div>
 
 
-            <div className="postFoot d-flex justify-content-start" onClick={handleCommentsModal}>
-                {/* <Link to={`/confession/${props.postId}`} className="links"> */}
-                <div className="totalComments underlineShareCount pr-2">
+            <div className="postFoot d-flex justify-content-start">
+                <div className="totalComments underlineShareCount pr-2" onClick={openCommentsModal}>
                     <span className="sharedCount">{props.viewcount ? props.viewcount : 0}</span> Views
                 </div>
-                {/* <Link to="#" className="links pl-2"> */}
-                <div className="totalComments ml-2">
+                <div className="totalComments ml-2" onClick={openCommentsModal}>
                     <span className="sharedCount">{props.sharedBy}</span> Comments
                 </div>
-                {/* </Link> */}
+
+                {(props.is_liked === 0
+                    ?
+                    <div className='iconsMainCont'>
+                        <div className={`upvote_downvote_icons_cont ${props.is_liked === 1 ? '' : "buttonType"}`}>
+                            <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
+                            <span className='count'>{props.like}</span>
+                        </div>
+                        <div className={`upvote_downvote_icons_cont ${props.is_liked === 2 ? '' : "buttonType"}`}>
+                            <img src={downvote} onClick={() => upvoteOrDownvote(false)} alt="" />
+                            <span className='count'>{props.dislike}</span>
+                        </div>
+                    </div>
+                    :
+                    <div className='iconsMainCont'>
+                        <div className={`upvote_downvote_icons_cont`}>
+                            {props.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
+                            <span className='count'>{props.like}</span>
+                        </div>
+                        <div className={`upvote_downvote_icons_cont`}>
+                            {props.is_liked === 2 ? <img src={downvoted} alt="" /> : <img src={downvote} alt="" />}
+                            <span className='count'>{props.dislike}</span>
+                        </div>
+                    </div>)}
             </div>
 
         </div>

@@ -22,6 +22,7 @@ import DeleteConfessionModal from '../../Modals/DeleteConfessionModal';
 import editCommentIcon from '../../../../images/editCommentIcon.png';
 import PofileModal from '../../Modals/PofileModal';
 import AppLogo from '../../components/AppLogo';
+import { useSelector } from 'react-redux';
 
 
 const deletePostModalIniVal = { visible: false, data: { postId: null, index: null } };
@@ -45,6 +46,7 @@ export default function Profile() {
     let maxRequestsToshow = 5;
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
+    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const [runOrNot, setRunOrNot] = useState(false);
     // const [enterName, setEnterName] = useState(false);
     const [displayName, setDisplayName] = useState(false);
@@ -177,7 +179,11 @@ export default function Profile() {
     }
 
     useEffect(() => {
-        updateProfile();
+        if(profile.display_name !== "")
+        {
+            console.log("updateprofile");
+            updateProfile();
+        }
     }, [profile])
 
 
@@ -230,8 +236,9 @@ export default function Profile() {
 
     // HANDLES SCROLL TO TOP BUTTON
     useEffect(() => {
-        document.addEventListener("scroll", () => {
-            let scroll = document.querySelector("html").scrollTop;
+        let ref = document.getElementById("postsWrapper");
+        ref.addEventListener("scroll", () => {
+            let scroll = document.querySelector("#postsWrapper").scrollTop;
             if (scroll > 1000) {
                 setGoDownArrow(true);
             } else {
@@ -243,7 +250,8 @@ export default function Profile() {
 
     //SCROLLS TO BOTTOM
     const goUp = () => {
-        window.scrollTo({ top: "0px", behavior: "smooth" });
+        let ref = document.getElementById("postsWrapper");
+        ref.scrollTo({ top: "0px", behavior: "smooth" });
     }
 
 
@@ -369,7 +377,6 @@ export default function Profile() {
     }
 
     const fetchMoreFriends = () => {
-        console.log("fetchMoreFriends");
         setMyFriends({
             ...myFriends, "config": {
                 ...myFriends.config
@@ -397,6 +404,20 @@ export default function Profile() {
             ...updatedConfessionNode,
             "no_of_comments": shared,
             "viewcount": _viewcount
+        };
+        updatedConfessionArray[index] = updatedConfessionNode;
+        setMyConfession([...updatedConfessionArray]);
+    }
+
+
+    const updatedConfessions = (index, data) => {
+        let updatedConfessionArray;
+        let updatedConfessionNode;
+        updatedConfessionArray = [...myConfession];
+        updatedConfessionNode = updatedConfessionArray[index];
+        updatedConfessionNode = {
+            ...updatedConfessionNode,
+            ...data
         };
         updatedConfessionArray[index] = updatedConfessionNode;
         setMyConfession([...updatedConfessionArray]);
@@ -469,16 +490,17 @@ export default function Profile() {
         })
     }
 
+
     return (
         <div className="container-fluid">
             {auth() ?
                 <div className="row">
 
                     {/* POPUP MODAL TO SHOW COMMENTS */}
-                    {commentsModalRun && <CommentGotModal
+                    {commentsModalReducer.visible && <CommentGotModal
                         handleChanges={handleChanges}
-                        state={commentsModal}
                         updateConfessionData={updateConfessionData}
+                        state={commentsModal}
                         handleCommentsModal={handleCommentsModal} />}
 
                     {/* DELETECONFESSIONMODAL */}
@@ -494,9 +516,6 @@ export default function Profile() {
                     <Header links={true} hideRound={true} />
                     <div className="leftColumn leftColumnFeed mypriflelocc profileSidebar">
                         <div className="leftColumnWrapper">
-                            {/* <div className="appLogo">
-                                <img src={logo} alt="" />
-                            </div> */}
                             <AppLogo />
 
                             <div className="middleContLoginReg feedMiddleCont profile">
@@ -566,7 +585,11 @@ export default function Profile() {
                                                         placeholder="Display Name"
                                                         onBlur={(e) => {
                                                             setDisplayName(false);
-                                                            handleProfile(e.target);
+                                                            // BECAUSE DISPLAYNAME IS MONDOTORY
+                                                            if(e.target.value !== '')
+                                                            {
+                                                                handleProfile(e.target);
+                                                            }
                                                         }}
                                                         defaultValue={profile.display_name} />
                                                 </span>)
@@ -574,8 +597,8 @@ export default function Profile() {
 
                                         </div>
 
-                                        <div className="form-group mb-0 radioCont wProfile mx-auto mtProfile">
-                                            <label htmlFor="postAnanonymsly" className="labelForToggle profilePageLabels">Post as anonymous</label>
+                                        <div className="form-group mb-0 radioCont wProfile mx-auto mtProfile withInfo">
+                                            <label htmlFor="postAnanonymsly" className="labelForToggle profilePageLabels">Randomized name</label>
                                             <input
                                                 type="checkbox"
                                                 className="switch12 profile"
@@ -583,6 +606,15 @@ export default function Profile() {
                                                 id="postAnanonymsly"
                                                 defaultChecked={parseInt(profile.post_as_anonymous) === 0 ? false : true}
                                                 onChange={(e) => handleProfile(e.target)} />
+
+                                            <i
+                                                className="fa fa-info-circle viewPrevPostIn"
+                                                aria-hidden="true"></i>
+
+                                            <div className="ljkdjfkl">
+                                                Enabling this will assign you random names whenever you post, comment, etc.
+                                            </div>
+
                                         </div>
                                         <div className="form-group mb-0 radioCont wProfile mx-auto mtProfile withInfo">
                                             <label htmlFor="postAnanonymsly" className="labelForToggle profilePageLabels">Show Posts</label>
@@ -636,7 +668,6 @@ export default function Profile() {
                                     </div>
 
                                     <div className={`requestnChatWrapper ${showFriendsList ? "" : "height0"} ${myRequests.count === 0 && ((myFriends.data.friends).length === 0) ? "height0" : ""}`}>
-                                        {/* {console.log(myRequests.count)} */}
                                         <div className={`d-none ${myRequests.count ? "d-md-block" : "d-md-none"}`}>
                                             {!isReqError
                                                 ?
@@ -798,13 +829,18 @@ export default function Profile() {
                                                                 updateConfessionData={updateConfessionData}
                                                                 postedComment={post.description}
                                                                 sharedBy={post.no_of_comments}
+                                                                updatedConfessions={updatedConfessions}
+                                                                is_viewed={post.is_viewed}
+                                                                like={post.like}
+                                                                dislike={post.dislike}
+                                                                is_liked={4}
                                                                 unread_comments={post.unread_comments} />
                                                         }
 
                                                         )}
                                                     </InfiniteScroll>
 
-                                                    : <div className="noConfessions endListMessage">You haven't created any post</div>)
+                                                    : <div className="profile noConfessions endListMessage">You haven't created any post</div>)
                                                     :
                                                     (<div className="text-center">
                                                         <div className="spinner-border pColor mt-4 text-center" role="status">

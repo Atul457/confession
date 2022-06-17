@@ -11,10 +11,9 @@ import rejectRequest from '../../../../images/friendsAl.png';
 import { fetchData } from '../../../../commonApi';
 import InfiniteScroll from "react-infinite-scroll-component";
 import useCommentsModal from '../../../utilities/useCommentsModal';
-// import logo from '../../../../images/appLogo.svg'
 import RefreshButton from '../../../refreshButton/RefreshButton';
 import AppLogo from '../../components/AppLogo';
-// import requestsIcon from '../../../../images/requestsIcon.png';
+import { useSelector } from 'react-redux';
 
 
 export default function UserProfile() {
@@ -38,6 +37,8 @@ export default function UserProfile() {
 
     //CUSTOM HOOK
     const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal();
+
+    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
 
 
     const [conf, setConf] = useState({
@@ -66,6 +67,7 @@ export default function UserProfile() {
                 method: "post",
                 url: "getotherprofile"
             }
+
             try {
                 const res = await fetchData(obj)
                 if (res.data.status === true) {
@@ -125,7 +127,7 @@ export default function UserProfile() {
 
         let obj = {
             data: data,
-            token: "",
+            token: auth() ? token : "",
             method: "post",
             url: "getmyconfessions"
         }
@@ -176,7 +178,6 @@ export default function UserProfile() {
 
     const sendFriendRequest = async (isCancelling = 0) => {
 
-        console.log(isCancelling)
         let data = {
             friend_id: profile.profileData.profile_id,
             is_cancelled: isCancelling
@@ -188,8 +189,6 @@ export default function UserProfile() {
             method: "post",
             url: "sendfriendrequest"
         }
-
-        // console.log(isCancelling === 1 ? 0 : 1);
 
         try {
             const res = await fetchData(obj)
@@ -233,29 +232,42 @@ export default function UserProfile() {
         });
     }
 
+    const updatedConfessions = (index, data) => {
+        let updatedConfessionArray;
+        let updatedConfessionNode;
+        updatedConfessionArray = [...conf.confDetails];
+        updatedConfessionNode = updatedConfessionArray[index];
+        updatedConfessionNode = {
+            ...updatedConfessionNode,
+            ...data
+        };
+        updatedConfessionArray[index] = updatedConfessionNode;
+        setConf({
+            ...conf,
+            "isConfLoading": false,
+            "isConfErr": false,
+            "confDetails": [...updatedConfessionArray]
+        });
+    }
+
 
     return (
         <div className="container-fluid">
 
             {!profile.isProfileLoading ?
                 <div className="row">
-
-                    {commentsModalRun &&
-                        <CommentGotModal
-                            handleChanges={handleChanges}
-                            state={commentsModal}
-                            updateConfessionData={updateConfessionData}
-                            handleCommentsModal={handleCommentsModal} />}
+                    {commentsModalReducer.visible && <CommentGotModal
+                        handleChanges={handleChanges}
+                        updateConfessionData={updateConfessionData}
+                        state={commentsModal}
+                        handleCommentsModal={handleCommentsModal} />}
 
                     {/* Adds Header Component */}
                     <Header links={true} hideRound={true} />
 
                     <div className="leftColumn leftColumnFeed mypriflelocc profileSidebar">
                         <div className="leftColumnWrapper">
-                            {/* <div className="appLogo">
-                                <img src={logo} alt="" />
-                            </div> */}
-                            <AppLogo/>
+                            <AppLogo />
 
                             <div className="middleContLoginReg feedMiddleCont profile">
                                 {/* CATEGORYCONT */}
@@ -282,7 +294,6 @@ export default function UserProfile() {
 
                                         <span className="loggedInUserName mt-2">{profile.profileDetails.name}</span>
 
-                                        {console.log(profile.profileDetails.is_friend)}
                                         {auth() && <>
                                             {
                                                 //FRIENDS
@@ -319,11 +330,7 @@ export default function UserProfile() {
                                             * Only Public posts are shown here
                                         </div>
                                     </div>
-
                                     {/* edited */}
-                                    {/* start of requestnChatWrapper */}
-
-                                    {/* end of requestnChatWrapper */}
                                 </aside>
                                 {/* CATEGORYCONT */}
                             </div>
@@ -373,7 +380,11 @@ export default function UserProfile() {
                                                         updateConfessionData={updateConfessionData}
                                                         handleCommentsModal={handleCommentsModal}
                                                         createdAt={post.created_at}
-                                                        // curid={profile.profileData.profile_id}
+                                                        updatedConfessions={updatedConfessions}
+                                                        is_viewed={post.is_viewed}
+                                                        like={post.like}
+                                                        dislike={post.dislike}
+                                                        is_liked={post.is_liked}
                                                         curid={null}
                                                         category_id={post.category_id}
                                                         key={index}

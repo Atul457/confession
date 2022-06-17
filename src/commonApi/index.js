@@ -1,11 +1,10 @@
 import axios from "axios";
 
 
-// let live = "https://cloudart.com.au:3235/api/";
-let live = "https://apis.thetalkplace.com:3235/api/";
+let live = "https://cloudart.com.au:3235/api/";
+// let live = "https://apis.thetalkplace.com:3235/api/";
 
 export const fetchData = async (props) => {
-
 
     let config = {
         baseURL: `${live}${props.url}`,
@@ -16,6 +15,7 @@ export const fetchData = async (props) => {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
             token: props.token,
+            ip_address : localStorage.getItem("ip"),
         },
         data: props.data,
     }

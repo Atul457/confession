@@ -19,6 +19,7 @@
 /* touch-action: pan-x pan-y;
 height: 100% */
 
+
 @font-face {
     font-family: 'playballregular';
     src: url('../fonts/playball_400-webfont.woff') format('woff2'),
@@ -314,6 +315,10 @@ input::-webkit-textfield-decoration-container {
     color: var(--skyColor);
 }
 
+.buttonType {
+    cursor: pointer;
+}
+
 .feedRefreshBtn {
     font-size: 30px;
     position: fixed;
@@ -493,6 +498,7 @@ input:focus-visible {
     position: relative;
     background-color: var(--whiteColor);
 }
+
 
 .postCont .sharekitdots {
     z-index: 9;
@@ -1182,6 +1188,25 @@ span.offlineColor {
 }
 
 
+.sharePopupItems i {
+    margin-right: 10px;
+    color: var(--primaryColor);
+    font-size: 19px;
+}
+
+
+.popupModal .modal-dialog {
+    margin: 0px;
+}
+
+.sharePopupItems {
+    font-weight: 500;
+    display: flex;
+    margin-bottom: 25px;
+    align-items: center;
+    justify-content: flex-start;
+    color: var(--primaryColor);
+}
 
 
 .scrollbar {
@@ -1207,7 +1232,7 @@ span.offlineColor {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-    background-color: #a4a3b7;
+    background-color: var(--orangeColor);
 }
 
 .profileSidebar::-webkit-scrollbar-track {
@@ -2065,6 +2090,28 @@ span.offlineColor {
     color: #E02F2F;
 }
 
+.postFoot.commmentsGotModal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.postFoot {
+    flex-wrap: wrap;
+}
+
+.upvote_downvote_icons_cont img {
+    width: 22px;
+}
+
+.upvote_downvote_icons_cont {
+    margin-left: 30px;
+}
+
+.upvote_downvote_icons_cont .count {
+    margin-left: 10px;
+}
+
 span.facebookMobIcon {
     background: #3B5999;
     padding: 10px 18px;
@@ -2528,7 +2575,7 @@ span.facebookMobIcon {
     position: relative;
 }
 
-.requestIndicator {
+/* .requestIndicator {
     position: absolute;
     width: 7px;
     height: 7px;
@@ -2536,6 +2583,16 @@ span.facebookMobIcon {
     border-radius: 50px;
     top: -2px;
     left: 19px;
+} */
+
+.requestIndicator {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    background: #ff4f4f;
+    border-radius: 50px;
+    top: -3px;
+    left: 18px;
 }
 
 .eyeNinputCont {
@@ -3095,6 +3152,31 @@ a.headerNavLinks.active::after {
     font-weight: 600;
 }
 
+.popupModal .modal-dialog {
+    height: 100%;
+}
+
+.popupModal .modal-content {
+    position: absolute;
+    animation: animatebottom 0.6s;
+    bottom: 0px;
+    height: fit-content;
+    padding: 15px 10px;
+    padding-bottom: 45px;
+}
+
+@keyframes animatebottom {
+    from {
+        bottom: -150px;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 0px;
+        opacity: 1;
+    }
+}
+
 .userProfileSubHeadings {
     font-size: 10px;
 }
@@ -3113,9 +3195,18 @@ a.headerNavLinks.active::after {
     width: 170px;
 }
 
-
 .shareReqCont.moveABitUp {
     top: -40px;
+}
+
+.postWrapperCommentsModal .shareReqCont {
+    top: 10px !important;
+    z-index: 10;
+    right: 26px;
+}
+
+.postWrapperCommentsModal .shareReqCont .shareReqRows.available {
+    padding: 12px 15px !important;
 }
 
 .shareReqRows.user {
@@ -3219,6 +3310,10 @@ a.headerNavLinks.active::after {
 
 .chatOutestCont {
     height: calc(100vh - 60px);
+}
+
+.iconsMainCont{
+    display: flex;
 }
 
 .chatPageHeaders {
@@ -3551,6 +3646,46 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
     display: none;
 }
 
+.carousel_item_feature .imgWrapper .carouselImage {
+    object-fit: contain;
+    width: 100% !important;
+}
+
+.featuresModal .control-dots .dot {
+    background-color: var(--primaryColor) !important;
+    box-shadow: none;
+}
+
+.featuresModal .carousel.carousel-slider {
+    padding-bottom: 20px;
+    position: unset !important;
+}
+
+.featuresModal .carousel .control-dots {
+    left: 0px
+}
+
+.featuresModal {
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.carousel_item_feature>div:last-child {
+    margin-top: 15px;
+}
+
+.carousel_item_feature .imgWrapper {
+    max-height: 180px;
+    overflow: hidden;
+}
+
+button.modalFootBtns.btn a {
+    color: #fff;
+}
+
+button.modalFootBtns.btn a:hover {
+    text-decoration: none;
+}
 
 
 
@@ -4496,7 +4631,7 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
     .createPostImgPrev {
         height: fit-content;
         padding: 20px 0px 20px 0px;
-        /* display: none; */
+        display: none;
     }
 
     .uploadeImgWrapper .removeImgIcon {
@@ -4822,7 +4957,6 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
 
     /* .shareReqCont {
         right: 45px;
-        top: 21px;
     } */
 
     .shareKitSpace {
@@ -4832,6 +4966,7 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
     .errorFieldsCPost>* {
         text-align: center;
     }
+
 
     .sharekitdots.admin {
         right: 70px;
@@ -4857,6 +4992,22 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
         font-size: 18px;
     }
 
+    .postWrapperCommentsModal .shareReqCont {
+        right: 10px;
+    }
+
+    .upvote_downvote_icons_cont{
+        margin-left: 15px;
+    }
+
+    .commmentsGotModal .iconsMainCont .upvote_downvote_icons_cont:first-child {
+        margin-left: 0px;
+    }
+    .commmentsGotModal .iconsMainCont {
+        width: 100%;
+        margin-top: 15px;
+    }
+
 }
 
 
@@ -4868,6 +5019,12 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
 
     .postUserName {
         max-width: 45px;
+    }
+}
+
+@media (max-width: 768px) and (max-height: 820px) {
+    .messagesCont {
+        height: calc(100vh - 35px - 380px);
     }
 }
 

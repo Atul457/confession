@@ -1,12 +1,15 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import addFriend from "../../images/addFriend.svg";
 import cancelFriend from "../../images/cancelFriendPop.svg";
+
 
 
 export default function ShareRequestPopUp({ toggleSharekit, isNotFriend, openFrReqModalFn, closeShareMenu }) {
 
   var classToAdd = '';
   var moveABitUp = '';
+  const commentsModalReducer = useSelector(state => state.commentsModalReducer)
 
   const do_ = () => {
     openFrReqModalFn();

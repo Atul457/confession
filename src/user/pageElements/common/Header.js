@@ -20,8 +20,10 @@ import contactUsActiveIcon from '../../../images/contactUsIconActive.png';
 import contactUsIcon from '../../../images/contactUsIcon.png';
 import VerifyEmailModal from '../Modals/VerifyEmailModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { togglemenu } from '../../../redux/actions/share';
 import AppLogo from "../components/AppLogo";
+import { togglemenu } from '../../../redux/actions/share';
+import UpdatePasswordModal from '../Modals/UpdatePasswordModal';
+import { UpdateUPassActionCreators } from '../../../redux/actions/updateUserPassword';
 
 
 export default function Header(props) {
@@ -69,24 +71,6 @@ export default function Header(props) {
         }
     }, [showProfileOption])
 
-    const catchEvent2 = (e) => {
-        var classes = e.target.classList;
-        if (!classes.contains("shareReqCont") && !classes.contains("shareReqRows") && !classes.contains("shareKitImgIcon") && !classes.contains("sharekitdots") && !classes.contains("dontHide")) {
-            dispatch(togglemenu({
-                id: null, value: false
-            }))
-        }
-    }
-
-    useEffect(() => {
-        if (ShareReducer.selectedPost?.value) {
-            document.addEventListener("click", catchEvent2);
-        }
-        return () => {
-            document.removeEventListener("click", catchEvent2);
-        }
-    }, [ShareReducer.selectedPost?.value])
-
 
     // GETS THE COUNT OF NEW REQUESTS
     useEffect(() => {
@@ -115,6 +99,25 @@ export default function Header(props) {
             getUnreadCommentsCount();
         }
     }, [localStorage.getItem("requestsCount")])
+
+
+    const catchEvent2 = (e) => {
+        var classes = e.target.classList;
+        if (!classes.contains("shareReqCont") && !classes.contains("shareReqRows") && !classes.contains("shareKitImgIcon") && !classes.contains("sharekitdots") && !classes.contains("dontHide")) {
+            dispatch(togglemenu({
+                id: null, value: false
+            }))
+        }
+    }
+
+    useEffect(() => {
+        if (ShareReducer.selectedPost?.value) {
+            document.addEventListener("click", catchEvent2);
+        }
+        return () => {
+            document.removeEventListener("click", catchEvent2);
+        }
+    }, [ShareReducer.selectedPost?.value])
 
 
 
@@ -189,6 +192,10 @@ export default function Header(props) {
     const HandleShowHide = () => {
         setShowProfileOption(!showProfileOption)
     }
+
+    const openUpdatePassModal = () => {
+        dispatch(UpdateUPassActionCreators.openChangePassModal())
+    }
     // END OF HANDLE PROFILE DIV
 
     return (
@@ -199,7 +206,7 @@ export default function Header(props) {
                     <div className="headerLeftCol pl-0">
                         <span to="/home" className="homeHeaderLink">
                             {/* <img src={logo} alt="" className="appLogo" /> */}
-                            <AppLogo/>
+                            <AppLogo />
                         </span>
                     </div>
                     <div className="viewProfileIcon pr-md-0 pr-lg-4">
@@ -281,6 +288,7 @@ export default function Header(props) {
                                                         <span className="userDropDown userProfileSubHeadings">{profile.email}</span>
                                                     </div>
                                                 </div>
+
                                                 <hr className="m-0" />
                                                 <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
                                                     <img src={profileIcon} alt="" className='profilePopUpIcons' />
@@ -296,6 +304,17 @@ export default function Header(props) {
                                                     </span>
                                                 </div>
                                             </Link>
+
+                                            {profile?.source === 1 &&
+                                                <>
+                                                    <hr className="m-0" />
+                                                    <div type="button"
+                                                        onClick={openUpdatePassModal} className="takeActionOptions  userProfileHeading takeActionOptionsOnHov userProfileHeading textDecNone py-2">
+                                                        <img src={profileIcon} alt="" className='profilePopUpIcons' />
+                                                        Reset Password
+                                                    </div>
+                                                </>}
+
                                             <hr className="m-0" />
                                             <div type="button" className="takeActionOptions userProfileHeading py-2 takeActionOptionsOnHov textDecNone mb-0" onClick={() => logout()}>
                                                 <img src={logoutIcon} alt="" className='profilePopUpIcons' />Logout
@@ -322,6 +341,8 @@ export default function Header(props) {
                 </div>
                 <div className={`roundCorners ${props.hideRound ? "d-none" : ""}`}>__</div>
             </header>
+
+            <UpdatePasswordModal />
         </>
     );
 }

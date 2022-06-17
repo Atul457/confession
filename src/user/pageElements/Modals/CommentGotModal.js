@@ -14,15 +14,25 @@ import _ from 'lodash';
 import TextareaAutosize from 'react-textarea-autosize';
 import shareKitIcon from "../../../images/shareKitIcon.png";
 import DateConverter from '../../../helpers/DateConverter';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeCModal, resetCModal, updateCModalState } from '../../../redux/actions/commentsModal';
+import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
+import canBeRequested from "../../../images/canBeRequested.svg";
+import alRequested from "../../../images/alRequested.svg";
+import upvote from '../../../images/upvote.svg';
+import downvote from '../../../images/downvote.svg';
+import downvoted from '../../../images/downvoted.svg';
+import upvoted from '../../../images/upvoted.svg';
+import alFriends from "../../../images/alFriends.svg";
+import useShareRequestPopUp from '../../utilities/useShareRequestPopUp';
+import { openCFRModal } from '../../../redux/actions/friendReqModal';
 
 
 
-
-export default function CommentGotModal({ state, categories, ...rest }) {
+export default function CommentGotModal({ categories, ...rest }) {
 
     //ON THE BASIS OF THIS ID THE POST DATA RELATED TO THIS MODAL POST WILL BE CHANGED
     const handleCommentsModal = () => {
-        rest.updateConfessionData((state.viewcount + 1), sharedBy, state.index);
         var data = {
             "postId": null,
             "visibility": false,
@@ -32,11 +42,14 @@ export default function CommentGotModal({ state, categories, ...rest }) {
         rest.handleCommentsModal(data);
     }
 
-    let history = useNavigate();
     let maxChar = 2000;
+    let history = useNavigate();
+    const dispatch = useDispatch();
+    const { state } = useSelector(state => state.commentsModalReducer);
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [confessionData, setConfessionData] = useState(false);
-    const [sharekit, toggleSharekit, ShareKit] = useShareKit();
+    const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
+    const [sharekit, toggleSharekit, ShareKit, hideShareKit] = useShareKit();
     const [isWaitingRes, setIsWaitingRes] = useState(true);
     const [isServerErr, setIsServerErr] = useState(false);
     const [isValidPost, setIsValidPost] = useState(true);   //MEANS STATUS IS OK BUT GOT NO RES
@@ -50,6 +63,8 @@ export default function CommentGotModal({ state, categories, ...rest }) {
     const [changeState, setChangeState] = useState(true);
     const [commentsCount, setCommentsCount] = useState(0);
     const [goDownArrow, setGoDownArrow] = useState(false);
+    const ShareReducer = useSelector(store => store.ShareReducer);
+
 
     const preventDoubleClick = (runOrNot) => {
         var elem = document.querySelector('#commentsModalDoComment');
@@ -151,13 +166,11 @@ export default function CommentGotModal({ state, categories, ...rest }) {
         catch {
             console.log('some error occured');
         }
-
         preventDoubleClick(false);
     }
 
 
     useEffect(() => {
-        // console.log(state.postId);
         setConfessionData({
             confession_id: state.postId,
             category_name: state.category_name,
@@ -300,12 +313,208 @@ export default function CommentGotModal({ state, categories, ...rest }) {
         setSharedBy((prevState) => prevState - 1);
     }
 
+    const closeModal = () => {
+        let upvoteDownvoteData = {}, viewData, likeDislikeCheck, isViewedCheck, data;
+        // CHECKS CHANGES IN UPVOTE AND DOWNVOTE
+        likeDislikeCheck = state.is_liked_prev === 0 && state.is_liked_prev !== state.is_liked;
+        // CHECKS WHETHER THE POST WAS UNVIEWED OR VIEWED
+        isViewedCheck = state.is_viewed === 0;
+        if (likeDislikeCheck === true) {
+            upvoteDownvoteData = {
+                like: state.like,
+                dislike: state.dislike,
+                is_liked: state.is_liked,
+            }
+        }
+
+        if (isViewedCheck || likeDislikeCheck) {
+            viewData = {
+                viewcount: state.viewcount + 1,
+                is_viewed: 1,
+            }
+
+            data = {
+                ...(isViewedCheck && viewData),
+                ...(likeDislikeCheck && upvoteDownvoteData)
+            }
+
+            // RUNS THE UPDATECONFESSIONDATA FUNCTION DEFINED IN POST.JS
+            state.updateConfessionData(state.index, data);
+        }
+        dispatch(resetCModal())
+    }
+
+
+    const ProfileIcon = (profileImg, isNotFriend) => {
+
+        // isNotFriend :
+        // 0 : SHOW NOTHING
+        // 1 : SHOW REQUEST
+        // 2: SHOW CANCEL 
+        // 3: ALREADY FRIEND
+
+        let profileImage, profileBPlate;
+
+        profileImage = profileImg !== '' ? profileImg : userIcon;
+
+        const getHtml = () => {
+
+            if (isNotFriend === 1) {
+                return <>
+                    <img
+                        src={canBeRequested}
+                        type="button"
+                        alt=""
+                        onClick={openFrReqModalFn_Post}
+                        className='registeredUserIndicator' />
+                    <img
+                        src={profileImg !== '' ? profileImg : userIcon}
+                        className="userAccIcon generated"
+                        onClick={openFrReqModalFn_Post}
+                        alt=""
+                    />
+                </>
+            }
+
+            if (isNotFriend === 2) {
+                return <>
+                    <img
+                        src={alFriends}
+                        onClick={openFrReqModalFn_Post}
+                        type="button"
+                        alt=""
+                        className='registeredUserIndicator' />
+                    <img
+                        src={profileImg !== '' ? profileImg : userIcon}
+                        onClick={openFrReqModalFn_Post}
+                        className="userAccIcon"
+                        alt=""
+                    />
+                </>
+            }
+
+            if (isNotFriend === 3) {
+                return <>
+                    <img
+                        src={alRequested}
+                        type="button"
+                        alt=""
+                        className='registeredUserIndicator' />
+                    <img
+                        src={profileImg !== '' ? profileImg : userIcon}
+                        className="userAccIcon"
+                        alt=""
+                    />
+                </>
+            }
+
+            return <img src={profileImage} className="userAccIcon" alt="" />
+        }
+
+
+        profileBPlate = getHtml();
+        return profileBPlate;
+    }
+
+
+    const _toggleShareReqPopUp = (id, value) => {
+
+        dispatch(togglemenu({
+            id, value,
+        }))
+
+        dispatch(
+            toggleSharekitMenu(false)
+        )
+
+        if (sharekit) {
+            hideShareKit();
+        } else {
+            toggleShareReqPopUp();
+
+            if (shareReqPopUp === true) {
+                hideShareKit();
+            }
+        }
+
+    }
+
+    const _toggleSharekit = (id, value) => {
+        dispatch(
+            toggleSharekitMenu(value)
+        )
+        dispatch(togglemenu({
+            id, value: false
+        }))
+
+        if (shareReqPopUp) {
+            closeShareReqPopUp();
+        }
+        toggleSharekit();
+
+    }
+
+    const closeShareMenu = () => {
+        dispatch(togglemenu({
+            id: null, value: false
+        }))
+    }
+
+
+    const openFrReqModalFn_Post = () => {
+        dispatch(openCFRModal({
+            cancelReq: state.isNotFriend === 2 ? true : false,
+            userId: state.user_id
+        }))
+        dispatch(closeCModal())
+    }
+
+    const upvoteOrDownvote = async (isLiked) => {
+
+        let is_liked, ip_address, check_ip, token = '', data;
+        is_liked = isLiked ? 1 : 2;
+        ip_address = localStorage.getItem("ip")
+        check_ip = ip_address.split(".").length
+        if (auth()) {
+            token = localStorage.getItem("userDetails");
+            token = JSON.parse(token).token;
+        }
+
+        if (check_ip === 4) {
+            let obj = {
+                data: { is_liked, ip_address },
+                token: token,
+                method: "post",
+                url: `likedislike/${state.postId}`
+            }
+            try {
+                const res = await fetchData(obj)
+                if (res.data.status === true) {
+                    data = {
+                        [isLiked ? "like" : "dislike"]: isLiked ? state.like + 1 : state.dislike + 1,
+                        is_liked
+                    }
+
+                    dispatch(updateCModalState(data))
+
+                } else {
+                    console.log(res);
+                }
+            } catch (error) {
+                console.log(error);
+                console.log("Some error occured");
+            }
+        } else {
+            console.log("Invalid ip");
+        }
+    }
+
     return (
         <>
-            <Modal show={state.visibility} size="lg" className="commentsModal" onHide={handleCommentsModal}>
+            <Modal show={state.visibility} size="lg" className="commentsModal" onHide={closeModal}>
                 <Modal.Header className='justify-content-between'>
                     <h6>Comments</h6>
-                    <span onClick={handleCommentsModal} type="button">
+                    <span onClick={closeModal} type="button">
                         <i className="fa fa-times" aria-hidden="true"></i>
                     </span>
                 </Modal.Header>
@@ -345,16 +554,41 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                 (
                                                     <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0 px-0 px-md-3">
 
-                                                        <span type="button" className={`sharekitdots resetRightModal ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
-                                                            {sharekit && <ShareKit postData={confessionData} />}
-                                                            <img src={shareKitIcon} className="shareKitImgIcon" /></span>
+                                                        <span
+                                                            type="button"
+                                                            className={`sharekitdots resetRightModal ${sharekit === false ? "justify-content-end" : ""}`}
+                                                            onClick={() => _toggleShareReqPopUp(state.postId, ShareReducer.selectedPost?.id === state.postId ? !ShareReducer.selectedPost?.value : true)}>
+                                                            {ShareReducer &&
+                                                                ShareReducer.selectedPost?.id === state.postId &&
+                                                                ShareReducer.sharekitShow &&
+                                                                <ShareKit
+                                                                    postData={{
+                                                                        confession_id: state.postId,
+                                                                        description: state.postedComment,
+                                                                    }}
+                                                                    closeShareReqPopUp={closeShareReqPopUp} />}
+                                                            <img src={shareKitIcon} className="shareKitImgIcon" />
+                                                        </span>
+
+                                                        {ShareReducer &&
+                                                            ShareReducer.selectedPost?.id === state.postId &&
+                                                            ShareReducer.selectedPost?.value === true &&
+                                                            <ShareRequestPopUp
+                                                                toggleSharekit={
+                                                                    () => _toggleSharekit(state.postId, !ShareReducer.sharekitShow?.value)
+                                                                }
+                                                                isNotFriend={state.isNotFriend}
+                                                                openFrReqModalFn={openFrReqModalFn_Post}
+                                                                closeShareMenu={closeShareMenu}
+                                                            />}
 
                                                         {isValidPost ? <div className="postCont modalPostCont">
                                                             {sharekit &&
                                                                 <div className="shareKitSpace"></div>}
                                                             <div className="postContHeader justify-content-start">
                                                                 <span className="userImage userImageFeed">
-                                                                    <img src={confessionData.profile_image === '' ? userIcon : confessionData.profile_image} className="userAccIcon" alt="" />
+
+                                                                    {ProfileIcon(state.profile_image, state.isNotFriend)}
                                                                 </span>
 
                                                                 {confessionData.post_as_anonymous === 1
@@ -428,10 +662,35 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
                                                             </div>
 
-                                                            <div className="postFoot">
+                                                            <div className="postFoot commmentsGotModal">
                                                                 <div className="totalComments">
                                                                     {sharedBy}  - People shared their thoughts about this post
                                                                 </div>
+                                                                {!isNaN(state.is_liked) ?
+                                                                    (state.is_liked === 0
+                                                                        ?
+                                                                        <div className='iconsMainCont'>
+                                                                            <div className={`upvote_downvote_icons_cont ${state.is_liked === 1 ? '' : "buttonType"}`}>
+                                                                                <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
+                                                                                <span className='count'>{state.like}</span>
+                                                                            </div>
+                                                                            <div className={`upvote_downvote_icons_cont ${state.is_liked === 2 ? '' : "buttonType"}`}>
+                                                                                <img src={downvote} onClick={() => upvoteOrDownvote(false)} alt="" />
+                                                                                <span className='count'>{state.dislike}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        :
+                                                                        <div className='iconsMainCont'>
+                                                                            <div className={`upvote_downvote_icons_cont`}>
+                                                                                {state.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
+                                                                                <span className='count'>{state.like}</span>
+                                                                            </div>
+                                                                            <div className={`upvote_downvote_icons_cont`}>
+                                                                                {state.is_liked === 2 ? <img src={downvoted} alt="" /> : <img src={downvote} alt="" />}
+                                                                                <span className='count'>{state.dislike}</span>
+                                                                            </div>
+                                                                        </div>)
+                                                                    : null}
                                                             </div>
                                                         </div>
                                                             :
@@ -451,7 +710,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                             End of Comments,
                                                                             <span
                                                                                 className='closeBackButton'
-                                                                                onClick={handleCommentsModal}>
+                                                                                onClick={closeModal}>
                                                                                 Go back
                                                                             </span>
                                                                         </div>
@@ -468,7 +727,6 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                     }
                                                                 >
                                                                     {commentsArr.map((post, index) => {
-                                                                        // console.log(post)
                                                                         return <Comments
                                                                             updateComments={updateComments}
                                                                             postId={postId}

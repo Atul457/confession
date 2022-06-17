@@ -22,8 +22,6 @@ export default function Register() {
     let history = useNavigate();
     const [authenticated, setAuthenticated] = useState(auth());
     const [isLoading, setIsLoading] = useState(false);
-    const [fullName, setFullName] = useState("");
-    const [lastName, setLastName] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [source, setSource] = useState(1);
     const [sourceId, setSourceId] = useState("");
@@ -98,8 +96,6 @@ export default function Register() {
 
     //SETS THE DATA GOT FROM GOOGLE LOGIN API, TO STATE VARIABLES FOR REGISTER 
     const registerUserWithSocial = async (profileData) => {
-
-        // console.log({ profileData });
         setDisplayName(profileData.name)
         setEmail(profileData.email);
         setSourceId(profileData.googleId);
@@ -201,9 +197,6 @@ export default function Register() {
 
 
     const registerUserWithSocialFb = (profileData) => {
-
-        // console.log({profileData});
-
         setDisplayName(profileData.name)
         setEmail("");
         setSourceId(profileData.source_id);
@@ -217,6 +210,7 @@ export default function Register() {
     async function validateForm(usingSocialLogin = false) {
 
         let profileResponseCont = document.getElementById('profileResponseCont');
+        let regDisplayErrorCont = document.getElementById('regDisplayErrorCont');
         let regEmailErrorCont = document.getElementById('regEmailErrorCont');
         let regPasswordErrorCont = document.getElementById('regPasswordErrorCont');
         let regRPasswordErrorCont = document.getElementById('regRPasswordErrorCont');
@@ -225,7 +219,10 @@ export default function Register() {
         //IF LOGIN IS BEING DONE USING SOCIAL LOGIN THEN NO VALIDATION IS DONE
         if (usingSocialLogin === false) {
 
-            if (email.trim() === '') {
+            if (displayName.trim() === '') {
+                regDisplayErrorCont.innerHTML = 'This is a required field.';
+                return false;
+            } else if (email.trim() === '') {
                 regEmailErrorCont.innerHTML = 'This is a required field.';
                 return false;
             } else if (!regex.test(email.trim())) {
@@ -262,6 +259,7 @@ export default function Register() {
                 regEmailErrorCont.innerHTML = '';
                 regPasswordErrorCont.innerHTML = '';
                 regRPasswordErrorCont.innerHTML = '';
+                regDisplayErrorCont.innerHTML = '';
 
                 let registerFromData = {
                     "email": email,
@@ -307,6 +305,13 @@ export default function Register() {
         }
     }
 
+    //DELAY
+    const openFeaturesDelay = () => {
+        setTimeout(() => {
+            openFeatures();
+        }, 25 * 1000)
+    }
+
 
     return (
         <div className="container-fluid">
@@ -333,7 +338,7 @@ export default function Register() {
 
                                 <div className="logInUsingBnts">
 
-                                    {/* Buttons Containers */}
+                                    {/* BUTTONS CONTAINERS */}
                                     <div className="logInUsingInsideCont d-none d-md-flex">
 
                                         <GoogleLogin
@@ -368,7 +373,7 @@ export default function Register() {
                                             icon="fa-facebook" />
 
                                     </div>
-                                    {/* End of Buttons Containers */}
+                                    {/* END OF BUTTONS CONTAINERS */}
 
                                     <div className="orLoginUsingCont">
                                         <span>OR</span>
@@ -379,8 +384,9 @@ export default function Register() {
 
                                 <div className="form-group">
                                     <div className="refreshBtnDiv">
-                                        <input type="text" id="displayName" className="form-control" placeholder="Display Name - Optional" minLength="3" value={displayName} onChange={(e) => { setDisplayName(e.target.value) }} />
+                                        <input type="text" id="displayName" className="form-control" placeholder="Display Name" minLength="3" value={displayName} onChange={(e) => { setDisplayName(e.target.value) }} />
                                     </div>
+                                    <div className="errorCont" id="regDisplayErrorCont"></div>
                                 </div>
 
 
@@ -479,7 +485,7 @@ export default function Register() {
                         privacyModal={privacyModal}
                         acceptPrivacy={acceptPrivacy}
                         handlePrivacyModal={handlePrivacyModal}
-                        openFeatures={openFeatures}
+                        openFeatures={openFeaturesDelay}
                     />
                     {/* PRIVACY MODAL */}
 
