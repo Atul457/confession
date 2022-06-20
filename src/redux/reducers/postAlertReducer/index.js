@@ -9,9 +9,11 @@ const initialState = {
 const postAlertReducer = (state = initialState, action) => {
     switch (action.type) {
         case postAlertActions.OPENMODAL:
-            return { ...state, ...action.payload };
+            return { ...state, visible: true };
         case postAlertActions.CLOSEMODAL:
             return initialState;
+        case postAlertActions.UPDATEMODAL:
+            return { ...state, postAnyway: action.payload };
         default:
             return initialState;
     }

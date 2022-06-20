@@ -169,7 +169,6 @@ export default function CommentGotModal({ categories, ...rest }) {
         preventDoubleClick(false);
     }
 
-
     useEffect(() => {
         setConfessionData({
             confession_id: state.postId,
@@ -314,7 +313,6 @@ export default function CommentGotModal({ categories, ...rest }) {
     }
 
     const closeModal = () => {
-        // Working
         let upvoteDownvoteData = {}, viewData, likeDislikeCheck, isViewedCheck, data;
         // CHECKS CHANGES IN UPVOTE AND DOWNVOTE
         likeDislikeCheck = state.is_liked_prev === 0 && state.is_liked_prev !== state.is_liked;
@@ -660,7 +658,7 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                         </Link>
                                                                     </span>
                                                                 }
-                                                                <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
+                                                                <span className="d-block text-left errorCont text-danger mb-2 moveUp">{requiredError}</span>
                                                             </div>
 
                                                             <div className="postFoot commmentsGotModal">
@@ -737,7 +735,8 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                             is_editable={post.is_editable}
                                                                             curid={(post.user_id === '' || post.user_id === 0) ? false : post.user_id}
                                                                             key={"Arr" + index + "dp"}
-                                                                            imgUrl={post.profile_image} userName={post.comment_by}
+                                                                            imgUrl={post.profile_image} 
+                                                                            userName={post.comment_by}
                                                                             postedComment={post.comment} />
 
                                                                     })}
@@ -745,7 +744,7 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                 : <div className="endListMessage m-0 pb-1">End of Comments,
                                                                     <span
                                                                         className='closeBackButton'
-                                                                        onClick={handleCommentsModal}>
+                                                                        onClick={closeModal}>
                                                                         Go back
                                                                     </span>
                                                                 </div>}

@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/SetAuth';
 import userIcon from '../../../images/userAcc.svg';
-import registeredUser from '../../../images/registeredUser.png';
 import { useNavigate } from "react-router-dom";
 import Lightbox from "react-awesome-lightbox";
 import "react-awesome-lightbox/build/style.css";

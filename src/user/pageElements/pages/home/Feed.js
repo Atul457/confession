@@ -172,16 +172,16 @@ export default function Feed(props) {
 
     //POSTS CONFESSION FROM FEED PAGE
     const postConfession = async () => {
-        console.log("postConfession");
-        
-        
+
+        preventDoubleClick(true);
+
         let postConfessionArr,
             token = '',
             loggedInUserData,
             post_as_anonymous = 1,
             feedDescErrorCont = document.getElementById("feedDescErrorCont"),
             feedPostConfResponseCont = document.getElementById("feedPostConfResponseCont");
-            
+
         let recapToken = ""
 
         window.grecaptcha.ready(() => {
@@ -192,7 +192,6 @@ export default function Feed(props) {
         });
 
         const executePostConfession = async () => {
-            console.log("postConfession");
 
             if (description.trim() !== '') {
 
@@ -219,13 +218,9 @@ export default function Feed(props) {
                 }
 
                 if (auth() && post_as_anonymous === 0) {
-                    console.log({postanyway : postAlertReducer.postAnyway, "insideiffeed" : true});
                     if (postAlertReducer.postAnyway === false) {
-                        preventDoubleClick(false);
-                        let data = { visible: true };
-                        dispatch(postAlertActionCreators.openModal(data));
-                        console.log({ state: postAlertReducer, action: "openmodal" });
-                        return
+                        dispatch(postAlertActionCreators.openModal());
+                        return false;
                     }
                 }
 
@@ -288,11 +283,11 @@ export default function Feed(props) {
                     selectRef.selectedIndex = 0;
                     feedPostConfResponseCont.innerHTML = "Server Error, Please try again after some time...";
                 }
-                
-                if(postAlertReducer.visible === true)
-                {
+
+                if (postAlertReducer.visible === true) {
                     dispatch(postAlertActionCreators.closeModal())
                 }
+
                 preventDoubleClick(false);
             }
             else {
@@ -667,6 +662,7 @@ export default function Feed(props) {
 
             {postAlertReducer.visible === true &&
                 <PostAlertModal
+                    preventDoubleClick={preventDoubleClick}
                     postConfession={postConfession}
                 />}
         </div>

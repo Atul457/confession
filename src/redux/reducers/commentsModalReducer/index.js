@@ -1,8 +1,12 @@
 import { commentsModActions } from "../../actions/commentsModal";
 
+
 const initialState = {
     visible: false,
-    state: null
+    state: null,
+    commentField: {
+        comment_id : null
+    }
 }
 
 
@@ -40,9 +44,17 @@ const commentsModalReducer = (state = initialState, action) => {
         case commentsModActions.UPDATMODALSTATE:
             return {
                 ...state,
-                state : {
+                state: {
                     ...state.state,
                     ...action.payload
+                }
+            }
+
+        case commentsModActions.SETCOMMENTFIELD:
+            return {
+                ...state,
+                commentField: {
+                    comment_id : action.payload
                 }
             }
 

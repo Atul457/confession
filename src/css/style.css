@@ -2651,7 +2651,7 @@ span.facebookMobIcon {
 }
 
 #postsMainCont {
-    max-height: 200px;
+    max-height: 300px;
     overflow-y: auto;
     padding: 10px;
 }
@@ -3312,7 +3312,7 @@ a.headerNavLinks.active::after {
     height: calc(100vh - 60px);
 }
 
-.iconsMainCont{
+.iconsMainCont {
     display: flex;
 }
 
@@ -3675,8 +3675,13 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
 }
 
 .carousel_item_feature .imgWrapper {
-    max-height: 180px;
+    width: 60%;
+    margin: 10px auto;
     overflow: hidden;
+}
+
+.replyCont textarea {
+    margin-top: 10px;
 }
 
 button.modalFootBtns.btn a {
@@ -3685,6 +3690,40 @@ button.modalFootBtns.btn a {
 
 button.modalFootBtns.btn a:hover {
     text-decoration: none;
+}
+
+.subcommentsMainCont {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0px 0px 0px 30px;
+}
+
+.subcommentCont.upperView {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.subcommentCont.upperView .postContHeader {
+    padding-bottom: 0px;
+    flex-wrap: wrap;
+}
+
+.subCommentsCount{
+    color: var(--primaryColor);
+    font-size: 10px;
+    padding-left: 10px;
+    position: absolute;
+    right: 0px;
+}
+
+.replyCont {
+    color: var(--primaryColor);
+    font-weight: 500;
+    margin-top: 10px;
+    cursor: pointer;
 }
 
 
@@ -4996,13 +5035,14 @@ button.modalFootBtns.btn a:hover {
         right: 10px;
     }
 
-    .upvote_downvote_icons_cont{
+    .upvote_downvote_icons_cont {
         margin-left: 15px;
     }
 
     .commmentsGotModal .iconsMainCont .upvote_downvote_icons_cont:first-child {
         margin-left: 0px;
     }
+
     .commmentsGotModal .iconsMainCont {
         width: 100%;
         margin-top: 15px;

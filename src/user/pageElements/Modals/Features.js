@@ -3,9 +3,9 @@ import Button from '@restart/ui/esm/Button';
 import { Modal } from 'react-bootstrap';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import city1 from "../../../images/city1.jpg";
-import city2 from "../../../images/city2.jpg";
-import city3 from "../../../images/city3.jpg";
+import carousel1 from "../../../images/carousel1.svg";
+import carousel2 from "../../../images/carousel2.svg";
+import carousel3 from "../../../images/carousel3.svg";
 import { Link } from 'react-router-dom';
 
 const Features = (props) => {
@@ -29,19 +29,19 @@ const Features = (props) => {
                         showArrows={false}>
                         <div className="carousel_item_feature">
                             <div className="imgWrapper">
-                                <img src={city1} className="carouselImage" />
+                                <img src={carousel1} className="carouselImage" />
                             </div>
                             <div>Share interesting posts!</div>
                         </div>
                         <div className="carousel_item_feature">
                             <div className="imgWrapper">
-                                <img src={city2} className="carouselImage" />
+                                <img src={carousel2} className="carouselImage" />
                             </div>
                             <div> Make friends and chat anonymously!</div>
                         </div>
                         <div className="carousel_item_feature">
                             <div className="imgWrapper">
-                                <img src={city3} className="carouselImage" />
+                                <img src={carousel3} className="carouselImage" />
                             </div>
                             <div> Get email notifications for friend requests and responses to your posts; you'll need to be logged in</div>
                         </div>

@@ -4,7 +4,8 @@ export const commentsModActions = {
     RESET : "RESETCOMMENTSGOTMODAL",
     REOPEN : "REOPENCOMMENTSGOTMODAL",
     UPDATEMODAL : "UPDATECOMMENTSMODAL",
-    UPDATMODALSTATE : "UPDATECOMMENTSMODALSTATE"
+    UPDATMODALSTATE : "UPDATECOMMENTSMODALSTATE",
+    SETCOMMENTFIELD : "SETCOMMENTFIELD",
 }
 
 
@@ -19,7 +20,6 @@ export const openCModal = payload => {
 export const closeCModal = payload => {
     return {
         type : commentsModActions.CLOSEMODAL,
-        // payload 
     }
 }
 
@@ -32,6 +32,13 @@ export const reOpenCModal = () => {
 export const resetCModal = () => {
     return {
         type: commentsModActions.RESET,
+    }
+}
+
+export const setCommentField = payload => {
+    return {
+        type: commentsModActions.SETCOMMENTFIELD,
+        payload : payload.id
     }
 }
 

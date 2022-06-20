@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import postAlertActionCreators from '../../../redux/actions/postAlert';
 import { useNavigate } from 'react-router-dom';
 
-const PostAlertModal = ({ postConfession }) => {
+const PostAlertModal = ({ postConfession, preventDoubleClick }) => {
 
     const dispatch = useDispatch();
     const history = useNavigate();
@@ -18,12 +18,26 @@ const PostAlertModal = ({ postConfession }) => {
     }, [postAlertReducer.postAnyway])
 
     const closeModal = () => {
+        preventDoubleClick(false)
         dispatch(postAlertActionCreators.closeModal());
     }
 
     const postAnyway = () => {
-        dispatch(postAlertActionCreators.openModal({ postAnyway: true }));
+        var timer;
+        return () => {
+            clearInterval(timer);
+            timer = setTimeout(() => {
+                console.log("post anyway");
+                dispatch(postAlertActionCreators.updateModal({ postAnyway: true }));
+            }, 500);
+        }
     }
+
+    const betterPostAnyway = postAnyway()
+
+    // const postAnyway = () => {
+    //     dispatch(postAlertActionCreators.updateModal({ postAnyway: true }));
+    // }
 
 
     const redirectToProfile = () => {
@@ -40,14 +54,14 @@ const PostAlertModal = ({ postConfession }) => {
                 </span>
             </Modal.Header>
             <Modal.Body className="privacyBody text-left px-4 pt-4">
-                You are about to post with the 'Randomize name' option turned OFF. The post will be shown with your 'Display name'.<br/>
+                You are about to post with the 'Randomize name' option turned OFF. The post will be shown with your 'Display name'.<br />
                 Do you want to continue?
             </Modal.Body>
             <Modal.Footer className="pt-0 justify-content-center flex-wrap">
                 <Button className="modalFootBtns btn" variant="primary" onClick={redirectToProfile}>
                     Choose a Display name
                 </Button>
-                <Button className="modalFootBtns btn" variant="primary" onClick={postAnyway}>
+                <Button className="modalFootBtns btn" variant="primary" onClick={betterPostAnyway}>
                     Continue posting?
                 </Button>
             </Modal.Footer>

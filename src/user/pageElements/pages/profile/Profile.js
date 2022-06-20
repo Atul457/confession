@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import Post from '../../components/Post';
-// import logo from '../../../../images/appLogo.svg'
 import Requests from '../../components/Requests';
 import pen from '../../../../images/whitepen.png';
-// import requestsIcon from '../../../../images/contactUsIconActive.png';
 import supportIcon from '../../../../images/contactUsIconActive.png';
 import { Link } from "react-router-dom";
 import SiteLoader from '../../components/SiteLoader';
@@ -179,9 +177,7 @@ export default function Profile() {
     }
 
     useEffect(() => {
-        if(profile.display_name !== "")
-        {
-            console.log("updateprofile");
+        if (profile.display_name !== "") {
             updateProfile();
         }
     }, [profile])
@@ -586,8 +582,7 @@ export default function Profile() {
                                                         onBlur={(e) => {
                                                             setDisplayName(false);
                                                             // BECAUSE DISPLAYNAME IS MONDOTORY
-                                                            if(e.target.value !== '')
-                                                            {
+                                                            if (e.target.value !== '') {
                                                                 handleProfile(e.target);
                                                             }
                                                         }}
