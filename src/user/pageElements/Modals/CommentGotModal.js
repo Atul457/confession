@@ -31,17 +31,6 @@ import { openCFRModal } from '../../../redux/actions/friendReqModal';
 
 export default function CommentGotModal({ categories, ...rest }) {
 
-    //ON THE BASIS OF THIS ID THE POST DATA RELATED TO THIS MODAL POST WILL BE CHANGED
-    const handleCommentsModal = () => {
-        var data = {
-            "postId": null,
-            "visibility": false,
-            "index": state.index,
-            "viewcount": (state.viewcount + 1)
-        }
-        rest.handleCommentsModal(data);
-    }
-
     let maxChar = 2000;
     let history = useNavigate();
     const dispatch = useDispatch();
@@ -732,10 +721,11 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                             updateComment={updateComment}
                                                                             created_at={post.created_at}
                                                                             commentId={post.comment_id}
+                                                                            countChild={post.countChild}
                                                                             is_editable={post.is_editable}
                                                                             curid={(post.user_id === '' || post.user_id === 0) ? false : post.user_id}
-                                                                            key={"Arr" + index + "dp"}
-                                                                            imgUrl={post.profile_image} 
+                                                                            key={"Arr" + index + postId + "dp"}
+                                                                            imgUrl={post.profile_image}
                                                                             userName={post.comment_by}
                                                                             postedComment={post.comment} />
 

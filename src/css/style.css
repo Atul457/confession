@@ -594,6 +594,12 @@ input:focus-visible {
     width: calc(100vw - 60px);
 }
 
+.inputToAddSubComment {
+    padding: 0px;
+    display: flex;
+    align-items: center;
+}
+
 .inputToAddComment.chat {
     width: calc(100% - 60px) !important;
 }
@@ -3711,7 +3717,7 @@ button.modalFootBtns.btn a:hover {
     flex-wrap: wrap;
 }
 
-.subCommentsCount{
+.subCommentsCount {
     color: var(--primaryColor);
     font-size: 10px;
     padding-left: 10px;
@@ -4546,6 +4552,18 @@ button.modalFootBtns.btn a:hover {
         height: 33px;
         margin: 15px 0px 10px !important;
     }
+
+    .inputToAddSubComment{
+        margin-top: 10px !important;
+    }
+
+    
+
+    .inputToAddSubComment.textAreaToComment textarea {
+        height: 33px;
+        margin: 0px !important;
+    }
+
 
     .inputToAddComment textarea {
         height: 33px;

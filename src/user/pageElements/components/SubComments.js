@@ -5,7 +5,7 @@ import auth from '../../behindScenes/Auth/AuthCheck';
 import forwardIcon from '../../../images/forwardIcon.png';
 import editCommentIcon from '../../../images/editCommentIcon.png';
 import TextareaAutosize from 'react-textarea-autosize';
-import { fetchData } from '../../../commonApi';
+// import { fetchData } from '../../../commonApi';
 import DateConverter from '../../../helpers/DateConverter';
 import { setCommentField } from '../../../redux/actions/commentsModal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -106,7 +106,7 @@ const SubComments = ({ data, subcommentId }) => {
         <div className="postCont overWritePostWithComment subcommentCont">
             <div className="postContHeader commentsContHeader">
                 <span className="commentsGotProfileImg">
-                    <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
+                    <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />
                 </span>
 
                 {props.curid !== false ?
@@ -116,7 +116,7 @@ const SubComments = ({ data, subcommentId }) => {
                             (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
                             : ''}>
                         <span className="userName">
-                            {props.userName}
+                            {props.comment_by}
                         </span>
                     </Link>)
                     :
@@ -140,7 +140,7 @@ const SubComments = ({ data, subcommentId }) => {
             <div className="postBody">
                 <div className="postedPost">
                     <pre className="preToNormal">
-                        {toggleTextarea === false && props.postedComment}
+                        {toggleTextarea === false && props.comment}
                         {toggleTextarea === true &&
                             <>
                                 <div className="container-fluid inputWithForwardCont">

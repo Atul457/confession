@@ -15,19 +15,19 @@ import { setCommentField } from '../../../redux/actions/commentsModal';
 
 export default function Comments(props) {
 
+    
+    let SLOMT = 3; // SHOW LATEST ON COMMENTS MORE THAN
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
     const [toggleTextarea, setToggleTextarea] = useState(false);
-    const [requiredError, setRequiredError] = useState('');
+    const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
     const editCommentField = useRef(null);
     const dispatch = useDispatch();
-    const [showSubComments, setShowSubComments] = useState(() => {
-        let lengthOfSubcomments = 4;
-        if (lengthOfSubcomments > 3)
-            return false;
-        return true;
-    })
+    const [subComments, setSubComments] = useState({ data: [], loading: false })
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
+    const [showSubComments, setShowSubComments] = useState(() => {
+        return getShowSubComments()
+    })
 
     useEffect(() => {
         if (toggleTextarea) {
@@ -35,23 +35,42 @@ export default function Comments(props) {
         }
     }, [toggleTextarea])
 
+    useEffect(() => {
+        if (showSubComments.isBeingExpanded === true) {
+            console.log("fetch sub comments, now");
+            commentsOnCconfession({})
+        }
+    }, [showSubComments.isBeingExpanded])
+
+
+    useEffect(() => {
+        if (showSubComments.present === true && showSubComments.show === true) {
+            commentsOnCconfession({ fetchOnLoad: true })
+        }
+    }, [])
+
 
     const setComment = () => {
+        if (requiredError.updateError !== '')
+            setRequiredError({ ...requiredError, updateError: "" });
+        dispatch(setCommentField({ id: "" }));
         setToggleTextarea(true);
         setEditedComment(props.postedComment);
     }
 
 
     const updateComment = () => {
+
         let commentData;
         commentData = {
             comment_id: props.commentId,
             comment: editedComment
         }
+
         if (editedComment.trim() === "") {
-            setRequiredError("This is required field");
+            setRequiredError({ ...requiredError, updateError: "This is required field" });
         } else {
-            setRequiredError("");
+            setRequiredError({ ...requiredError, updateError: "" });
             props.updateComment(commentData);
             setToggleTextarea(false);
         }
@@ -59,9 +78,100 @@ export default function Comments(props) {
 
 
     const sendSubComment = () => {
-        console.log("send sub comment");
-        dispatch(setCommentField({ id: "" }));
+
+        let commentData, ref;
+        ref = document.querySelector(`#textarea${props.commentId}`);
+
+        commentData = {
+            comment: ref.value,
+            parent_id: props.commentId
+        }
+
+        console.log(ref.value);
+        // dispatch(setCommentField({ id: "" }));
+
+        if (ref.value.trim() === "") {
+            setRequiredError({ ...requiredError, replyError: "This is required field" });
+        } else {
+            setRequiredError({ ...requiredError, replyError: "" });
+            props.sendSubComment(commentData);
+        }
+
     }
+
+
+    function getShowSubComments() {
+        let countChild = props.countChild;
+        if (countChild && countChild > SLOMT)
+            return {
+                present: true,
+                show: false,
+                isShown: false,
+                isBeingExpanded: false
+            }
+        else if (countChild && countChild <= SLOMT)
+            return {
+                present: true,
+                show: true,
+                isShown: false,
+                isBeingExpanded: false
+            }
+        else if (countChild === 0)
+            return {
+                present: false,
+                show: false,
+                isShown: false,
+                isBeingExpanded: false
+            }
+    }
+
+
+    async function commentsOnCconfession({ page = 1, append = false, fetchOnLoad = false }) {
+
+        // console.log({ page, append, fetchOnLoad });
+        let pageNo = page;
+        let commentId = props.commentId;
+        let token;
+
+        if (fetchOnLoad === true)
+            setShowSubComments({ ...showSubComments, isShown: true })
+
+        setSubComments({ ...subComments, loading: true });
+
+        if (auth()) {
+            token = localStorage.getItem("userDetails");
+            token = JSON.parse(token);
+            token = token.token;
+        } else {
+            token = "";
+        }
+
+        let data = {
+            "confession_id": props.postId,
+            "page": pageNo,
+            "root_id": commentId
+        }
+
+        let obj = {
+            data: data,
+            token: token,
+            method: "post",
+            url: "getcomments"
+        }
+        try {
+            const res = await fetchData(obj)
+            if (res.data.status === true) {
+                return setSubComments({ loading: false, data: res.data.body.comments })
+            } else {
+                console.log(res);
+            }
+            setSubComments({ ...subComments, loading: false })
+        } catch {
+            setSubComments({ ...subComments, loading: false })
+            console.log("something went wrong");
+        }
+    }
+
 
 
     // SUBMITS THE DATA ON ENTER AND CREATES A NEW PARA ON SHIFT+ENTER KEY
@@ -88,6 +198,7 @@ export default function Comments(props) {
     }
 
 
+    // DELETES THE COMMENT
     const deleteCommentFunc = async () => {
 
         let confessionId = props.postId;
@@ -111,6 +222,13 @@ export default function Comments(props) {
     }
 
     const openCommentBox = () => {
+
+        if (requiredError.replyError !== '')
+            setRequiredError({ ...requiredError, replyError: "" });
+
+        if (toggleTextarea === true)
+            setToggleTextarea(false);
+
         if (props.commentId === commentsModalReducer.commentField.comment_id) {
             return dispatch(setCommentField({ id: "" }));
         }
@@ -119,7 +237,7 @@ export default function Comments(props) {
     }
 
     const openSubComments = () => {
-        setShowSubComments(true)
+        setShowSubComments({ ...showSubComments, isBeingExpanded: true, isShown: true })
     }
 
 
@@ -161,7 +279,7 @@ export default function Comments(props) {
 
                 </div>
                 <div className="postBody">
-                    <div className="postedPost">
+                    <div className="postedPost mb-0">
                         <pre className="preToNormal">
                             {toggleTextarea === false && props.postedComment}
                             {toggleTextarea === true &&
@@ -182,7 +300,7 @@ export default function Comments(props) {
                                             <img src={forwardIcon} className="forwardIconContImg" onClick={updateComment} />
                                         </div>
                                     </div>
-                                    <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
+                                    <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError.updateError}</span>
                                 </>
                             }
                         </pre>
@@ -193,44 +311,71 @@ export default function Comments(props) {
                             </span>
 
                             {commentsModalReducer.commentField.comment_id === props.commentId &&
-                                <TextareaAutosize
-                                    type="text"
-                                    maxLength="2000"
-                                    placeholder='Sub comment'
-                                    onKeyDown={(e) => checkKeyPressed(e, 1)}
-                                    className="form-control">
-                                </TextareaAutosize>}
+                                <>
+                                    <div className='inputToAddSubComment textAreaToComment mt-md-2'>
+                                        <TextareaAutosize
+                                            type="text"
+                                            maxLength="2000"
+                                            id={"textarea" + props.commentId}
+                                            placeholder='Sub comment'
+                                            onKeyDown={(e) => checkKeyPressed(e, 1)}
+                                            className="form-control mt-0">
+                                        </TextareaAutosize>
+
+                                        <div
+                                            className="arrowToAddComment"
+                                            type="button"
+                                            onClick={sendSubComment}
+                                        >
+                                            <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                                        </div>
+                                    </div>
+                                    <span className="d-block errorCont text-danger mb-2 mt-2 moveUp">{requiredError.replyError}</span>
+                                </>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="subcommentsMainCont">
-                {showSubComments === false ?
 
-                    <div className="postCont overWritePostWithComment subcommentCont upperView" onClick={openSubComments}>
-                        <div className="postContHeader commentsContHeader">
-                            <span className="commentsGotProfileImg">
-                                <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
-                            </span>
-                            <span className="userName">
-                                {props.userName}
-                            </span>
-                            <span className="postCreatedTime">
-                                {DateConverter(props.created_at)}
-                            </span>
-                            <span className='subCommentsCount'>
-                                5 More Reply
-                            </span>
+            {/* IF SUB_COMMENTS PRESENT THEN EXECUTE THE NEXT CONDITION,
+            IF THEY ARE NOT SHOW THEN SHOW THE LATEST COMMENT,
+            ELSE SHOW ALL THE COMMENTS */}
+
+            {showSubComments.present &&
+                showSubComments.isShown === false ?
+                <div className="postCont overWritePostWithComment subcommentCont upperView" onClick={openSubComments}>
+                    <div className="postContHeader commentsContHeader">
+                        <span className="commentsGotProfileImg">
+                            <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
+                        </span>
+                        <span className="userName">
+                            Dummy name
+                        </span>
+                        <span className="postCreatedTime">
+                            {DateConverter(props.created_at)}
+                        </span>
+                        <span className='subCommentsCount'>
+                            {props.countChild} More Reply
+                        </span>
+                    </div>
+                </div>
+                :
+                subComments.loading === true ?
+                    <div className="w-100 text-center mb-3">
+                        <div className="spinner-border pColor" role="status">
+                            <span className="sr-only">Loading...</span>
                         </div>
                     </div> :
 
-                    [1, 2, 3, 4, 5].map((index) => {
-                        return <SubComments
-                            key={"sub" + props.commentId + index}
-                            data={props}
-                            subcommentId={"sub" + props.commentId + index} />
-                    })}
-            </div>
+                    <div className="subcommentsMainCont">
+                        {subComments.data.map((subcomment) => {
+                            return <SubComments
+                                key={subcomment.comment_id}
+                                data={subcomment}
+                                subcommentId={subcomment.comment_id} />
+                        })}
+                    </div>}
         </>
     )
 }
