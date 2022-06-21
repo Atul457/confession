@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { fetchData } from '../../../commonApi';
 import Lightbox from "react-awesome-lightbox";
 import userIcon from '../../../images/userAcc.png';
+import commentCountIcon from '../../../images/commentCountIcon.svg';
 import forwardIcon from '../../../images/forwardIcon.png';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Comments from '../../pageElements/components/Comments';
@@ -627,60 +628,65 @@ export default function CommentGotModal({ categories, ...rest }) {
 
                                                                 }
 
-                                                                {auth()
-                                                                    ?
+                                                                {auth() === true &&
                                                                     <div className="container-fluid inputWithForwardCont">
                                                                         <div className="inputToAddComment textAreaToComment mb-1 my-md-0">
-                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control mt-0 mb-2 mb-md-3"></TextareaAutosize>
+                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control mt-0 mb-2"></TextareaAutosize>
 
                                                                         </div>
                                                                         <div className="arrowToAddComment" type="button" id="commentsModalDoComment" onClick={() => { doComment() }}>
                                                                             <img src={forwardIcon} alt="" className="forwardIconContImg" />
                                                                         </div>
                                                                     </div>
-                                                                    :
-                                                                    <span className="feedPageLoginBtnCont">
-                                                                        <Link to="/login">
-                                                                            <div className="categoryOfUser enhancedStyle" type="button">
-                                                                                Login to comment
-                                                                            </div>
-                                                                        </Link>
-                                                                    </span>
                                                                 }
                                                                 <span className="d-block text-left errorCont text-danger mb-2 moveUp">{requiredError}</span>
                                                             </div>
 
                                                             <div className="postFoot commmentsGotModal">
-                                                                <div className="totalComments">
-                                                                    {sharedBy}  - People shared their thoughts about this post
-                                                                </div>
 
-                                                                
-                                                                {!isNaN(state.is_liked) ?
-                                                                    (state.is_liked === 0
-                                                                        ?
-                                                                        <div className='iconsMainCont'>
-                                                                            <div className={`upvote_downvote_icons_cont ${state.is_liked === 1 ? '' : "buttonType"}`}>
-                                                                                <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
-                                                                                <span className='count'>{state.like}</span>
+                                                                {auth() === false &&
+                                                                    <span className="feedPageLoginBtnCont postLoginBtnCont">
+                                                                        <Link to="/login">
+                                                                            <div className="categoryOfUser enhancedStyle" type="button">
+                                                                                Login to comment
                                                                             </div>
-                                                                            {/* <div className={`upvote_downvote_icons_cont ${state.is_liked === 2 ? '' : "buttonType"}`}>
+                                                                        </Link>
+                                                                    </span>}
+
+                                                                <div className={`iconsCont ${auth() === false ? 'mainDesignOnWrap' : ''}`}>
+                                                                    <div className="upvote_downvote_icons_cont  ml-0" type="button">
+                                                                        <img src={commentCountIcon} alt="" />
+                                                                        <span className="count">{sharedBy}</span>
+                                                                    </div>
+
+
+                                                                    {!isNaN(state.is_liked) ?
+                                                                        (state.is_liked === 0
+                                                                            ?
+                                                                            <div className='iconsMainCont'>
+                                                                                <div className={`upvote_downvote_icons_cont ${state.is_liked === 1 ? '' : "buttonType"}`}>
+                                                                                    <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
+                                                                                    <span className='count'>{state.like}</span>
+                                                                                </div>
+                                                                                {/* <div className={`upvote_downvote_icons_cont ${state.is_liked === 2 ? '' : "buttonType"}`}>
                                                                                 <img src={downvote} onClick={() => upvoteOrDownvote(false)} alt="" />
                                                                                 <span className='count'>{state.dislike}</span>
                                                                             </div> */}
-                                                                        </div>
-                                                                        :
-                                                                        <div className='iconsMainCont'>
-                                                                            <div className={`upvote_downvote_icons_cont`}>
-                                                                                {state.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
-                                                                                <span className='count'>{state.like}</span>
                                                                             </div>
-                                                                            {/* <div className={`upvote_downvote_icons_cont`}>
+                                                                            :
+                                                                            <div className='iconsMainCont'>
+                                                                                <div className={`upvote_downvote_icons_cont`}>
+                                                                                    {state.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
+                                                                                    <span className='count'>{state.like}</span>
+                                                                                </div>
+                                                                                {/* <div className={`upvote_downvote_icons_cont`}>
                                                                                 {state.is_liked === 2 ? <img src={downvoted} alt="" /> : <img src={downvote} alt="" />}
                                                                                 <span className='count'>{state.dislike}</span>
                                                                             </div> */}
-                                                                        </div>)
-                                                                    : null}
+                                                                            </div>)
+                                                                        : null}
+
+                                                                </div>
                                                             </div>
                                                         </div>
                                                             :

@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import userIcon from '../../../images/userAcc.png';
 import commentReplyIcon from '../../../images/creplyIcon.svg';
@@ -10,7 +11,7 @@ import { fetchData } from '../../../commonApi';
 import DateConverter from '../../../helpers/DateConverter';
 import SubComments from './SubComments';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCommentField } from '../../../redux/actions/commentsModal';
+import { setCommentField, setUpdateFieldCModal } from '../../../redux/actions/commentsModal';
 
 
 export default function Comments(props) {
@@ -19,7 +20,7 @@ export default function Comments(props) {
     let SLOMT = 3; // SHOW LATEST ON COMMENTS MORE THAN
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
-    const [toggleTextarea, setToggleTextarea] = useState(false);
+    // const [toggleTextarea, setToggleTextarea] = useState(false);
     const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
     const editCommentField = useRef(null);
     const dispatch = useDispatch();
@@ -30,10 +31,10 @@ export default function Comments(props) {
     })
 
     useEffect(() => {
-        if (toggleTextarea) {
+        if (commentsModalReducer.updateField.comment_id === props.commentId) {
             editCommentField.current.focus();
         }
-    }, [toggleTextarea])
+    }, [commentsModalReducer.updateField.comment_id])
 
     useEffect(() => {
         if (showSubComments.isBeingExpanded === true) {
@@ -54,7 +55,7 @@ export default function Comments(props) {
         if (requiredError.updateError !== '')
             setRequiredError({ ...requiredError, updateError: "" });
         dispatch(setCommentField({ id: "" }));
-        setToggleTextarea(true);
+        dispatch(setUpdateFieldCModal({ comment_id: props.commentId }));
         setEditedComment(props.postedComment);
     }
 
@@ -72,7 +73,7 @@ export default function Comments(props) {
         } else {
             setRequiredError({ ...requiredError, updateError: "" });
             props.updateComment(commentData);
-            setToggleTextarea(false);
+            dispatch(setUpdateFieldCModal({ comment_id:"" }));
         }
 
     }
@@ -134,7 +135,6 @@ export default function Comments(props) {
         var elem = document.querySelector('#commentsModalDoComment');
         runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;
     }
-
 
 
     function getShowSubComments() {
@@ -263,8 +263,8 @@ export default function Comments(props) {
         if (requiredError.replyError !== '')
             setRequiredError({ ...requiredError, replyError: "" });
 
-        if (toggleTextarea === true)
-            setToggleTextarea(false);
+        if (commentsModalReducer.updateField.comment_id === props.commentId)
+            dispatch(setUpdateFieldCModal({ comment_id: "" }));
 
         if (props.commentId === commentsModalReducer.commentField.comment_id) {
             return dispatch(setCommentField({ id: "" }));
@@ -310,7 +310,8 @@ export default function Comments(props) {
                     {props.is_editable === 1 &&
                         <div className='editDelComment'>
                             <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
-                            {toggleTextarea === false && <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} />}
+                            {/* {toggleTextarea === false && <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} />} */}
+                            {commentsModalReducer.updateField.comment_id !== props.commentId ? <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} /> : ''}
                         </div>
                     }
 
@@ -318,8 +319,9 @@ export default function Comments(props) {
                 <div className="postBody">
                     <div className="postedPost mb-0">
                         <pre className="preToNormal">
-                            {toggleTextarea === false && props.postedComment}
-                            {toggleTextarea === true &&
+                            {/* {toggleTextarea === false && props.postedComment} */}
+                            {commentsModalReducer.updateField.comment_id !== props.commentId && props.postedComment}
+                            {commentsModalReducer.updateField.comment_id === props.commentId &&
                                 <>
                                     <div className="container-fluid inputWithForwardCont">
                                         <div className="inputToAddComment textAreaToComment">

@@ -5,7 +5,10 @@ const initialState = {
     visible: false,
     state: null,
     commentField: {
-        comment_id : null
+        comment_id: null
+    },
+    updateField: {
+        comment_id: null,
     }
 }
 
@@ -54,7 +57,16 @@ const commentsModalReducer = (state = initialState, action) => {
             return {
                 ...state,
                 commentField: {
-                    comment_id : action.payload
+                    comment_id: action.payload
+                }
+            }
+
+        case commentsModActions.MUTATEUPDATEBOX:
+            return {
+                ...state,
+                updateField: {
+                    ...state.updateField,
+                    ...action.payload
                 }
             }
 

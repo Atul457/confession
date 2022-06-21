@@ -6,6 +6,7 @@ export const commentsModActions = {
     UPDATEMODAL : "UPDATECOMMENTSMODAL",
     UPDATMODALSTATE : "UPDATECOMMENTSMODALSTATE",
     SETCOMMENTFIELD : "SETCOMMENTFIELD",
+    MUTATEUPDATEBOX : "SHOWORHIDEUPDATETEXTAREA"
 }
 
 
@@ -53,5 +54,12 @@ export const updateCModalState = (payload) => {
     return {
         type: commentsModActions.UPDATMODALSTATE,
         payload
+    }
+}
+
+export const setUpdateFieldCModal = payload => {
+    return {
+        type : commentsModActions.MUTATEUPDATEBOX,
+        payload: payload
     }
 }

@@ -1907,7 +1907,7 @@ span.offlineColor {
     background: none;
     color: var(--primaryColor);
     padding: 7px 10px !important;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
 }
 
 .authProfileIcon {
@@ -2102,8 +2102,20 @@ span.offlineColor {
     align-items: center;
 }
 
+.iconsCont {
+    display: flex;
+    align-items: center;
+}
+
+.mainDesignOnWrap {
+    margin: 10px 0px;
+    margin-right: 10px;
+}
+
 .postFoot {
     flex-wrap: wrap;
+    display: flex;
+    justify-content: start;
 }
 
 .upvote_downvote_icons_cont img {
@@ -2112,9 +2124,17 @@ span.offlineColor {
 }
 
 .upvote_downvote_icons_cont {
+    font-size: 15px;
     margin-left: 20px;
     display: flex;
     align-items: center;
+    color: var(--primaryColor);
+    font-weight: 500;
+}
+
+.postLoginBtnCont {
+    margin: 0px;
+    margin-right: 30px;
 }
 
 .upvote_downvote_icons_cont .count {
@@ -5060,13 +5080,17 @@ button.modalFootBtns.btn a:hover {
         margin-left: 15px;
     }
 
-    .commmentsGotModal .iconsMainCont .upvote_downvote_icons_cont:first-child {
-        margin-left: 0px;
-    }
 
     .commmentsGotModal .iconsMainCont {
         width: 100%;
-        margin-top: 15px;
+    }
+
+    .postFoot {
+        justify-content: space-between;
+    }
+
+    .postLoginBtnCont {
+        margin-right: 25px;
     }
 
 }

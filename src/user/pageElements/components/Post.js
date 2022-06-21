@@ -502,9 +502,12 @@ export default function Post(props) {
                     </div>
                 }
 
-                {authenticated[0]
-                    ?
-                    (
+            </div>
+
+
+            {authenticated[0] === true &&
+                (
+                    <>
                         <div className="container-fluid inputWithForwardCont">
                             <div className="inputToAddComment textAreaToComment w-100">
                                 <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control mb-2"></TextareaAutosize>
@@ -513,9 +516,16 @@ export default function Post(props) {
                                 <img src={forwardIcon} alt="" className="forwardIconContImg" />
                             </div>
                         </div>
-                    )
-                    :
-                    <span className="feedPageLoginBtnCont w-100">
+                        <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
+                    </>
+                )
+            }
+
+
+            <div className="postFoot">
+
+                {authenticated[0] === false &&
+                    <span className="feedPageLoginBtnCont postLoginBtnCont">
                         <Link to="/login">
                             <div className="categoryOfUser enhancedStyle mb-0" type="button">
                                 Login to comment
@@ -523,43 +533,40 @@ export default function Post(props) {
                         </Link>
                     </span>}
 
-                <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
-            </div>
+                <div className={`iconsCont ${authenticated[0] === false ? 'mainDesignOnWrap' : ''}`}>
+                    <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button" onClick={openCommentsModal}>
+                        <img src={viewsCountIcon} alt="" />
+                        <span className="count">{props.viewcount ? props.viewcount : 0}</span>
+                    </div>
+                    <div className="upvote_downvote_icons_cont" type="button" onClick={openCommentsModal}>
+                        <img src={commentCountIcon} alt="" />
+                        <span className="count">{props.sharedBy}</span>
+                    </div>
 
-
-            <div className="postFoot d-flex justify-content-start">
-                <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button" onClick={openCommentsModal}>
-                    <img src={viewsCountIcon} alt="" />
-                    <span className="count">{props.viewcount ? props.viewcount : 0}</span>
-                </div>
-                <div className="upvote_downvote_icons_cont" type="button" onClick={openCommentsModal}>
-                    <img src={commentCountIcon} alt="" />
-                    <span className="count">{props.sharedBy}</span>
-                </div>
-
-                {(props.is_liked === 0
-                    ?
-                    <div className='iconsMainCont'>
-                        <div className={`upvote_downvote_icons_cont ${props.is_liked === 1 ? '' : "buttonType"}`}>
-                            <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
-                            <span className='count'>{props.like}</span>
-                        </div>
-                        {/* <div className={`upvote_downvote_icons_cont ${props.is_liked === 2 ? '' : "buttonType"}`}>
+                    {(props.is_liked === 0
+                        ?
+                        <div className='iconsMainCont'>
+                            <div className={`upvote_downvote_icons_cont ${props.is_liked === 1 ? '' : "buttonType"}`}>
+                                <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
+                                <span className='count'>{props.like}</span>
+                            </div>
+                            {/* <div className={`upvote_downvote_icons_cont ${props.is_liked === 2 ? '' : "buttonType"}`}>
                             <img src={downvote} onClick={() => upvoteOrDownvote(false)} alt="" />
                             <span className='count'>{props.dislike}</span>
                         </div> */}
-                    </div>
-                    :
-                    <div className='iconsMainCont'>
-                        <div className={`upvote_downvote_icons_cont`}>
-                            {props.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
-                            <span className='count'>{props.like}</span>
                         </div>
-                        {/* <div className={`upvote_downvote_icons_cont`}>
+                        :
+                        <div className='iconsMainCont'>
+                            <div className={`upvote_downvote_icons_cont`}>
+                                {props.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
+                                <span className='count'>{props.like}</span>
+                            </div>
+                            {/* <div className={`upvote_downvote_icons_cont`}>
                             {props.is_liked === 2 ? <img src={downvoted} alt="" /> : <img src={downvote} alt="" />}
                             <span className='count'>{props.dislike}</span>
                         </div> */}
-                    </div>)}
+                        </div>)}
+                </div>
             </div>
 
         </div>
