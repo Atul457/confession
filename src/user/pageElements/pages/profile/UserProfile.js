@@ -259,6 +259,7 @@ export default function UserProfile() {
                     {commentsModalReducer.visible && <CommentGotModal
                         handleChanges={handleChanges}
                         updateConfessionData={updateConfessionData}
+                        updatedConfessions={updatedConfessions}
                         state={commentsModal}
                         handleCommentsModal={handleCommentsModal} />}
 

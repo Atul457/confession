@@ -3066,7 +3066,7 @@ a.headerNavLinks.active::after {
     top: -4px;
 }
 
-/* .editCommentIcon {position: absolute;right: 4px;top: 4px;width: 15px;cursor: pointer;} */
+.editCommentIcon {cursor: pointer;}
 .deleteCommentIcon {
     font-size: 21px !important;
     color: var(--primaryColor);

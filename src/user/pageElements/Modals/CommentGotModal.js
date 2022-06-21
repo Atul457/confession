@@ -480,9 +480,12 @@ export default function CommentGotModal({ categories, ...rest }) {
                 const res = await fetchData(obj)
                 if (res.data.status === true) {
                     data = {
-                        [isLiked ? "like" : "dislike"]: isLiked ? state.like + 1 : state.dislike + 1,
-                        is_liked
+                        like: isLiked ? state.like + 1 : state.like - 1,
+                        is_liked: isLiked ? 1 : 2
                     }
+
+                    console.log({ data });
+                    rest.updatedConfessions(state.index, data)
 
                     dispatch(updateCModalState(data))
 
@@ -660,31 +663,23 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                     </div>
 
 
-                                                                    {!isNaN(state.is_liked) ?
-                                                                        (state.is_liked === 0
-                                                                            ?
-                                                                            <div className='iconsMainCont'>
-                                                                                <div className={`upvote_downvote_icons_cont ${state.is_liked === 1 ? '' : "buttonType"}`}>
-                                                                                    <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
-                                                                                    <span className='count'>{state.like}</span>
-                                                                                </div>
-                                                                                {/* <div className={`upvote_downvote_icons_cont ${state.is_liked === 2 ? '' : "buttonType"}`}>
-                                                                                <img src={downvote} onClick={() => upvoteOrDownvote(false)} alt="" />
-                                                                                <span className='count'>{state.dislike}</span>
-                                                                            </div> */}
+                                                                    {(state.hasOwnProperty("is_liked")
+                                                                        ?
+                                                                        <div className='iconsMainCont'>
+                                                                            <div className={`upvote_downvote_icons_cont buttonType`}>
+                                                                                {state.is_liked === 1 ?
+                                                                                    <img src={upvoted} alt="" onClick={() => upvoteOrDownvote(false)} /> :
+                                                                                    <img src={upvote} alt="" onClick={() => upvoteOrDownvote(true)} />}
+                                                                                <span className='count'>{state.like}</span>
                                                                             </div>
-                                                                            :
-                                                                            <div className='iconsMainCont'>
-                                                                                <div className={`upvote_downvote_icons_cont`}>
-                                                                                    {state.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
-                                                                                    <span className='count'>{state.like}</span>
-                                                                                </div>
-                                                                                {/* <div className={`upvote_downvote_icons_cont`}>
-                                                                                {state.is_liked === 2 ? <img src={downvoted} alt="" /> : <img src={downvote} alt="" />}
-                                                                                <span className='count'>{state.dislike}</span>
-                                                                            </div> */}
-                                                                            </div>)
-                                                                        : null}
+                                                                        </div>
+                                                                        :
+                                                                        <div className='iconsMainCont'>
+                                                                            <div className={`upvote_downvote_icons_cont`}>
+                                                                                <img src={upvote} alt="" />
+                                                                                <span className='count'>{state.like}</span>
+                                                                            </div>
+                                                                        </div>)}
 
                                                                 </div>
                                                             </div>

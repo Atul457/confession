@@ -72,7 +72,7 @@ export default function Post(props) {
             "updatedConfessions": props.updatedConfessions,
             "like": props.like,
             "dislike": props.dislike,
-            "is_liked": props.is_liked,
+            ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
             "is_liked_prev": props.is_liked,
             "updateConfessionData": updateConfessionData
         }))
@@ -346,8 +346,8 @@ export default function Post(props) {
                 const res = await fetchData(obj)
                 if (res.data.status === true) {
                     data = {
-                        [isLiked ? "like" : "dislike"]: isLiked ? props.like + 1 : props.dislike + 1,
-                        is_liked
+                        like: isLiked ? props.like + 1 : props.like - 1,
+                        is_liked: isLiked ? 1 : 2
                     }
                     updateConfessionData(props.index, data)
                 } else {
@@ -543,29 +543,25 @@ export default function Post(props) {
                         <span className="count">{props.sharedBy}</span>
                     </div>
 
-                    {(props.is_liked === 0
+                    {(props.hasOwnProperty("is_liked")
                         ?
                         <div className='iconsMainCont'>
-                            <div className={`upvote_downvote_icons_cont ${props.is_liked === 1 ? '' : "buttonType"}`}>
-                                <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
+                            <div className={`upvote_downvote_icons_cont buttonType`}>
+                                {props.is_liked === 1 ?
+                                    <img src={upvoted} alt="" onClick={() => upvoteOrDownvote(false)} /> :
+                                    <img src={upvote} alt="" onClick={() => upvoteOrDownvote(true)} />}
                                 <span className='count'>{props.like}</span>
                             </div>
-                            {/* <div className={`upvote_downvote_icons_cont ${props.is_liked === 2 ? '' : "buttonType"}`}>
-                            <img src={downvote} onClick={() => upvoteOrDownvote(false)} alt="" />
-                            <span className='count'>{props.dislike}</span>
-                        </div> */}
                         </div>
                         :
                         <div className='iconsMainCont'>
                             <div className={`upvote_downvote_icons_cont`}>
-                                {props.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
+                                <img src={upvote} alt="" />
                                 <span className='count'>{props.like}</span>
                             </div>
-                            {/* <div className={`upvote_downvote_icons_cont`}>
-                            {props.is_liked === 2 ? <img src={downvoted} alt="" /> : <img src={downvote} alt="" />}
-                            <span className='count'>{props.dislike}</span>
-                        </div> */}
-                        </div>)}
+                        </div>
+                    )
+                    }
                 </div>
             </div>
 

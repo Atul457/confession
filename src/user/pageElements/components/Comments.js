@@ -73,7 +73,7 @@ export default function Comments(props) {
         } else {
             setRequiredError({ ...requiredError, updateError: "" });
             props.updateComment(commentData);
-            dispatch(setUpdateFieldCModal({ comment_id:"" }));
+            dispatch(setUpdateFieldCModal({ comment_id: "" }));
         }
 
     }
@@ -165,7 +165,6 @@ export default function Comments(props) {
 
     async function commentsOnCconfession({ page = 1, append = false, fetchOnLoad = false }) {
 
-        // console.log({ page, append, fetchOnLoad });
         let pageNo = page;
         let commentId = props.commentId;
         let token;
@@ -203,9 +202,9 @@ export default function Comments(props) {
                 console.log(res);
             }
             setSubComments({ ...subComments, loading: false })
-        } catch {
+        } catch (err) {
             setSubComments({ ...subComments, loading: false })
-            console.log("something went wrong");
+            console.log(err);
         }
     }
 
@@ -258,7 +257,9 @@ export default function Comments(props) {
         }
     }
 
-    const openCommentBox = () => {
+
+    // Handles comment box
+    const handleCommentBox = () => {
 
         if (requiredError.replyError !== '')
             setRequiredError({ ...requiredError, replyError: "" });
@@ -310,7 +311,6 @@ export default function Comments(props) {
                     {props.is_editable === 1 &&
                         <div className='editDelComment'>
                             <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
-                            {/* {toggleTextarea === false && <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} />} */}
                             {commentsModalReducer.updateField.comment_id !== props.commentId ? <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} /> : ''}
                         </div>
                     }
@@ -319,7 +319,6 @@ export default function Comments(props) {
                 <div className="postBody">
                     <div className="postedPost mb-0">
                         <pre className="preToNormal">
-                            {/* {toggleTextarea === false && props.postedComment} */}
                             {commentsModalReducer.updateField.comment_id !== props.commentId && props.postedComment}
                             {commentsModalReducer.updateField.comment_id === props.commentId &&
                                 <>
@@ -344,7 +343,7 @@ export default function Comments(props) {
                             }
                         </pre>
                         <div className="replyCont">
-                            <span onClick={openCommentBox}>
+                            <span onClick={handleCommentBox}>
                                 <img src={commentReplyIcon} alt="" />
                                 <span className='pl-2'>Reply</span>
                             </span>

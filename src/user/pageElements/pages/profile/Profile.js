@@ -828,7 +828,6 @@ export default function Profile() {
                                                                 is_viewed={post.is_viewed}
                                                                 like={post.like}
                                                                 dislike={post.dislike}
-                                                                is_liked={4}
                                                                 unread_comments={post.unread_comments} />
                                                         }
 
