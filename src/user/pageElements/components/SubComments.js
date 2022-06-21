@@ -7,62 +7,77 @@ import editCommentIcon from '../../../images/editCommentIcon.png';
 import TextareaAutosize from 'react-textarea-autosize';
 // import { fetchData } from '../../../commonApi';
 import DateConverter from '../../../helpers/DateConverter';
-import { setCommentField } from '../../../redux/actions/commentsModal';
+import { setCommentField, setUpdateFieldCModal } from '../../../redux/actions/commentsModal';
 import { useDispatch, useSelector } from 'react-redux';
 import commentReplyIcon from '../../../images/creplyIcon.svg';
 
 
-const SubComments = ({ data, subcommentId }) => {
+const SubComments = ({ data, subcommentId, updatSubComments }) => {
 
     let props = data;
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
     const [toggleTextarea, setToggleTextarea] = useState(false);
-    const [requiredError, setRequiredError] = useState('');
+    const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
     const editCommentField = useRef(null);
     const dispatch = useDispatch();
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
 
     useEffect(() => {
-        if (toggleTextarea) {
+        if (commentsModalReducer.updateField.comment_id === props.comment_id) {
             editCommentField.current.focus();
         }
-    }, [toggleTextarea])
+    }, [commentsModalReducer.updateField.comment_id])
 
 
     const setComment = () => {
-        setToggleTextarea(true);
-        setEditedComment(props.postedComment);
+        if (requiredError.updateError !== '')
+            setRequiredError({ ...requiredError, updateError: "" });
+        dispatch(setCommentField({ id: "" }));
+        dispatch(setUpdateFieldCModal({ comment_id: props.comment_id }));
+        console.log(props);
+        setEditedComment(props.comment);
     }
 
 
     const updateComment = () => {
+
         let commentData;
+
         commentData = {
-            comment_id: props.commentId,
+            comment_id: props.comment_id,
             comment: editedComment
         }
+
         if (editedComment.trim() === "") {
-            setRequiredError("This is required field");
+            setRequiredError({ ...requiredError, updateError: "This is required field" });
         } else {
-            setRequiredError("");
-            props.updateComment(commentData);
-            setToggleTextarea(false);
+            setRequiredError({ ...requiredError, updateError: "" });
+            updatSubComments(commentData);
+            dispatch(setUpdateFieldCModal({ comment_id: "" }));
         }
+
     }
 
 
     // SUBMITS THE DATA ON ENTER AND CREATES A NEW PARA ON SHIFT+ENTER KEY
     const betterCheckKeyPressed = () => {
         var timer;
-        return (event) => {
+        return (event, comment) => {
             if (window.innerWidth > 767) {
                 if (event.keyCode === 13 && !event.shiftKey) {
                     event.preventDefault();
                     //PREVENTS DOUBLE MESSAGE SEND
                     clearInterval(timer);
                     timer = setTimeout(() => {
-                        updateComment();
+                        // 0 MEANS UPDATE THE PARENT COMMENT
+                        // 1 MEANS ADD A NEW COMMENT
+                        console.log({ comment });
+                        if (comment === 0) {
+                            return updateComment();
+                        } else {
+                            // sendSubComment();
+                        }
                     }, 100);
                 }
             }
@@ -90,7 +105,7 @@ const SubComments = ({ data, subcommentId }) => {
         // } catch (error) {
         //     console.log(error);
         // }
-        
+
     }
 
     const openCommentBox = () => {
@@ -133,7 +148,7 @@ const SubComments = ({ data, subcommentId }) => {
                 {props.is_editable === 1 &&
                     <div className='editDelComment'>
                         <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
-                        {toggleTextarea === false && <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} />}
+                        {commentsModalReducer.updateField.comment_id !== props.comment_id ? <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} /> : ''}
                     </div>
                 }
 
@@ -141,8 +156,8 @@ const SubComments = ({ data, subcommentId }) => {
             <div className="postBody">
                 <div className="postedPost">
                     <pre className="preToNormal">
-                        {toggleTextarea === false && props.comment}
-                        {toggleTextarea === true &&
+                        {commentsModalReducer.updateField.comment_id !== props.commentId && props.comment}
+                        {commentsModalReducer.updateField.comment_id === props.comment_id &&
                             <>
                                 <div className="container-fluid inputWithForwardCont">
                                     <div className="inputToAddComment textAreaToComment">
@@ -150,7 +165,7 @@ const SubComments = ({ data, subcommentId }) => {
                                             type="text"
                                             ref={editCommentField}
                                             value={editedComment}
-                                            onKeyDown={(e) => checkKeyPressed(e)}
+                                            onKeyDown={(e) => checkKeyPressed(e, 0)}
                                             maxLength="2000"
                                             onChange={(e) => { setEditedComment(e.target.value) }}
                                             className="form-control my-1">
@@ -160,7 +175,7 @@ const SubComments = ({ data, subcommentId }) => {
                                         <img src={forwardIcon} className="forwardIconContImg" onClick={updateComment} />
                                     </div>
                                 </div>
-                                <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
+                                <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError.updateError}</span>
                             </>
                         }
                     </pre>
@@ -174,10 +189,11 @@ const SubComments = ({ data, subcommentId }) => {
                         {commentsModalReducer.commentField.comment_id === subcommentId &&
                             <TextareaAutosize
                                 type="text"
+                                onKeyDown={(e) => checkKeyPressed(e, 1)}
                                 maxLength="2000"
                                 placeholder='Sub comment'
                                 className="form-control">
-                            </TextareaAutosize> }
+                            </TextareaAutosize>}
                     </div>
                 </div>
             </div>

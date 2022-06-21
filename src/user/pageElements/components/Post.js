@@ -343,13 +343,14 @@ export default function Post(props) {
                 url: `likedislike/${props.postId}`
             }
             try {
+                data = {
+                    like: isLiked ? props.like + 1 : props.like - 1,
+                    is_liked: isLiked ? 1 : 2
+                }
+                updateConfessionData(props.index, data)
+
                 const res = await fetchData(obj)
                 if (res.data.status === true) {
-                    data = {
-                        like: isLiked ? props.like + 1 : props.like - 1,
-                        is_liked: isLiked ? 1 : 2
-                    }
-                    updateConfessionData(props.index, data)
                 } else {
                     console.log(res);
                 }

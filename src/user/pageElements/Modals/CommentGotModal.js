@@ -477,17 +477,17 @@ export default function CommentGotModal({ categories, ...rest }) {
                 url: `likedislike/${state.postId}`
             }
             try {
+                data = {
+                    like: isLiked ? state.like + 1 : state.like - 1,
+                    is_liked: isLiked ? 1 : 2
+                }
+                rest.updatedConfessions(state.index, data)
+                dispatch(updateCModalState(data))
+
+
                 const res = await fetchData(obj)
+
                 if (res.data.status === true) {
-                    data = {
-                        like: isLiked ? state.like + 1 : state.like - 1,
-                        is_liked: isLiked ? 1 : 2
-                    }
-
-                    console.log({ data });
-                    rest.updatedConfessions(state.index, data)
-
-                    dispatch(updateCModalState(data))
 
                 } else {
                     console.log(res);

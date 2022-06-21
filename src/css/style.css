@@ -2139,6 +2139,7 @@ span.offlineColor {
 
 .upvote_downvote_icons_cont .count {
     margin-left: 10px;
+    width: 20px;
 }
 
 span.facebookMobIcon {
@@ -3066,7 +3067,10 @@ a.headerNavLinks.active::after {
     top: -4px;
 }
 
-.editCommentIcon {cursor: pointer;}
+.editCommentIcon {
+    cursor: pointer;
+}
+
 .deleteCommentIcon {
     font-size: 21px !important;
     color: var(--primaryColor);
@@ -5077,7 +5081,8 @@ button.modalFootBtns.btn a:hover {
     }
 
     .upvote_downvote_icons_cont {
-        margin-left: 15px;
+        margin-left: 5px;
+        /* margin-left: 15px; */
     }
 
 
@@ -5090,7 +5095,24 @@ button.modalFootBtns.btn a:hover {
     }
 
     .postLoginBtnCont {
-        margin-right: 25px;
+        margin-right: 10px;
+    }
+
+    .mainDesignOnWrap {
+        margin-right: 0px;
+    }
+
+    .upvote_downvote_icons_cont img {
+        width: 17px;
+        height: 17px;
+    }
+
+    .upvote_downvote_icons_cont .count {
+        margin-left: 4px;
+        width: unset;
+        min-width: 20px;
+        text-align: left;
+        font-size: 14px;
     }
 
 }
