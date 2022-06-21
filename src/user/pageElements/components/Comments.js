@@ -15,7 +15,7 @@ import { setCommentField } from '../../../redux/actions/commentsModal';
 
 export default function Comments(props) {
 
-    
+
     let SLOMT = 3; // SHOW LATEST ON COMMENTS MORE THAN
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
@@ -74,30 +74,67 @@ export default function Comments(props) {
             props.updateComment(commentData);
             setToggleTextarea(false);
         }
+
     }
 
 
-    const sendSubComment = () => {
+    const sendSubComment = async () => {
 
-        let commentData, ref;
+        var userData, commentData, ref, obj;
+
+        if (requiredError.replyError !== '')
+            setRequiredError({ ...requiredError, replyError: '' });
+
+        preventDoubleClick(true);
+
         ref = document.querySelector(`#textarea${props.commentId}`);
-
-        commentData = {
-            comment: ref.value,
-            parent_id: props.commentId
-        }
-
-        console.log(ref.value);
-        // dispatch(setCommentField({ id: "" }));
 
         if (ref.value.trim() === "") {
             setRequiredError({ ...requiredError, replyError: "This is required field" });
-        } else {
-            setRequiredError({ ...requiredError, replyError: "" });
-            props.sendSubComment(commentData);
+            return preventDoubleClick(false);
         }
 
+        commentData = {
+            confession_id: props.postId,
+            comment: ref.value,
+            parent_id: props.commentId,
+            root_id: props.commentId
+        }
+
+        ref.value = ""
+
+        if (auth())
+            userData = localStorage.getItem("userDetails");
+
+        userData = JSON.parse(userData).token;
+        obj = {
+            data: commentData,
+            token: userData,
+            method: "post",
+            url: "postcomment"
+        }
+
+        try {
+            const response = await fetchData(obj)
+            if (response.data.status === true) {
+                setSubComments({ ...subComments, data: [...subComments.data, response.data.comment] })
+                dispatch(setCommentField({ id: "" }));
+            } else {
+                setRequiredError({ ...requiredError, replyError: response.data.message });
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+        preventDoubleClick(false);
     }
+
+
+    const preventDoubleClick = (runOrNot) => {
+        var elem = document.querySelector('#commentsModalDoComment');
+        runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;
+    }
+
 
 
     function getShowSubComments() {

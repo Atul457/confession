@@ -2,7 +2,9 @@
 import React, { useState } from 'react';
 import forwardIcon from '../../../images/forwardIcon.svg';
 import upvote from '../../../images/upvote.svg';
-import downvote from '../../../images/downvote.svg';
+import commentCountIcon from '../../../images/commentCountIcon.svg';
+import viewsCountIcon from '../../../images/viewsCountIcon.svg';
+// import downvote from '../../../images/downvote.svg';
 import downvoted from '../../../images/downvoted.svg';
 import upvoted from '../../../images/upvoted.svg';
 import { Link } from "react-router-dom";
@@ -526,11 +528,13 @@ export default function Post(props) {
 
 
             <div className="postFoot d-flex justify-content-start">
-                <div className="totalComments underlineShareCount pr-2" onClick={openCommentsModal}>
-                    <span className="sharedCount">{props.viewcount ? props.viewcount : 0}</span> Views
+                <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button" onClick={openCommentsModal}>
+                    <img src={viewsCountIcon} alt="" />
+                    <span className="count">{props.viewcount ? props.viewcount : 0}</span>
                 </div>
-                <div className="totalComments ml-2" onClick={openCommentsModal}>
-                    <span className="sharedCount">{props.sharedBy}</span> Comments
+                <div className="upvote_downvote_icons_cont" type="button" onClick={openCommentsModal}>
+                    <img src={commentCountIcon} alt="" />
+                    <span className="count">{props.sharedBy}</span>
                 </div>
 
                 {(props.is_liked === 0
@@ -540,10 +544,10 @@ export default function Post(props) {
                             <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
                             <span className='count'>{props.like}</span>
                         </div>
-                        <div className={`upvote_downvote_icons_cont ${props.is_liked === 2 ? '' : "buttonType"}`}>
+                        {/* <div className={`upvote_downvote_icons_cont ${props.is_liked === 2 ? '' : "buttonType"}`}>
                             <img src={downvote} onClick={() => upvoteOrDownvote(false)} alt="" />
                             <span className='count'>{props.dislike}</span>
-                        </div>
+                        </div> */}
                     </div>
                     :
                     <div className='iconsMainCont'>
@@ -551,10 +555,10 @@ export default function Post(props) {
                             {props.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
                             <span className='count'>{props.like}</span>
                         </div>
-                        <div className={`upvote_downvote_icons_cont`}>
+                        {/* <div className={`upvote_downvote_icons_cont`}>
                             {props.is_liked === 2 ? <img src={downvoted} alt="" /> : <img src={downvote} alt="" />}
                             <span className='count'>{props.dislike}</span>
-                        </div>
+                        </div> */}
                     </div>)}
             </div>
 

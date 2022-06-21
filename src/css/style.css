@@ -2108,10 +2108,13 @@ span.offlineColor {
 
 .upvote_downvote_icons_cont img {
     width: 22px;
+    height: 22px;
 }
 
 .upvote_downvote_icons_cont {
-    margin-left: 30px;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
 }
 
 .upvote_downvote_icons_cont .count {
@@ -4553,11 +4556,11 @@ button.modalFootBtns.btn a:hover {
         margin: 15px 0px 10px !important;
     }
 
-    .inputToAddSubComment{
+    .inputToAddSubComment {
         margin-top: 10px !important;
     }
 
-    
+
 
     .inputToAddSubComment.textAreaToComment textarea {
         height: 33px;

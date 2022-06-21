@@ -654,6 +654,8 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                 <div className="totalComments">
                                                                     {sharedBy}  - People shared their thoughts about this post
                                                                 </div>
+
+                                                                
                                                                 {!isNaN(state.is_liked) ?
                                                                     (state.is_liked === 0
                                                                         ?
@@ -662,10 +664,10 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                                 <img src={upvote} onClick={() => upvoteOrDownvote(true)} alt="" />
                                                                                 <span className='count'>{state.like}</span>
                                                                             </div>
-                                                                            <div className={`upvote_downvote_icons_cont ${state.is_liked === 2 ? '' : "buttonType"}`}>
+                                                                            {/* <div className={`upvote_downvote_icons_cont ${state.is_liked === 2 ? '' : "buttonType"}`}>
                                                                                 <img src={downvote} onClick={() => upvoteOrDownvote(false)} alt="" />
                                                                                 <span className='count'>{state.dislike}</span>
-                                                                            </div>
+                                                                            </div> */}
                                                                         </div>
                                                                         :
                                                                         <div className='iconsMainCont'>
@@ -673,10 +675,10 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                                 {state.is_liked === 1 ? <img src={upvoted} alt="" /> : <img src={upvote} alt="" />}
                                                                                 <span className='count'>{state.like}</span>
                                                                             </div>
-                                                                            <div className={`upvote_downvote_icons_cont`}>
+                                                                            {/* <div className={`upvote_downvote_icons_cont`}>
                                                                                 {state.is_liked === 2 ? <img src={downvoted} alt="" /> : <img src={downvote} alt="" />}
                                                                                 <span className='count'>{state.dislike}</span>
-                                                                            </div>
+                                                                            </div> */}
                                                                         </div>)
                                                                     : null}
                                                             </div>
