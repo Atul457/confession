@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import auth from '../../behindScenes/Auth/AuthCheck';
-import SetAuth from '../../behindScenes/SetAuth';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchData } from '../../../commonApi';
 import Lightbox from "react-awesome-lightbox";
@@ -21,19 +20,17 @@ import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
 import canBeRequested from "../../../images/canBeRequested.svg";
 import alRequested from "../../../images/alRequested.svg";
 import upvote from '../../../images/upvote.svg';
-import downvote from '../../../images/downvote.svg';
-import downvoted from '../../../images/downvoted.svg';
 import upvoted from '../../../images/upvoted.svg';
 import alFriends from "../../../images/alFriends.svg";
 import useShareRequestPopUp from '../../utilities/useShareRequestPopUp';
 import { openCFRModal } from '../../../redux/actions/friendReqModal';
+import { getToken } from '../../../helpers/getToken';
 
 
 
 export default function CommentGotModal({ categories, ...rest }) {
 
     let maxChar = 2000;
-    let history = useNavigate();
     const dispatch = useDispatch();
     const { state } = useSelector(state => state.commentsModalReducer);
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
@@ -56,30 +53,18 @@ export default function CommentGotModal({ categories, ...rest }) {
     const ShareReducer = useSelector(store => store.ShareReducer);
 
 
-    const preventDoubleClick = (runOrNot) => {
-        var elem = document.querySelector('#commentsModalDoComment');
-        runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;
-    }
 
-    const doComment = async (comment_id = false, editedComment = "") => {
+    const _doComment = async (comment_id = false, editedComment = "") => {
 
-        preventDoubleClick(true);
         var arr, _comment, userData;
 
-        userData = localStorage.getItem("userDetails");
-        if (userData === "" || userData === null) {
-            SetAuth(0);
-            history("/login");
-            return false;
-        }
-        userData = JSON.parse(userData).token;
+        userData = getToken();
 
         if (comment_id === false)       //NEW COMMENT
         {
             setRequiredError('');
             if (comment === '') {
                 setRequiredError('This is required field');
-                preventDoubleClick(false);
                 return false;
             }
             _comment = comment;
@@ -156,8 +141,9 @@ export default function CommentGotModal({ categories, ...rest }) {
         catch {
             console.log('some error occured');
         }
-        preventDoubleClick(false);
     }
+
+    const doComment = _.debounce(_doComment, 500);
 
     useEffect(() => {
         setConfessionData({
@@ -229,25 +215,14 @@ export default function CommentGotModal({ categories, ...rest }) {
 
 
     // SUBMITS THE DATA ON ENTER AND CREATES A NEW PARA ON SHIFT+ENTER KEY
-    const betterCheckKeyPressed = () => {
-        var timer;
-        return (event) => {
-            if (window.innerWidth > 767) {
-                if (event.keyCode === 13 && event.shiftKey) {
-                    setComment(comment);
-                } else if (event.keyCode === 13 && !event.shiftKey) {
-                    event.preventDefault();
-                    //PREVENTS DOUBLE MESSAGE SEND
-                    clearInterval(timer);
-                    timer = setTimeout(() => {
-                        doComment();
-                    }, 100);
-                }
+    const checkKeyPressed = (event) => {
+        if (window.innerWidth > 767) {
+            if (event.keyCode === 13 && !event.shiftKey) {
+                event.preventDefault();
+                doComment();
             }
         }
     }
-
-    const checkKeyPressed = betterCheckKeyPressed();
 
 
     const fetchMoreComments = () => {
@@ -289,6 +264,7 @@ export default function CommentGotModal({ categories, ...rest }) {
     const updateComment = (commentData) => {
         doComment(commentData.comment_id, commentData.comment);
     }
+
 
     const updateComments = (commentId) => {
         setCommentsCount((prevState) => prevState - 1);
@@ -484,7 +460,6 @@ export default function CommentGotModal({ categories, ...rest }) {
                 rest.updatedConfessions(state.index, data)
                 dispatch(updateCModalState(data))
 
-
                 const res = await fetchData(obj)
 
                 if (res.data.status === true) {
@@ -659,7 +634,9 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                 <div className={`iconsCont ${auth() === false ? 'mainDesignOnWrap' : ''}`}>
                                                                     <div className="upvote_downvote_icons_cont  ml-0" type="button">
                                                                         <img src={commentCountIcon} alt="" />
-                                                                        <span className="count">{sharedBy}</span>
+                                                                        <span className="count">
+                                                                            {state.no_of_comments}
+                                                                        </span>
                                                                     </div>
 
 

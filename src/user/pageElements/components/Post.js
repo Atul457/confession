@@ -4,8 +4,6 @@ import forwardIcon from '../../../images/forwardIcon.svg';
 import upvote from '../../../images/upvote.svg';
 import commentCountIcon from '../../../images/commentCountIcon.svg';
 import viewsCountIcon from '../../../images/viewsCountIcon.svg';
-// import downvote from '../../../images/downvote.svg';
-import downvoted from '../../../images/downvoted.svg';
 import upvoted from '../../../images/upvoted.svg';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
@@ -350,10 +348,10 @@ export default function Post(props) {
                 updateConfessionData(props.index, data)
 
                 const res = await fetchData(obj)
-                if (res.data.status === true) {
-                } else {
-                    console.log(res);
-                }
+                // if (res.data.status === true) {
+                // } else {
+                //     console.log(res);
+                // }
             } catch (error) {
                 console.log(error);
                 console.log("Some error occured");

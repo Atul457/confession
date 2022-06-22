@@ -1,12 +1,12 @@
 export const commentsModActions = {
-    OPENMODAL : "OPENCOMMENTSGOTMODAL",
-    CLOSEMODAL : "CLOSECOMMENTSGOTMODAL",
-    RESET : "RESETCOMMENTSGOTMODAL",
-    REOPEN : "REOPENCOMMENTSGOTMODAL",
-    UPDATEMODAL : "UPDATECOMMENTSMODAL",
-    UPDATMODALSTATE : "UPDATECOMMENTSMODALSTATE",
-    SETCOMMENTFIELD : "SETCOMMENTFIELD",
-    MUTATEUPDATEBOX : "SHOWORHIDEUPDATETEXTAREA"
+    OPENMODAL: "OPENCOMMENTSGOTMODAL",
+    CLOSEMODAL: "CLOSECOMMENTSGOTMODAL",
+    RESET: "RESETCOMMENTSGOTMODAL",
+    REOPEN: "REOPENCOMMENTSGOTMODAL",
+    UPDATEMODAL: "UPDATECOMMENTSMODAL",
+    UPDATMODALSTATE: "UPDATECOMMENTSMODALSTATE",
+    SETCOMMENTFIELD: "SETCOMMENTFIELD",
+    MUTATEUPDATEBOX: "SHOWORHIDEUPDATETEXTAREA"
 }
 
 
@@ -20,7 +20,7 @@ export const openCModal = payload => {
 
 export const closeCModal = payload => {
     return {
-        type : commentsModActions.CLOSEMODAL,
+        type: commentsModActions.CLOSEMODAL,
     }
 }
 
@@ -39,11 +39,11 @@ export const resetCModal = () => {
 export const setCommentField = payload => {
     return {
         type: commentsModActions.SETCOMMENTFIELD,
-        payload : payload.id
+        payload: payload.id
     }
 }
 
-export const updateCModal =  (payload) => {
+export const updateCModal = (payload) => {
     return {
         type: commentsModActions.UPDATEMODAL,
         payload
@@ -59,7 +59,7 @@ export const updateCModalState = (payload) => {
 
 export const setUpdateFieldCModal = payload => {
     return {
-        type : commentsModActions.MUTATEUPDATEBOX,
+        type: commentsModActions.MUTATEUPDATEBOX,
         payload: payload
     }
 }

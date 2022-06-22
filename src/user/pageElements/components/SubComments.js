@@ -5,19 +5,21 @@ import auth from '../../behindScenes/Auth/AuthCheck';
 import forwardIcon from '../../../images/forwardIcon.png';
 import editCommentIcon from '../../../images/editCommentIcon.png';
 import TextareaAutosize from 'react-textarea-autosize';
-// import { fetchData } from '../../../commonApi';
 import DateConverter from '../../../helpers/DateConverter';
-import { setCommentField, setUpdateFieldCModal } from '../../../redux/actions/commentsModal';
+import { setCommentField, setUpdateFieldCModal, updateCModalState } from '../../../redux/actions/commentsModal';
 import { useDispatch, useSelector } from 'react-redux';
 import commentReplyIcon from '../../../images/creplyIcon.svg';
+import { fetchData } from '../../../commonApi';
+import { getToken } from '../../../helpers/getToken';
+import _ from 'lodash';
 
 
-const SubComments = ({ data, subcommentId, updatSubComments }) => {
+const SubComments = ({ data, subcommentId, updatSubComments, index,
+    root_id, addNewSubComment, deleteSubComment }) => {
 
     let props = data;
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
-    const [toggleTextarea, setToggleTextarea] = useState(false);
     const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
     const editCommentField = useRef(null);
     const dispatch = useDispatch();
@@ -30,55 +32,88 @@ const SubComments = ({ data, subcommentId, updatSubComments }) => {
     }, [commentsModalReducer.updateField.comment_id])
 
 
+    useEffect(() => {
+        if (commentsModalReducer.commentField.comment_id === props.comment_id) {
+            let ref = document.querySelector(`#sendSubComment${props.comment_id}`)
+            ref.focus();
+        }
+    }, [commentsModalReducer.commentField.comment_id])
+
+
     const setComment = () => {
         if (requiredError.updateError !== '')
             setRequiredError({ ...requiredError, updateError: "" });
         dispatch(setCommentField({ id: "" }));
         dispatch(setUpdateFieldCModal({ comment_id: props.comment_id }));
-        console.log(props);
         setEditedComment(props.comment);
     }
 
 
     const updateComment = () => {
-
-        let commentData;
-
-        commentData = {
-            comment_id: props.comment_id,
-            comment: editedComment
-        }
-
         if (editedComment.trim() === "") {
             setRequiredError({ ...requiredError, updateError: "This is required field" });
         } else {
             setRequiredError({ ...requiredError, updateError: "" });
-            updatSubComments(commentData);
-            dispatch(setUpdateFieldCModal({ comment_id: "" }));
+            updatSubComments(props.comment_id, editedComment, index);
+        }
+    }
+
+
+
+    const sendSubComment = async () => {
+        let ref, token, commentData, obj;
+        ref = document.querySelector(`#sendSubComment${subcommentId}`);
+
+        if (ref.value.trim() === '')
+            return setRequiredError({ ...requiredError, replyError: "This is required field" });
+
+        commentData = {
+            confession_id: commentsModalReducer.state?.postId,
+            comment: ref.value,
+            parent_id: subcommentId,
+            root_id
+        }
+
+        token = getToken()
+        obj = {
+            data: commentData,
+            token: token,
+            method: "post",
+            url: "postcomment"
+        }
+
+        try {
+            const response = await fetchData(obj);
+            dispatch(setCommentField({ id: "" }));
+            if (response.data.status === true) {
+                let data;
+                addNewSubComment(response.data.comment);
+                data = { no_of_comments: commentsModalReducer.state.no_of_comments + 1 }
+                dispatch(updateCModalState(data))
+            } else {
+                return setRequiredError({ ...requiredError, replyError: response.data.message });
+            }
+        } catch (error) {
+            console.log(error);
         }
 
     }
 
 
+    const sendSubCommentDebounced = _.debounce(sendSubComment, 500);
+
+
     // SUBMITS THE DATA ON ENTER AND CREATES A NEW PARA ON SHIFT+ENTER KEY
-    const betterCheckKeyPressed = () => {
-        var timer;
-        return (event, comment) => {
-            if (window.innerWidth > 767) {
-                if (event.keyCode === 13 && !event.shiftKey) {
-                    event.preventDefault();
-                    //PREVENTS DOUBLE MESSAGE SEND
-                    clearInterval(timer);
-                    timer = setTimeout(() => {
-                        // 0 MEANS UPDATE THE PARENT COMMENT
-                        // 1 MEANS ADD A NEW COMMENT
-                        console.log({ comment });
-                        if (comment === 0) {
-                            return updateComment();
-                        } else {
-                            // sendSubComment();
-                        }
-                    }, 100);
+    const checkKeyPressed = (event, comment) => {
+        if (window.innerWidth > 767) {
+            if (event.keyCode === 13 && !event.shiftKey) {
+                event.preventDefault();
+                // 0 MEANS UPDATE THE PARENT COMMENT
+                // 1 MEANS ADD A NEW COMMENT
+                if (comment === 0) {
+                    updateComment();
+                } else {
+                    sendSubCommentDebounced();
                 }
             }
         }
@@ -87,39 +122,48 @@ const SubComments = ({ data, subcommentId, updatSubComments }) => {
 
     const deleteCommentFunc = async () => {
 
-        // let confessionId = props.postId;
-        // let commentId = props.commentId;
+        let indexArr = [], confessionId, commentId;
+        const ids = document.querySelectorAll(`.abc${props.comment_id}`);
+        ids.forEach(curr => indexArr.push(curr.getAttribute("index")))
+        indexArr = [...new Set(indexArr)]
+        indexArr = indexArr.reverse();
 
-        // let obj = {
-        //     data: {},
-        //     token: userDetails.token,
-        //     method: "get",
-        //     url: `deletecomment/${confessionId}/${commentId}`,
-        // }
+        confessionId = commentsModalReducer.state?.postId;
+        commentId = props.comment_id;
 
-        // try {
-        //     const res = await fetchData(obj)
-        //     if (res.data.status === true) {
-        //         props.updateComments(commentId);
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
+        let obj = {
+            data: {},
+            token: getToken(),
+            method: "get",
+            url: `deletecomment/${confessionId}/${commentId}`,
+        }
+
+        try {
+            const res = await fetchData(obj)
+            if (res.data.status === true) {
+                deleteSubComment([...indexArr, index]);
+            } else {
+                setRequiredError({ ...requiredError, updateError: res.data.message });
+            }
+        } catch (error) {
+            console.log(error);
+        }
 
     }
 
     const openCommentBox = () => {
         if (subcommentId === commentsModalReducer.commentField.comment_id) {
+            setRequiredError({ ...requiredError, replyError: "" });
             return dispatch(setCommentField({ id: "" }));
         }
 
         dispatch(setCommentField({ id: subcommentId }));
+        dispatch(setUpdateFieldCModal({ comment_id: "" }));
     }
 
-    const checkKeyPressed = betterCheckKeyPressed();
 
     return (
-        <div className="postCont overWritePostWithComment subcommentCont">
+        <div className={`postCont overWritePostWithComment subcommentCont ${props.id_path}`} index={index}>
             <div className="postContHeader commentsContHeader">
                 <span className="commentsGotProfileImg">
                     <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />
@@ -172,7 +216,10 @@ const SubComments = ({ data, subcommentId, updatSubComments }) => {
                                         </TextareaAutosize>
                                     </div>
                                     <div className="arrowToAddComment" type="button">
-                                        <img src={forwardIcon} className="forwardIconContImg" onClick={updateComment} />
+                                        <img src={forwardIcon}
+                                            className="forwardIconContImg"
+                                            onClick={updateComment}
+                                        />
                                     </div>
                                 </div>
                                 <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError.updateError}</span>
@@ -187,13 +234,29 @@ const SubComments = ({ data, subcommentId, updatSubComments }) => {
                         </span>
 
                         {commentsModalReducer.commentField.comment_id === subcommentId &&
-                            <TextareaAutosize
-                                type="text"
-                                onKeyDown={(e) => checkKeyPressed(e, 1)}
-                                maxLength="2000"
-                                placeholder='Sub comment'
-                                className="form-control">
-                            </TextareaAutosize>}
+                            <>
+                                <div className='inputToAddSubComment textAreaToComment mt-md-2'>
+                                    <TextareaAutosize
+                                        type="text"
+                                        onKeyDown={(e) => checkKeyPressed(e, 1)}
+                                        maxLength="2000"
+                                        id={`sendSubComment${props.comment_id}`}
+                                        placeholder='Sub comment'
+                                        className="form-control">
+                                    </TextareaAutosize>
+
+                                    <div
+                                        className="arrowToAddComment"
+                                        type="button"
+                                        onClick={sendSubCommentDebounced}
+                                    >
+                                        <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                                    </div>
+                                </div>
+                                <span className="d-block errorCont text-danger mb-2 mt-2 moveUp">{requiredError.replyError}</span>
+                            </>
+
+                        }
                     </div>
                 </div>
             </div>
