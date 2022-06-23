@@ -95,13 +95,17 @@ export default function Comments(props) {
     }
 
 
-
     // DELETES THE ELEMENTS FROM SUBCOMMENTS ARR
     const deleteSubComment = (arrayOfNodesIndexes) => {
-        let originalArray = [];
+        let originalArray = [], delCommentCount, data;
         originalArray.push(...subComments.data);
-        arrayOfNodesIndexes.forEach(curr => { console.log(curr); originalArray.splice(curr, 1) })
-        setSubComments({ ...subComments, data: [...originalArray] })
+        arrayOfNodesIndexes.forEach(curr => { originalArray.splice(curr, 1) });
+        delCommentCount = arrayOfNodesIndexes.length;
+        setSubComments({ ...subComments, data: [...originalArray] });
+
+        // UPDATES THE COMMENTSGOTMODAL COMMENT COUNT
+        data = { no_of_comments: parseInt(commentsModalReducer.state.no_of_comments) - delCommentCount };
+        dispatch(updateCModalState(data));
     }
 
 
@@ -126,7 +130,6 @@ export default function Comments(props) {
                 return setRequiredError({ ...requiredError, replyError: "This is required field" });
             }
             _comment = ref.value;
-            ref.value = ""
 
             commentData = {
                 confession_id: props.postId,
@@ -155,15 +158,23 @@ export default function Comments(props) {
 
         try {
             const response = await fetchData(obj)
+            props.updateSingleCommentData({ countChild: props.countChild + 1 }, props.index)
             if (response.data.status === true) {
+                ref.value = ""
+
+                // NEW COMMENT
                 if (comment_id === false) {
                     let data;
-                    setSubComments({ ...subComments, data: [...subComments.data, response.data.comment] })
-                    data = {
-                        no_of_comments: commentsModalReducer.state.no_of_comments + 1
-                    }
+                    data = { no_of_comments: commentsModalReducer.state.no_of_comments + 1 };
                     dispatch(updateCModalState(data))
-                    return dispatch(setCommentField({ id: "" }));
+                    dispatch(setCommentField({ id: "" }));
+
+                    if (showSubComments.isBeingExpanded === true || showSubComments?.keepOpened === true || subComments.data.length < SLOMT) {
+                        setShowSubComments({ ...showSubComments, keepOpened: true });
+                        return setSubComments({ ...subComments, data: [...subComments.data, response.data.comment] })
+                    }
+
+                    props.updateSingleCommentData({ countChild: props.countChild + 1 }, props.index)
                 }
 
                 // UPDATING THE SUB COMMENTS ARRAY
@@ -300,7 +311,11 @@ export default function Comments(props) {
         try {
             const res = await fetchData(obj)
             if (res.data.status === true) {
-                props.updateComments(commentId);
+                let delCommentCount = 1;
+                // DECRESES WITH THE COUNT OF ITS CHILD AND 1, WHICH IS IT ITSELF
+                if (props.countChild > 0)
+                    delCommentCount = props.countChild + 1;
+                props.updateComments(commentId, delCommentCount);
             }
         } catch (error) {
             console.log(error);

@@ -38,9 +38,8 @@ export default function CommentGotModal({ categories, ...rest }) {
     const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
     const [sharekit, toggleSharekit, ShareKit, hideShareKit] = useShareKit();
     const [isWaitingRes, setIsWaitingRes] = useState(true);
-    const [isServerErr, setIsServerErr] = useState(false);
+    const [isServerErr] = useState(false);
     const [isValidPost, setIsValidPost] = useState(true);   //MEANS STATUS IS OK BUT GOT NO RES
-    const [sharedBy, setSharedBy] = useState('');
     const [comment, setComment] = useState('');
     const [commentsData, setCommentsData] = useState({ page: 1 });
     const [postId, setPostId] = useState('');
@@ -94,7 +93,6 @@ export default function CommentGotModal({ categories, ...rest }) {
         try {
             const response = await fetchData(obj)
             if (response.data.status === true) {
-                let shared = sharedBy;
                 setComment("");
                 changeState ? setChangeState(false) : setChangeState(true);
 
@@ -114,12 +112,11 @@ export default function CommentGotModal({ categories, ...rest }) {
                     commentsArrDummy = commentsArr;
                     commentsArrDummy.push(newComment);
                     setCommentsArr(commentsArrDummy);
-                    setSharedBy(parseInt(shared) + 1);
+                    dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) + 1 }))
                 }
                 else if (comment_id === false)  //JUST INCREMENTS THE COMMENT COUNT
                 {
-                    setCommentsCount(parseInt(shared) + 1);
-                    setSharedBy(parseInt(shared) + 1);
+                    dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) + 1 }))
                 }
                 else    //UPDATES
                 {
@@ -160,7 +157,6 @@ export default function CommentGotModal({ categories, ...rest }) {
             image: state.image,
         });
 
-        setSharedBy(state.no_of_comments)
         setPostId(state.postId);
         setIsValidPost(true);
         setIsWaitingRes(false);
@@ -266,7 +262,7 @@ export default function CommentGotModal({ categories, ...rest }) {
     }
 
 
-    const updateComments = (commentId) => {
+    const updateComments = (commentId, count) => {
         setCommentsCount((prevState) => prevState - 1);
         let newCommentsArr = commentsArr.filter((current) => {
             if (commentId !== current.comment_id) {
@@ -275,8 +271,9 @@ export default function CommentGotModal({ categories, ...rest }) {
         })
 
         setCommentsArr(newCommentsArr);
-        setSharedBy((prevState) => prevState - 1);
+        dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) - count }))
     }
+
 
     const closeModal = () => {
         let upvoteDownvoteData = {}, viewData, likeDislikeCheck, isViewedCheck, data;
@@ -292,20 +289,20 @@ export default function CommentGotModal({ categories, ...rest }) {
             }
         }
 
-        if (isViewedCheck || likeDislikeCheck) {
-            viewData = {
-                viewcount: state.viewcount + 1,
-                is_viewed: 1,
-            }
-
-            data = {
-                ...(isViewedCheck && viewData),
-                ...(likeDislikeCheck && upvoteDownvoteData)
-            }
-
-            // RUNS THE UPDATECONFESSIONDATA FUNCTION DEFINED IN POST.JS
-            state.updateConfessionData(state.index, data);
+        viewData = {
+            viewcount: state.viewcount + 1,
+            is_viewed: 1,
         }
+
+        data = {
+            ...(isViewedCheck && viewData),
+            ...(likeDislikeCheck && upvoteDownvoteData),
+            no_of_comments: state.no_of_comments
+        }
+
+        // RUNS THE UPDATECONFESSIONDATA FUNCTION DEFINED IN POST.JS
+        state.updateConfessionData(state.index, data);
+
         dispatch(resetCModal())
     }
 
@@ -474,6 +471,15 @@ export default function CommentGotModal({ categories, ...rest }) {
         } else {
             console.log("Invalid ip");
         }
+    }
+
+    const updateSingleCommentData = (data, index) => {
+        let updatedNode, originalArray;
+        originalArray = [...commentsArr];
+        updatedNode = {};
+        updatedNode = { ...updatedNode, ...commentsArr[index], ...data };
+        originalArray.splice(index, 1, updatedNode);
+        setCommentsArr(originalArray);
     }
 
     return (
@@ -695,7 +701,11 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                     }
                                                                 >
                                                                     {commentsArr.map((post, index) => {
+                                                                        // console.log({ post })
                                                                         return <Comments
+                                                                            updateSingleCommentData
+                                                                            ={updateSingleCommentData}
+                                                                            index={index}
                                                                             updateComments={updateComments}
                                                                             postId={postId}
                                                                             updateComment={updateComment}

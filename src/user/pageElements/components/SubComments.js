@@ -84,12 +84,12 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
         try {
             const response = await fetchData(obj);
-            dispatch(setCommentField({ id: "" }));
             if (response.data.status === true) {
                 let data;
                 addNewSubComment(response.data.comment);
                 data = { no_of_comments: commentsModalReducer.state.no_of_comments + 1 }
                 dispatch(updateCModalState(data))
+                dispatch(setCommentField({ id: "" }));
             } else {
                 return setRequiredError({ ...requiredError, replyError: response.data.message });
             }
@@ -156,6 +156,9 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
             setRequiredError({ ...requiredError, replyError: "" });
             return dispatch(setCommentField({ id: "" }));
         }
+
+        if (requiredError.replyError !== '')
+            setRequiredError({ ...requiredError, replyError: "" });
 
         dispatch(setCommentField({ id: subcommentId }));
         dispatch(setUpdateFieldCModal({ comment_id: "" }));
@@ -253,10 +256,10 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
                                         <img src={forwardIcon} alt="" className="forwardIconContImg" />
                                     </div>
                                 </div>
-                                <span className="d-block errorCont text-danger mb-2 mt-2 moveUp">{requiredError.replyError}</span>
                             </>
 
                         }
+                        <span className="d-block errorCont text-danger mb-0 mt-2 moveUp">{requiredError.replyError}</span>
                     </div>
                 </div>
             </div>
