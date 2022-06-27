@@ -4,7 +4,7 @@ import Footer from "../../common/Footer";
 import Comments from '../../components/Comments';
 import Category from '../../components/Category';
 import userIcon from '../../../../images/userAcc.png';
-import forwardIcon from '../../../../images/forwardIcon.png';
+import forwardIcon from '../../../../images/forwardIcon.svg';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import { Link } from "react-router-dom";
 import SiteLoader from "../../components/SiteLoader";
@@ -18,17 +18,22 @@ import { useParams } from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import logo from '../../../../images/appLogo.svg'
 import DateConverter from '../../../../helpers/DateConverter';
-
+import { openCModal as openCommentsModalFn } from '../../../../redux/actions/commentsModal';
+import { useDispatch, useSelector } from 'react-redux';
+import CommentGotModal from '../../Modals/CommentGotModal';
+import useCommentsModal from '../../../utilities/useCommentsModal';
 
 
 
 export default function CommentsGot(props) {
 
-    const params = useParams();
 
-    let history = useNavigate();
     let maxChar = 2000;
+    const params = useParams();
+    let history = useNavigate();
+    const dispatch = useDispatch();
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
+    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const [confessionData, setConfessionData] = useState(false);
     const [isWaitingRes, setIsWaitingRes] = useState(true);
     const [isServerErr, setIsServerErr] = useState(false);
@@ -42,6 +47,8 @@ export default function CommentsGot(props) {
     const [lightBox, setLightBox] = useState(false);
     const [changeState, setChangeState] = useState(true);
     const [activeCat, setActiveCat] = useState(false);
+    const [reqFulfilled, setReqFullfilled] = useState(false);
+    const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal();
     const [commentsCount, setCommentsCount] = useState(0);
     const [goDownArrow, setGoDownArrow] = useState(false);
 
@@ -49,6 +56,43 @@ export default function CommentsGot(props) {
         var elem = document.querySelector('#postButtonComGot');
         runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;
     }
+
+
+    const openCommentsModal = () => {
+
+        console.log({ confessionData });
+
+        dispatch(openCommentsModalFn({
+            "postId": confessionData.confession_id,
+            "viewcount": confessionData.viewcount,
+            "visibility": true,
+            "index": 0,
+            "userName": confessionData.userName,
+            "postedComment": confessionData.description,
+            "category_id": confessionData.category_id,
+            "category_name": confessionData.category_name,
+            "confession_id": confessionData.confession_id,
+            "created_at": confessionData.created_at,
+            "created_by": confessionData.created_by,
+            "description": confessionData.postedComment,
+            "no_of_comments": confessionData.no_of_comments,
+            "post_as_anonymous": confessionData.post_as_anonymous,
+            "profile_image": confessionData.profile_image,
+            "user_id": confessionData.user_id === '0' ? false : confessionData.user_id,
+            "image": confessionData.image === '' ? '' : confessionData.image,
+            "isNotFriend": confessionData.isNotFriend,
+            "is_viewed": confessionData.is_viewed,
+            "updatedConfessions": () => { },
+            "like": confessionData.like,
+            "is_liked": confessionData.is_liked,
+            "dislike": confessionData.dislike,
+            "is_liked_prev": confessionData.is_liked,
+            "updateConfessionData": () => { }
+        }))
+
+
+    }
+
 
     const doComment = async (comment_id = false, editedComment = "") => {
 
@@ -172,12 +216,16 @@ export default function CommentsGot(props) {
             try {
                 const response = await fetchData(obj)
                 if (response.data.status === true) {
+                    // setReqFullfilled(true);
                     setConfessionData(response.data.confession);
+                    console.log({ res: response.data.confession });
                     setSharedBy(response.data.confession.no_of_comments)
                     setPostId(response.data.confession.confession_id);
 
                     let activeCategory = response.data.confession.category_id;
                     setActiveCat(activeCategory);
+
+
                 } else {
                     //Handles app in case of no api response
                     setIsValidPost(false);
@@ -189,8 +237,21 @@ export default function CommentsGot(props) {
                 setIsServerErr(true);
             }
         }
+
         getConfession();
+
     }, [params.postId])
+
+
+    useEffect(() => {
+        if (reqFulfilled === false && confessionData !== false) {
+            setReqFullfilled(true);
+            openCommentsModal();
+
+        }
+    }, [reqFulfilled, confessionData])
+
+
 
 
     const commentsOnCconfession = async (page = 1, append = false) => {
@@ -216,6 +277,7 @@ export default function CommentsGot(props) {
             method: "post",
             url: "getcomments"
         }
+
         try {
             const res = await fetchData(obj)
             if (res.data.status === true) {
@@ -285,6 +347,15 @@ export default function CommentsGot(props) {
 
     return (
         <div className="container-fluid">
+
+            {commentsModalReducer.visible && <CommentGotModal
+                handleChanges={handleChanges}
+                updateConfessionData={() => { }}
+                updatedConfessions={() => { }}
+                state={commentsModal}
+                handleCommentsModal={handleCommentsModal} />}
+
+
             {confessionData
                 ?
                 <div className="row">
@@ -319,14 +390,8 @@ export default function CommentsGot(props) {
                     <div className="rightColumn rightColumnFeed">
                         <div className="rightMainFormCont rightMainFormContFeed p-0">
                             <div className="preventHeader">preventHead</div>
-                            <div className="container py-md-4 p-3 preventFooter">
+                            <div className="py-md-4 p-3 preventFooter w-100">
                                 <div className="row forPosSticky">
-
-                                    {/* CATEGORYCONT */}
-                                    {/* <aside className="col-12 col-md-4 col-lg-3 posSticky">
-                                <Category activeCatIndex={activeCat} categories={props.categories} updateActiveCategory={updateActiveCategory} />
-                            </aside> */}
-                                    {/* CATEGORYCONT */}
 
                                     {/* MIDDLECONTAINER */}
 
@@ -377,7 +442,7 @@ export default function CommentsGot(props) {
                                                             </span>
                                                         </div>
                                                         <div className="postBody">
-                                                            <div className="postedPost">
+                                                            <div className="postedPost" onClick={openCommentsModal} type="button">
                                                                 <pre className="preToNormal">
                                                                     {confessionData.description}
                                                                 </pre>
@@ -437,7 +502,7 @@ export default function CommentsGot(props) {
                                                             The post doesn't exist
                                                         </div>}
 
-                                                    {isValidPost && <div className="postsMainCont">
+                                                    {/* {isValidPost && <div className="postsMainCont">
                                                         {commentsArr.length > 0
                                                             &&
                                                             <InfiniteScroll
@@ -455,8 +520,10 @@ export default function CommentsGot(props) {
                                                             >
                                                                 {commentsArr.map((post, index) => {
                                                                     return <Comments
+                                                                        postId={params.postId}
                                                                         updateComment={updateComment}
                                                                         commentId={post.comment_id}
+                                                                        countChild={post.countChild}
                                                                         is_editable={post.is_editable}
                                                                         created_at={post.created_at}
                                                                         curid={(post.user_id === '' || post.user_id === 0) ? false : post.user_id}
@@ -468,7 +535,7 @@ export default function CommentsGot(props) {
                                                             </InfiniteScroll>
                                                         }
 
-                                                    </div>}
+                                                    </div>} */}
 
                                                 </section>
                                             )

@@ -6,7 +6,7 @@ import { fetchData } from '../../../commonApi';
 import Lightbox from "react-awesome-lightbox";
 import userIcon from '../../../images/userAcc.png';
 import commentCountIcon from '../../../images/commentCountIcon.svg';
-import forwardIcon from '../../../images/forwardIcon.png';
+import forwardIcon from '../../../images/forwardIcon.svg';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Comments from '../../pageElements/components/Comments';
 import useShareKit from '../../utilities/useShareKit';
@@ -583,7 +583,7 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                 </span>
                                                                 <span className="postCreatedTime">
                                                                     {/* {confessionData.created_at} */}
-                                                                    {DateConverter(confessionData.created_at)}
+                                                                    {DateConverter(confessionData.created_at ?? state.created_at)}
 
                                                                 </span>
                                                             </div>
@@ -598,7 +598,7 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                 {(confessionData.image !== null && (confessionData.image).length > 0)
                                                                     &&
                                                                     (
-                                                                        <div className="form-group imgPreviewCont my-2 mb-0">
+                                                                        <div className="form-group imgPreviewCont">
                                                                             <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
                                                                                 {(confessionData.image).map((src) => {
                                                                                     return (<span className='uploadeImgWrapper fetched'>
@@ -615,7 +615,7 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                 {auth() === true &&
                                                                     <div className="container-fluid inputWithForwardCont">
                                                                         <div className="inputToAddComment textAreaToComment mb-1 my-md-0">
-                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control mt-0 mb-2"></TextareaAutosize>
+                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control"></TextareaAutosize>
 
                                                                         </div>
                                                                         <div className="arrowToAddComment" type="button" id="commentsModalDoComment" onClick={() => { doComment() }}>

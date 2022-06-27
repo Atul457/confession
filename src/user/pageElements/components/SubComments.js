@@ -2,8 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import userIcon from '../../../images/userAcc.png';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
-import forwardIcon from '../../../images/forwardIcon.png';
-import editCommentIcon from '../../../images/editCommentIcon.png';
+import forwardIcon from '../../../images/forwardIcon.svg';
+import editCommentIcon from '../../../images/editCommentIcon.svg';
 import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../../helpers/DateConverter';
 import { setCommentField, setUpdateFieldCModal, updateCModalState } from '../../../redux/actions/commentsModal';
@@ -15,7 +15,7 @@ import _ from 'lodash';
 
 
 const SubComments = ({ data, subcommentId, updatSubComments, index,
-    root_id, addNewSubComment, deleteSubComment }) => {
+    root_id, addNewSubComment, deleteSubComment, postId }) => {
 
     let props = data;
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
@@ -64,15 +64,19 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
         let ref, token, commentData, obj;
         ref = document.querySelector(`#sendSubComment${subcommentId}`);
 
+        console.log();
         if (ref.value.trim() === '')
             return setRequiredError({ ...requiredError, replyError: "This is required field" });
 
         commentData = {
-            confession_id: commentsModalReducer.state?.postId,
+            confession_id: commentsModalReducer.state?.postId ?? postId,
             comment: ref.value,
             parent_id: subcommentId,
             root_id
         }
+
+        console.log(commentData);
+
 
         token = getToken()
         obj = {
@@ -174,7 +178,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
                 {props.curid !== false ?
 
-                    (<Link className={`textDecNone`}
+                    (<Link className={`textDecNone commentsUserName`}
                         to={props.curid ?
                             (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
                             : ''}>
@@ -201,9 +205,9 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
             </div>
             <div className="postBody">
-                <div className="postedPost">
+                <div className="postedPost mb-0">
                     <pre className="preToNormal">
-                        {commentsModalReducer.updateField.comment_id !== props.commentId && props.comment}
+                        {commentsModalReducer.updateField.comment_id !== props.comment_id && props.comment}
                         {commentsModalReducer.updateField.comment_id === props.comment_id &&
                             <>
                                 <div className="container-fluid inputWithForwardCont">
@@ -225,31 +229,31 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
                                         />
                                     </div>
                                 </div>
-                                <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError.updateError}</span>
+                                {requiredError.updateError !== "" ? <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError.updateError}</span> : null}
                             </>
                         }
                     </pre>
 
-                    <div className="replyCont">
+                    <div className="replyCont replyContainer">
                         <span onClick={openCommentBox}>
-                            <img src={commentReplyIcon} alt="" />
+                            <img src={commentReplyIcon} alt="" className="replyIcon" />
                             <span className='pl-2'>Reply</span>
                         </span>
 
                         {commentsModalReducer.commentField.comment_id === subcommentId &&
                             <>
-                                <div className='inputToAddSubComment textAreaToComment mt-md-2'>
+                                <div className='inputToAddSubComment textAreaToComment'>
                                     <TextareaAutosize
                                         type="text"
                                         onKeyDown={(e) => checkKeyPressed(e, 1)}
                                         maxLength="2000"
                                         id={`sendSubComment${props.comment_id}`}
-                                        placeholder='Sub comment'
+                                        placeholder='Reply'
                                         className="form-control">
                                     </TextareaAutosize>
 
                                     <div
-                                        className="arrowToAddComment"
+                                        className="arrowToAddComment mt-0"
                                         type="button"
                                         onClick={sendSubCommentDebounced}
                                     >
@@ -259,7 +263,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
                             </>
 
                         }
-                        <span className="d-block errorCont text-danger mb-0 mt-2 moveUp">{requiredError.replyError}</span>
+                        {requiredError.replyError !== "" ? <span className="d-block errorCont text-danger mb-0 mt-2 moveUp">{requiredError.replyError}</span> : null}
                     </div>
                 </div>
             </div>

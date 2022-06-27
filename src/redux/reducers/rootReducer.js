@@ -8,6 +8,8 @@ import { forgotUserPassReducer } from './forgotUpReducer';
 import commentsModalReducer from './commentsModalReducer';
 import friendReqModalReducer from './friendReqModalReducer';
 import postAlertReducer from './postAlertReducer';
+import notificationReducer from './notificationReducer';
+
 
 const rootReducer = combineReducers({
     Terms,
@@ -18,7 +20,8 @@ const rootReducer = combineReducers({
     forgotUserPassReducer,
     commentsModalReducer,
     friendReqModalReducer,
-    postAlertReducer
+    postAlertReducer,
+    notificationReducer
 })
 
 export default rootReducer

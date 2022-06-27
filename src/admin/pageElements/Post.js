@@ -5,7 +5,7 @@ import userIcon from '../../images/userAcc.png';
 import Lightbox from "react-awesome-lightbox";
 import "react-awesome-lightbox/build/style.css";
 import { fetchData } from '../../commonApi';
-import forwardIcon from '../../images/forwardIcon.png';
+import forwardIcon from '../../images/forwardIcon.svg';
 import SetAuth from '../behindScenes/Auth/SetAuth';
 import { useNavigate } from "react-router-dom";
 import useShareKit from '../utilities/useShareKit';
@@ -260,7 +260,15 @@ export default function Post(props) {
 
                 <div className="container-fluid inputWithForwardCont">
                     <div className="inputToAddComment textAreaToComment w-100">
-                        <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control my-3"></TextareaAutosize>
+                        <TextareaAutosize
+                            type="text"
+                            maxLength={maxChar}
+                            row='1'
+                            value={comment}
+                            onKeyDown={(e) => { checkKeyPressed(e) }}
+                            onChange={(e) => { setComment(e.target.value) }}
+                            className="form-control my-3">
+                        </TextareaAutosize>
                     </div>
                     <div className="arrowToAddComment" id="postDoComment" type="button" onClick={() => { doComment(props.postId) }}>
                         <img src={forwardIcon} alt="" className="forwardIconContImg" />

@@ -4,8 +4,8 @@ import userIcon from '../../../images/userAcc.png';
 import commentReplyIcon from '../../../images/creplyIcon.svg';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
-import forwardIcon from '../../../images/forwardIcon.png';
-import editCommentIcon from '../../../images/editCommentIcon.png';
+import forwardIcon from '../../../images/forwardIcon.svg';
+import editCommentIcon from '../../../images/editCommentIcon.svg';
 import TextareaAutosize from 'react-textarea-autosize';
 import { fetchData } from '../../../commonApi';
 import DateConverter from '../../../helpers/DateConverter';
@@ -137,9 +137,11 @@ export default function Comments(props) {
                 parent_id: props.commentId,
                 root_id: props.commentId
             }
+
         }
         else      //UPDATE COMMENT
         {
+
             commentData = {
                 confession_id: props.postId,
                 comment_id,
@@ -158,13 +160,13 @@ export default function Comments(props) {
 
         try {
             const response = await fetchData(obj)
-            props.updateSingleCommentData({ countChild: props.countChild + 1 }, props.index)
+            props.updateSingleCommentData({ countChild: props.countChild + 1 }, props.index);
             if (response.data.status === true) {
-                ref.value = ""
 
                 // NEW COMMENT
                 if (comment_id === false) {
                     let data;
+                    ref.value = ""
                     data = { no_of_comments: commentsModalReducer.state.no_of_comments + 1 };
                     dispatch(updateCModalState(data))
                     dispatch(setCommentField({ id: "" }));
@@ -257,6 +259,7 @@ export default function Comments(props) {
             "page": pageNo,
             "root_id": commentId
         }
+
 
         let obj = {
             data: data,
@@ -354,7 +357,7 @@ export default function Comments(props) {
 
                     {props.curid !== false ?
 
-                        (<Link className={`textDecNone`}
+                        (<Link className={`textDecNon`}
                             to={props.curid ?
                                 (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
                                 : ''}>
@@ -402,13 +405,13 @@ export default function Comments(props) {
                                             <img src={forwardIcon} className="forwardIconContImg" onClick={updateComment} />
                                         </div>
                                     </div>
-                                    <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError.updateError}</span>
+                                    {requiredError.updateError !== '' ? <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError.updateError}</span> : ''}
                                 </>
                             }
                         </pre>
                         <div className="replyCont">
-                            <span onClick={handleCommentBox}>
-                                <img src={commentReplyIcon} alt="" />
+                            <span onClick={() => handleCommentBox()}>
+                                <img src={commentReplyIcon} alt="" className='replyIcon' />
                                 <span className='pl-2'>Reply</span>
                             </span>
 
@@ -427,12 +430,12 @@ export default function Comments(props) {
                                         <div
                                             className="arrowToAddComment mt-0"
                                             type="button"
-                                            onClick={handleSubComment}
+                                            onClick={() => handleSubComment()}
                                         >
                                             <img src={forwardIcon} alt="" className="forwardIconContImg" />
                                         </div>
                                     </div>
-                                    <span className="d-block errorCont text-danger mb-2 mt-2 moveUp">{requiredError.replyError}</span>
+                                    {requiredError.replyError !== "" ? <span className="d-block errorCont text-danger mb-2 mt-2 moveUp">{requiredError.replyError}</span> : null}
                                 </>
                             }
                         </div>
@@ -476,6 +479,7 @@ export default function Comments(props) {
                                 deleteSubComment={deleteSubComment}
                                 addNewSubComment={addNewSubComment}
                                 index={index}
+                                postId={props.postId}
                                 root_id={props.commentId}
                                 key={subcomment.comment_id}
                                 data={subcomment}

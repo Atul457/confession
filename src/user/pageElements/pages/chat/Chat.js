@@ -647,7 +647,6 @@ export default function Chat() {
         })
     }
     const showRequests = () => {
-        console.log("hideMessages");
         setToggleView({
             messages: false,
             chat: false,
@@ -659,12 +658,12 @@ export default function Chat() {
     return (
         <div className="container-fluid">
             {
-                auth() ? <div className="row">
+                auth() ? <div className="row chatPageOuter">
                     {/* ADDS HEADER COMPONENT */}
                     <Header links={true} fullWidth={true} />
                     {/* END OF ADDS HEADER COMPONENT */}
 
-                    <div className="preventHeader">preventHead</div>
+                    <div className="preventHeader preventHeaderChatSec">preventHead</div>
                     <div className={`container py-md-4 ${toggleView.chat || toggleView.requests ? "p-3" : "p-0"} preventFooter chatOutestCont ${toggleView.messages || toggleView.requests ? "resetHeight" : ""}`}>
                         <div className="row m-0">
 
@@ -785,7 +784,7 @@ export default function Chat() {
                                         <div className="middleContMainDivChat">
                                             <div className="forBottomBorder">
                                                 {toggleView.messages && <i type="button" className="fa fa-arrow-left moveBackFromChat" aria-hidden="true" onClick={showChat}></i>}
-                                                <div className="col-12 imgNopenUserNameWrap">
+                                                <div className="imgNopenUserNameWrap">
 
                                                     <span className="userImageContChatOutest">
                                                         <img src={chatterDetails.image === '' ? chatterImg : chatterDetails.image} alt="" className="userImageContChat" />
@@ -815,7 +814,8 @@ export default function Chat() {
                                             </div>
                                         </div>
 
-                                        <div style={{ height: "59px" }}>preventHead</div>
+                                        <div style={{ height: "59px" }}
+                                            className="preventHeaderChatSec">preventHead</div>
 
 
                                         <div className="messagesCont pt-2" id="messagesCont">
@@ -874,7 +874,14 @@ export default function Chat() {
                                             <i className={`fa fa-arrow-circle-o-down goDownArrow ${goDownArrow === true && "d-block"}`} aria-hidden="true" type="button" onClick={goDown}></i>
                                             <div className="inputToAddComment textAreaToComment chat">
 
-                                                <TextareaAutosize type="text" rows='1' value={typedMessage} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setTypedMessage(e.target.value) }} className="form-control my-3"></TextareaAutosize>
+                                                <TextareaAutosize
+                                                    type="text"
+                                                    rows='1'
+                                                    value={typedMessage}
+                                                    onKeyDown={(e) => { checkKeyPressed(e) }}
+                                                    onChange={(e) => { setTypedMessage(e.target.value) }} className="form-control my-3">
+
+                                                </TextareaAutosize>
                                             </div>
                                             <div className="arrowToAddComment chat" type="button" id="sendMessageChat" onClick={() => { sendMessage() }}>
                                                 <img src={forwardIcon} alt="" className="forwardIconContImgForChat" />

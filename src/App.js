@@ -205,6 +205,8 @@ function App() {
             </Route>
             {/* PRIVACY PAGE */}
 
+            <Route path="chatt" element={<div></div>}>
+            </Route>
 
 
             {/* TERMS PAGE */}
@@ -258,7 +260,8 @@ function App() {
 
 
             {/* LOGIN PAGE */}
-            <Route path="login" element={<Login />}>
+            <Route path="login" element={<ProtectedRoute><Login /></ProtectedRoute>}>
+              <Route index element={<Login />} />
             </Route>
             {/* LOGIN PAGE */}
 

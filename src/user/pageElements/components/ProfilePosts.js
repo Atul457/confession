@@ -1,5 +1,5 @@
 import React from 'react';
-import forwardIcon from '../images/forwardIcon.png';
+import forwardIcon from '../images/forwardIcon.svg';
 import { Link } from "react-router-dom";
 
 export default function ProfilePosts(props) {

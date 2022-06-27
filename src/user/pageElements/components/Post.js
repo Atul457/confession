@@ -508,8 +508,16 @@ export default function Post(props) {
                 (
                     <>
                         <div className="container-fluid inputWithForwardCont">
-                            <div className="inputToAddComment textAreaToComment w-100">
-                                <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control mb-2"></TextareaAutosize>
+                            <div className="textAreaToComment w-100">
+                                <TextareaAutosize
+                                    type="text"
+                                    maxLength={maxChar}
+                                    row='1'
+                                    value={comment}
+                                    onKeyDown={(e) => { checkKeyPressed(e) }}
+                                    onChange={(e) => { setComment(e.target.value) }}
+                                    className="form-control">
+                                </TextareaAutosize>
                             </div>
                             <div className="arrowToAddComment" id="userPostCommentIcon" type="button" onClick={() => { doComment(props.postId) }}>
                                 <img src={forwardIcon} alt="" className="forwardIconContImg" />

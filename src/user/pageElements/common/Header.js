@@ -5,13 +5,15 @@ import profileIcon from '../../../images/profileIcon.svg'
 import mobileProfileIcon from '../../../images/mobileProfileIcon.svg'
 import homeIconActive from '../../../images/homeIcon.svg'
 import homeIcon from '../../../images/homeIconActive.svg'
+import bell from '../../../images/bell.svg'
+import bellActive from '../../../images/orangebell.svg'
 import confessIcon from '../../../images/confessIcon.svg'
 import confessIconActive from '../../../images/confessIconActive.svg'
 import inboxIcon from '../../../images/inboxIcon.png'
 import inboxIconActive from '../../../images/inboxIconActive.png'
 import newInactiveMessages from '../../../images/newInMessages.svg'
 import newMessagesInbox from '../../../images/newMessages.svg'
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/SetAuth';
 import { useLocation } from 'react-router';
@@ -24,13 +26,17 @@ import AppLogo from "../components/AppLogo";
 import { togglemenu } from '../../../redux/actions/share';
 import UpdatePasswordModal from '../Modals/UpdatePasswordModal';
 import { UpdateUPassActionCreators } from '../../../redux/actions/updateUserPassword';
+import { closeNotiPopup, openNotiPopup } from '../../../redux/actions/notificationAC';
 
 
 export default function Header(props) {
 
     const ShareReducer = useSelector(store => store.ShareReducer);
     const verifyEState = useSelector(store => store.VerifyEmail);
+    const notificationReducer = useSelector(store => store.notificationReducer);
     const dispatch = useDispatch();
+    const params = useParams();
+    const pathname = useLocation().pathname.replace("/", "");
     const [profile] = useState(() => {
         if (auth()) {
             let profile = localStorage.getItem("userDetails");
@@ -70,6 +76,17 @@ export default function Header(props) {
             document.removeEventListener("click", catchEvent);
         }
     }, [showProfileOption])
+
+
+    useEffect(() => {
+        if (notificationReducer.isVisible === true) {
+            document.addEventListener("click", catchEventNoti);
+        }
+
+        return () => {
+            document.removeEventListener("click", catchEventNoti);
+        }
+    }, [notificationReducer.isVisible])
 
 
     // GETS THE COUNT OF NEW REQUESTS
@@ -141,9 +158,13 @@ export default function Header(props) {
                     // EMAIL VERIFICATION LOGIC
                     var email_verified = res.data.email_verified;   // 0 NOT VERIFIED , 1 VERIFIED
 
+                    let currPath;
 
-                    // console.log(verifyEState.verified);
-                    if (email_verified !== "" && email_verified === 0) {
+                    if (params.postId) {
+                        currPath = `confession/${params.postId}`;
+                    }
+
+                    if (email_verified !== "" && email_verified === 0 && pathname !== currPath) {
                         if (verifyEState.verified === false) {
                             setShowEModal(true);
                         }
@@ -189,6 +210,16 @@ export default function Header(props) {
         }
     }
 
+
+    // HANDLE NOTIFICATION DIV
+    const catchEventNoti = (e) => {
+        var classes = e.target.classList;
+        let result = !classes.contains("takeActionNoti") && !classes.contains("noti") && !classes.contains("takeActionOptions") && !classes.contains("notificationIcon");
+        if (result) {
+            dispatch(closeNotiPopup());
+        }
+    }
+
     const HandleShowHide = () => {
         setShowProfileOption(!showProfileOption)
     }
@@ -197,6 +228,14 @@ export default function Header(props) {
         dispatch(UpdateUPassActionCreators.openChangePassModal())
     }
     // END OF HANDLE PROFILE DIV
+
+
+    const toggleNotificationCont = () => {
+        if (!notificationReducer.isVisible)
+            return dispatch(openNotiPopup())
+
+        dispatch(closeNotiPopup());
+    }
 
     return (
         <>
@@ -268,60 +307,89 @@ export default function Header(props) {
 
                             {auth() ?
                                 (
-                                    <div className="authProfileIcon" onClick={HandleShowHide}>
-                                        <span className="requestsIndicatorNuserIconCont" type="button">
-                                            <img src={userIcon} alt="" className="userAccIcon headerUserAccIcon" />
-                                            <img src={mobileProfileIcon} alt="" className="userAccIcon headerUserAccIcon mobIcon" />
-                                            {requestsIndicator > 0 && (
-                                                <span className="requestIndicator"></span>
-                                            )}
-                                        </span>
+                                    <>
+                                        <div className="authProfileIcon noti">
+                                            <div className="notifications" onClick={toggleNotificationCont}>
+                                                <img src={bell} alt="" className="notificationIcon headerUserAccIcon" />
+                                                <img src={bellActive} alt="" className="notificationIcon headerUserAccIcon mobIcon" />
+                                            </div>
 
-                                        {showProfileOption && <div className="takeAction p-1 pb-0 d-block">
-                                            <Link to="/profile" className="textDecNone border-bottom">
-                                                <div type="button" className="profileImgWithEmail takeActionOptions d-flex align-items-center mt-2 textDecNone">
-                                                    <span className="profileHeaderImage mr-2 ml-2">
-                                                        <img src={profile.image === '' ? mobileProfileIcon : profile.image} alt="" />
-                                                    </span>
-                                                    <div className="nameEmailWrapperHeader">
-                                                        <span className="userDropDown userProfileHeading">{profile.name}</span>
-                                                        <span className="userDropDown userProfileSubHeadings">{profile.email}</span>
-                                                    </div>
+                                            {notificationReducer.isVisible && <div className="takeActionNoti p-1 pb-0 d-block">
+                                                <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
+                                                    <i className="fa fa-comments" aria-hidden="true"></i>
+                                                    You have got a new comment on your post
                                                 </div>
 
                                                 <hr className="m-0" />
                                                 <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
-                                                    <img src={profileIcon} alt="" className='profilePopUpIcons' />
-                                                    <span className="viewProfileNcommentsCont">
-                                                        <div className='userProfileHeading'>
-                                                            View profile
-                                                        </div>
-                                                        {newCommentsCount > 0 &&
-                                                            <div className='userProfileSubHeadings'>
-                                                                Unread Replies ({newCommentsCount})
-                                                            </div>
-                                                        }
-                                                    </span>
+                                                    <i className="fa fa-envelope" aria-hidden="true"></i>
+                                                    You have got a new reply on your comment
                                                 </div>
-                                            </Link>
 
-                                            {profile?.source === 1 &&
-                                                <>
-                                                    <hr className="m-0" />
-                                                    <div type="button"
-                                                        onClick={openUpdatePassModal} className="takeActionOptions  userProfileHeading takeActionOptionsOnHov userProfileHeading textDecNone py-2">
-                                                        <img src={profileIcon} alt="" className='profilePopUpIcons' />
-                                                        Reset Password
-                                                    </div>
-                                                </>}
-
-                                            <hr className="m-0" />
-                                            <div type="button" className="takeActionOptions userProfileHeading py-2 takeActionOptionsOnHov textDecNone mb-0" onClick={() => logout()}>
-                                                <img src={logoutIcon} alt="" className='profilePopUpIcons' />Logout
-                                            </div>
+                                                <hr className="m-0" />
+                                                <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
+                                                    <i className="fa fa-comment-o" aria-hidden="true"></i>
+                                                    You have got a new reply oon your reply
+                                                </div>
+                                            </div>}
                                         </div>
-                                        }
-                                    </div>
+
+
+                                        <div className="authProfileIcon" onClick={HandleShowHide}>
+                                            <span className="requestsIndicatorNuserIconCont" type="button">
+                                                <img src={userIcon} alt="" className="userAccIcon headerUserAccIcon" />
+                                                <img src={mobileProfileIcon} alt="" className="userAccIcon headerUserAccIcon mobIcon" />
+                                                {requestsIndicator > 0 && (
+                                                    <span className="requestIndicator"></span>
+                                                )}
+                                            </span>
+
+                                            {showProfileOption && <div className="takeAction p-1 pb-0 d-block">
+                                                <Link to="/profile" className="textDecNone border-bottom">
+                                                    <div type="button" className="profileImgWithEmail takeActionOptions d-flex align-items-center mt-2 textDecNone">
+                                                        <span className="profileHeaderImage mr-2 ml-2">
+                                                            <img src={profile.image === '' ? mobileProfileIcon : profile.image} alt="" />
+                                                        </span>
+                                                        <div className="nameEmailWrapperHeader">
+                                                            <span className="userDropDown userProfileHeading">{profile.name}</span>
+                                                            <span className="userDropDown userProfileSubHeadings">{profile.email}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <hr className="m-0" />
+                                                    <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
+                                                        <img src={profileIcon} alt="" className='profilePopUpIcons' />
+                                                        <span className="viewProfileNcommentsCont">
+                                                            <div className='userProfileHeading'>
+                                                                View profile
+                                                            </div>
+                                                            {newCommentsCount > 0 &&
+                                                                <div className='userProfileSubHeadings'>
+                                                                    Unread Replies ({newCommentsCount})
+                                                                </div>
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                </Link>
+
+                                                {profile?.source === 1 &&
+                                                    <>
+                                                        <hr className="m-0" />
+                                                        <div type="button"
+                                                            onClick={openUpdatePassModal} className="takeActionOptions  userProfileHeading takeActionOptionsOnHov userProfileHeading textDecNone py-2">
+                                                            <img src={profileIcon} alt="" className='profilePopUpIcons' />
+                                                            Reset Password
+                                                        </div>
+                                                    </>}
+
+                                                <hr className="m-0" />
+                                                <div type="button" className="takeActionOptions userProfileHeading py-2 takeActionOptionsOnHov textDecNone mb-0" onClick={() => logout()}>
+                                                    <img src={logoutIcon} alt="" className='profilePopUpIcons' />Logout
+                                                </div>
+                                            </div>
+                                            }
+                                        </div>
+                                    </>
                                 )
                                 :
                                 <Link to="/login" className='linkToLogin'>

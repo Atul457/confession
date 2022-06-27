@@ -1,5 +1,5 @@
 import React from 'react'
-import forwardIcon from '../images/forwardIcon.png';
+import forwardIcon from '../images/forwardIcon.svg';
 import chatterImg from '../images/chatterImg.png';
 import Header from '../pageElements/Header';
 import Footer from '../pageElements/Footer';

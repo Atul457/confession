@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { fetchData } from '../../../commonApi';
 import Lightbox from "react-awesome-lightbox";
 import userIcon from '../../../images/userAcc.png';
-import forwardIcon from '../../../images/forwardIcon.png';
+import forwardIcon from '../../../images/forwardIcon.svg';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Footer from '../../pageElements/common/Footer';
 import Comments from '../Comments';
