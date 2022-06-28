@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
-import Comments from '../../components/Comments';
 import Category from '../../components/Category';
 import userIcon from '../../../../images/userAcc.png';
 import forwardIcon from '../../../../images/forwardIcon.svg';
@@ -9,19 +8,22 @@ import auth from '../../../behindScenes/Auth/AuthCheck';
 import { Link } from "react-router-dom";
 import SiteLoader from "../../components/SiteLoader";
 import { useNavigate } from "react-router-dom";
-import SetAuth from '../../../behindScenes/SetAuth';
 import Lightbox from "react-awesome-lightbox";
 import { fetchData } from '../../../../commonApi';
 import "react-awesome-lightbox/build/style.css";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams } from "react-router-dom";
 import TextareaAutosize from 'react-textarea-autosize';
 import logo from '../../../../images/appLogo.svg'
+import commentCountIcon from '../../../../images/commentCountIcon.svg';
+import upvote from '../../../../images/upvote.svg';
+import upvoted from '../../../../images/upvoted.svg';
 import DateConverter from '../../../../helpers/DateConverter';
 import { openCModal as openCommentsModalFn } from '../../../../redux/actions/commentsModal';
 import { useDispatch, useSelector } from 'react-redux';
-import CommentGotModal from '../../Modals/CommentGotModal';
 import useCommentsModal from '../../../utilities/useCommentsModal';
+import { getToken } from '../../../../helpers/getToken';
+import viewsCountIcon from '../../../../images/viewsCountIcon.svg';
+import _ from 'lodash';
 
 
 
@@ -38,29 +40,17 @@ export default function CommentsGot(props) {
     const [isWaitingRes, setIsWaitingRes] = useState(true);
     const [isServerErr, setIsServerErr] = useState(false);
     const [isValidPost, setIsValidPost] = useState(true);   //MEANS STATUS IS OK BUT GOT NO RES
-    const [sharedBy, setSharedBy] = useState('');
     const [comment, setComment] = useState('');
-    const [commentsData, setCommentsData] = useState({ page: 1 });
-    const [postId, setPostId] = useState('');
     const [requiredError, setRequiredError] = useState('');
-    const [commentsArr, setCommentsArr] = useState([]);
     const [lightBox, setLightBox] = useState(false);
-    const [changeState, setChangeState] = useState(true);
     const [activeCat, setActiveCat] = useState(false);
+    const [loaded, setLoaded] = useState(false)
     const [reqFulfilled, setReqFullfilled] = useState(false);
     const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal();
-    const [commentsCount, setCommentsCount] = useState(0);
-    const [goDownArrow, setGoDownArrow] = useState(false);
-
-    const preventDoubleClick = (runOrNot) => {
-        var elem = document.querySelector('#postButtonComGot');
-        runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;
-    }
 
 
+    // OPENS THE MODAL
     const openCommentsModal = () => {
-
-        console.log({ confessionData });
 
         dispatch(openCommentsModalFn({
             "postId": confessionData.confession_id,
@@ -87,52 +77,28 @@ export default function CommentsGot(props) {
             "is_liked": confessionData.is_liked,
             "dislike": confessionData.dislike,
             "is_liked_prev": confessionData.is_liked,
-            "updateConfessionData": () => { }
+            "updateConfessionData": updateConfessionData
         }))
-
-
     }
 
 
-    const doComment = async (comment_id = false, editedComment = "") => {
-
-        preventDoubleClick(true);
+    // POST NEW COMMENT
+    const doComment_ = async () => {
         var arr, _comment, userData;
 
-        userData = localStorage.getItem("userDetails");
-        if (userData === "" || userData === null) {
-            SetAuth(0);
-            history("/login");
+        userData = getToken();
+
+        setRequiredError('');
+        if (comment === '') {
+            setRequiredError('This is required field');
             return false;
         }
-        userData = JSON.parse(userData).token;
-
-
-
-        if (comment_id === false)       //NEW COMMENT
-        {
-            setRequiredError('');
-            if (comment === '') {
-                setRequiredError('This is required field');
-                preventDoubleClick(false);
-                return false;
-            }
-            _comment = comment;
-            setComment("");
-            arr = {
-                "confession_id": postId,
-                "comment": _comment,
-                "comment_id": ""
-            }
-        } else      //UPDATE COMMENT
-        {
-            console.log("update");
-            _comment = editedComment;
-            arr = {
-                "confession_id": postId,
-                "comment": _comment,
-                "comment_id": comment_id
-            }
+        _comment = comment;
+        setComment("");
+        arr = {
+            "confession_id": params.postId,
+            "comment": _comment,
+            "comment_id": ""
         }
 
         let obj = {
@@ -144,44 +110,11 @@ export default function CommentsGot(props) {
         try {
             const response = await fetchData(obj)
             if (response.data.status === true) {
-                let shared = sharedBy;
+
                 setComment("");
-                changeState ? setChangeState(false) : setChangeState(true);
+                let data = { no_of_comments: confessionData.no_of_comments + 1 };
+                updateConfessionData(0, data);  //INCREMENTS THE COMMENT COUNT
 
-                //APPENDS DATA ONLY WHEN YOU ARE ON THE LAST PAGE OF THE COMMENTS
-                var pageSize, totalPages;
-                pageSize = 20;
-                totalPages = Math.ceil(commentsCount / pageSize);
-                totalPages = totalPages === 0 ? (totalPages + 1) : totalPages;
-
-                if (totalPages === commentsData.page && comment_id === false)   //APPENDS
-                {
-                    var newComment, commentsArrDummy;
-                    newComment = {};
-                    newComment = response.data.comment;
-                    commentsArrDummy = [];
-                    commentsArrDummy = commentsArr;
-                    commentsArrDummy.push(newComment);
-                    setCommentsArr(commentsArrDummy);
-                    setSharedBy(parseInt(shared) + 1);
-                }
-                else if (comment_id === false)  //JUST INCREMENTS THE COMMENT COUNT
-                {
-                    setCommentsCount(parseInt(shared) + 1);
-                    setSharedBy(parseInt(shared) + 1);
-                }
-                else    //UPDATES
-                {
-                    var arr = commentsArr.map((curr) => {
-                        if (curr.comment_id === comment_id) {
-                            return { ...curr, "comment": _comment };
-                        } else {
-                            return curr;
-                        }
-                    });
-
-                    setCommentsArr(arr);
-                }
             } else {
                 setRequiredError(response.data.message);
             }
@@ -189,117 +122,80 @@ export default function CommentsGot(props) {
         catch {
             console.log('some error occured');
         }
-        preventDoubleClick(false);
     }
 
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
+    // POST COMMENT
+    const doComment = _.debounce(doComment_, 1000);
+
+
+    // GET CONFESSION FUNCTION
+    async function getConfession() {
 
         let token;
-        if (auth()) {
-            token = localStorage.getItem("userDetails");
-            token = JSON.parse(token);
-            token = token.token;
-        } else {
-            token = "";
-        }
-
-        const getConfession = async () => {
-            let obj = {
-                data: {},
-                token: token,
-                method: "get",
-                url: `getconfession/${params.postId}`
-            }
-
-            try {
-                const response = await fetchData(obj)
-                if (response.data.status === true) {
-                    // setReqFullfilled(true);
-                    setConfessionData(response.data.confession);
-                    console.log({ res: response.data.confession });
-                    setSharedBy(response.data.confession.no_of_comments)
-                    setPostId(response.data.confession.confession_id);
-
-                    let activeCategory = response.data.confession.category_id;
-                    setActiveCat(activeCategory);
-
-
-                } else {
-                    //Handles app in case of no api response
-                    setIsValidPost(false);
-                    setConfessionData(true);
-                }
-                setIsWaitingRes(false);
-            } catch {
-                setIsWaitingRes(false);
-                setIsServerErr(true);
-            }
-        }
-
-        getConfession();
-
-    }, [params.postId])
-
-
-    useEffect(() => {
-        if (reqFulfilled === false && confessionData !== false) {
-            setReqFullfilled(true);
-            openCommentsModal();
-
-        }
-    }, [reqFulfilled, confessionData])
-
-
-
-
-    const commentsOnCconfession = async (page = 1, append = false) => {
-        let pageNo = page;
-
-        let token;
-        if (auth()) {
-            token = localStorage.getItem("userDetails");
-            token = JSON.parse(token);
-            token = token.token;
-        } else {
-            token = "";
-        }
-
-        let data = {
-            "confession_id": params.postId,
-            "page": pageNo
-        }
+        token = getToken();
 
         let obj = {
-            data: data,
+            data: {},
             token: token,
-            method: "post",
-            url: "getcomments"
+            method: "get",
+            url: `getconfession/${params.postId}`
         }
 
         try {
-            const res = await fetchData(obj)
-            if (res.data.status === true) {
-                if (append === true) {
-                    let newConf = [...commentsArr, ...res.data.body.comments];
-                    setCommentsData({ page: pageNo })
-                    setCommentsArr(newConf);
-                } else {
-                    setCommentsCount(res.data.body.count);
-                    setCommentsArr(res.data.body.comments);
+            const response = await fetchData(obj)
+            if (response.data.status === true) {
 
-                }
+                let activeCategory = response.data.confession.category_id;
+                setActiveCat(activeCategory);
+                setIsWaitingRes(false);
+                setConfessionData(response.data.confession);
+                return setLoaded(true);
+
             }
+
+            //Handles app in case of no api response
+            setIsValidPost(false);
+            setConfessionData(true);
+            setLoaded(false);
+            setIsWaitingRes(false);
+
         } catch {
-            console.log("something went wrong");
+            setIsWaitingRes(false);
+            setIsValidPost(false);
+            setConfessionData(true);
+            setLoaded(false);
         }
     }
 
 
+    // REFETCH COMMENTS ON URL POSTID CHANGE
     useEffect(() => {
-        commentsOnCconfession();
-    }, [])
+        setConfessionData(false)
+        setLoaded(false);
+        getConfession();
+    }, [params.postId])
+
+
+    // OPENS THE COMMENTS MODAL FIRST TIME AFTER COMMENT DATA HAS BEEN LOADED
+    useEffect(() => {
+        if (loaded && Object.keys(confessionData).length > 0) {
+            openCommentsModal();
+        }
+    }, [loaded])
+
+
+    // REOPENS THE COMMENTS MODAL ON CONFESSION_ID CHANGE
+    useEffect(() => {
+
+        if (params.postId === confessionData.confession_id && !reqFulfilled) {
+            setReqFullfilled(true)
+        }
+
+        if (reqFulfilled)
+            setReqFullfilled(false);
+
+    }, [params.postId])
 
 
     // TAKES YOU TO THE HOME PAGE, AND LOADS THE ACTIVECAT CONFESSION DATA
@@ -307,42 +203,70 @@ export default function CommentsGot(props) {
         history(`/home`, { state: { active: activeCat } });
     }
 
+
     // SUBMITS THE DATA ON ENTER AND CREATES A NEW PARA ON SHIFT+ENTER KEY
     const checkKeyPressed = (event) => {
         if (event.keyCode === 13 && event.shiftKey) {
             setComment(comment);
         } else if (event.keyCode === 13 && !event.shiftKey) {
             event.preventDefault();
-            doComment(props.postId);
+            doComment(false, '');
         }
     }
 
 
-    const fetchMoreComments = () => {
-        commentsOnCconfession((commentsData.page + 1), true);
-    }
+    // LIKE UNLIKE FUNCTIONALITY
+    const upvoteOrDownvote = async (isLiked) => {
 
-    // HANDLES SCROLL TO TOP BUTTON
-    useEffect(() => {
-        document.addEventListener("scroll", () => {
-            let scroll = document.querySelector("html").scrollTop;
-            if (scroll > 1000) {
-                setGoDownArrow(true);
-            } else {
-                setGoDownArrow(false);
+        let is_liked, ip_address, check_ip, token = '', data;
+        is_liked = isLiked ? 1 : 2;
+        ip_address = localStorage.getItem("ip")
+        check_ip = ip_address.split(".").length
+        token = getToken();
+
+        if (check_ip === 4) {
+            let obj = {
+                data: { is_liked, ip_address },
+                token: token,
+                method: "post",
+                url: `likedislike/${confessionData.confession_id}`
             }
-        })
-    }, [])
+            try {
+                data = {
+                    like: isLiked ? confessionData.like + 1 : confessionData.like - 1,
+                    is_liked: isLiked ? 1 : 2
+                }
 
+                updateConfessionData(0, data);
 
-    const updateComment = (commentData) => {
-        doComment(commentData.comment_id, commentData.comment);
+                const res = await fetchData(obj)
+                if (res.data.status === true) {
+
+                } else {
+                    console.log(res);
+                }
+            } catch (error) {
+                console.log(error);
+                console.log("Some error occured");
+            }
+        } else {
+            console.log("Invalid ip");
+        }
     }
 
 
-    //SCROLLS TO BOTTOM
-    const goUp = () => {
-        window.scrollTo({ top: "0px", behavior: "smooth" });
+    // UPDATES THE CONFESSION DATA ON THE COMMENTS GOT PAGE
+    function updateConfessionData(index, data) {
+        let updatedConfessionArray;
+        let updatedConfessionNode;
+        updatedConfessionArray = { ...confessionData };
+        updatedConfessionNode = updatedConfessionArray;
+        updatedConfessionNode = {
+            ...updatedConfessionNode,
+            ...data
+        };
+        updatedConfessionArray = updatedConfessionNode;
+        setConfessionData({ ...updatedConfessionArray });
     }
 
     return (
@@ -475,7 +399,7 @@ export default function CommentsGot(props) {
                                                                         <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control my-3"></TextareaAutosize>
 
                                                                     </div>
-                                                                    <div type="button" id="postButtonComGot" className="arrowToAddComment" onClick={() => { doComment(props.postId) }}>
+                                                                    <div type="button" id="postButtonComGot" className="arrowToAddComment" onClick={() => { doComment() }}>
                                                                         <img src={forwardIcon} alt="" className="forwardIconContImg" />
                                                                     </div>
                                                                 </div>
@@ -488,12 +412,55 @@ export default function CommentsGot(props) {
                                                                     </Link>
                                                                 </span>
                                                             }
+
+
                                                             <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
                                                         </div>
 
                                                         <div className="postFoot">
-                                                            <div className="totalComments">
-                                                                {sharedBy}  - People shared their thoughts about this post
+                                                            {auth() === false &&
+                                                                <span className="feedPageLoginBtnCont postLoginBtnCont">
+                                                                    <Link to="/login">
+                                                                        <div className="categoryOfUser enhancedStyle" type="button">
+                                                                            Login to comment
+                                                                        </div>
+                                                                    </Link>
+                                                                </span>}
+
+                                                            <div className={`iconsCont ${auth() === false ? 'mainDesignOnWrap' : ''}`}>
+
+                                                                <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button" onClick={openCommentsModal}>
+                                                                    <img src={viewsCountIcon} alt="" />
+                                                                    <span className="count">{confessionData.viewcount}</span>
+                                                                </div>
+
+
+                                                                <div className="upvote_downvote_icons_cont  ml-0" type="button" onClick={openCommentsModal}>
+                                                                    <img src={commentCountIcon} alt="" />
+                                                                    <span className="count">
+                                                                        {confessionData.no_of_comments}
+                                                                    </span>
+                                                                </div>
+
+
+                                                                {(confessionData.hasOwnProperty("is_liked")
+                                                                    ?
+                                                                    <div className='iconsMainCont'>
+                                                                        <div className={`upvote_downvote_icons_cont buttonType`}>
+                                                                            {confessionData.is_liked === 1 ?
+                                                                                <img src={upvoted} alt="" onClick={() => upvoteOrDownvote(false)} /> :
+                                                                                <img src={upvote} alt="" onClick={() => upvoteOrDownvote(true)} />}
+                                                                            <span className='count'>{confessionData.like}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    :
+                                                                    <div className='iconsMainCont'>
+                                                                        <div className={`upvote_downvote_icons_cont`}>
+                                                                            <img src={upvote} alt="" />
+                                                                            <span className='count'>{confessionData.like}</span>
+                                                                        </div>
+                                                                    </div>)}
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -501,41 +468,6 @@ export default function CommentsGot(props) {
                                                         <div className="alert alert-danger" role="alert">
                                                             The post doesn't exist
                                                         </div>}
-
-                                                    {/* {isValidPost && <div className="postsMainCont">
-                                                        {commentsArr.length > 0
-                                                            &&
-                                                            <InfiniteScroll
-                                                                endMessage={<div className="endListMessage mt-4 pb-3">End of Comments</div>}
-                                                                dataLength={commentsArr.length}
-                                                                next={fetchMoreComments}
-                                                                hasMore={commentsArr.length < commentsCount}
-                                                                loader={
-                                                                    <div className="w-100 text-center">
-                                                                        <div className="spinner-border pColor mt-4" role="status">
-                                                                            <span className="sr-only">Loading...</span>
-                                                                        </div>
-                                                                    </div>
-                                                                }
-                                                            >
-                                                                {commentsArr.map((post, index) => {
-                                                                    return <Comments
-                                                                        postId={params.postId}
-                                                                        updateComment={updateComment}
-                                                                        commentId={post.comment_id}
-                                                                        countChild={post.countChild}
-                                                                        is_editable={post.is_editable}
-                                                                        created_at={post.created_at}
-                                                                        curid={(post.user_id === '' || post.user_id === 0) ? false : post.user_id}
-                                                                        key={"Arr" + index + "dp"}
-                                                                        imgUrl={post.profile_image} userName={post.comment_by}
-                                                                        postedComment={post.comment} />
-
-                                                                })}
-                                                            </InfiniteScroll>
-                                                        }
-
-                                                    </div>} */}
 
                                                 </section>
                                             )
@@ -546,7 +478,7 @@ export default function CommentsGot(props) {
                             </div>
                         </div>
                     </div>
-                    <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
+
                     <Footer />
                 </div>
                 :

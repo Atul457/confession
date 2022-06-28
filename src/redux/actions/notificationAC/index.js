@@ -1,12 +1,20 @@
 export const notiActionTypes = {
     'OPENPOPUP' : 'NOTIFICATIONOPENPOPUP',
-    'CLOSEPOPUP' : 'NOTIFICATIONCLOSEPOPUP'
+    'CLOSEPOPUP' : 'NOTIFICATIONCLOSEPOPUP',
+    'UPDATEPOPUP' : 'UPDATENOTIFICATIONPOPUPSTATE'
 }
 
 
 export const openNotiPopup = () => {
     return {
         type: notiActionTypes.OPENPOPUP
+    }
+}
+
+export const updateNotiPopState = (payload) => {
+    return {
+        type: notiActionTypes.UPDATEPOPUP,
+        payload
     }
 }
 

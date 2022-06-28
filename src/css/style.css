@@ -203,9 +203,13 @@ input::-webkit-textfield-decoration-container {
     padding: 0px 30px;
     height: 60px;
     display: flex;
-    align-items: end;
+    align-items: flex-end;
     border-bottom: 3px solid #CDCDCD;
     position: relative;
+}
+
+.notiDivsLinkTag:hover {
+    text-decoration: none;
 }
 
 .insideHeader {
@@ -469,6 +473,10 @@ input:focus-visible {
     color: var(--labelsColor);
 }
 
+.notificationUnread {
+    width: 13px;
+}
+
 .categoriesCont {
     display: flex;
     padding-top: 20px;
@@ -478,11 +486,23 @@ input:focus-visible {
 .categoriesContainer {
     display: flex;
     flex-wrap: wrap;
-    /* justify-content: center; */
-    height: 350px;
+    height: 290px;
     overflow-y: auto;
     margin-bottom: 20px;
     padding: 0px 0px 0px 15px;
+}
+
+.socialLinksIconWrapper {
+    margin-top: 20px;
+}
+
+.authProfileIcon.socialLinksIconWrapper {
+    display: none;
+}
+
+.socialLinksIconWrapper img {
+    width: 40px;
+    cursor: pointer;
 }
 
 .activeCategory {
@@ -1256,6 +1276,26 @@ span.offlineColor {
 }
 
 .profileSidebar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: var(--primaryColor);
+}
+
+
+.NotiWrapper::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+.NotiWrapper::-webkit-scrollbar {
+    width: 5px;
+    background-color: var(--primaryColor);
+}
+
+.NotiWrapper::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
@@ -2126,6 +2166,13 @@ span.offlineColor {
 .noti .takeActionNoti {
     padding: 5px 0px !important;
     right: -43px;
+    overflow: hidden;
+}
+
+.NotiWrapper {
+    max-width: 225px;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .iconsCont {
@@ -2141,7 +2188,7 @@ span.offlineColor {
 .postFoot {
     flex-wrap: wrap;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
 .upvote_downvote_icons_cont img {
@@ -2573,9 +2620,47 @@ span.facebookMobIcon {
 }
 
 .noti .takeActionOptionsOnHov {
+    flex-wrap: wrap;
     font-weight: 500;
     padding: 0px 22px;
 }
+
+.notificationLabel {
+    width: 120px;
+}
+
+
+.socialLinksModal ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0px;
+    margin-bottom: 0px;
+    width: 80%;
+}
+
+.socialLinksModal img {
+    width: 70px;
+}
+
+.socialLinksModal {
+    height: 300px;
+    padding: 0px 40px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.noti .unread::after {
+    content: '';
+    margin-left: 10px;
+    width: 12px;
+    height: 12px;
+    background: #38B000;
+    border-radius: 50%;
+}
+
 
 .noti .takeActionOptionsOnHov i {
     padding-right: 15px !important;
@@ -4665,7 +4750,7 @@ button.modalFootBtns.btn a:hover {
         display: flex;
     }
 
-    .noti .takeActionNoti{
+    .noti .takeActionNoti {
         right: 34px;
     }
 
@@ -5279,6 +5364,29 @@ button.modalFootBtns.btn a:hover {
         z-index: 10;
         background: #fff;
         padding-bottom: 30px !important;
+    }
+
+
+    .socialLinksIconWrapper {
+        margin-top: 0px;
+        margin-right: 20px;
+    }
+
+    .socialLinksIconWrapper img {
+        width: 28px;
+    }
+
+    .authProfileIcon.socialLinksIconWrapper {
+        display: block;
+    }
+
+    .socialLinksModal img{
+        width: 40px;
+    }
+
+    .socialLinksModal{
+        height: 180px;
+        padding: 0px 20px !important;
     }
 
     /* new  */

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import auth from '../../behindScenes/Auth/AuthCheck';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { fetchData } from '../../../commonApi';
 import Lightbox from "react-awesome-lightbox";
 import userIcon from '../../../images/userAcc.png';

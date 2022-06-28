@@ -9,6 +9,7 @@ import commentsModalReducer from './commentsModalReducer';
 import friendReqModalReducer from './friendReqModalReducer';
 import postAlertReducer from './postAlertReducer';
 import notificationReducer from './notificationReducer';
+import socialLinksModalReducer from './socialLinksModalReducer';
 
 
 const rootReducer = combineReducers({
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
     commentsModalReducer,
     friendReqModalReducer,
     postAlertReducer,
-    notificationReducer
+    notificationReducer,
+    socialLinksModalReducer
 })
 
 export default rootReducer

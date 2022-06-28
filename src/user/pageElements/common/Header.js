@@ -4,6 +4,8 @@ import logoutIcon from '../../../images/logoutIcon.svg'
 import profileIcon from '../../../images/profileIcon.svg'
 import mobileProfileIcon from '../../../images/mobileProfileIcon.svg'
 import homeIconActive from '../../../images/homeIcon.svg'
+import bellNewNoti from '../../../images/bellNewNoti.svg'
+import orangeBellNewNoti from '../../../images/orangeBellNewNoti.svg'
 import homeIcon from '../../../images/homeIconActive.svg'
 import bell from '../../../images/bell.svg'
 import bellActive from '../../../images/orangebell.svg'
@@ -22,11 +24,16 @@ import contactUsActiveIcon from '../../../images/contactUsIconActive.png';
 import contactUsIcon from '../../../images/contactUsIcon.png';
 import VerifyEmailModal from '../Modals/VerifyEmailModal';
 import { useDispatch, useSelector } from 'react-redux';
+import socialLinksIcon from '../../../images/socialLinksIcon.svg';
 import AppLogo from "../components/AppLogo";
 import { togglemenu } from '../../../redux/actions/share';
 import UpdatePasswordModal from '../Modals/UpdatePasswordModal';
 import { UpdateUPassActionCreators } from '../../../redux/actions/updateUserPassword';
-import { closeNotiPopup, openNotiPopup } from '../../../redux/actions/notificationAC';
+import { closeNotiPopup, openNotiPopup, updateNotiPopState } from '../../../redux/actions/notificationAC';
+import _ from 'lodash';
+import SocialLinksModal from '../Modals/SocialLinksModal';
+import openSLinksModalActionCreators from '../../../redux/actions/socialLinksModal';
+
 
 
 export default function Header(props) {
@@ -34,6 +41,7 @@ export default function Header(props) {
     const ShareReducer = useSelector(store => store.ShareReducer);
     const verifyEState = useSelector(store => store.VerifyEmail);
     const notificationReducer = useSelector(store => store.notificationReducer);
+    const socialLinksModalReducer = useSelector(store => store.socialLinksModalReducer);
     const dispatch = useDispatch();
     const params = useParams();
     const pathname = useLocation().pathname.replace("/", "");
@@ -137,6 +145,10 @@ export default function Header(props) {
     }, [ShareReducer.selectedPost?.value])
 
 
+    useEffect(() => {
+        getNotiStatus();
+    }, [notificationReducer.data])
+
 
     //GETS THE TOTAL NO OF NEW COMMENTS
     const getUnreadCommentsCount = async () => {
@@ -155,8 +167,17 @@ export default function Header(props) {
                     setNewCommentsCount(res.data.comments);
                     setMssgsCount(res.data.messages)
 
+                    // IF NOTIFICATION DATA IS NOT UPDATED THE ONLY UPDATE IT
+                    if (!_.isEqual(res.data.commentscenter, notificationReducer.data)) {
+                        dispatch(updateNotiPopState({ data: res.data.commentscenter }))
+                    }
+
                     // EMAIL VERIFICATION LOGIC
                     var email_verified = res.data.email_verified;   // 0 NOT VERIFIED , 1 VERIFIED
+
+
+                    // PREVENTS EMAIL VERIFICATION MODAL FROM BEING SHOWN ON SINGLE CONFESSION PAGE
+                    // (pathname !== currPath)
 
                     let currPath;
 
@@ -237,6 +258,75 @@ export default function Header(props) {
         dispatch(closeNotiPopup());
     }
 
+
+    const getNotiHtml = () => {
+        let data, arr, html, count = 0;
+        data = notificationReducer.data;
+        arr = [{ iconClass: "fa fa-comments", label: "You have got a new comment on your post" },
+        { iconClass: "fa fa-envelope", label: "You have got a new reply on your comment" },
+        { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
+        { iconClass: "fa fa-ban", label: "No new notifications" }]
+
+
+        if (data.length === 0) {
+            return (<div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
+                <i className={arr[arr.length - 1].iconClass} aria-hidden="true"></i>
+                {arr[arr.length - 1].label}
+            </div>)
+
+        }
+
+
+        html = data.map((curr, index) => {
+            if (curr.is_unread === 1)
+                count++;
+
+            return <Link
+                className='notiDivsLinkTag'
+                key={'notiDivs' + curr.confession_id + 'type' + curr.type + Math.floor(Math.random() * 1000000)}
+                onClick={() => { dispatch(closeNotiPopup()) }}
+                to={`/confession/${curr.confession_id}`}>
+                <>
+                    {index > 0 && <hr className="m-0" />}
+                    <div type="button" className={`takeActionOptions takeActionOptionsOnHov textDecNone py-2 ${curr.is_unread === 1 ? 'unread' : ''}`}>
+                        <i className={arr[curr.type - 1].iconClass} aria-hidden="true"></i>
+                        <span className='notificationLabel'>
+                            {arr[curr.type - 1].label}
+                        </span>
+                    </div>
+                </>
+            </Link>
+        })
+
+        return html;
+    }
+
+
+    function getNotiStatus() {
+
+        let data, count = 0;
+        data = notificationReducer.data;
+        data.forEach(function (curr) {
+            if (curr.is_unread === 1) {
+                count++;
+            }
+        })
+
+        if (count > 0 && notificationReducer.newNotifications !== true)
+            dispatch(updateNotiPopState({ newNotifications: true }))
+
+        if (count === 0 && notificationReducer.newNotifications !== false)
+            dispatch(updateNotiPopState({ newNotifications: false }));
+
+    }
+
+
+    // OPENS SOCIAL LINKS MODAL
+    const openSocialLinksModal = () => {
+        dispatch(openSLinksModalActionCreators.openModal());
+    }
+
+
     return (
         <>
             <header className={`mainHead col-12 posFixedForHeader ${props.fullWidth ? "fullWidthHeader" : ''} ${props.hideRound ? "hideHeaderProfile" : ""}`}>
@@ -244,7 +334,6 @@ export default function Header(props) {
                 <div className="insideHeader">
                     <div className="headerLeftCol pl-0">
                         <span to="/home" className="homeHeaderLink">
-                            {/* <img src={logo} alt="" className="appLogo" /> */}
                             <AppLogo />
                         </span>
                     </div>
@@ -308,28 +397,28 @@ export default function Header(props) {
                             {auth() ?
                                 (
                                     <>
+
+                                        <div className='socialLinksIconWrapper authProfileIcon'>
+                                            <img
+                                                src={socialLinksIcon}
+                                                alt="socialLinksIcon"
+                                                onClick={openSocialLinksModal} />
+                                        </div>
+
                                         <div className="authProfileIcon noti">
                                             <div className="notifications" onClick={toggleNotificationCont}>
-                                                <img src={bell} alt="" className="notificationIcon headerUserAccIcon" />
-                                                <img src={bellActive} alt="" className="notificationIcon headerUserAccIcon mobIcon" />
+                                                {notificationReducer.newNotifications ?
+                                                    <img src={bellNewNoti} alt="" className="notificationIcon headerUserAccIcon" /> :
+                                                    <img src={bell} alt="" className="notificationIcon headerUserAccIcon" />}
+
+                                                {notificationReducer.newNotifications ?
+                                                    <img src={bellActive} alt="" className="notificationIcon headerUserAccIcon mobIcon" /> :
+                                                    <img src={orangeBellNewNoti} alt="" className="notificationIcon headerUserAccIcon mobIcon" />}
                                             </div>
 
                                             {notificationReducer.isVisible && <div className="takeActionNoti p-1 pb-0 d-block">
-                                                <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
-                                                    <i className="fa fa-comments" aria-hidden="true"></i>
-                                                    You have got a new comment on your post
-                                                </div>
-
-                                                <hr className="m-0" />
-                                                <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
-                                                    <i className="fa fa-envelope" aria-hidden="true"></i>
-                                                    You have got a new reply on your comment
-                                                </div>
-
-                                                <hr className="m-0" />
-                                                <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
-                                                    <i className="fa fa-comment-o" aria-hidden="true"></i>
-                                                    You have got a new reply oon your reply
+                                                <div className="NotiWrapper">
+                                                    {getNotiHtml()}
                                                 </div>
                                             </div>}
                                         </div>
@@ -410,6 +499,13 @@ export default function Header(props) {
                 <div className={`roundCorners ${props.hideRound ? "d-none" : ""}`}>__</div>
             </header>
 
+
+            {/* SOCIAL LINKS MODAL */}
+            <SocialLinksModal
+                visible={socialLinksModalReducer.visible}
+            />
+
+            {/* UPDATE PASSWORD MODAL */}
             <UpdatePasswordModal />
         </>
     );
