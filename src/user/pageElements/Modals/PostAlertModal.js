@@ -35,11 +35,6 @@ const PostAlertModal = ({ postConfession, preventDoubleClick }) => {
 
     const betterPostAnyway = postAnyway()
 
-    // const postAnyway = () => {
-    //     dispatch(postAlertActionCreators.updateModal({ postAnyway: true }));
-    // }
-
-
     const redirectToProfile = () => {
         dispatch(postAlertActionCreators.closeModal());
         history("/profile");
@@ -62,7 +57,7 @@ const PostAlertModal = ({ postConfession, preventDoubleClick }) => {
                     Choose a Display name
                 </Button>
                 <Button className="modalFootBtns btn" variant="primary" onClick={betterPostAnyway}>
-                    Continue posting?
+                    Continue posting
                 </Button>
             </Modal.Footer>
 
