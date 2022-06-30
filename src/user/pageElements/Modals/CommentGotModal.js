@@ -701,8 +701,8 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                     }
                                                                 >
                                                                     {commentsArr.map((post, index) => {
-                                                                        // console.log({ post })
                                                                         return <Comments
+                                                                            isLastIndex={commentsArr.length === index + 1}
                                                                             updateSingleCommentData
                                                                             ={updateSingleCommentData}
                                                                             index={index}

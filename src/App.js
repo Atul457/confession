@@ -34,6 +34,7 @@ import ReactPixel from 'react-facebook-pixel';
 import ProtectedRoute from './user/ProtectedRoute';
 import getIP from './helpers/getIP';
 import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
+import { Navigate } from 'react-router-dom';
 // import AdSense_ from './user/pageElements/components/AdSense';
 
 
@@ -135,6 +136,15 @@ function App() {
 
   }, [])
 
+
+  const ProtectedRouteLogin = ({ children, isLoggedIn }) => {
+    if (isLoggedIn)
+      return <Navigate to="/home" />
+
+    return children
+  }
+
+
   return (
     <>
       {categories ?
@@ -205,9 +215,6 @@ function App() {
             </Route>
             {/* PRIVACY PAGE */}
 
-            <Route path="chatt" element={<div></div>}>
-            </Route>
-
 
             {/* TERMS PAGE */}
             <Route path="terms" element={<Terms />}>
@@ -247,12 +254,6 @@ function App() {
             {/* REPORT PAGE */}
 
 
-            {/* admob PAGE */}
-            {/* <Route path="add" element={<AdSense_ />}>
-            </Route> */}
-            {/* admob PAGE */}
-
-
             {/* CREATEPOST PAGE */}
             <Route path="createPost" element={<CreatePost categories={categories} />}>
             </Route>
@@ -260,8 +261,8 @@ function App() {
 
 
             {/* LOGIN PAGE */}
-            <Route path="login" element={<ProtectedRoute><Login /></ProtectedRoute>}>
-              <Route index element={<Login />} />
+            <Route path="login" element={<ProtectedRouteLogin isLoggedIn={auth()}><Login /></ProtectedRouteLogin>}>
+              {/* <Route index element={<Login />} /> */}
             </Route>
             {/* LOGIN PAGE */}
 
@@ -323,6 +324,7 @@ function App() {
     </>
   );
 }
+
 
 
 export default App;

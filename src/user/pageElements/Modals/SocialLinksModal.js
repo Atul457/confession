@@ -22,7 +22,7 @@ const SocialLinksModal = (props) => {
             <Modal show={props.visible} onHide={closeModal} centered size="lg">
                 <Modal.Header className='justify-content-between'>
                     <h6>Follow us</h6>
-                    <span onClick={props.closeModal} type="button">
+                    <span onClick={closeModal} type="button">
                         <i className="fa fa-times" aria-hidden="true"></i>
                     </span>
                 </Modal.Header>
@@ -30,22 +30,22 @@ const SocialLinksModal = (props) => {
                     <ul>
                         <li>
                             <Link to='#'>
-                                <img src={fbSocial} alt="fbSocialIcon"/>
+                                <img src={fbSocial} alt="fbSocialIcon" />
                             </Link>
                         </li>
                         <li>
                             <Link to='#'>
-                                <img src={TwitterSocial} alt="TwitterSocialIcon"/>
+                                <img src={TwitterSocial} alt="TwitterSocialIcon" />
                             </Link>
                         </li>
                         <li>
                             <Link to='#'>
-                                <img src={instaSocial} alt="instaSocialIcon"/>
+                                <img src={instaSocial} alt="instaSocialIcon" />
                             </Link>
                         </li>
                         <li>
                             <Link to='#'>
-                                <img src={tiktokSocial} alt="tiktokSocialIcon"/>
+                                <img src={tiktokSocial} alt="tiktokSocialIcon" />
                             </Link>
                         </li>
                     </ul>

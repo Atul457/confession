@@ -20,7 +20,7 @@ const Features = (props) => {
                     </span>
                 </Modal.Header>
                 <Modal.Body className="privacyBody text-left featuresModal">
-                    <ul>
+                    {/* <ul>
                         <li>
                             Share interesting posts!
                         </li>
@@ -30,11 +30,11 @@ const Features = (props) => {
                         <li>
                             Get email notifications for friend requests and responses to your posts; you'll need to be logged in
                         </li>
-                    </ul>
-                    {/* <Carousel
+                    </ul> */}
+                    <Carousel
                         autoPlay={true}
                         infiniteLoop={true}
-                        interval={2000}
+                        interval={5000}
                         showThumbs={false}
                         showStatus={false}
                         showArrows={false}>
@@ -56,18 +56,18 @@ const Features = (props) => {
                             </div>
                             <div> Get email notifications for friend requests and responses to your posts; you'll need to be logged in</div>
                         </div>
-                    </Carousel> */}
+                    </Carousel>
 
                     <Modal.Footer className="pt-0 justify-content-center">
-                        <Button className="modalFootBtns btn mb-0" variant="primary" onClick={props.closeModal}>
+                        {/* <Button className="modalFootBtns btn mb-0" variant="primary" onClick={props.closeModal}>
                             Done
-                        </Button>
-                        {/* <Button className="modalFootBtns btn" variant="primary" onClick={props.closeModal}>
+                        </Button> */}
+                        <Button className="modalFootBtns btn" variant="primary" onClick={props.closeModal}>
                             <Link to="/login">Sign in</Link>
                         </Button>
                         <Button className="modalFootBtns btn" variant="primary" onClick={props.closeModal}>
                             <Link to="/register">Sign up</Link>
-                        </Button> */}
+                        </Button>
                     </Modal.Footer>
                 </Modal.Body>
 

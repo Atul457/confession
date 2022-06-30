@@ -150,6 +150,7 @@ export default function Header(props) {
     }, [notificationReducer.data])
 
 
+
     //GETS THE TOTAL NO OF NEW COMMENTS
     const getUnreadCommentsCount = async () => {
         let obj = {
@@ -412,8 +413,8 @@ export default function Header(props) {
                                                     <img src={bell} alt="" className="notificationIcon headerUserAccIcon" />}
 
                                                 {notificationReducer.newNotifications ?
-                                                    <img src={bellActive} alt="" className="notificationIcon headerUserAccIcon mobIcon" /> :
-                                                    <img src={orangeBellNewNoti} alt="" className="notificationIcon headerUserAccIcon mobIcon" />}
+                                                    <img src={orangeBellNewNoti} alt="" className="notificationIcon headerUserAccIcon mobIcon" /> :
+                                                    <img src={bellActive} alt="" className="notificationIcon headerUserAccIcon mobIcon" />}
                                             </div>
 
                                             {notificationReducer.isVisible && <div className="takeActionNoti p-1 pb-0 d-block">

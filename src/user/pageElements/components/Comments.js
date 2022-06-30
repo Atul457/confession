@@ -348,8 +348,8 @@ export default function Comments(props) {
 
 
     return (
-        <>
-            <div className="postCont overWritePostWithComment">
+        <div className={`overWritePostWithCommentWr ${props.isLastIndex ? 'lastIndex' : ''} ${commentsModalReducer.commentField.comment_id === props.commentId ? 'moveDown' : ''}`}>
+            <div className="postCont overWritePostWithComment outer">
                 <div className="postContHeader commentsContHeader">
                     <span className="commentsGotProfileImg">
                         <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
@@ -473,20 +473,22 @@ export default function Comments(props) {
                         </div>
                     </div> :
 
-                    <div className="subcommentsMainCont">
-                        {subComments.data.map((subcomment, index) => {
-                            return <SubComments
-                                deleteSubComment={deleteSubComment}
-                                addNewSubComment={addNewSubComment}
-                                index={index}
-                                postId={props.postId}
-                                root_id={props.commentId}
-                                key={subcomment.comment_id}
-                                data={subcomment}
-                                updatSubComments={updatSubComments}
-                                subcommentId={subcomment.comment_id} />
-                        })}
+                    <div className='subcommentsMainContWrapper'>
+                        <div className="subcommentsMainCont">
+                            {subComments.data.map((subcomment, index) => {
+                                return <SubComments
+                                    deleteSubComment={deleteSubComment}
+                                    addNewSubComment={addNewSubComment}
+                                    index={index}
+                                    postId={props.postId}
+                                    root_id={props.commentId}
+                                    key={subcomment.comment_id}
+                                    data={subcomment}
+                                    updatSubComments={updatSubComments}
+                                    subcommentId={subcomment.comment_id} />
+                            })}
+                        </div>
                     </div>}
-        </>
+        </div>
     )
 }
