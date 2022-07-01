@@ -10,10 +10,12 @@ import { Modal } from 'react-bootstrap';
 import Button from '@restart/ui/esm/Button';
 import { fetchData } from '../../commonApi';
 import { useLocation } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
 import useCommentsModal from '../utilities/useCommentsModal';
 import RefreshButton from '../../user/refreshButton/RefreshButton';
 import _ from "lodash"
 import AppLogo from '../../user/pageElements/components/AppLogo';
+import CommentGotModal from './modals/CommentsGotModal';
 
 
 export default function Dashboard() {
@@ -41,6 +43,7 @@ export default function Dashboard() {
 
 
   const editCategorySelect = useRef(null);
+  const commentsModalReducer = useSelector(state => state.commentsModalReducer);
   const [categoryShow, setCategoryShow] = useState(false);
   const createCategorySelect = useRef(null);
   const [goDownArrow, setGoDownArrow] = useState(false);
@@ -124,7 +127,6 @@ export default function Dashboard() {
 
     getData();
   }, [])
-
 
 
   async function getConfessions(append, act, page) {
@@ -432,18 +434,31 @@ export default function Dashboard() {
     setConfessions([...updatedConfessionArray]);
   }
 
+  const updatedConfessions = (index, data) => {
+    let updatedConfessionArray;
+    let updatedConfessionNode;
+    updatedConfessionArray = [...confessions];
+    updatedConfessionNode = updatedConfessionArray[index];
+    updatedConfessionNode = {
+      ...updatedConfessionNode,
+      ...data
+    };
+    updatedConfessionArray[index] = updatedConfessionNode;
+    setConfessions([...updatedConfessionArray]);
+  }
+
 
   return (
     <>
       {
         auth() ?
           <div className="container-fluid">
-            {commentsModalRun &&
-              <CommentsGotModal
-                updateConfessionData={updateConfessionData}
-                handleChanges={handleChanges}
-                state={commentsModal}
-                handleCommentsModal={handleCommentsModal} />}
+            {commentsModalReducer.visible && <CommentGotModal
+              handleChanges={handleChanges}
+              updateConfessionData={updateConfessionData}
+              updatedConfessions={updatedConfessions}
+              state={commentsModal}
+              handleCommentsModal={handleCommentsModal} />}
             <div className="row outerContWrapper">
 
               {/* Adds Header Component */}
@@ -527,6 +542,13 @@ export default function Dashboard() {
                                   {confessions.map((post, index) => {
                                     return (<>
                                       <Post
+                                        confession_id={post.confession_id}
+                                        isNotFriend={post.isNotFriend}
+                                        like={post.like}
+                                        dislike={post.dislike}
+                                        is_liked={post.is_liked}
+                                        is_viewed={post.is_viewed}
+                                        updatedConfessions={updatedConfessions}
                                         key={`dashBoardPost${index}`}
                                         index={index}
                                         viewcount={post.viewcount}

@@ -486,7 +486,7 @@ input:focus-visible {
 .categoriesContainer {
     display: flex;
     flex-wrap: wrap;
-    height: 290px;
+    height: 230px;
     overflow-y: auto;
     margin-bottom: 20px;
     padding: 0px 0px 0px 15px;
@@ -530,7 +530,7 @@ input:focus-visible {
     height: 100%;
     left: -15px;
     content: '';
-    background-color: red;
+    background-color: #fff;
     border-radius: 0px 0px 0px 20px;
     z-index: 2;
 }
@@ -563,6 +563,13 @@ input:focus-visible {
     top: 114px
 }
 
+.postWrapperCommentsModal .upperView.postCont:after {
+    content: unset;
+}
+
+.overWritePostWithCommentWr.lastIndex.moveDown.moveMore:before {
+    top: 164px;
+}
 
 
 .postWrapperCommentsModal .postCont:after {
@@ -579,7 +586,7 @@ input:focus-visible {
 }
 
 .postWrapperCommentsModal .postCont.outer:after {
-    left: -17px;
+    left: -17px !important;
 }
 
 
@@ -5495,7 +5502,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .postWrapperCommentsModal .postCont.outer:after {
-        left: -13px;
+        left: -13px !important;
     }
 
     .postWrapperCommentsModal .postCont:after {

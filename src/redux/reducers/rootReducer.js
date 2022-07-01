@@ -10,6 +10,7 @@ import friendReqModalReducer from './friendReqModalReducer';
 import postAlertReducer from './postAlertReducer';
 import notificationReducer from './notificationReducer';
 import socialLinksModalReducer from './socialLinksModalReducer';
+import postBoxStateReducer from './postBoxStateReducer';
 
 
 const rootReducer = combineReducers({
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
     friendReqModalReducer,
     postAlertReducer,
     notificationReducer,
-    socialLinksModalReducer
+    socialLinksModalReducer,
+    postBoxStateReducer
 })
 
 export default rootReducer

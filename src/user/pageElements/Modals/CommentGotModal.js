@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import auth from '../../behindScenes/Auth/AuthCheck';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { fetchData } from '../../../commonApi';
 import Lightbox from "react-awesome-lightbox";
 import userIcon from '../../../images/userAcc.png';
@@ -27,11 +27,20 @@ import { openCFRModal } from '../../../redux/actions/friendReqModal';
 import { getToken } from '../../../helpers/getToken';
 
 
+const checkIsViewPage = (hook) => {
+    let path = hook.pathname;
+    path = path.split('/');
+    return path.length === 3 && path[1] === 'confession';
+}
+
+
 
 export default function CommentGotModal({ categories, ...rest }) {
 
     let maxChar = 2000;
     const dispatch = useDispatch();
+    const path = checkIsViewPage(useLocation())
+    const history = useNavigate();
     const { state } = useSelector(state => state.commentsModalReducer);
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [confessionData, setConfessionData] = useState(false);
@@ -50,7 +59,6 @@ export default function CommentGotModal({ categories, ...rest }) {
     const [commentsCount, setCommentsCount] = useState(0);
     const [goDownArrow, setGoDownArrow] = useState(false);
     const ShareReducer = useSelector(store => store.ShareReducer);
-
 
 
     const _doComment = async (comment_id = false, editedComment = "") => {
@@ -160,7 +168,6 @@ export default function CommentGotModal({ categories, ...rest }) {
         setPostId(state.postId);
         setIsValidPost(true);
         setIsWaitingRes(false);
-
     }, [state.postId])
 
 
@@ -304,6 +311,9 @@ export default function CommentGotModal({ categories, ...rest }) {
         state.updateConfessionData(state.index, data);
 
         dispatch(resetCModal())
+
+        if (path)
+            history('/home');
     }
 
 

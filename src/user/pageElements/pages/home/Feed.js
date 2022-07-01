@@ -21,6 +21,8 @@ import { FriendReqModal } from '../../Modals/FriendReqModal';
 import postAlertActionCreators from '../../../../redux/actions/postAlert';
 import PostAlertModal from '../../Modals/PostAlertModal';
 import { changeCancelled, changeRequested, closeFRModal, toggleLoadingFn } from '../../../../redux/actions/friendReqModal';
+import { setPostBoxState } from '../../../../redux/actions/postBoxState';
+import _ from 'lodash';
 
 
 export default function Feed(props) {
@@ -42,6 +44,7 @@ export default function Feed(props) {
     const [confCount, setConfCount] = useState(0);
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const friendReqModalReducer = useSelector(state => state.friendReqModalReducer);
+    const postBoxStateReducer = useSelector(state => state.postBoxStateReducer);
     const postAlertReducer = useSelector(state => state.postAlertReducer);
     const [AC2S, setAC2] = useState(() => {
         if (actCategory.state)
@@ -54,12 +57,11 @@ export default function Feed(props) {
     const [confessions, setConfessions] = useState(false);
     const [confessionResults, setConfessionResults] = useState(true);
     // const afterHowManyShowAdd = useState(9);    //AFTER THIS MUCH SHOW ADDS
-    const [description, setDescription] = useState("");
+    const [description, setDescription] = useState(postBoxStateReducer.description ?? "");
     const [isLoading, setIsLoading] = useState(false);
     const [errorOrSuccess, setErrorOrSuccess] = useState(true);
-    const [selectedCat, setSelectedCat] = useState("");
+    const [selectedCat, setSelectedCat] = useState(postBoxStateReducer.selectedCat ?? "");
     const [categoryShow, setCategoryShow] = useState(false);
-    const recaptchaRef = useRef(null);
     const [adSlots, setAdSlots] = useState([]);
 
 
@@ -163,17 +165,10 @@ export default function Feed(props) {
     }
 
 
-    //PREVENTS DOUBLE POST
-    const preventDoubleClick = (runOrNot) => {
-        var elem = document.querySelector('#postConfessionBtn');
-        runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");
-    }
-
 
     //POSTS CONFESSION FROM FEED PAGE
-    const postConfession = async () => {
+    const _postConfession = async () => {
 
-        preventDoubleClick(true);
 
         let postConfessionArr,
             token = '',
@@ -195,7 +190,6 @@ export default function Feed(props) {
 
             if (description.trim() !== '') {
 
-                preventDoubleClick(true);
 
                 feedDescErrorCont.innerText = "";
                 if (auth()) {
@@ -207,13 +201,11 @@ export default function Feed(props) {
                 }
                 else if (recapToken === '') {
                     feedDescErrorCont.innerText = "Recaptcha is required";
-                    preventDoubleClick(false);
                     return false;
                 }
 
                 if (selectedCat === '') {
                     feedDescErrorCont.innerText = "Please select a category";
-                    preventDoubleClick(false);
                     return false;
                 }
 
@@ -284,20 +276,24 @@ export default function Feed(props) {
                     feedPostConfResponseCont.innerHTML = "Server Error, Please try again after some time...";
                 }
 
-                if (postAlertReducer.visible === true) {
-                    dispatch(postAlertActionCreators.closeModal())
-                }
+                if (postAlertReducer.visible === true)
+                    dispatch(postAlertActionCreators.closeModal());
 
-                preventDoubleClick(false);
+
+                if (postBoxStateReducer.description !== '' || postBoxStateReducer.selectedCat !== '')
+                    dispatch(setPostBoxState({ description: '', selectedCat: '' }));
+
             }
             else {
                 feedDescErrorCont.innerText = "This field is required";
-                preventDoubleClick(false);
             }
 
         }
     }
 
+
+    //PREVENTS DOUBLE POST
+    const postConfession = _.debounce(_postConfession, 600);
 
     const fetchMoreData = () => {
         let page = pageNo;
@@ -486,6 +482,7 @@ export default function Feed(props) {
                                                                 className="form-control"
                                                                 onChange={(e) => setSelectedCat(e.target.value)}
                                                                 id="selectedCategory"
+                                                                defaultValue={selectedCat}
                                                                 name="category">
                                                                 <option value={""}>Select Category </option>
 
@@ -662,7 +659,7 @@ export default function Feed(props) {
 
             {postAlertReducer.visible === true &&
                 <PostAlertModal
-                    preventDoubleClick={preventDoubleClick}
+                    data={{ selectedCat, description }}
                     postConfession={postConfession}
                 />}
         </div>

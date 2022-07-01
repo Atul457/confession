@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import commentCountIcon from '../../../images/commentCountIcon.svg';
+import upvote from '../../../images/upvote.svg';
+import upvoted from '../../../images/upvoted.svg';
 import { Modal } from 'react-bootstrap';
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/Auth/SetAuth';
@@ -13,11 +16,14 @@ import Comments from '../Comments';
 import useShareKit from '../../utilities/useShareKit';
 import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../../helpers/DateConverter';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetCModal, updateCModalState } from '../../../redux/actions/commentsModal';
 
 
 
 
-export default function CommentGotModal({ state, categories, ...rest }) {
+export default function CommentGotModal({ categories, ...rest }) {
+
 
     const handleCommentsModal = () => {
         //ON THE BASIS OF THIS ID THE POST DATA RELATED TO THIS MODAL POST WILL BE CHANGED
@@ -32,7 +38,9 @@ export default function CommentGotModal({ state, categories, ...rest }) {
     }
 
     let history = useNavigate();
+    const { state } = useSelector(state => state.commentsModalReducer);
     let maxChar = 2000;
+    const dispatch = useDispatch();
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("adminDetails")) : '');
     const [confessionData, setConfessionData] = useState(false);
     const [sharekit, toggleSharekit, ShareKit] = useShareKit();
@@ -59,7 +67,41 @@ export default function CommentGotModal({ state, categories, ...rest }) {
 
         setCommentsArr(newCommentsArr);
         setSharedBy((prevState) => prevState - 1);
+        dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) - 1 }))
     }
+
+
+    const closeModal = () => {
+        let upvoteDownvoteData = {}, viewData, likeDislikeCheck, isViewedCheck, data;
+        // CHECKS CHANGES IN UPVOTE AND DOWNVOTE
+        likeDislikeCheck = state.is_liked_prev === 0 && state.is_liked_prev !== state.is_liked;
+        // CHECKS WHETHER THE POST WAS UNVIEWED OR VIEWED
+        isViewedCheck = state.is_viewed === 0;
+        if (likeDislikeCheck === true) {
+            upvoteDownvoteData = {
+                like: state.like,
+                dislike: state.dislike,
+                is_liked: state.is_liked,
+            }
+        }
+
+        viewData = {
+            viewcount: state.viewcount + 1,
+            is_viewed: 1,
+        }
+
+        data = {
+            ...(isViewedCheck && viewData),
+            ...(likeDislikeCheck && upvoteDownvoteData),
+            no_of_comments: state.no_of_comments
+        }
+
+        // RUNS THE UPDATECONFESSIONDATA FUNCTION DEFINED IN POST.JS
+        state.updateConfessionData(state.index, data);
+
+        dispatch(resetCModal())
+    }
+
 
     const preventDoubleClick = (runOrNot) => {
         var elem = document.querySelector('#commentsModalDoCommentAd');
@@ -122,6 +164,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                     commentsArrDummy = commentsArr;
                     commentsArrDummy.push(newComment);
                     setCommentsArr(commentsArrDummy);
+                    dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) + 1 }))
                 }
                 setCommentsCount(parseInt(shared) + 1);
 
@@ -138,44 +181,24 @@ export default function CommentGotModal({ state, categories, ...rest }) {
 
 
     useEffect(() => {
-        let token;
-        if (auth()) {
-            token = localStorage.getItem("adminDetails");
-            token = JSON.parse(token);
-            token = token.token;
-        } else {
-            token = "";
-        }
+        setConfessionData({
+            confession_id: state.postId,
+            category_name: state.category_name,
+            created_by: state.created_by,
+            created_at: state.created_at,
+            description: state.description,
+            no_of_comments: state.no_of_comments,
+            post_as_anonymous: state.post_as_anonymous,
+            profile_image: state.profile_image,
+            user_id: state.user_id,
+            viewcount: state.viewcount,
+            image: state.image,
+        });
 
-        const getConfession = async () => {
-            let obj = {
-                data: {},
-                token: token,
-                method: "get",
-                url: `getconfession/${state.postId}`
-            }
+        setPostId(state.postId);
+        setIsValidPost(true);
+        setIsWaitingRes(false);
 
-            try {
-                const response = await fetchData(obj)
-                if (response.data.status === true) {
-                    setConfessionData(response.data.confession);
-
-                    // console.log(response.data.confession);
-                    setSharedBy(response.data.confession.no_of_comments)
-                    setPostId(response.data.confession.confession_id);
-                    setIsValidPost(true);
-                } else {
-                    //Handles app in case of no api response
-                    setIsValidPost(false);
-                    setConfessionData(true);
-                }
-                setIsWaitingRes(false);
-            } catch {
-                setIsWaitingRes(false);
-                setIsServerErr(true);
-            }
-        }
-        getConfession();
     }, [state.postId])
 
 
@@ -288,19 +311,70 @@ export default function CommentGotModal({ state, categories, ...rest }) {
         }
     }
 
-    // console.log({confessionData});
+
+    const upvoteOrDownvote = async (isLiked) => {
+
+        let is_liked, ip_address, check_ip, token = '', data;
+        is_liked = isLiked ? 1 : 2;
+        ip_address = localStorage.getItem("ip")
+        check_ip = ip_address.split(".").length
+        if (auth()) {
+            token = localStorage.getItem("userDetails");
+            token = JSON.parse(token).token;
+        }
+
+        if (check_ip === 4) {
+            let obj = {
+                data: { is_liked, ip_address },
+                token: token,
+                method: "post",
+                url: `likedislike/${state.postId}`
+            }
+            try {
+                data = {
+                    like: isLiked ? state.like + 1 : state.like - 1,
+                    is_liked: isLiked ? 1 : 2
+                }
+                rest.updatedConfessions(state.index, data)
+                dispatch(updateCModalState(data))
+
+                const res = await fetchData(obj)
+
+                if (res.data.status === true) {
+
+                } else {
+                    console.log(res);
+                }
+            } catch (error) {
+                console.log(error);
+                console.log("Some error occured");
+            }
+        } else {
+            console.log("Invalid ip");
+        }
+    }
+
+
+    const updateSingleCommentData = (data, index) => {
+        let updatedNode, originalArray;
+        originalArray = [...commentsArr];
+        updatedNode = {};
+        updatedNode = { ...updatedNode, ...commentsArr[index], ...data };
+        originalArray.splice(index, 1, updatedNode);
+        setCommentsArr(originalArray);
+    }
 
 
     return (
         <>
-            <Modal show={state.visibility} size="lg" className="commentsModal" onHide={handleCommentsModal}>
+            <Modal show={state.visibility} size="lg" className="commentsModal" onHide={closeModal}>
                 <Modal.Header className='justify-content-between'>
                     <h6>Comments</h6>
-                    <span onClick={handleCommentsModal} type="button">
+                    <span onClick={closeModal} type="button">
                         <i className="fa fa-times" aria-hidden="true"></i>
                     </span>
                 </Modal.Header>
-                <Modal.Body className="privacyBody pt-0">
+                <Modal.Body className="privacyBody pt-0 commentsGot">
                     <div className="container-fluid postWrapperCommentsModal">
                         {confessionData
                             ?
@@ -340,7 +414,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                             {sharekit && <ShareKit postData={confessionData} />}
                                                             <i className="fa fa-share-alt" aria-hidden="true"></i></span>
 
-                                                        {isValidPost ? <div className="postCont">
+                                                        {isValidPost ? <div className="postCont modalPostCont">
                                                             {sharekit &&
                                                                 <div className="shareKitSpace"></div>}
                                                             <div className="postContHeader justify-content-start">
@@ -353,11 +427,8 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                         {confessionData.created_by}
                                                                     </span> :
                                                                     <Link className={`textDecNone postUserName`}
-                                                                        // to={confessionData.post_as_anonymous === 0 &&
-                                                                        //     (auth() ? (userDetails.profile.user_id === confessionData.user_id ? `/profile` : `/userProfile?user=${confessionData.user_id}`) : `/userProfile?user=${confessionData.user_id}`)
-                                                                        // }
                                                                         to="#"
-                                                                        >
+                                                                    >
                                                                         <span className="userName removeElipses">
                                                                             {confessionData.post_as_anonymous === 1 ? "Anonymous ." : confessionData.created_by}
                                                                         </span>
@@ -401,7 +472,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                     ?
                                                                     <div className="container-fluid inputWithForwardCont">
                                                                         <div className="inputToAddComment textAreaToComment mb-1 my-md-0">
-                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control mt-0 mb-2 mb-md-3"></TextareaAutosize>
+                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control"></TextareaAutosize>
 
                                                                         </div>
                                                                         <div className="arrowToAddComment" type="button" id="commentsModalDoCommentAd" onClick={() => { doComment(state.postId) }}>
@@ -420,9 +491,40 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
                                                             </div>
 
-                                                            <div className="postFoot">
-                                                                <div className="totalComments">
-                                                                    {sharedBy}  - People shared their thoughts about this post
+                                                            <div className="postFoot commmentsGotModal">
+                                                                {auth() === false &&
+                                                                    <span className="feedPageLoginBtnCont postLoginBtnCont">
+                                                                        <Link to="/login">
+                                                                            <div className="categoryOfUser enhancedStyle" type="button">
+                                                                                Login to comment
+                                                                            </div>
+                                                                        </Link>
+                                                                    </span>}
+
+                                                                <div className={`iconsCont ${auth() === false ? 'mainDesignOnWrap' : ''}`}>
+                                                                    <div className="upvote_downvote_icons_cont  ml-0" type="button">
+                                                                        <img src={commentCountIcon} alt="" />
+                                                                        <span className="count">
+                                                                            {state.no_of_comments}
+                                                                        </span>
+                                                                    </div>
+
+
+                                                                    {(state.hasOwnProperty("is_liked")
+                                                                        ?
+                                                                        <div className='iconsMainCont'>
+                                                                            <div className={`upvote_downvote_icons_cont`}>
+                                                                                <img src={upvote} alt="" />
+                                                                                <span className='count'>{state.like}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        :
+                                                                        <div className='iconsMainCont'>
+                                                                            <div className={`upvote_downvote_icons_cont`}>
+                                                                                <img src={upvote} alt="" />
+                                                                                <span className='count'>{state.like}</span>
+                                                                            </div>
+                                                                        </div>)}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -435,6 +537,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                             {commentsArr.length > 0
                                                                 ?
                                                                 <InfiniteScroll
+                                                                    className='commentsModalIscroll'
                                                                     onScroll={handleScrollTo}
                                                                     scrollableTarget="postsMainCont"
                                                                     endMessage={
@@ -442,7 +545,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                             End of Comments,
                                                                             <span
                                                                                 className='closeBackButton'
-                                                                                onClick={handleCommentsModal}>
+                                                                                onClick={closeModal}>
                                                                                 Go back
                                                                             </span>
                                                                         </div>}
@@ -459,7 +562,12 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                 >
                                                                     {commentsArr.map((post, index) => {
                                                                         return <Comments
+                                                                            isLastIndex={commentsArr.length === index + 1}
+                                                                            index={index}
+                                                                            updateSingleCommentData={updateSingleCommentData}
                                                                             changeListener={changeListener}
+                                                                            countChild={post.countChild}
+                                                                            commentId={post.comment_id}
                                                                             updateComments={updateComments}
                                                                             comment_id={post.comment_id}
                                                                             postId={state.postId}
@@ -475,7 +583,7 @@ export default function CommentGotModal({ state, categories, ...rest }) {
                                                                     End of Comments,
                                                                     <span
                                                                         className='closeBackButton'
-                                                                        onClick={handleCommentsModal}>
+                                                                        onClick={closeModal}>
                                                                         Go back
                                                                     </span>
                                                                 </div>}

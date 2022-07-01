@@ -4,8 +4,9 @@ import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import postAlertActionCreators from '../../../redux/actions/postAlert';
 import { useNavigate } from 'react-router-dom';
+import { setPostBoxState } from '../../../redux/actions/postBoxState';
 
-const PostAlertModal = ({ postConfession, preventDoubleClick }) => {
+const PostAlertModal = ({ postConfession, data }) => {
 
     const dispatch = useDispatch();
     const history = useNavigate();
@@ -18,7 +19,6 @@ const PostAlertModal = ({ postConfession, preventDoubleClick }) => {
     }, [postAlertReducer.postAnyway])
 
     const closeModal = () => {
-        preventDoubleClick(false)
         dispatch(postAlertActionCreators.closeModal());
     }
 
@@ -27,7 +27,6 @@ const PostAlertModal = ({ postConfession, preventDoubleClick }) => {
         return () => {
             clearInterval(timer);
             timer = setTimeout(() => {
-                console.log("post anyway");
                 dispatch(postAlertActionCreators.updateModal({ postAnyway: true }));
             }, 500);
         }
@@ -37,6 +36,7 @@ const PostAlertModal = ({ postConfession, preventDoubleClick }) => {
 
     const redirectToProfile = () => {
         dispatch(postAlertActionCreators.closeModal());
+        dispatch(setPostBoxState(data));
         history("/profile");
     }
 

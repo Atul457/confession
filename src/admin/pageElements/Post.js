@@ -11,12 +11,19 @@ import { useNavigate } from "react-router-dom";
 import useShareKit from '../utilities/useShareKit';
 import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../helpers/DateConverter';
+import { useDispatch, useSelector } from 'react-redux';
+import viewsCountIcon from '../../images/viewsCountIcon.svg';
+import commentCountIcon from '../../images/commentCountIcon.svg';
+import upvote from '../../images/upvote.svg';
+import upvoted from '../../images/upvoted.svg';
+import { openCModal as openCommentsModalFn } from '../../redux/actions/commentsModal';
 
 
 export default function Post(props) {
 
     let maxChar = 2000;
     let history = useNavigate();
+    const dispatch = useDispatch();
     const noOfWords = useState(200);    //IN POST AFTER THESE MUCH CHARACTERS SHOWS VIEWMORE BUTTON
     const [requiredError, setRequiredError] = useState('');
 
@@ -31,6 +38,64 @@ export default function Post(props) {
 
     // CUSTOM HOOKS
     const [sharekit, toggleSharekit, ShareKit] = useShareKit();
+
+    const openCommentsModal = () => {
+        dispatch(openCommentsModalFn({
+            "postId": props.postId,
+            "viewcount": props.viewcount,
+            "visibility": true,
+            "index": props.index,
+            "userName": props.userName,
+            "postedComment": props.postedComment,
+            "category_id": props.category_id,
+            "category_name": props.category,
+            "confession_id": props.confession_id,
+            "created_at": props.createdAt,
+            "created_by": props.userName,
+            "description": props.postedComment,
+            "no_of_comments": props.sharedBy,
+            "post_as_anonymous": props.post_as_anonymous,
+            "profile_image": props.profileImg,
+            "user_id": props.curid,
+            "image": props.imgUrl,
+            "isNotFriend": props.isNotFriend,
+            "is_viewed": props.is_viewed,
+            "updatedConfessions": props.updatedConfessions,
+            "like": props.like,
+            "dislike": props.dislike,
+            ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
+            "is_liked_prev": props.is_liked,
+            "updateConfessionData": updateConfessionData
+        }))
+
+        // console.log({
+        //     "postId": props.postId,
+        //     "viewcount": props.viewcount,
+        //     "visibility": true,
+        //     "index": props.index,
+        //     "userName": props.userName,
+        //     "postedComment": props.postedComment,
+        //     "category_id": props.category_id,
+        //     "category_name": props.category,
+        //     "confession_id": props.confession_id,
+        //     "created_at": props.createdAt,
+        //     "created_by": props.userName,
+        //     "description": props.postedComment,
+        //     "no_of_comments": props.sharedBy,
+        //     "post_as_anonymous": props.post_as_anonymous,
+        //     "profile_image": props.profileImg,
+        //     "user_id": props.curid,
+        //     "image": props.imgUrl,
+        //     "isNotFriend": props.isNotFriend,
+        //     "is_viewed": props.is_viewed,
+        //     "updatedConfessions": props.updatedConfessions,
+        //     "like": props.like,
+        //     "dislike": props.dislike,
+        //     ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
+        //     "is_liked_prev": props.is_liked,
+        //     "updateConfessionData": updateConfessionData
+        // })
+    }
 
     //HANDLES THE COMMENTS MODAL 
     const handleCommentsModal = () => {
@@ -140,6 +205,51 @@ export default function Post(props) {
         }
     }
 
+
+    const upvoteOrDownvote = async (isLiked) => {
+
+        let is_liked, ip_address, check_ip, token = '', data;
+        is_liked = isLiked ? 1 : 2;
+        ip_address = localStorage.getItem("ip")
+        check_ip = ip_address.split(".").length
+        if (auth()) {
+            token = localStorage.getItem("userDetails");
+            token = JSON.parse(token).token;
+        }
+
+        if (check_ip === 4) {
+            let obj = {
+                data: { is_liked, ip_address },
+                token: token,
+                method: "post",
+                url: `likedislike/${props.postId}`
+            }
+            try {
+                data = {
+                    like: isLiked ? props.like + 1 : props.like - 1,
+                    is_liked: isLiked ? 1 : 2
+                }
+                updateConfessionData(props.index, data)
+
+                const res = await fetchData(obj)
+                // if (res.data.status === true) {
+                // } else {
+                //     console.log(res);
+                // }
+            } catch (error) {
+                console.log(error);
+                console.log("Some error occured");
+            }
+        } else {
+            console.log("Invalid ip");
+        }
+    }
+
+    const updateConfessionData = (index, data) => {
+        props.updatedConfessions(index, data)
+    }
+
+
     const checkKeyPressed = betterCheckKeyPressed();
 
 
@@ -218,15 +328,7 @@ export default function Post(props) {
 
 
             <div className="postBody">
-                <div className="postedPost" onClick={handleCommentsModal}>
-                    {/* <Link className="links text-dark" to={`confession/${props.postId}`}> */}
-                    {/* <Link className="links text-dark" to={`#`}>
-                        <pre className="preToNormal">
-                            {props.postedComment.substr(0, noOfWords[0])}
-                        </pre>
-                        {((props.postedComment).split("")).length >= noOfWords[0] ? <span toberedirectedto={props.postId} className="viewMoreBtn pl-1">View More</span> : ''}
-                    </Link> */}
-
+                <div className="postedPost" onClick={openCommentsModal}>
                     <Link className="links text-dark" to="#">
                         <pre className="preToNormal post">
                             {props.postedComment}
@@ -278,16 +380,25 @@ export default function Post(props) {
 
             </div>
 
-            <div className="postFoot d-flex w-100 mt-1" onClick={handleCommentsModal}>
-                {/* <Link to={`confession/${props.postId}`} className="links"> */}
-                <div className="totalComments underlineShareCount pr-2">
-                    <span className="sharedCount">{props.viewcount ? props.viewcount : 0}</span> - Views
+            <div className="postFoot">
+                <div className={`iconsCont`}>
+                    <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button" onClick={openCommentsModal}>
+                        <img src={viewsCountIcon} alt="" />
+                        <span className="count">{props.viewcount ? props.viewcount : 0}</span>
+                    </div>
+                    <div className="upvote_downvote_icons_cont" type="button" onClick={openCommentsModal}>
+                        <img src={commentCountIcon} alt="" />
+                        <span className="count">{props.sharedBy}</span>
+                    </div>
+
+                    <div className='iconsMainCont'>
+                        <div className={`upvote_downvote_icons_cont`}>
+                            <img src={upvote} alt="" />
+                            <span className='count'>{props.like}</span>
+                        </div>
+                    </div>
+
                 </div>
-                {/* <Link to={`#`} className="links pl-2"> */}
-                <div className="totalComments ml-2">
-                    <span className="sharedCount">{props.sharedBy}</span> - Comments
-                </div>
-                {/* </Link> */}
             </div>
 
         </div>
