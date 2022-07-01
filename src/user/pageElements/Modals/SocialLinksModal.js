@@ -5,7 +5,6 @@ import instaSocial from '../../../images/instaSocial.svg'
 import TwitterSocial from '../../../images/TwitterSocial.svg'
 import tiktokSocial from '../../../images/tiktokSocial.svg'
 import fbSocial from '../../../images/fbSocial.svg'
-import { Link } from 'react-router-dom';
 import openSLinksModalActionCreators from '../../../redux/actions/socialLinksModal';
 
 
@@ -19,36 +18,37 @@ const SocialLinksModal = (props) => {
 
     return (
         <>
-            <Modal show={props.visible} onHide={closeModal} centered size="lg">
+            <Modal show={props.visible} centered size="lg">
                 <Modal.Header className='justify-content-between'>
                     <h6>Follow us</h6>
-                    <span onClick={closeModal} type="button">
-                        <i className="fa fa-times" aria-hidden="true"></i>
-                    </span>
                 </Modal.Header>
                 <Modal.Body className="privacyBody text-left socialLinksModal">
                     <ul>
                         <li>
-                            <Link to='#'>
+                            <a target="blank" href="https://www.facebook.com/TheTalkPlaceOfficial">
                                 <img src={fbSocial} alt="fbSocialIcon" />
-                            </Link>
+                            </a>
                         </li>
                         <li>
-                            <Link to='#'>
+                            <a target="blank" href="http://twitter.com/the_talkplace">
                                 <img src={TwitterSocial} alt="TwitterSocialIcon" />
-                            </Link>
+                            </a>
                         </li>
                         <li>
-                            <Link to='#'>
+                            <a target="blank" href="https://www.instagram.com/the_talkplace">
                                 <img src={instaSocial} alt="instaSocialIcon" />
-                            </Link>
+                            </a>
                         </li>
                         <li>
-                            <Link to='#'>
+                            <a target="blank" href="http://TikTok.com/@the_talkplace">
                                 <img src={tiktokSocial} alt="tiktokSocialIcon" />
-                            </Link>
+                            </a>
                         </li>
                     </ul>
+
+                    <div className='closeModalBtnVerb' onClick={closeModal}>
+                        Miss out on following us
+                    </div>
                 </Modal.Body>
 
             </Modal>

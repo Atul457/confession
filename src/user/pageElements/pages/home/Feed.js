@@ -4,6 +4,11 @@ import Footer from "../../common/Footer";
 import Post from '../../components/Post';
 import Category from '../../components/Category';
 import manWithHorn from '../../../../images/manWithHorn.png';
+import instaSocial from '../../../../images/instaSocial.svg'
+import TwitterSocial from '../../../../images/TwitterSocial.svg'
+import tiktokSocial from '../../../../images/tiktokSocial.svg'
+import fbSocial from '../../../../images/fbSocial.svg'
+import { Link } from 'react-router-dom';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import downArrowIcon from '../../../../images/downArrow.png';
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -418,6 +423,39 @@ export default function Feed(props) {
                             </aside>
                             {/* CATEGORYCONT */}
                         </div>
+
+
+                        {/* SOCIAL LINKS PANEL */}
+                        <div className="leftSidebarFooter">
+                            <div className='categoryHead pb-2'>
+                                Follow us on
+                            </div>
+                            <div className='socialLinksIconWrapperFeed w-100'>
+                                <ul>
+                                    <li>
+                                        <a target="blank" href="https://www.facebook.com/TheTalkPlaceOfficial">
+                                            <img src={fbSocial} alt="fbSocialIcon" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a target="blank" href="http://twitter.com/the_talkplace">
+                                            <img src={TwitterSocial} alt="TwitterSocialIcon" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a target="blank" href="https://www.instagram.com/the_talkplace">
+                                            <img src={instaSocial} alt="instaSocialIcon" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a target="blank" href="http://TikTok.com/@the_talkplace">
+                                            <img src={tiktokSocial} alt="tiktokSocialIcon" />
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        {/* SOCIAL LINKS PANEL */}
                     </div>
                 </div>
 

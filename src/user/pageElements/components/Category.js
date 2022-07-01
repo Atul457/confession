@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import socialLinksIcon from '../../../images/socialLinksIcon.svg';
-import { useDispatch } from 'react-redux';
-import openSLinksModalActionCreators from '../../../redux/actions/socialLinksModal';
 
 
 export default function Category(props) {
 
 
     const [categories, setCategories] = useState([]);
-    const dispatch = useDispatch();
     useEffect(() => {
         setCategories(props.categories);    //Gets the categories from app.js
     }, [props.categories])
 
-
-    const openSocialLinksModal = () => {
-        dispatch(openSLinksModalActionCreators.openModal());
-    }
 
 
     // Makes Clicked Category Button Active and Makes the getConfessions api being hit on Feed Component
@@ -61,15 +53,11 @@ export default function Category(props) {
                             })
                             }
                         </div>
-                        {/* <div className="col-12 pt-0 errorCont text-danger" id="categoryRequiredErr" style={{padding : "20px"}}>
-                        </div> */}
+                        
                         <div className={`col-12 pt-0 filterVerbiage  ${props.hideHead && " d-none"}`}>
                             * Filter out posts by clicking on the categories above. Unselect the category to remove the filter.
                         </div>
 
-                        <div className='socialLinksIconWrapper col-12'>
-                            <img src={socialLinksIcon} alt="socialLinksIcon" onClick={openSocialLinksModal} />
-                        </div>
                     </div>
                 </div>
             </div>
