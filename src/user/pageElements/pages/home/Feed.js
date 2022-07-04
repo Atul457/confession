@@ -430,7 +430,7 @@ export default function Feed(props) {
                             <div className='categoryHead pb-2'>
                                 Follow us on
                             </div>
-                            <div className='socialLinksIconWrapperFeed w-100'>
+                            <div className='socialLinksIconWrapperFeed w-75'>
                                 <ul>
                                     <li>
                                         <a target="blank" href="https://www.facebook.com/TheTalkPlaceOfficial">

@@ -395,17 +395,17 @@ export default function Header(props) {
 
                                 : ''}
 
+
+                            <div className='socialLinksIconWrapper authProfileIcon'>
+                                <img
+                                    src={socialLinksIcon}
+                                    alt="socialLinksIcon"
+                                    onClick={openSocialLinksModal} />
+                            </div>
+
                             {auth() ?
                                 (
                                     <>
-
-                                        <div className='socialLinksIconWrapper authProfileIcon'>
-                                            <img
-                                                src={socialLinksIcon}
-                                                alt="socialLinksIcon"
-                                                onClick={openSocialLinksModal} />
-                                        </div>
-
                                         <div className="authProfileIcon noti">
                                             <div className="notifications" onClick={toggleNotificationCont}>
                                                 {notificationReducer.newNotifications ?
@@ -417,11 +417,12 @@ export default function Header(props) {
                                                     <img src={bellActive} alt="" className="notificationIcon headerUserAccIcon mobIcon" />}
                                             </div>
 
-                                            {notificationReducer.isVisible && <div className="takeActionNoti p-1 pb-0 d-block">
-                                                <div className="NotiWrapper">
-                                                    {getNotiHtml()}
-                                                </div>
-                                            </div>}
+                                            {notificationReducer.isVisible &&
+                                                <div className="takeActionNoti p-1 pb-0 d-block">
+                                                    <div className="NotiWrapper">
+                                                        {getNotiHtml()}
+                                                    </div>
+                                                </div>}
                                         </div>
 
 

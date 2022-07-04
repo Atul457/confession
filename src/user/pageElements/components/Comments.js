@@ -348,7 +348,7 @@ export default function Comments(props) {
 
 
     return (
-        <div className={`overWritePostWithCommentWr ${props.isLastIndex ? 'lastIndex' : ''} ${commentsModalReducer.commentField.comment_id === props.commentId ? 'moveDown' : ''}`}>
+        <div className={`overWritePostWithCommentWr ${!auth() ? 'notAuth' : ''} ${props.isLastIndex ? 'lastIndex' : ''} ${commentsModalReducer.commentField.comment_id === props.commentId ? 'moveDown' : ''}`}>
             <div className="postCont overWritePostWithComment outer">
                 <div className="postContHeader commentsContHeader">
                     <span className="commentsGotProfileImg">
@@ -409,36 +409,38 @@ export default function Comments(props) {
                                 </>
                             }
                         </pre>
-                        <div className="replyCont">
-                            <span onClick={() => handleCommentBox()}>
-                                <img src={commentReplyIcon} alt="" className='replyIcon' />
-                                <span className='pl-2'>Reply</span>
-                            </span>
 
-                            {commentsModalReducer.commentField.comment_id === props.commentId &&
-                                <>
-                                    <div className='inputToAddSubComment textAreaToComment mt-md-2'>
-                                        <TextareaAutosize
-                                            type="text"
-                                            maxLength="2000"
-                                            id={"textarea" + props.commentId}
-                                            placeholder='Sub comment'
-                                            onKeyDown={(e) => checkKeyPressed(e, 1)}
-                                            className="form-control mt-0">
-                                        </TextareaAutosize>
+                        {auth() &&
+                            <div className="replyCont">
+                                <span onClick={() => handleCommentBox()}>
+                                    <img src={commentReplyIcon} alt="" className='replyIcon' />
+                                    <span className='pl-2'>Reply</span>
+                                </span>
 
-                                        <div
-                                            className="arrowToAddComment mt-0"
-                                            type="button"
-                                            onClick={() => handleSubComment()}
-                                        >
-                                            <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                                {commentsModalReducer.commentField.comment_id === props.commentId &&
+                                    <>
+                                        <div className='inputToAddSubComment textAreaToComment mt-md-2'>
+                                            <TextareaAutosize
+                                                type="text"
+                                                maxLength="2000"
+                                                id={"textarea" + props.commentId}
+                                                placeholder='Sub comment'
+                                                onKeyDown={(e) => checkKeyPressed(e, 1)}
+                                                className="form-control mt-0">
+                                            </TextareaAutosize>
+
+                                            <div
+                                                className="arrowToAddComment mt-0"
+                                                type="button"
+                                                onClick={() => handleSubComment()}
+                                            >
+                                                <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                                            </div>
                                         </div>
-                                    </div>
-                                    {requiredError.replyError !== "" ? <span className="d-block errorCont text-danger mb-2 mt-2 moveUp">{requiredError.replyError}</span> : null}
-                                </>
-                            }
-                        </div>
+                                        {requiredError.replyError !== "" ? <span className="d-block errorCont text-danger mb-2 mt-2 moveUp">{requiredError.replyError}</span> : null}
+                                    </>
+                                }
+                            </div>}
                     </div>
                 </div>
             </div>

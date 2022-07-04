@@ -234,7 +234,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
                         }
                     </pre>
 
-                    <div className="replyCont replyContainer">
+                    {auth() && <div className="replyCont replyContainer">
                         <span onClick={openCommentBox}>
                             <img src={commentReplyIcon} alt="" className="replyIcon" />
                             <span className='pl-2'>Reply</span>
@@ -264,7 +264,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
                         }
                         {requiredError.replyError !== "" ? <span className="d-block errorCont text-danger mb-0 mt-2 moveUp">{requiredError.replyError}</span> : null}
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>

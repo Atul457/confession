@@ -474,9 +474,9 @@ input:focus-visible {
 }
 
 .socialLinksIconWrapperFeed {
-    background: rgba(250, 250, 250, 0.8);
+    background: var(--whiteColor);
     box-shadow: 0px 0px 45px 17px rgba(39, 76, 119, 0.14);
-    height: 100px;
+    height: 70px;
     padding: 0px 20px;
     display: flex;
     justify-content: center;
@@ -501,13 +501,13 @@ input:focus-visible {
 .socialLinksIconWrapperFeed ul li {
     display: flex;
     align-items: center;
-    width: 11%;
+    width: 15%;
 }
 
 .closeModalBtnVerb {
     color: var(--primaryColor);
     font-weight: 500;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .socialLinksIconWrapperFeed ul li a {
@@ -593,14 +593,19 @@ input:focus-visible {
     top: 30px;
 }
 
+.overWritePostWithCommentWr.lastIndex.notAuth:before {
+    top: 32px;
+}
+
+
 .overWritePostWithCommentWr.lastIndex:before {
     content: '';
     background: #fff;
     width: 20px;
     position: absolute;
     left: -34px;
-    top: 67px;
-    height: 100%;
+    top: 69px;
+    height: 60%;
     z-index: 1000000;
 }
 
@@ -618,9 +623,9 @@ input:focus-visible {
 
 
 .postWrapperCommentsModal .postCont:after {
-    border-left: 2px solid #565454;
-    border-bottom: 2px solid #565454;
-    width: 18px;
+    border-left: 1px solid #565454;
+    border-bottom: 1px solid #565454;
+    width: 13px;
     position: absolute;
     top: -60px;
     height: 100%;
@@ -1497,6 +1502,14 @@ span.offlineColor {
     margin-top: 10px;
     display: flex;
     flex-direction: column-reverse;
+}
+
+.messagesCont .infinite-scroll-component {
+    padding-bottom: 15px;
+}
+
+.postsMainCont .infinite-scroll-component {
+    overflow: initial !important;
 }
 
 .messagesCont::-webkit-scrollbar-track {
@@ -2462,7 +2475,6 @@ span.facebookMobIcon {
 }
 
 .infinite-scroll-component {
-    overflow: initial !important;
     height: initial;
 }
 
@@ -2771,7 +2783,7 @@ span.facebookMobIcon {
 }
 
 #postsMainCont .infinite-scroll-component__outerdiv:after {
-    border-left: 2px solid #565454;
+    border-left: 1px solid #565454;
     position: absolute;
     top: -60px;
     height: calc(100% - 100px);
@@ -3264,7 +3276,7 @@ span.facebookMobIcon {
 .leftSidebarFooter {
     position: unset;
     width: 100%;
-    padding: 0px 30px;
+    padding: 0px 20px;
 }
 
 .leftColumnFeed>.leftColumnWrapper {
@@ -3360,6 +3372,7 @@ a.headerNavLinks.active::after {
     display: flex;
     align-items: center;
     flex-direction: column;
+    overflow: inherit;
 }
 
 .modal-content {
@@ -4011,7 +4024,7 @@ button.modalFootBtns.btn a:hover {
 }
 
 .subcommentsMainCont:after {
-    border-left: 2px solid #565454;
+    border-left: 1px solid #565454;
     position: absolute;
     top: -88px;
     height: 100%;
@@ -5044,10 +5057,6 @@ button.modalFootBtns.btn a:hover {
         right: 20px;
     }
 
-    .linkToLogin {
-        position: absolute;
-    }
-
     .rightMainCreatePostFormCont .head {
         display: flex;
         flex-direction: column;
@@ -5557,8 +5566,8 @@ button.modalFootBtns.btn a:hover {
 
     .socialLinksModal {
         flex-direction: column;
-        height: 180px;
-        padding: 0px 20px !important;
+        height: 140px;
+        padding: 40px 20px 30px !important;
     }
 
     #postsMainCont {
@@ -5570,7 +5579,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .postWrapperCommentsModal .postCont:after {
-        width: 14px;
+        width: 12px;
         left: -14px;
     }
 

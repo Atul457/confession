@@ -46,8 +46,8 @@ const SocialLinksModal = (props) => {
                         </li>
                     </ul>
 
-                    <div className='closeModalBtnVerb' onClick={closeModal}>
-                        Miss out on following us
+                    <div className='closeModalBtnVerb' type='button' onClick={closeModal}>
+                        Don't miss out on following us
                     </div>
                 </Modal.Body>
 
