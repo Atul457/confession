@@ -64,7 +64,7 @@ export default function CommentsGot(props) {
             "confession_id": confessionData.confession_id,
             "created_at": confessionData.created_at,
             "created_by": confessionData.created_by,
-            "description": confessionData.postedComment,
+            "description": confessionData.description,
             "no_of_comments": confessionData.no_of_comments,
             "post_as_anonymous": confessionData.post_as_anonymous,
             "profile_image": confessionData.profile_image,

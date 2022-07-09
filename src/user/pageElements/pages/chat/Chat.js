@@ -96,7 +96,6 @@ export default function Chat() {
             showMessages();
         }
 
-        console.log("from store");
     }, [store])
 
 
@@ -214,7 +213,6 @@ export default function Chat() {
     useEffect(() => {
         getRequests();
         getFriends();
-        console.log("from empty");
     }, [])
 
 
@@ -631,7 +629,6 @@ export default function Chat() {
     }
 
     const showMessages = () => {
-        console.log("hideMessages");
         setToggleView({
             chat: false,
             requests: false,
@@ -639,7 +636,6 @@ export default function Chat() {
         })
     }
     const showChat = () => {
-        console.log("showChat");
         setToggleView({
             messages: false,
             requests: false,
@@ -652,6 +648,19 @@ export default function Chat() {
             chat: false,
             requests: true
         })
+    }
+
+    const handleBounce = boolVal => {
+        let body = document.querySelector('body');
+        let html = document.querySelector('html');
+        if(boolVal)
+        {
+            body.classList.add('bounceOff');
+            html.classList.add('bounceOff');
+        }else{
+            body.classList.remove('bounceOff');
+            html.classList.remove('bounceOff');
+        }
     }
 
 
@@ -875,6 +884,8 @@ export default function Chat() {
                                             <div className="inputToAddComment textAreaToComment chat">
 
                                                 <TextareaAutosize
+                                                    onFocus={() => handleBounce(true)}
+                                                    onBlur={() => handleBounce(false)}
                                                     type="text"
                                                     rows='1'
                                                     value={typedMessage}

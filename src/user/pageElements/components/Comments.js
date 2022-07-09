@@ -348,7 +348,16 @@ export default function Comments(props) {
 
 
     return (
-        <div className={`overWritePostWithCommentWr ${!auth() ? 'notAuth' : ''} ${props.isLastIndex ? 'lastIndex' : ''} ${commentsModalReducer.commentField.comment_id === props.commentId ? 'moveDown' : ''}`}>
+        <div className={`overWritePostWithCommentWr`}>
+            {!props.isLastIndex
+                ?
+                <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
+                :
+                <div className='overLap'>
+                    <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
+                </div>
+            }
+
             <div className="postCont overWritePostWithComment outer">
                 <div className="postContHeader commentsContHeader">
                     <span className="commentsGotProfileImg">
@@ -479,6 +488,7 @@ export default function Comments(props) {
                         <div className="subcommentsMainCont">
                             {subComments.data.map((subcomment, index) => {
                                 return <SubComments
+                                    isLastIndex={subComments.data.length === index + 1}
                                     deleteSubComment={deleteSubComment}
                                     addNewSubComment={addNewSubComment}
                                     index={index}

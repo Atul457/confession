@@ -49,7 +49,7 @@ export default function Report() {
             },
             {
                 id: 3,
-                name: "Server Error"
+                name: "Malfunction or Bug"
             },
             {
                 id: 4,

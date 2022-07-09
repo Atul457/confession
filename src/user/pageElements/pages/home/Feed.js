@@ -8,7 +8,6 @@ import instaSocial from '../../../../images/instaSocial.svg'
 import TwitterSocial from '../../../../images/TwitterSocial.svg'
 import tiktokSocial from '../../../../images/tiktokSocial.svg'
 import fbSocial from '../../../../images/fbSocial.svg'
-import { Link } from 'react-router-dom';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import downArrowIcon from '../../../../images/downArrow.png';
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -28,6 +27,7 @@ import PostAlertModal from '../../Modals/PostAlertModal';
 import { changeCancelled, changeRequested, closeFRModal, toggleLoadingFn } from '../../../../redux/actions/friendReqModal';
 import { setPostBoxState } from '../../../../redux/actions/postBoxState';
 import _ from 'lodash';
+import { pulsationHelper } from '../../../../helpers/pulsationHelper';
 
 
 export default function Feed(props) {
@@ -39,7 +39,6 @@ export default function Feed(props) {
         let selectedCategory = document.querySelector('#selectedCategory');
         selectedCategory.dispatchEvent(new Event('click'));
     }
-
 
     // SETS INITIAL CATEGORY ON WHICH THE API WILL GET HIT TO GET CONFESSIONS
 
@@ -85,6 +84,11 @@ export default function Feed(props) {
         setPrivacyModal({ ...privacyModal, visible: false });
         localStorage.setItem("privacyAccepted", 1);
     }
+
+
+    useEffect(() => {
+        pulsationHelper()
+    }, [])
 
 
     useEffect(() => {
@@ -430,24 +434,24 @@ export default function Feed(props) {
                             <div className='categoryHead pb-2'>
                                 Follow us on
                             </div>
-                            <div className='socialLinksIconWrapperFeed w-75'>
+                            <div className='socialLinksIconWrapperFeed'>
                                 <ul>
-                                    <li>
+                                    <li pulsate='07-07-22,pulsatingIcon social'>
                                         <a target="blank" href="https://www.facebook.com/TheTalkPlaceOfficial">
                                             <img src={fbSocial} alt="fbSocialIcon" />
                                         </a>
                                     </li>
-                                    <li>
+                                    <li pulsate='07-07-22,pulsatingIcon social'>
                                         <a target="blank" href="http://twitter.com/the_talkplace">
                                             <img src={TwitterSocial} alt="TwitterSocialIcon" />
                                         </a>
                                     </li>
-                                    <li>
+                                    <li pulsate='07-07-22,pulsatingIcon social'>
                                         <a target="blank" href="https://www.instagram.com/the_talkplace">
                                             <img src={instaSocial} alt="instaSocialIcon" />
                                         </a>
                                     </li>
-                                    <li>
+                                    <li pulsate='07-07-22,pulsatingIcon social'>
                                         <a target="blank" href="http://TikTok.com/@the_talkplace">
                                             <img src={tiktokSocial} alt="tiktokSocialIcon" />
                                         </a>

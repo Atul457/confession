@@ -21,7 +21,7 @@ export const Complaints = () => {
                     <div className="container py-md-4 px-md-5 p-3 preventFooter">
                         <div className="row forPosSticky">
                             <Link to="/dashboard" className='backtoHome'>
-                                <i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>
+                                <i className="fa fa-arrow-left mr-2" aria-hidden="true"></i>
                                 Back to home
                             </Link>
                             <section className="col-lg-12 col-12 mt-3 mt-lg-0 boxShadow">

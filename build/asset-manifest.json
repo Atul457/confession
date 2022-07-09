@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/confessionNew/static/css/main.d225cfd6.css",
-    "main.js": "/confessionNew/static/js/main.a7f2e9fb.js",
+    "main.css": "/confessionNew/static/css/main.2ca03577.css",
+    "main.js": "/confessionNew/static/js/main.2003dd87.js",
     "static/js/787.7b2783aa.chunk.js": "/confessionNew/static/js/787.7b2783aa.chunk.js",
     "static/media/loginLogo.svg": "/confessionNew/static/media/loginLogo.2727c5bf82b4d2c7dd6632a328467d72.svg",
     "static/media/createPostLogo.svg": "/confessionNew/static/media/createPostLogo.d22d70fe94e37e5f92461501b5d5459b.svg",
@@ -30,16 +30,17 @@
     "static/media/editCommentIcon.svg": "/confessionNew/static/media/editCommentIcon.c960d0990b557bd34adefbffa9a3b903.svg",
     "static/media/cancelFriendPop.svg": "/confessionNew/static/media/cancelFriendPop.29afd5ad5efb94d981187da16659278c.svg",
     "static/media/addFriend.svg": "/confessionNew/static/media/addFriend.327292622154a00cb8b849866c82c7f7.svg",
-    "static/media/newInMessages.svg": "/confessionNew/static/media/newInMessages.16765e151dd85ff1d13d980cb41f966e.svg",
-    "static/media/newMessages.svg": "/confessionNew/static/media/newMessages.e63520cf47e3dff4bda0ae78ac10be62.svg",
+    "static/media/newInMessages.svg": "/confessionNew/static/media/newInMessages.9510a96ac573838abbaa01d1656979fd.svg",
+    "static/media/newMessages.svg": "/confessionNew/static/media/newMessages.dcbcc68ffbeb924ec195aaa5142df5ec.svg",
+    "static/media/inboxIcon.svg": "/confessionNew/static/media/inboxIcon.e93e205521ab362e8df03b2518d8294c.svg",
     "static/media/viewsCountIcon.svg": "/confessionNew/static/media/viewsCountIcon.121cb0ca5559cd81e368d5a3db0aea35.svg",
     "static/media/profileIcon.svg": "/confessionNew/static/media/profileIcon.b3e92afe6e13d4dcc1eddc6acb49fc8a.svg",
     "static/media/creplyIcon.svg": "/confessionNew/static/media/creplyIcon.fb799a171b579a4fcbd37b9d0ac9464b.svg",
-    "static/media/orangeBellNewNoti.svg": "/confessionNew/static/media/orangeBellNewNoti.6166612dc3cdc34615d7e6c703f863ec.svg",
     "static/media/orangebell.svg": "/confessionNew/static/media/orangebell.c56565cbcc26a15bf47a3685a69d356f.svg",
     "static/media/homeIcon.svg": "/confessionNew/static/media/homeIcon.6d413a80066131a6f33b7b505b362749.svg",
     "static/media/homeIconActive.svg": "/confessionNew/static/media/homeIconActive.a917fedf8061fed8af632033418063b5.svg",
-    "static/media/bellNewNoti.svg": "/confessionNew/static/media/bellNewNoti.50e901225d1687e6a3ede82fc1211891.svg",
+    "static/media/bellNewNoti.svg": "/confessionNew/static/media/bellNewNoti.ae8c0fbb4b38d8c6712fe40afc6dd86b.svg",
+    "static/media/orangeBellNewNoti.svg": "/confessionNew/static/media/orangeBellNewNoti.fd22c858fd5589cf119fc4e0bae3dea5.svg",
     "static/media/bell.svg": "/confessionNew/static/media/bell.40d3cf3dfc626189856c29604b227a62.svg",
     "static/media/fbSocial.svg": "/confessionNew/static/media/fbSocial.c5eb01a76b96bf421853387d3c766337.svg",
     "static/media/forwardIcon.svg": "/confessionNew/static/media/forwardIcon.f5511cf5f1a271c8e030ba93d1809ad9.svg",
@@ -49,12 +50,12 @@
     "static/media/mobileProfileIcon.svg": "/confessionNew/static/media/mobileProfileIcon.ecbf7f76a6a2454a6de920bfbf966f20.svg",
     "static/media/confessIcon.svg": "/confessionNew/static/media/confessIcon.ce4ca7840e51967af6c206ab2c760611.svg",
     "static/media/confessIconActive.svg": "/confessionNew/static/media/confessIconActive.891ead1e20e742dd8c3775c5b15d1394.svg",
-    "main.d225cfd6.css.map": "/confessionNew/static/css/main.d225cfd6.css.map",
-    "main.a7f2e9fb.js.map": "/confessionNew/static/js/main.a7f2e9fb.js.map",
+    "main.2ca03577.css.map": "/confessionNew/static/css/main.2ca03577.css.map",
+    "main.2003dd87.js.map": "/confessionNew/static/js/main.2003dd87.js.map",
     "787.7b2783aa.chunk.js.map": "/confessionNew/static/js/787.7b2783aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d225cfd6.css",
-    "static/js/main.a7f2e9fb.js"
+    "static/css/main.2ca03577.css",
+    "static/js/main.2003dd87.js"
   ]
 }

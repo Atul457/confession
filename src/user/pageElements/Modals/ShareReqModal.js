@@ -14,7 +14,7 @@ const ShareReqModal = (props) => {
                 <>
                     {props.isNotFriend === 1 &&
                         <div className='sharePopupItems' type="button" onClick={do_}>
-                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <i className="fa fa-user" aria-hidden="true"></i>
                             <span>
                                 Friend Request
                             </span>
@@ -23,7 +23,7 @@ const ShareReqModal = (props) => {
 
                     {props.isNotFriend === 2 &&
                         <div type="button" className='sharePopupItems' onClick={do_}>
-                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <i className="fa fa-user" aria-hidden="true"></i>
                             <span>
                                 Cancel Request
                             </span>

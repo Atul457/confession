@@ -11,7 +11,7 @@ import bell from '../../../images/bell.svg'
 import bellActive from '../../../images/orangebell.svg'
 import confessIcon from '../../../images/confessIcon.svg'
 import confessIconActive from '../../../images/confessIconActive.svg'
-import inboxIcon from '../../../images/inboxIcon.png'
+import inboxIcon from '../../../images/inboxIcon.svg'
 import inboxIconActive from '../../../images/inboxIconActive.png'
 import newInactiveMessages from '../../../images/newInMessages.svg'
 import newMessagesInbox from '../../../images/newMessages.svg'
@@ -33,6 +33,7 @@ import { closeNotiPopup, openNotiPopup, updateNotiPopState } from '../../../redu
 import _ from 'lodash';
 import SocialLinksModal from '../Modals/SocialLinksModal';
 import openSLinksModalActionCreators from '../../../redux/actions/socialLinksModal';
+import { pulsationHelper } from '../../../helpers/pulsationHelper';
 
 
 
@@ -53,6 +54,11 @@ export default function Header(props) {
             return profile;
         }
     });
+
+    useEffect(() => {
+        pulsationHelper()
+    }, [])
+
 
     const [token] = useState(() => {
         if (auth()) {
@@ -396,7 +402,9 @@ export default function Header(props) {
                                 : ''}
 
 
-                            <div className='socialLinksIconWrapper authProfileIcon'>
+                            <div
+                                className='socialLinksIconWrapper authProfileIcon'
+                                pulsate='07-07-22,pulsatingIcon mobile'>
                                 <img
                                     src={socialLinksIcon}
                                     alt="socialLinksIcon"
@@ -407,7 +415,9 @@ export default function Header(props) {
                                 (
                                     <>
                                         <div className="authProfileIcon noti">
-                                            <div className="notifications" onClick={toggleNotificationCont}>
+                                            <div className="notifications"
+                                                onClick={toggleNotificationCont}
+                                                pulsate='07-07-22,pulsatingIcon mobile'>
                                                 {notificationReducer.newNotifications ?
                                                     <img src={bellNewNoti} alt="" className="notificationIcon headerUserAccIcon" /> :
                                                     <img src={bell} alt="" className="notificationIcon headerUserAccIcon" />}

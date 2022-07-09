@@ -18,7 +18,7 @@ const SocialLinksModal = (props) => {
 
     return (
         <>
-            <Modal show={props.visible} centered size="lg">
+            <Modal show={props.visible} centered size="lg" onHide={closeModal}>
                 <Modal.Header className='justify-content-between'>
                     <h6>Follow us</h6>
                 </Modal.Header>
@@ -46,9 +46,9 @@ const SocialLinksModal = (props) => {
                         </li>
                     </ul>
 
-                    <div className='closeModalBtnVerb' type='button' onClick={closeModal}>
+                    {/* <div className='closeModalBtnVerb' type='button' onClick={closeModal}>
                         Don't miss out on following us
-                    </div>
+                    </div> */}
                 </Modal.Body>
 
             </Modal>

@@ -3,19 +3,18 @@ import userIcon from '../../images/userAcc.png';
 import { Link } from "react-router-dom";
 import auth from '../behindScenes/Auth/AuthCheck';
 import forwardIcon from '../../images/forwardIcon.svg';
-import editCommentIcon from '../../images/editCommentIcon.svg';
 import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../helpers/DateConverter';
 import { setCommentField, setUpdateFieldCModal, updateCModalState } from '../../redux/actions/commentsModal';
 import { useDispatch, useSelector } from 'react-redux';
 import commentReplyIcon from '../../images/creplyIcon.svg';
 import { fetchData } from '../../commonApi';
-import { getAdminToken, getToken } from '../../helpers/getToken';
+import { getAdminToken } from '../../helpers/getToken';
 import _ from 'lodash';
 
 
 const SubComments = ({ data, subcommentId, updatSubComments, index,
-    root_id, addNewSubComment, deleteSubComment, postId }) => {
+    root_id, addNewSubComment, deleteSubComment, postId, isLastIndex }) => {
 
     let props = data;
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
@@ -169,7 +168,15 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
 
     return (
-        <div className={`postCont overWritePostWithComment subcommentCont ${props.id_path}`} index={index}>
+        <div className={`postCont overWritePostWithComment subcommentCont ${props.id_path} ${!auth() ? 'notAuth' : ''}`} index={index}>
+            {!isLastIndex
+                ?
+                <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
+                :
+                <div className='overLap'>
+                    <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
+                </div>
+            }
             <div className="postContHeader commentsContHeader">
                 <span className="commentsGotProfileImg">
                     <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />

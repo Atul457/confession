@@ -15,7 +15,7 @@ import _ from 'lodash';
 
 
 const SubComments = ({ data, subcommentId, updatSubComments, index,
-    root_id, addNewSubComment, deleteSubComment, postId }) => {
+    root_id, addNewSubComment, deleteSubComment, postId, isLastIndex }) => {
 
     let props = data;
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
@@ -63,8 +63,6 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
     const sendSubComment = async () => {
         let ref, token, commentData, obj;
         ref = document.querySelector(`#sendSubComment${subcommentId}`);
-
-        console.log();
         if (ref.value.trim() === '')
             return setRequiredError({ ...requiredError, replyError: "This is required field" });
 
@@ -74,9 +72,6 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
             parent_id: subcommentId,
             root_id
         }
-
-        console.log(commentData);
-
 
         token = getToken()
         obj = {
@@ -170,7 +165,15 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
 
     return (
-        <div className={`postCont overWritePostWithComment subcommentCont ${props.id_path}`} index={index}>
+        <div className={`postCont overWritePostWithComment subcommentCont ${props.id_path} ${!auth() ? 'notAuth' : ''}`} index={index}>
+            {!isLastIndex
+                ?
+                <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
+                :
+                <div className='overLap'>
+                    <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
+                </div>
+            }
             <div className="postContHeader commentsContHeader">
                 <span className="commentsGotProfileImg">
                     <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />
