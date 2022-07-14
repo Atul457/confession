@@ -35,7 +35,6 @@ import ProtectedRoute from './user/ProtectedRoute';
 import getIP from './helpers/getIP';
 import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
 import { Navigate } from 'react-router-dom';
-// import AdSense_ from './user/pageElements/components/AdSense';
 
 
 //GOOGLE TAG MANAGER

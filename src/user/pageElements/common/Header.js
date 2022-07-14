@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import userIcon from '../../../images/userAcc.svg'
 import logoutIcon from '../../../images/logoutIcon.svg'
+import friendRequests from '../../../images/friendRequests.svg'
+import profileResetPass from '../../../images/profileResetPass.svg'
 import profileIcon from '../../../images/profileIcon.svg'
 import mobileProfileIcon from '../../../images/mobileProfileIcon.svg'
 import homeIconActive from '../../../images/homeIcon.svg'
@@ -13,8 +15,6 @@ import confessIcon from '../../../images/confessIcon.svg'
 import confessIconActive from '../../../images/confessIconActive.svg'
 import inboxIcon from '../../../images/inboxIcon.svg'
 import inboxIconActive from '../../../images/inboxIconActive.png'
-import newInactiveMessages from '../../../images/newInMessages.svg'
-import newMessagesInbox from '../../../images/newMessages.svg'
 import { Link, NavLink, useParams } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/SetAuth';
@@ -73,7 +73,7 @@ export default function Header(props) {
 
     const [requestsIndicator, setRequestIndicator] = useState(localStorage.getItem("requestsCount") ? parseInt(localStorage.getItem("requestsCount")) : 0);
     const [newCommentsCount, setNewCommentsCount] = useState(0);
-    const [newMssgsCount, setMssgsCount] = useState(0);
+    const [newMssgsCount, setMssgsCount] = useState(localStorage.getItem("mssgCount") ? parseInt(localStorage.getItem("mssgCount")) : 0);
     const [showEModal, setShowEModal] = useState(false);
     const authenticated = useState(auth());
     const [showProfileOption, setShowProfileOption] = useState(false);
@@ -105,31 +105,8 @@ export default function Header(props) {
 
     // GETS THE COUNT OF NEW REQUESTS
     useEffect(() => {
-        if (auth()) {
-            let obj = {
-                data: { page: 1 },
-                token: token,
-                method: "post",
-                url: "getfriendrequests"
-            }
-            try {
-                const res = fetchData(obj)
-                res.then((res) => {
-                    if (res.data.status === true) {
-                        let count = parseInt(res.data.count);
-                        setRequestIndicator(count);
-                        localStorage.setItem("requestsCount", count);
-                    } else {
-                        console.log(res.data);
-                    }
-                })
-            } catch {
-                console.log("Some error occured");
-            }
-
-            getUnreadCommentsCount();
-        }
-    }, [localStorage.getItem("requestsCount")])
+        if (auth()) getUnreadCommentsCount();
+    }, [])
 
 
     const catchEvent2 = (e) => {
@@ -158,7 +135,7 @@ export default function Header(props) {
 
 
     //GETS THE TOTAL NO OF NEW COMMENTS
-    const getUnreadCommentsCount = async () => {
+    const getUnreadCommentsCount = async (item) => {
         let obj = {
             data: {},
             token: token,
@@ -171,8 +148,13 @@ export default function Header(props) {
             res.then((res) => {
 
                 if (res.data.status === true) {
+                    let count = parseInt(res.data.friendrequests);
+                    let count_ = parseInt(res.data.messages);
                     setNewCommentsCount(res.data.comments);
-                    setMssgsCount(res.data.messages)
+                    setMssgsCount(count_)
+                    setRequestIndicator(count);
+                    localStorage.setItem("requestsCount", count);
+                    localStorage.setItem("mssgCount", count_);
 
                     // IF NOTIFICATION DATA IS NOT UPDATED THE ONLY UPDATE IT
                     if (!_.isEqual(res.data.commentscenter, notificationReducer.data)) {
@@ -181,10 +163,6 @@ export default function Header(props) {
 
                     // EMAIL VERIFICATION LOGIC
                     var email_verified = res.data.email_verified;   // 0 NOT VERIFIED , 1 VERIFIED
-
-
-                    // PREVENTS EMAIL VERIFICATION MODAL FROM BEING SHOWN ON SINGLE CONFESSION PAGE
-                    // (pathname !== currPath)
 
                     let currPath;
 
@@ -208,6 +186,14 @@ export default function Header(props) {
         }
 
     }
+
+    useEffect(() => {
+        const interval = setInterval(() => { getUnreadCommentsCount(notificationReducer) }, 3000)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [notificationReducer.data])
+
 
 
     // LOGS OUT THE USER
@@ -319,11 +305,14 @@ export default function Header(props) {
             }
         })
 
-        if (count > 0 && notificationReducer.newNotifications !== true)
+        if (count > 0 && notificationReducer.newNotifications !== true) {
             dispatch(updateNotiPopState({ newNotifications: true }))
+        }
 
-        if (count === 0 && notificationReducer.newNotifications !== false)
+        if (count === 0 && notificationReducer.newNotifications !== false) {
+            console.log('second')
             dispatch(updateNotiPopState({ newNotifications: false }));
+        }
 
     }
 
@@ -380,11 +369,9 @@ export default function Header(props) {
                                             authenticated[0] ? <div className="linkBtns">
                                                 <NavLink to="/chat" className="headerNavLinks">
                                                     <span className="headIconCont">
-                                                        <img src={currentUrl === 'chat' ?
-                                                            (newMssgsCount > 0 ? newMessagesInbox : inboxIconActive) :
-                                                            (newMssgsCount > 0 ? newInactiveMessages : inboxIcon)} alt="" />
+                                                        <img src={currentUrl === 'chat' ? inboxIconActive : inboxIcon} alt="" />
                                                     </span>
-                                                    <span className={`headLinkName ${currentUrl === "chat" ? "activeLinkOfHeader" : ""}`}>Inbox</span>
+                                                    <span className={`headLinkName ${newMssgsCount > 0 ? 'newInboxMessages' : ''} ${currentUrl === "chat" ? "activeLinkOfHeader" : ""}`}>Inbox</span>
                                                 </NavLink>
                                             </div> :
                                                 <div className="linkBtns">
@@ -471,6 +458,26 @@ export default function Header(props) {
                                                             }
                                                         </span>
                                                     </div>
+                                                    {requestsIndicator > 0 ?
+                                                        <>
+                                                            <hr className="m-0" />
+                                                            <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
+                                                                <img src={friendRequests} alt="" className='profilePopUpIcons friendReqIcon' />
+                                                                <span className="viewProfileNcommentsCont">
+                                                                    <div className='userProfileHeading'>
+                                                                        Friend requests
+                                                                    </div>
+                                                                    {
+                                                                        requestsIndicator > 0 &&
+                                                                        <div className='userProfileSubHeadings'>
+                                                                            {requestsIndicator > 1 ?
+                                                                                `${requestsIndicator} Friend Requests` :
+                                                                                `${requestsIndicator} Friend Request`}
+                                                                        </div>
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        </> : null}
                                                 </Link>
 
                                                 {profile?.source === 1 &&
@@ -478,7 +485,7 @@ export default function Header(props) {
                                                         <hr className="m-0" />
                                                         <div type="button"
                                                             onClick={openUpdatePassModal} className="takeActionOptions  userProfileHeading takeActionOptionsOnHov userProfileHeading textDecNone py-2">
-                                                            <img src={profileIcon} alt="" className='profilePopUpIcons' />
+                                                            <img src={profileResetPass} alt="" className='profilePopUpIcons' />
                                                             Reset Password
                                                         </div>
                                                     </>}

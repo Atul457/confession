@@ -122,7 +122,7 @@ export default function Register() {
     }
 
     useEffect(() => {
-        if (privacyModal.accepted === true && featuresState.shown === true) {
+        if (privacyModal.accepted === true) {
             validateForm(true);
         }
     }, [privacyModal.accepted, featuresState.shown])
@@ -252,64 +252,57 @@ export default function Register() {
 
         if (privacyModal.accepted === true) {
 
-            if (featuresState.shown === true) {
+            // if (featuresState.shown === true) {
 
-                setIsLoading(true);
-                profileResponseCont.innerText = '';
-                regEmailErrorCont.innerHTML = '';
-                regPasswordErrorCont.innerHTML = '';
-                regRPasswordErrorCont.innerHTML = '';
-                regDisplayErrorCont.innerHTML = '';
+            setIsLoading(true);
+            profileResponseCont.innerText = '';
+            regEmailErrorCont.innerHTML = '';
+            regPasswordErrorCont.innerHTML = '';
+            regRPasswordErrorCont.innerHTML = '';
+            regDisplayErrorCont.innerHTML = '';
 
-                let registerFromData = {
-                    "email": email,
-                    "source": source,
-                    "password": password,
-                    "source_id": sourceId,
-                    "display_name": displayName,
-                };
+            let registerFromData = {
+                "email": email,
+                "source": source,
+                "password": password,
+                "source_id": sourceId,
+                "display_name": displayName,
+            };
 
 
-                let obj = {
-                    data: registerFromData,
-                    token: "",
-                    method: "post",
-                    url: "register"
-                }
-
-                try {
-                    const res = await fetchData(obj)
-                    if (res.data.status === true) {
-                        setAuthenticated(true);
-                        setErrorOrSuccess(true);
-                        localStorage.setItem("userDetails", JSON.stringify(res.data.body));
-                        SetAuth(1);
-                        localStorage.removeItem("adminDetails");
-                        localStorage.removeItem("adminAuthenticated");
-                        history("/home");
-                    } else {
-                        setErrorOrSuccess(false);
-                    }
-                    setIsLoading(false);
-                    profileResponseCont.innerText = res.data.message;
-                } catch {
-                    setIsLoading(false);
-                    setErrorOrSuccess(false);
-                    profileResponseCont.innerText = "Server Error, Please try again after some time...";
-                }
-            } else {
-                setPrivacyModal({ ...privacyModal, visible: true })
+            let obj = {
+                data: registerFromData,
+                token: "",
+                method: "post",
+                url: "register"
             }
+
+            try {
+                const res = await fetchData(obj)
+                if (res.data.status === true) {
+                    setAuthenticated(true);
+                    setErrorOrSuccess(true);
+                    localStorage.setItem("userDetails", JSON.stringify(res.data.body));
+                    SetAuth(1);
+                    localStorage.removeItem("adminDetails");
+                    localStorage.removeItem("adminAuthenticated");
+                    history("/home", { state: { openFeatures: true } });
+                } else {
+                    setErrorOrSuccess(false);
+                }
+                setIsLoading(false);
+                profileResponseCont.innerText = res.data.message;
+            } catch {
+                setIsLoading(false);
+                setErrorOrSuccess(false);
+                profileResponseCont.innerText = "Server Error, Please try again after some time...";
+            }
+            // } else {
+            //     setPrivacyModal({ ...privacyModal, visible: true })
+            // }
         } else {
             setPrivacyModal({ ...privacyModal, visible: true })
         }
-    }
-
-    //DELAY
-    const openFeaturesDelay = () => {
-        setTimeout(() => {
-            openFeatures();
-        }, 25 * 1000)
     }
 
 
@@ -485,7 +478,7 @@ export default function Register() {
                         privacyModal={privacyModal}
                         acceptPrivacy={acceptPrivacy}
                         handlePrivacyModal={handlePrivacyModal}
-                        openFeatures={openFeaturesDelay}
+                        openFeatures={() => { }}
                     />
                     {/* PRIVACY MODAL */}
 

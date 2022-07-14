@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 export default function PrivacyModal(props) {
 
   const acceptPrivacy = () => {
-    props.acceptPrivacy(); 
+    props.acceptPrivacy();
     props.openFeatures();
   }
 

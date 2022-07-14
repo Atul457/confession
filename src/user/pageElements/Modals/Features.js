@@ -20,41 +20,30 @@ const Features = (props) => {
                     </span>
                 </Modal.Header>
                 <Modal.Body className="privacyBody text-left featuresModal">
-                    {/* <ul>
-                        <li>
-                            Share interesting posts!
-                        </li>
-                        <li>
-                            Make friends and chat anonymously!
-                        </li>
-                        <li>
-                            Get email notifications for friend requests and responses to your posts; you'll need to be logged in
-                        </li>
-                    </ul> */}
                     <Carousel
                         autoPlay={true}
                         infiniteLoop={true}
-                        interval={5000}
+                        interval={10000}
                         showThumbs={false}
                         showStatus={false}
                         showArrows={false}>
                         <div className="carousel_item_feature">
                             <div className="imgWrapper">
-                                <img src={carousel1} className="carouselImage" />
+                                <img src={carousel3} className="carouselImage" />
                             </div>
-                            <div>Share interesting posts!</div>
+                            <div>Sign up or Login to get notified when people respond to your post</div>
                         </div>
                         <div className="carousel_item_feature">
                             <div className="imgWrapper">
                                 <img src={carousel2} className="carouselImage" />
                             </div>
-                            <div> Make friends and chat anonymously!</div>
+                            <div>Sign up or Login to connect with friends and chat anonymously!</div>
                         </div>
                         <div className="carousel_item_feature">
                             <div className="imgWrapper">
-                                <img src={carousel3} className="carouselImage" />
+                                <img src={carousel1} className="carouselImage" />
                             </div>
-                            <div> Get email notifications for friend requests and responses to your posts; you'll need to be logged in</div>
+                            <div>Sign up or Login to get notified when exciting community features and updates are available</div>
                         </div>
                     </Carousel>
 

@@ -610,6 +610,7 @@ input:focus-visible {
 
 .overWritePostWithCommentWr .connector {
     position: absolute;
+    color: var(--textPrimary);
     left: -25px;
     font-size: 23px;
     background: #fff;
@@ -2461,6 +2462,10 @@ span.facebookMobIcon {
     pointer-events: none;
 }
 
+.hiddenReqCont {
+    display: none;
+}
+
 .textAreaToComment textarea {
     border-color: var(--skyColor);
     font-size: 13px;
@@ -2468,6 +2473,7 @@ span.facebookMobIcon {
     color: var(--placeholderColor);
     overflow: hidden;
     height: 38px;
+    word-break: break-word;
 }
 
 .textAreaToComment textarea:focus {
@@ -2808,7 +2814,7 @@ span.facebookMobIcon {
 }
 
 #postsMainCont .infinite-scroll-component__outerdiv:after {
-    border-left: 1px solid var(--primaryColor);
+    border-left: 1px solid var(--textPrimary);
     position: absolute;
     top: 0px;
     height: calc(100% - 20px);
@@ -4050,7 +4056,7 @@ button.modalFootBtns.btn a:hover {
 }
 
 .subcommentsMainCont:after {
-    border-left: 1px solid var(--primaryColor);
+    border-left: 1px solid var(--textPrimary);
     position: absolute;
     top: -66px;
     height: 100%;
@@ -4225,6 +4231,25 @@ button.modalFootBtns.btn a:hover {
 
 /* icons pulsation */
 
+
+.friendReqIcon{
+    width: 19px;
+}
+
+.newInboxMessages:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #FF4F4F;
+    position: absolute;
+    top: -2px;
+    right: -9px;
+    border-radius: 50%;
+}
+
+.headLinkName{
+    position: relative;
+}
 
 
 
@@ -4799,6 +4824,10 @@ button.modalFootBtns.btn a:hover {
     .endListMessage {
         padding-bottom: 70px;
         text-align: center;
+    }
+    
+    .requestsCont .endListMessage{
+        margin-top: 32px !important;
     }
 
     .endListMessage.chatEndListMessage {
@@ -5777,6 +5806,10 @@ button.modalFootBtns.btn a:hover {
 
     .pulsatingIcon.mobile:before {
         box-shadow: inset 0 0 0 2px var(--whiteColor);
+    }
+
+    .hiddenReqCont {
+        display: block;
     }
 
 

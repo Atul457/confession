@@ -466,7 +466,7 @@ export default function CommentsGot(props) {
                                                     </div>
                                                         :
                                                         <div className="alert alert-danger" role="alert">
-                                                            The post doesn't exist
+                                                            This post does not exist or may have been deleted
                                                         </div>}
 
                                                 </section>

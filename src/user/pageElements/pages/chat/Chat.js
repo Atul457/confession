@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from "../../common/Header";
 import Chatter from "../../components/Chatter";
 import chatterImg from '../../../../images/chatterImg.png';
@@ -26,6 +26,7 @@ export default function Chat() {
     }
 
     const params = useParams();
+    const chatRef = useRef();
     const [toggleView, setToggleView] = useState({
         chat: false,
         requests: false,
@@ -373,6 +374,12 @@ export default function Chat() {
         runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;
     }
 
+    const scrollToMyRef = () => {
+        const scroll = chatRef.current.scrollHeight - chatRef.current.clientHeight;
+        if (chatRef?.current)
+            chatRef.current.scrollTo(0, scroll);
+    };
+
 
     //SEND MESSAGE
     const sendMessage = async () => {
@@ -403,6 +410,7 @@ export default function Chat() {
                         ...prevState
                     ])
 
+                    scrollToMyRef()
                     setCount((prevState) => prevState + 1);
 
                     changeMessagesInFriendList(res.data.message);
@@ -653,11 +661,10 @@ export default function Chat() {
     const handleBounce = boolVal => {
         let body = document.querySelector('body');
         let html = document.querySelector('html');
-        if(boolVal)
-        {
+        if (boolVal) {
             body.classList.add('bounceOff');
             html.classList.add('bounceOff');
-        }else{
+        } else {
             body.classList.remove('bounceOff');
             html.classList.remove('bounceOff');
         }
@@ -750,12 +757,10 @@ export default function Chat() {
                                             Something went wrong
                                         </div>) :
 
-                                            <div className="friendsRequestsMainCont">
-                                                <Link to="/requests" className="w-100">
-                                                    <span className="chatPageHeaders">
-                                                        Friend Requests
-                                                    </span>
-                                                </Link>
+                                            <div className={`friendsRequestsMainCont ${myRequests.data.count ? '' : 'hiddenReqCont'}`}>
+                                                <span className="chatPageHeaders">
+                                                    Friend Requests
+                                                </span>
 
                                                 {/* SHOWS ALL THE USERS WHO HAVE REQUESTED TO YOU */}
                                                 {((myRequests.data.count)
@@ -809,12 +814,12 @@ export default function Chat() {
 
                                                 <div className={`takeAction takeActionProfile p-1 ${check ? "d-block" : "d-none"}`} id="takeAction">
 
-                                                    <div type="button" className={`takeActionOptions chat mt-2 textDecNone`} onClick={() => { performAction("report") }}>
+                                                    <div type="button" className={`takeActionOptions chat mt-2 textDecNone px-3`} onClick={() => { performAction("report") }}>
                                                         <i className="fa fa-file pr-1 pl-2" aria-hidden="true"></i>
                                                         Report user
                                                     </div>
                                                     <hr className="m-0 mt-2" />
-                                                    <div type="button" className="takeActionOptions chat mt-2 textDecNone" onClick={() => { performAction("clear") }}>
+                                                    <div type="button" className="takeActionOptions chat mt-2 textDecNone px-3" onClick={() => { performAction("clear") }}>
                                                         <i className="fa fa-trash pr-1 pl-2" aria-hidden="true"></i>
                                                         Clear chat
                                                     </div>
@@ -827,7 +832,7 @@ export default function Chat() {
                                             className="preventHeaderChatSec">preventHead</div>
 
 
-                                        <div className="messagesCont pt-2" id="messagesCont">
+                                        <div className="messagesCont pt-2" id="messagesCont" ref={chatRef}>
 
                                             <InfiniteScroll
                                                 onScroll={handleGoDownArr}

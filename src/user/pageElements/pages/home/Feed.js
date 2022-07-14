@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import Post from '../../components/Post';
@@ -48,10 +48,10 @@ export default function Feed(props) {
     const [confCount, setConfCount] = useState(0);
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const friendReqModalReducer = useSelector(state => state.friendReqModalReducer);
-    const postBoxStateReducer = useSelector(state => state.postBoxStateReducer);
+    const postBoxStateReducer = useSelector(state => state.postBoxStateReducer.feed);
     const postAlertReducer = useSelector(state => state.postAlertReducer);
     const [AC2S, setAC2] = useState(() => {
-        if (actCategory.state)
+        if (actCategory.state && !actCategory?.state?.openFeatures)
             return actCategory.state.active;
         else
             return "";
@@ -61,7 +61,6 @@ export default function Feed(props) {
     const [confessions, setConfessions] = useState(false);
     const [confessionResults, setConfessionResults] = useState(true);
     // const afterHowManyShowAdd = useState(9);    //AFTER THIS MUCH SHOW ADDS
-    const [description, setDescription] = useState(postBoxStateReducer.description ?? "");
     const [isLoading, setIsLoading] = useState(false);
     const [errorOrSuccess, setErrorOrSuccess] = useState(true);
     const [selectedCat, setSelectedCat] = useState(postBoxStateReducer.selectedCat ?? "");
@@ -88,7 +87,12 @@ export default function Feed(props) {
 
     useEffect(() => {
         pulsationHelper()
+        if (actCategory?.state?.openFeatures === true) openFeaturesDelay();
     }, [])
+
+    // useEffect(()=>{
+    //     console.log(isLoading);
+    // }, [isLoading])
 
 
     useEffect(() => {
@@ -178,13 +182,13 @@ export default function Feed(props) {
     //POSTS CONFESSION FROM FEED PAGE
     const _postConfession = async () => {
 
-
         let postConfessionArr,
             token = '',
             loggedInUserData,
             post_as_anonymous = 1,
             feedDescErrorCont = document.getElementById("feedDescErrorCont"),
-            feedPostConfResponseCont = document.getElementById("feedPostConfResponseCont");
+            feedPostConfResponseCont = document.getElementById("feedPostConfResponseCont"),
+            description = document.getElementById("description");
 
         let recapToken = ""
 
@@ -197,7 +201,7 @@ export default function Feed(props) {
 
         const executePostConfession = async () => {
 
-            if (description.trim() !== '') {
+            if (description.value.trim() !== '') {
 
 
                 feedDescErrorCont.innerText = "";
@@ -226,7 +230,7 @@ export default function Feed(props) {
                 }
 
                 postConfessionArr = {
-                    "description": description,
+                    "description": description.value,
                     "category_id": selectedCat,
                     "post_as_anonymous": post_as_anonymous,
                     "image": "",
@@ -241,6 +245,7 @@ export default function Feed(props) {
                     }
                 }
 
+                setIsLoading(true);
 
                 let obj = {
                     data: postConfessionArr,
@@ -252,11 +257,10 @@ export default function Feed(props) {
 
                 try {
                     const response = await fetchData(obj);
-                    setIsLoading(true);
                     if (response.data.status === true) {
                         feedDescErrorCont.innerText = "";
                         setErrorOrSuccess(true);
-                        setDescription("");
+                        description.value = '';
                         setSelectedCat("");
                         getConfessions(false, activeCategory, 1);
                         feedPostConfResponseCont.innerHTML = response.data.message;
@@ -290,7 +294,7 @@ export default function Feed(props) {
 
 
                 if (postBoxStateReducer.description !== '' || postBoxStateReducer.selectedCat !== '')
-                    dispatch(setPostBoxState({ description: '', selectedCat: '' }));
+                    dispatch(setPostBoxState({ feed: { description: '', selectedCat: '' } }));
 
             }
             else {
@@ -302,7 +306,7 @@ export default function Feed(props) {
 
 
     //PREVENTS DOUBLE POST
-    const postConfession = _.debounce(_postConfession, 600);
+    const postConfession = _.debounce(_postConfession, 200);
 
     const fetchMoreData = () => {
         let page = pageNo;
@@ -400,7 +404,7 @@ export default function Feed(props) {
     const openFeaturesDelay = () => {
         setTimeout(() => {
             openFeatures();
-        }, 25 * 1000)
+        }, 60 * 1000)
     }
 
 
@@ -502,13 +506,11 @@ export default function Feed(props) {
                                                     <div className="col-12 inputToAddComment toDoinputToAddComment">
                                                         <TextareaAutosize
                                                             className="form-control"
+                                                            id="description"
                                                             minRows={5}
                                                             maxLength={noOfChar}
-                                                            value={description}
+                                                            defaultValue={postBoxStateReducer.description ?? ""}
                                                             placeholder={"What’s REALLY on your mind?"}
-                                                            onChange={(e) => {
-                                                                setDescription(e.target.value)
-                                                            }}
                                                         ></TextareaAutosize>
                                                         <span className="textAreaLimit">[ Max-Characters:{noOfChar} ]</span>
                                                     </div>
@@ -539,11 +541,14 @@ export default function Feed(props) {
                                                             <span className="d-block errorCont text-danger" id="catErrorCont"></span>
                                                         </div>
 
-                                                        <div className="doPostBtn" type="button" id="postConfessionBtn" onClick={() => { postConfession() }}>
+                                                        <div className="doPostBtn" type="button" id="postConfessionBtn" onClick={() => {
+                                                            if (isLoading === false)
+                                                                postConfession()
+                                                        }}>
                                                             <div className="">
-                                                                {isLoading
+                                                                {isLoading === true
                                                                     ?
-                                                                    <div className="spinner-border pColor spinnerSizeFeed" role="status">
+                                                                    <div className="spinner-border whiteSpinner  spinnerSizeFeed" role="status">
                                                                         <span className="sr-only">Loading...</span>
                                                                     </div>
                                                                     :
@@ -700,10 +705,12 @@ export default function Feed(props) {
                 />}
 
             {postAlertReducer.visible === true &&
-                <PostAlertModal
-                    data={{ selectedCat, description }}
-                    postConfession={postConfession}
-                />}
+                <>
+                    <PostAlertModal
+                        data={{ feed: { selectedCat, description: document.querySelector('#description').value } }}
+                        postConfession={postConfession}
+                    />
+                </>}
         </div>
     );
 }

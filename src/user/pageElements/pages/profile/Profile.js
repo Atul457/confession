@@ -115,6 +115,7 @@ export default function Profile() {
                         friends: append === true ? [...myFriends.data.friends, ...res.data.friends] : res.data.friends,
                     }
                 });
+
             } else {
                 setMyFriends({ ...myFriends, isLoading: false });
             }
@@ -265,6 +266,13 @@ export default function Profile() {
             if (res.data.status === true) {
                 localStorage.setItem("requestsCount", res.data.count);
                 setMyRequests(res.data);
+
+                // OPENS THE FRIEND LIST DROPDOWN IF THERE A FRIEND REQUESTS
+                if (res.data?.requests && res.data?.requests.length > 0) {
+                    let windowWidth = window.innerWidth
+                    if (windowWidth < 768) return setProfileModal({ visible: true })
+                    setShowFriendsList(true)
+                }
             }
             setIsReqLoading(false)
         } catch {
@@ -297,6 +305,7 @@ export default function Profile() {
             const res = await fetchData(obj)
             if (res.data.status === true) {
                 getRequests();
+                if (status === 1) getFriends();
             }
         } catch {
             console.log("Some error occured");
@@ -706,7 +715,6 @@ export default function Profile() {
                                                         (myFriends.data.friends.length > 0 &&
                                                             <>
                                                                 <div className="profileFriendsCont w-100" id="friendList">
-
 
                                                                     <InfiniteScroll
                                                                         scrollableTarget={`friendList`}

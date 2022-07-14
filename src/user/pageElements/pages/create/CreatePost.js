@@ -10,16 +10,31 @@ import { useNavigate } from "react-router-dom";
 import { fetchData } from '../../../../commonApi';
 import ExtValidator from '../../../../extensionValidator/ExtValidator';
 import TextareaAutosize from 'react-textarea-autosize';
+import { useSelector, useDispatch } from 'react-redux';
+import postAlertActionCreators from '../../../../redux/actions/postAlert';
+import PostAlertModal from '../../Modals/PostAlertModal';
+import _ from 'lodash';
+import { setPostBoxState } from '../../../../redux/actions/postBoxState';
 
 
 export default function CreatePost(props) {
 
     let history = useNavigate();
+    const dispatch = useDispatch();
+    const postAlertReducer = useSelector(state => state.postAlertReducer);
+    const postBoxStateReducer = useSelector(state => state.postBoxStateReducer.create);
     const [categories, setCategories] = useState(false);
-    const [selectedCat, setSelectedCat] = useState('');
-    const [anonymous, setAnonymous] = useState(true);
+    const [selectedCat, setSelectedCat] = useState(postBoxStateReducer.selectedCat ?? "");
+    const [anonymous, setAnonymous] = useState(() => {
+        if (!auth()) return true;
+        let postAsAnonymous = localStorage.getItem('userDetails');
+        postAsAnonymous = postAsAnonymous && JSON.parse(postAsAnonymous)?.profile?.post_as_anonymous;
+        if (postAsAnonymous !== undefined)
+            return postAsAnonymous === 0 ? false : true;
+        return true;
+    });
     const [selectedFile, setSelectedFile] = useState('');
-    const [description, setDescription] = useState("");
+    const [description, setDescription] = useState(postBoxStateReducer.description ?? "");
     const [submittable, setSubmittable] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [errorOrSuccess, setErrorOrSuccess] = useState(true);
@@ -43,17 +58,9 @@ export default function CreatePost(props) {
     }, [props.categories])
 
 
-    const preventDoubleClick = (runOrNot) => {
-        if (document.querySelector('#postConfBtn')) {
-            var elem = document.querySelector('#postConfBtn');
-            runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;
-        }
-    }
-
     async function validateFrom()     // Validates the form
     {
         if (submittable) {
-            preventDoubleClick(true);
             let loggedInUserData;
             let descErrorCont = document.getElementById('descErrorCont'), token = '';
             let catErrorCont = document.getElementById('catErrorCont');
@@ -83,26 +90,30 @@ export default function CreatePost(props) {
                 else if (recapToken === '') {
                     // capthaErrorCont.innerText = "Recaptcha is required";
                     console.log("Recaptcha is required")
-                    preventDoubleClick(false);
                     return false;
                 }
 
                 if (description.trim() === '') {
                     // console.log("empty");
                     descErrorCont.innerHTML = 'Comment required.';
-                    preventDoubleClick(false);
                     return false;
                 } else {
                     descErrorCont.innerHTML = '';
                 }
                 if (selectedCat.trim() === '') {
                     catErrorCont.innerHTML = 'Please select a category.';
-                    preventDoubleClick(false);
                     return false;
                 }
                 else {
                     catErrorCont.innerHTML = '';
-                    setIsLoading(true);
+
+                    if (auth() && anonymous === false) {
+                        if (postAlertReducer.postAnyway === false) {
+                            dispatch(postAlertActionCreators.openModal());
+                            return false;
+                        }
+                    }
+
                     let createPostArr = {
                         "description": description,
                         "category_id": selectedCat,
@@ -122,6 +133,7 @@ export default function CreatePost(props) {
 
                     try {
                         const response = await fetchData(obj)
+                        setIsLoading(true);
                         if (response.data.status === true) {
                             setErrorOrSuccess(true);
                             history("/home");
@@ -137,11 +149,19 @@ export default function CreatePost(props) {
                         responseCont.innerHTML = "Server Error, Please try again after some time...";
                     }
 
-                    preventDoubleClick(false);
+                    if (postAlertReducer.visible === true)
+                        dispatch(postAlertActionCreators.closeModal());
+
+
+                    if (postBoxStateReducer.description !== '' || postBoxStateReducer.selectedCat !== '')
+                        dispatch(setPostBoxState({ create: { description: '', selectedCat: '' } }));
                 }
             }
         }
     }
+
+    //PREVENTS DOUBLE POST
+    const postConfession = _.debounce(validateFrom, 600);
 
 
     //IN PROGRESS
@@ -166,7 +186,7 @@ export default function CreatePost(props) {
             setSubmittable(false);
             let fileSize = parseInt(e.target.files[0].size / 1000);
             responseCont.innerHTML = '';
-            
+
             if (fileSize > fs) {
                 responseCont.innerHTML = '[Max FileSize: 1000KB], No file selected';
                 setIsImgLoading(false);
@@ -347,14 +367,6 @@ export default function CreatePost(props) {
                                 <div className="container-fluid rightMainCreatePostFormCont px-0">
                                     <div className="head">
 
-                                        {/* <div className="recaptchaFeed text-right justify-content-center mb-2"> */}
-                                        {/* {!auth() && <ReCAPTCHA
-                                                sitekey="6LfOYpAeAAAAACg8L8vo8s7U1keZJwF_xrlfN-o9"
-                                                onChange={verifyRecaptcha}
-                                            />} */}
-                                        {/* </div> */}
-
-
                                         <div className='exceptRecap'>
 
                                             <div className="form-group radioCont exceptRecapFields">
@@ -371,6 +383,7 @@ export default function CreatePost(props) {
 
                                             <div className="createPostInputs exceptRecapFields selectCategory">
                                                 <select
+                                                    value={selectedCat}
                                                     className="form-control"
                                                     onChange={(e) => setSelectedCat(e.target.value)}
                                                     id="selectedCategory"
@@ -391,7 +404,7 @@ export default function CreatePost(props) {
                                                 disabled={!submittable}
                                                 id="postConfBtn"
                                                 type="button"
-                                                onClick={() => { validateFrom() }}
+                                                onClick={() => { postConfession() }}
                                                 className="btn doPostBtn exceptRecapFields">
                                                 {isLoading ? <div className="spinnerSizePost spinner-border text-white" role="status">
                                                     <span className="sr-only">Loading...</span>
@@ -435,6 +448,13 @@ export default function CreatePost(props) {
                 {/* Adds Footer Component */}
                 <Footer />
             </div>
+
+            {/* POST ALERT MODAL */}
+            {postAlertReducer.visible === true &&
+                <PostAlertModal
+                    data={{ create: { description, selectedCat } }}
+                    postConfession={postConfession}
+                />}
         </div>
     );
 }
