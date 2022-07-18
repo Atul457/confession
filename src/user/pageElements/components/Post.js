@@ -36,6 +36,7 @@ export default function Post(props) {
     const dispatch = useDispatch();
     const ShareReducer = useSelector(store => store.ShareReducer);
     const [requiredError, setRequiredError] = useState('');
+    const friendReqState = useSelector(state => state.friendReqModalReducer)
     const authenticated = useState(auth());
     const noOfWords = useState(200);    //IN POST AFTER THESE MUCH CHARACTERS SHOWS VIEWMORE BUTTON
     const [comment, setComment] = useState('');
@@ -198,8 +199,13 @@ export default function Post(props) {
     const openFrReqModalFn_Post = () => {
         dispatch(openCFRModal({
             cancelReq: props.isNotFriend === 2 ? true : false,
-            userId: props.curid
+            userId: (friendReqState.requested === true || friendReqState.cancelled) ?
+                friendReqState.data.userId :
+                props.curid
         }))
+
+        // other === requested
+        // 2 === cancel the requst
 
         // openFrReqModalFn();
         dispatch(togglemenu({

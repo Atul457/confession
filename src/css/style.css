@@ -1501,9 +1501,31 @@ span.offlineColor {
     font-weight: 600;
     font-size: 13px;
     display: flex;
+    width: calc(100% - 80px);
     align-items: flex-start;
     padding-left: 0px;
     flex-direction: column;
+}
+
+.chatLink {
+    position: relative;
+}
+
+.upperCont {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.upperCont i {
+    cursor: pointer;
+    color: var(--primaryColor);
+}
+
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
 }
 
 .forBottomBorder {
@@ -4232,7 +4254,7 @@ button.modalFootBtns.btn a:hover {
 /* icons pulsation */
 
 
-.friendReqIcon{
+.friendReqIcon {
     width: 19px;
 }
 
@@ -4247,8 +4269,12 @@ button.modalFootBtns.btn a:hover {
     border-radius: 50%;
 }
 
-.headLinkName{
+.headLinkName {
     position: relative;
+}
+
+.disabled {
+    background: #aba9a9;
 }
 
 
@@ -4363,6 +4389,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .singleChatterUserName {
+        width: calc(100% - 40px);
         font-size: 10px;
         margin-bottom: 5px;
     }
@@ -4825,8 +4852,8 @@ button.modalFootBtns.btn a:hover {
         padding-bottom: 70px;
         text-align: center;
     }
-    
-    .requestsCont .endListMessage{
+
+    .requestsCont .endListMessage {
         margin-top: 32px !important;
     }
 
@@ -5812,6 +5839,9 @@ button.modalFootBtns.btn a:hover {
         display: block;
     }
 
+    .chatLink .newInboxMessages::after {
+        top: 5px
+    }
 
 }
 

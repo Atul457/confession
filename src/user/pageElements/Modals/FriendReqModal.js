@@ -54,18 +54,24 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
 
     const sendRequest = () => {
         _updateCanBeRequested(friendReqState.data.userId, 2);
-        dispatch(closeFRModal())
+        dispatch(closeFRModal({
+            requested: false
+        }))
         reOpenCommentsModal(2);
     }
 
     const cancelRequest = () => {
         _updateCanBeRequested(friendReqState.data.userId, 1);
-        dispatch(closeFRModal())
+        dispatch(closeFRModal({
+            cancelled: false
+        }))
         reOpenCommentsModal(1);
     }
 
     const closeModal = () => {
-        dispatch(closeFRModal())
+        dispatch(closeFRModal({
+            
+        }))
         reOpenCommentsModal();
     }
 
@@ -119,8 +125,7 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
                                 Done
                             </Button>
                             :
-
-                            <>
+                            (<>
                                 <Button
                                     className="reqModalFootBtns cancel"
                                     variant="primary"
@@ -138,7 +143,9 @@ export const FriendReqModal = ({ userId, closeFrReqModalFn, toggleLoadingFn, _up
                                             :
                                             "Submit"
                                     }
-                                </Button></>}
+                                </Button>
+                            </>)
+                        }
                     </Modal.Footer>
                 </Modal>
 

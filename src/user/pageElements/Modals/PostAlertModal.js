@@ -8,8 +8,6 @@ import { setPostBoxState } from '../../../redux/actions/postBoxState';
 
 const PostAlertModal = ({ postConfession, data }) => {
 
-    console.log(data)
-
     const dispatch = useDispatch();
     const history = useNavigate();
     const postAlertReducer = useSelector(state => state.postAlertReducer);

@@ -9,12 +9,15 @@ import contactUsActiveIcon from '../../../images/contactUsIconActive.png';
 import contactUsIcon from '../../../images/contactUsMobIcon.png';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
+import { useSelector } from 'react-redux';
+
 
 export default function Footer() {
 
     let currentUrl = window.location.href;
     currentUrl = currentUrl.split("/");
     currentUrl = currentUrl[(currentUrl.length) - 1];
+    const notificationReducer = useSelector(store => store.notificationReducer);
 
 
     return (
@@ -40,11 +43,11 @@ export default function Footer() {
                 {auth()
                     ?
                     <div className="linkBtns">
-                        <Link to="/chat" className="linkBtnsAnchor">
+                        <Link to="/chat" className="linkBtnsAnchor chatLink">
                             <span className="headIconCont">
                                 <img src={currentUrl === 'chat' ? inboxIconActive : inboxIcon} alt="" />
                             </span>
-                            <span className={`footLinkName ${currentUrl === "chat" ? "activeLinkOfHeader" : ""}`}>Chat</span>
+                            <span className={`footLinkName ${notificationReducer.messagesCount > 0 ? 'newInboxMessages' : ''} ${currentUrl === "chat" ? "activeLinkOfHeader" : ""}`}>Chat</span>
                         </Link>
                     </div>
                     :
