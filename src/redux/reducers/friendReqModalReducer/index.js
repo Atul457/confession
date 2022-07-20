@@ -24,7 +24,7 @@ const friendReqModalReducer = (state = initialState, action) => {
             return {
                 ...state,
                 visible: false,
-                data: action.payload
+                ...action.payload
             }
 
         case friendReqActions.CHANGECANCELLED:

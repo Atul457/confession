@@ -70,10 +70,10 @@ export default function Login() {
     // END OF PRIVACY MODAL
 
     useEffect(() => {
-        if (auth()) {
+        if (authenticated === 1) {
             history("/home");
         }
-    }, [authenticated, history])
+    }, [authenticated])
 
 
     //GETS THE DATA FROM THE GOOGLE LOGIN API, 
@@ -108,14 +108,14 @@ export default function Login() {
                     if (res.data.is_registered === 1) //USER IS REGISTERED, LOGINS THE USER
                     {
                         localStorage.setItem("userDetails", JSON.stringify(res.data.body));
-                        setAuthenticated(1);
                         SetAuth(1);
-                        loginResponseCont.innerHTML = "";
                         setErrorOrSuccess(true);
+                        setAuthenticated(1);
+                        loginResponseCont.innerHTML = "";
                         localStorage.removeItem("adminDetails");
                         localStorage.removeItem("adminAuthenticated");
                         localStorage.setItem("privacyAccepted", 1);
-                        history("/home");
+                        return;
                     }
                 } else if (res.data.status === false) //USER IS NOT REGISTERD
                 {
@@ -128,8 +128,9 @@ export default function Login() {
                     } else {
                         console.log(res);
                     }
-                    setIsLoading(false);
+                    return setIsLoading(false);
                 }
+                setIsLoading(false);
             } catch (err) {
                 console.log(err);
                 setIsLoading(false);
@@ -180,14 +181,15 @@ export default function Login() {
                     if (res.data.is_registered === 1)  //USER IS REGISTERED, LOGINS THE USER
                     {
                         localStorage.setItem("userDetails", JSON.stringify(res.data.body));
-                        setAuthenticated(1);
                         SetAuth(1);
-                        loginResponseCont.innerHTML = "";
                         setErrorOrSuccess(true);
+                        setIsLoading(false)
+                        setAuthenticated(1);
+                        loginResponseCont.innerHTML = "";
                         localStorage.removeItem("adminDetails");
                         localStorage.removeItem("adminAuthenticated");
                         localStorage.setItem("privacyAccepted", 1);
-                        history("/home");
+                        return;
                     }
                 } else if (res.data.status === false) {
                     setErrorOrSuccess(prevState => !prevState === false && !prevState);
@@ -201,8 +203,8 @@ export default function Login() {
                     } else {
                         console.log(res);
                     }
+                    return setIsLoading(false)
                 }
-                setIsLoading(false)
             } catch (err) {
                 console.log(err);
                 setIsLoading(false)
@@ -311,20 +313,20 @@ export default function Login() {
                 const res = await fetchData(obj)
                 if (res.data.status === true) {
                     localStorage.setItem("userDetails", JSON.stringify(res.data.body));
-                    setAuthenticated(1);
                     SetAuth(1);
-                    loginResponseCont.innerHTML = "";
+                    setIsLoading(false);
                     setErrorOrSuccess(true);
+                    setAuthenticated(1);
+                    loginResponseCont.innerHTML = "";
                     localStorage.removeItem("adminDetails");
                     localStorage.removeItem("adminAuthenticated");
                     localStorage.setItem("privacyAccepted", 1);
-                    history("/home");
                 } else {
                     setErrorOrSuccess(false);
                     setAuthenticated(false);
                     loginResponseCont.innerHTML = res.data.message;
+                    setIsLoading(false);
                 }
-                setIsLoading(false);
             } catch {
                 setErrorOrSuccess(false);
                 setIsLoading(false);
@@ -489,7 +491,7 @@ export default function Login() {
                         </div>
 
                         {/* PRIVACY MODAL */}
-                        <PrivacyModal privacyModal={privacyModal} acceptPrivacy={acceptPrivacy} handlePrivacyModal={handlePrivacyModal} />
+                        <PrivacyModal openFeatures={() => { }} privacyModal={privacyModal} acceptPrivacy={acceptPrivacy} handlePrivacyModal={handlePrivacyModal} />
                         {/* PRIVACY MODAL */}
 
                         {/* FORGOT PASSWORD MODAL */}

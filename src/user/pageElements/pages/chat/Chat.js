@@ -5,7 +5,7 @@ import chatterImg from '../../../../images/chatterImg.png';
 import forwardIcon from '../../../../images/chatArrow.png'
 import Requests from "../../components/Requests";
 import Footer from "../../common/Footer";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import SiteLoader from '../../components/SiteLoader';
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -13,11 +13,13 @@ import Button from '@restart/ui/esm/Button';
 import { Modal } from 'react-bootstrap';
 import userIcon from '../../../../images/userAcc.svg';
 import { fetchData } from '../../../../commonApi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../../../helpers/DateConverter';
-
+import { getToken } from '../../../../helpers/getToken';
+import UnFriendModal from '../../Modals/UnFriendModal';
+import { unFriendActionCreators } from '../../../../redux/actions/unFriendReqModal';
 
 export default function Chat() {
 
@@ -26,6 +28,7 @@ export default function Chat() {
     }
 
     const params = useParams();
+    const dispatch = useDispatch();
     const chatRef = useRef();
     const [toggleView, setToggleView] = useState({
         chat: false,
@@ -39,7 +42,7 @@ export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [count, setCount] = useState(0);
-    // const [activeChat, setActiveChat] = useState(false);
+    const [chatClosed, setChatClosed] = useState(false);
     const [reportModal, setReportModal] = useState({
         isVisible: false,
         isReported: false,
@@ -174,7 +177,7 @@ export default function Chat() {
 
         let obj = {
             data: data,
-            token: userDetails.token,
+            token: getToken(),
             method: "post",
             url: "refreshchat"
         }
@@ -202,11 +205,61 @@ export default function Chat() {
             if (lastId !== false) {
                 refreshChat();
             }
-        }, [2000]);
+        }, [4000]);
         return () => {
             clearInterval(interval);
         }
     }, [lastId]);
+
+    const openUnFriendModal = (friend_id, index) => {
+        dispatch(
+            unFriendActionCreators.updateUnFriendModalState({
+                visible: true, data: { friend_id, index }
+            })
+        );
+    }
+
+
+    // UNFRIEND THE FRIEND
+    const unFriend = async (friend_id, index) => {
+
+        dispatch(
+            unFriendActionCreators.updateUnFriendModalState({
+                visible: false, data: {}
+            })
+        );
+
+        const friends = [...myFriends.data.friends];
+        friends.splice(index, 1);
+
+        setMyFriends({
+            ...myFriends,
+            data: {
+                count: myFriends.data.count - 1,
+                friends: friends
+            }
+        })
+
+        let data = {
+            request_id: friend_id,
+            status: 3
+        }
+        setChat({ ...chat, noFriends: true, isVisible: false })
+        setChatClosed(true)
+
+        let obj = {
+            data: data,
+            token: getToken(),
+            method: "post",
+            url: "updatefriendrequeststatus"
+        }
+
+        try {
+            await fetchData(obj);
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
 
 
@@ -375,9 +428,20 @@ export default function Chat() {
     }
 
     const scrollToMyRef = () => {
-        const scroll = chatRef.current.scrollHeight - chatRef.current.clientHeight;
-        if (chatRef?.current)
-            chatRef.current.scrollTo(0, scroll);
+        if (chatRef.current.scrollTop==0)
+        {
+            document.querySelector('.lastMessage').scrollIntoView({ behavior: 'smooth', block: 'end' });
+            const ref = document.querySelector('.messagesCont')
+            if (ref)
+                ref.scrollTop = (ref.scrollTop + 30);
+        }
+        else
+        {
+            const scroll = chatRef.current.scrollHeight - chatRef.current.clientHeight;
+            if (chatRef?.current)
+                chatRef.current.scrollTo(0, scroll);
+        }
+       
     };
 
 
@@ -405,6 +469,7 @@ export default function Chat() {
             try {
                 const res = await fetchData(obj)
                 if (res.data.status === true) {
+
                     setMessages((prevState) => [
                         res.data.message,
                         ...prevState
@@ -414,6 +479,8 @@ export default function Chat() {
                     setCount((prevState) => prevState + 1);
 
                     changeMessagesInFriendList(res.data.message);
+                } else {
+                    if (res.data.refresh === true) window.location.reload(false);
                 }
             } catch {
                 console.log("Some error occured");
@@ -456,7 +523,6 @@ export default function Chat() {
 
     //OPENS CHAT ON CLICK, ON A FRIENDS
     const openChat = (chatterDetGot) => {
-        // console.log(chatterDetGot);
         setCheck(false);
         let windowWidth = window.innerWidth;
         if (windowWidth < 768) {
@@ -649,6 +715,8 @@ export default function Chat() {
             requests: false,
             chat: true,
         })
+        setMessages([])
+        setCount(0)
     }
     const showRequests = () => {
         setToggleView({
@@ -732,6 +800,8 @@ export default function Chat() {
 
                                                         (myFriends.data.friends).map((user, index) => {
                                                             return <Chatter
+                                                                index={index}
+                                                                openUnFriendModal={openUnFriendModal}
                                                                 updated_at={user.updated_at}
                                                                 key={`${index}${user.imgUrl}${user.name}${user.chatterDesc}`}
                                                                 is_userreport={user.is_userreport}
@@ -786,12 +856,18 @@ export default function Chat() {
                             {/* OPENED CHAT CONTAINER */}
                             <div className={`rightSectionChat chattingWithCont ${toggleView.messages ? "d-block " : "d-none"} d-md-block transition`}>
                                 {chat.isVisible === false ? (
-
                                     <div className="outerLookChat">
-                                        {chat.noFriends === true ? <span className="endListMessage">No Chats to show</span> :
-                                            <div className="spinner-border pColor" role="status">
-                                                <span className="sr-only">Loading...</span>
-                                            </div>}
+                                        {myFriends.data.friends.length === 0 &&
+                                            <span className="endListMessage">
+                                                No Chats to show
+                                            </span>
+                                        }
+
+                                        {myFriends.data.friends.length !== 0 && chatClosed &&
+                                            <span className="endListMessage">
+                                                open the chat to see the messages
+                                            </span>
+                                        }
                                     </div>
                                 ) :
                                     <>
@@ -882,7 +958,6 @@ export default function Chat() {
                                             </InfiniteScroll>
                                         </div>
 
-
                                         {/* MESSAGEBOX */}
                                         <div className="container-fluid inputWithForwardCont goDownArrowWrapper">
                                             <i className={`fa fa-arrow-circle-o-down goDownArrow ${goDownArrow === true && "d-block"}`} aria-hidden="true" type="button" onClick={goDown}></i>
@@ -947,6 +1022,8 @@ export default function Chat() {
                 </Modal.Footer>
             </Modal>
             {/* REPORT USER MODAL */}
+
+            <UnFriendModal unFriend={unFriend} />
         </div>
     );
 }

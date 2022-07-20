@@ -29,7 +29,7 @@ import AppLogo from "../components/AppLogo";
 import { togglemenu } from '../../../redux/actions/share';
 import UpdatePasswordModal from '../Modals/UpdatePasswordModal';
 import { UpdateUPassActionCreators } from '../../../redux/actions/updateUserPassword';
-import { closeNotiPopup, openNotiPopup, updateNotiPopState } from '../../../redux/actions/notificationAC';
+import { closeNotiPopup, openNotiPopup, updateMessagesCount, updateNotiPopState } from '../../../redux/actions/notificationAC';
 import _ from 'lodash';
 import SocialLinksModal from '../Modals/SocialLinksModal';
 import openSLinksModalActionCreators from '../../../redux/actions/socialLinksModal';
@@ -73,7 +73,6 @@ export default function Header(props) {
 
     const [requestsIndicator, setRequestIndicator] = useState(localStorage.getItem("requestsCount") ? parseInt(localStorage.getItem("requestsCount")) : 0);
     const [newCommentsCount, setNewCommentsCount] = useState(0);
-    const [newMssgsCount, setMssgsCount] = useState(localStorage.getItem("mssgCount") ? parseInt(localStorage.getItem("mssgCount")) : 0);
     const [showEModal, setShowEModal] = useState(false);
     const authenticated = useState(auth());
     const [showProfileOption, setShowProfileOption] = useState(false);
@@ -151,7 +150,11 @@ export default function Header(props) {
                     let count = parseInt(res.data.friendrequests);
                     let count_ = parseInt(res.data.messages);
                     setNewCommentsCount(res.data.comments);
-                    setMssgsCount(count_)
+
+                    if (res.data.messages !== notificationReducer.messagesCount) {
+                        dispatch(updateMessagesCount(res.data.messages))
+                    }
+
                     setRequestIndicator(count);
                     localStorage.setItem("requestsCount", count);
                     localStorage.setItem("mssgCount", count_);
@@ -176,13 +179,10 @@ export default function Header(props) {
                         }
                     }
 
-                } else {
-                    console.log(res);
-                }
+                } else console.log(res);
             })
         } catch (err) {
             console.log(err);
-            console.log("Some error occured");
         }
 
     }
@@ -192,7 +192,7 @@ export default function Header(props) {
         return () => {
             clearInterval(interval)
         }
-    }, [notificationReducer.data])
+    }, [notificationReducer.data, notificationReducer.messagesCount])
 
 
 
@@ -310,7 +310,6 @@ export default function Header(props) {
         }
 
         if (count === 0 && notificationReducer.newNotifications !== false) {
-            console.log('second')
             dispatch(updateNotiPopState({ newNotifications: false }));
         }
 
@@ -371,7 +370,7 @@ export default function Header(props) {
                                                     <span className="headIconCont">
                                                         <img src={currentUrl === 'chat' ? inboxIconActive : inboxIcon} alt="" />
                                                     </span>
-                                                    <span className={`headLinkName ${newMssgsCount > 0 ? 'newInboxMessages' : ''} ${currentUrl === "chat" ? "activeLinkOfHeader" : ""}`}>Inbox</span>
+                                                    <span className={`headLinkName ${notificationReducer.messagesCount > 0 ? 'newInboxMessages' : ''} ${currentUrl === "chat" ? "activeLinkOfHeader" : ""}`}>Inbox</span>
                                                 </NavLink>
                                             </div> :
                                                 <div className="linkBtns">

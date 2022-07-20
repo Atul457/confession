@@ -1501,9 +1501,31 @@ span.offlineColor {
     font-weight: 600;
     font-size: 13px;
     display: flex;
+    width: calc(100% - 80px);
     align-items: flex-start;
     padding-left: 0px;
     flex-direction: column;
+}
+
+.chatLink {
+    position: relative;
+}
+
+.upperCont {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.upperCont i {
+    cursor: pointer;
+    color: var(--primaryColor);
+}
+
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
 }
 
 .forBottomBorder {
@@ -3911,6 +3933,22 @@ input.switch12.profile:checked {
     font-size: 21px;
 }
 
+.postsHeadingProfile.profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filterByUnread {
+    width: 140px !important;
+}
+
+.filterByUnread select {
+    padding: 0px 30px;
+    width: 100%;
+    font-size: 14px;
+}
+
 .friendRequestsHeader.toggleModal {
     display: none;
 }
@@ -4232,7 +4270,7 @@ button.modalFootBtns.btn a:hover {
 /* icons pulsation */
 
 
-.friendReqIcon{
+.friendReqIcon {
     width: 19px;
 }
 
@@ -4247,8 +4285,12 @@ button.modalFootBtns.btn a:hover {
     border-radius: 50%;
 }
 
-.headLinkName{
+.headLinkName {
     position: relative;
+}
+
+.disabled {
+    background: #aba9a9;
 }
 
 
@@ -4363,6 +4405,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .singleChatterUserName {
+        width: calc(100% - 40px);
         font-size: 10px;
         margin-bottom: 5px;
     }
@@ -4677,6 +4720,7 @@ button.modalFootBtns.btn a:hover {
         padding: 0px 10px;
         margin-top: 70px;
         height: calc(100vh - 120px - 75px - 63px - 160px) !important;
+        -webkit-overflow-scrolling: touch;
     }
 
     .overFlowHidden {
@@ -4825,8 +4869,8 @@ button.modalFootBtns.btn a:hover {
         padding-bottom: 70px;
         text-align: center;
     }
-    
-    .requestsCont .endListMessage{
+
+    .requestsCont .endListMessage {
         margin-top: 32px !important;
     }
 
@@ -5531,6 +5575,10 @@ button.modalFootBtns.btn a:hover {
         margin-bottom: 0px;
     }
 
+    .postsHeadingProfile.profile {
+        margin-bottom: 20px;
+    }
+
     .thoughtsNrequestsCont.profile .infinite-scroll-component__outerdiv {
         padding: 20px 10px;
     }
@@ -5687,7 +5735,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .rightSectionChat {
-        overflow: hidden !important;
+
         padding: 0px;
     }
 
@@ -5812,6 +5860,18 @@ button.modalFootBtns.btn a:hover {
         display: block;
     }
 
+    .chatLink .newInboxMessages::after {
+        top: 5px
+    }
+
+    .filterByUnread {
+        margin-top: 0px !important;
+        justify-content: flex-start !important;
+    }
+
+    .filterByUnread select {
+        text-align: left !important;
+    }
 
 }
 

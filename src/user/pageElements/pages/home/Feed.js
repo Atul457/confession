@@ -90,10 +90,6 @@ export default function Feed(props) {
         if (actCategory?.state?.openFeatures === true) openFeaturesDelay();
     }, [])
 
-    // useEffect(()=>{
-    //     console.log(isLoading);
-    // }, [isLoading])
-
 
     useEffect(() => {
         if (!auth()) {
@@ -180,7 +176,10 @@ export default function Feed(props) {
 
 
     //POSTS CONFESSION FROM FEED PAGE
-    const _postConfession = async () => {
+    const postConfession = async () => {
+
+        setIsLoading(true);
+        updatePostBtn(true);
 
         let postConfessionArr,
             token = '',
@@ -202,8 +201,6 @@ export default function Feed(props) {
         const executePostConfession = async () => {
 
             if (description.value.trim() !== '') {
-
-
                 feedDescErrorCont.innerText = "";
                 if (auth()) {
                     loggedInUserData = localStorage.getItem("userDetails");
@@ -213,11 +210,14 @@ export default function Feed(props) {
                     recapToken = "";
                 }
                 else if (recapToken === '') {
+                    updatePostBtn(false);
                     feedDescErrorCont.innerText = "Recaptcha is required";
                     return false;
                 }
 
                 if (selectedCat === '') {
+                    updatePostBtn(false);
+                    setIsLoading(false);
                     feedDescErrorCont.innerText = "Please select a category";
                     return false;
                 }
@@ -225,6 +225,8 @@ export default function Feed(props) {
                 if (auth() && post_as_anonymous === 0) {
                     if (postAlertReducer.postAnyway === false) {
                         dispatch(postAlertActionCreators.openModal());
+                        updatePostBtn(false);
+                        setIsLoading(false);
                         return false;
                     }
                 }
@@ -241,11 +243,13 @@ export default function Feed(props) {
                 if (!auth()) {
                     if (localStorage.getItem("privacyAccepted") ? (parseInt(localStorage.getItem("privacyAccepted")) !== 1 ? true : false) : true) {
                         setPrivacyModal({ ...privacyModal, isConfessionBeingPost: true, visible: true })
+                        updatePostBtn(false);
+                        setIsLoading(false);
                         return false;
                     }
                 }
 
-                setIsLoading(true);
+
 
                 let obj = {
                     data: postConfessionArr,
@@ -269,11 +273,12 @@ export default function Feed(props) {
                         feedPostConfResponseCont.innerHTML = response.data.message;
                     }
 
+                    updatePostBtn(false);
+                    setIsLoading(false);
                     setSelectedCat("");
                     //RESETS THE SELECT BOX
                     let selectRef = document.querySelector('#selectedCategory');
                     selectRef.selectedIndex = 0;
-                    setIsLoading(false);
 
                     setTimeout(() => {
                         feedPostConfResponseCont.innerHTML = "";
@@ -282,6 +287,7 @@ export default function Feed(props) {
                 } catch (err) {
                     console.log(err);
                     setErrorOrSuccess(false);
+                    updatePostBtn(false);
                     setIsLoading(false);
                     setSelectedCat("");
                     let selectRef = document.querySelector('#selectedCategory');
@@ -299,14 +305,22 @@ export default function Feed(props) {
             }
             else {
                 feedDescErrorCont.innerText = "This field is required";
+                updatePostBtn(false);
+                setIsLoading(false);
             }
 
         }
     }
 
+    const updatePostBtn = bool => {
+        let ref = document.getElementById('postConfessionBtn');
+        if (bool) return ref.classList.add('disabled');
+        ref.classList.remove('disabled');
+    }
+
 
     //PREVENTS DOUBLE POST
-    const postConfession = _.debounce(_postConfession, 200);
+    // const postConfession = _.debounce(_postConfession, 200);
 
     const fetchMoreData = () => {
         let page = pageNo;
@@ -332,14 +346,18 @@ export default function Feed(props) {
 
     // HANDLES SCROLL TO TOP BUTTON
     useEffect(() => {
-        document.addEventListener("scroll", () => {
+        const scroll = () => {
             let scroll = document.querySelector("html").scrollTop;
             if (scroll > 3000) {
                 setGoDownArrow(true);
             } else {
                 setGoDownArrow(false);
             }
-        })
+        }
+        document.addEventListener("scroll", scroll);
+        return () => {
+            document.removeEventListener("scroll", scroll);
+        }
     }, [])
 
     const updateConfessionData = (_viewcount, sharedBy, index) => {
@@ -369,6 +387,7 @@ export default function Feed(props) {
                 return curr;
             }
         })
+        console.log({ userId, action, updatedConfessionArray })
         setConfessions([...updatedConfessionArray]);
     }
 
@@ -694,23 +713,23 @@ export default function Feed(props) {
             </div>
 
             {friendReqModalReducer.visible === true &&
-                <FriendReqModal
-                    cancelReq={props.isNotFriend === 2 ? true : false}
-                    changeCancelled={changeCancelled}
-                    userId={props.curid}
-                    closeFrReqModalFn={closeFRModal}
-                    toggleLoadingFn={toggleLoadingFn}
-                    changeRequested={changeRequested}
-                    _updateCanBeRequested={updateCanBeRequested}
-                />}
+                <>
+                    <FriendReqModal
+                        changeCancelled={changeCancelled}
+                        closeFrReqModalFn={closeFRModal}
+                        toggleLoadingFn={toggleLoadingFn}
+                        changeRequested={changeRequested}
+                        _updateCanBeRequested={updateCanBeRequested}
+                    />
+                </>}
 
-            {postAlertReducer.visible === true &&
+            {(document.querySelector('#description') && document.querySelector('#description').value !== '' && postAlertReducer.visible === true) &&
                 <>
                     <PostAlertModal
                         data={{ feed: { selectedCat, description: document.querySelector('#description').value } }}
                         postConfession={postConfession}
                     />
                 </>}
-        </div>
+        </div >
     );
 }

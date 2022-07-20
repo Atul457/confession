@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import Post from '../../components/Post';
 import Requests from '../../components/Requests';
 import pen from '../../../../images/whitepen.png';
+import downArrowIcon from '../../../../images/downArrow.png';
 import supportIcon from '../../../../images/contactUsIconActive.png';
 import { Link } from "react-router-dom";
 import SiteLoader from '../../components/SiteLoader';
@@ -42,11 +43,11 @@ export default function Profile() {
 
 
     let maxRequestsToshow = 5;
+    const unread = useRef();
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const [runOrNot, setRunOrNot] = useState(false);
-    // const [enterName, setEnterName] = useState(false);
     const [displayName, setDisplayName] = useState(false);
     const [profile, setProfile] = useState(userDetails.profile);
     const [myConfession, setMyConfession] = useState([]);
@@ -57,7 +58,6 @@ export default function Profile() {
     const [myRequests, setMyRequests] = useState({ count: 0 });   //TO MAINTAIN THE DESIGN
     const [isReqLoading, setIsReqLoading] = useState(true);
     const [isReqError, setIsReqError] = useState(false);
-    // const [lastName, setLastName] = useState(false);
     const [confCount, setConfCount] = useState(0);
     const [confData, setConfData] = useState(1);
     const [deletable, setDeletable] = useState(false);
@@ -189,7 +189,8 @@ export default function Profile() {
         let pageNo = page;
         let data = {
             profile_id: dataObj.confData.profile_id,
-            page: pageNo
+            page: pageNo,
+            only_unread: parseInt(unread.current?.value)
         }
 
         let obj = {
@@ -230,6 +231,10 @@ export default function Profile() {
     useEffect(() => {
         getData();
     }, [dataObj.confData, userDetails.token])
+
+    const confFilter = () => {
+        getData();
+    }
 
     // HANDLES SCROLL TO TOP BUTTON
     useEffect(() => {
@@ -378,6 +383,7 @@ export default function Profile() {
     };
 
     const fetchMoreConfessions = () => {
+        // console.log(unread?.current?.value);
         getData((confData + 1), true);
     }
 
@@ -781,8 +787,20 @@ export default function Profile() {
 
 
                         <div className="roundCorners">__</div>
-                        <div className="postsHeadingProfile">
+                        <div className="postsHeadingProfile profile">
                             My Posts
+                            <div className="form-group createPostInputs filterByUnread createInputSelect mb-0">
+                                <select
+                                    className='form-control createInputSelect'
+                                    ref={unread}
+                                    onChange={confFilter}
+                                    defaultValue={0}>
+                                    <option value="0">Filter by</option>
+                                    <option value="0">All</option>
+                                    <option value="1">Unread</option>
+                                </select>
+                                <img src={downArrowIcon} alt="" type="button" />
+                            </div>
                         </div>
                         <div className="thoughtsNrequestsCont container-fluid profile" id="postsWrapper">
                             <div className="row w-100 mx-0">
@@ -842,7 +860,11 @@ export default function Profile() {
                                                         )}
                                                     </InfiniteScroll>
 
-                                                    : <div className="profile noConfessions endListMessage">You haven't created any post</div>)
+                                                    : <div className="profile noConfessions endListMessage">
+                                                        {parseInt(unread.current?.value) === 1 ?
+                                                            "No post found" :
+                                                            "You haven't created any post"}
+                                                    </div>)
                                                     :
                                                     (<div className="text-center">
                                                         <div className="spinner-border pColor mt-4 text-center" role="status">

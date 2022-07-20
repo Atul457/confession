@@ -30,7 +30,7 @@ import Terms from './user/pageElements/pages/terms';
 import CookiePolicy from './user/pageElements/pages/cookie';
 import Recapv3 from './user/pageElements/components/Recapv3';
 import AuthCheck from "./user/behindScenes/Auth/AuthCheck"
-import ReactPixel from 'react-facebook-pixel';
+// import ReactPixel from 'react-facebook-pixel';
 import ProtectedRoute from './user/ProtectedRoute';
 import getIP from './helpers/getIP';
 import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
@@ -46,6 +46,7 @@ TagManager.initialize(tagManagerArgs);
 // const options = { autoConfig: true, debug: false, };
 // ReactPixel.init('1638738963149766', null, options);
 // ReactPixel.fbq('track', 'PageView');
+
 
 getIP()
 
