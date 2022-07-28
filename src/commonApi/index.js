@@ -26,9 +26,9 @@ export const fetchData = async (props) => {
             return response;
         } else {
             if (response.data.logout === true) {
-                // localStorage.removeItem("authenticated");
-                // localStorage.removeItem("userDetails");
-                // window.location.href = "/login?message=1";
+                localStorage.removeItem("authenticated");
+                localStorage.removeItem("userDetails");
+                window.location.href = "/login?message=1";
             }
             return response
         }
