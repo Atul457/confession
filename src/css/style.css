@@ -19,6 +19,10 @@
 /* touch-action: pan-x pan-y;
 height: 100% */
 
+.hideForNow{
+    display: none !important;
+}
+
 .bounceOff {
     position: fixed;
     overflow: hidden;
@@ -1800,6 +1804,7 @@ span.offlineColor {
 .txtUnderLine {
     text-decoration: underline;
 }
+
 
 .callingImgSpan {
     width: 47px;
@@ -4117,7 +4122,7 @@ button.modalFootBtns.btn a:hover {
 
 .subCommentsCount {
     color: var(--primaryColor);
-    font-size: 10px;
+    font-size: 12px;
     padding-left: 10px;
     position: absolute;
     right: 0px;
@@ -4291,6 +4296,12 @@ button.modalFootBtns.btn a:hover {
 
 .disabled {
     background: #aba9a9;
+}
+
+.refreshIcon {
+    font-size: 41px !important;
+    right: 80px !important;
+    bottom: 35px;
 }
 
 
@@ -4548,6 +4559,10 @@ button.modalFootBtns.btn a:hover {
 
 
 @media(max-width:767px) {
+
+    .subCommentsCount{
+        font-size: 9px;
+    }
 
     .socialLinksIconWrapperFeed {
         display: none;
@@ -5871,6 +5886,11 @@ button.modalFootBtns.btn a:hover {
 
     .filterByUnread select {
         text-align: left !important;
+    }
+
+    .refreshIcon{
+        font-size: 35px !important;
+        bottom: 102px !important;
     }
 
 }

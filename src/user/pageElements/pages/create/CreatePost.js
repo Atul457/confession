@@ -71,6 +71,7 @@ export default function CreatePost(props) {
             catErrorCont.innerText = '';
             descErrorCont.innerText = '';
             let recapToken = "";
+            let post_as_anonymous = 1;
 
 
             window.grecaptcha.ready(() => {
@@ -86,6 +87,7 @@ export default function CreatePost(props) {
                     loggedInUserData = localStorage.getItem("userDetails");
                     loggedInUserData = JSON.parse(loggedInUserData);
                     token = loggedInUserData.token;
+                    post_as_anonymous = loggedInUserData.profile.post_as_anonymous;
                 }
                 else if (recapToken === '') {
                     // capthaErrorCont.innerText = "Recaptcha is required";
@@ -107,7 +109,7 @@ export default function CreatePost(props) {
                 else {
                     catErrorCont.innerHTML = '';
 
-                    if (auth() && anonymous === false) {
+                    if (auth() && post_as_anonymous === 0) {
                         if (postAlertReducer.postAnyway === false) {
                             dispatch(postAlertActionCreators.openModal());
                             return false;
@@ -117,7 +119,7 @@ export default function CreatePost(props) {
                     let createPostArr = {
                         "description": description,
                         "category_id": selectedCat,
-                        "post_as_anonymous": auth() ? (anonymous ? 1 : 0) : 0,
+                        "post_as_anonymous": post_as_anonymous,
                         "image": JSON.stringify(imgPathArr),
                         "code": token === '' ? recapToken : ''
                     };
@@ -369,7 +371,7 @@ export default function CreatePost(props) {
 
                                         <div className='exceptRecap'>
 
-                                            <div className="form-group radioCont exceptRecapFields">
+                                            <div className="form-group radioCont exceptRecapFields hideForNow">
                                                 <label htmlFor="TweightRadio" className="labelForToggle createPostLabels">Randomized name</label>
                                                 <input
                                                     type="checkbox"
@@ -381,7 +383,7 @@ export default function CreatePost(props) {
                                                     disabled={!auth() ? true : false} />
                                             </div>
 
-                                            <div className="createPostInputs exceptRecapFields selectCategory">
+                                            <div className="createPostInputs exceptRecapFields selectCategory ml-0">
                                                 <select
                                                     value={selectedCat}
                                                     className="form-control"

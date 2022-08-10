@@ -22,14 +22,14 @@ export default function VerifyEmailModal(props) {
             let userDetails = localStorage.getItem("userDetails");
             userDetails = JSON.parse(userDetails);
             return userDetails;
-        }else{
+        } else {
             return false
         }
     });
 
     const hideEModalFn = () => {
         dispatch(EVerifyModal({
-            ...verifyEState, visible: false,verified : true
+            ...verifyEState, visible: false, verified: true
         }))
     }
 
@@ -49,7 +49,7 @@ export default function VerifyEmailModal(props) {
 
     const verifyEmail = async () => {
 
-        let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        let regex = /^[\d\D]+@[a-zA-Z0-9.-]+\.[\d\D]{2,4}$/;
         let _email = "";
         if (!userDetails.profile.email) {
             if (email.trim() === "") {
@@ -80,7 +80,7 @@ export default function VerifyEmailModal(props) {
         try {
             const res = await fetchData(obj)
             if (res.data.status === true) {
-                dispatch(EVerifyModal({ ...verifyEState, isLoading: false, visible: false, verified : true }))
+                dispatch(EVerifyModal({ ...verifyEState, isLoading: false, visible: false, verified: true }))
                 return;
             }
         } catch (err) {

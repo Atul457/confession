@@ -324,7 +324,7 @@ export default function Report() {
                                         accept=".jpeg, .png, .jpg, .gif"
                                         onChange={(e) => { toBase64(e) }}
                                     />
-                                    <label htmlFor="uploadReportImages" className="createPostLabels">Upload Screenshots if there are any</label>
+                                    <label htmlFor="uploadReportImages" className="createPostLabels">Upload Image</label>
                                 </div>
                             </div>
 

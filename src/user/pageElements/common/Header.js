@@ -179,7 +179,9 @@ export default function Header(props) {
                         }
                     }
 
-                } else console.log(res);
+                } else {
+                    // console.log(res)
+                };
             })
         } catch (err) {
             console.log(err);
@@ -188,9 +190,12 @@ export default function Header(props) {
     }
 
     useEffect(() => {
-        const interval = setInterval(() => { getUnreadCommentsCount(notificationReducer) }, 3000)
+        let interval;
+        if (auth()) {
+            interval = setInterval(() => { getUnreadCommentsCount(notificationReducer) }, 3000)
+        }
         return () => {
-            clearInterval(interval)
+            if (auth()) clearInterval(interval)
         }
     }, [notificationReducer.data, notificationReducer.messagesCount])
 

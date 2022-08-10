@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../../images/appLogo.svg';
-// import userIcon from '../../images/userBlack.png';
 import loginLogo from '../../images/loginLogo.svg';
-// import userIconI from '../../images/userGray.png';
-// import lockIconI from '../../images/lockOGray.png';
-// import lockIcon from '../../images/lockOBlue.png';
 import Footer from "./common/Footer";
 import auth from '../behindScenes/Auth/AuthCheck';
 import { useNavigate } from "react-router-dom";
@@ -14,7 +10,7 @@ import { fetchData } from '../../commonApi';
 import LgSidebar from '../../user/pageElements/components/common/LgSidebar';
 
 
-export default function Login(props) {
+export default function Login() {
 
     let history = useNavigate();
     const [authenticated, setAuthenticated] = useState(auth());
@@ -34,7 +30,7 @@ export default function Login(props) {
         let loginResponseCont = document.getElementById('loginResponseCont');
         let loginEmail = document.getElementById('loginEmail');
         let loginPassword = document.getElementById('loginPassword');
-        let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        let regex = /^[\d\D]+@[a-zA-Z0-9.-]+\.[\d\D]{2,4}$/;
         loginResponseCont.innerHTML = "";
 
         if (email.trim() === '') {

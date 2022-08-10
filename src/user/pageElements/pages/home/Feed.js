@@ -333,6 +333,8 @@ export default function Feed(props) {
     useEffect(() => {
         destroySlots();
         getConfessions(false, activeCategory, 1);
+        setAC2(activeCategory)
+        // console.log({ activeCategory })
         setPageNo(1);
     }, [activeCategory])
 
@@ -407,7 +409,13 @@ export default function Feed(props) {
 
     //SCROLLS TO BOTTOM
     const goUp = () => {
-        window.scrollTo({ top: "0px", behavior: "smooth" });
+        const firstPost = document.querySelector('.postCont[index="0"]')
+        if (firstPost) {
+            firstPost.scrollIntoView({
+                block: "center",
+                // behavior: "smooth"
+            })
+        }
     }
 
 
@@ -424,6 +432,18 @@ export default function Feed(props) {
         setTimeout(() => {
             openFeatures();
         }, 60 * 1000)
+    }
+
+    // REFRESH FEED
+    const refreshFeed = async () => {
+        goUp()
+        await new Promise(resolve => {
+            setTimeout(() => {
+                resolve()
+            }, 200)
+        })
+        if (activeCategory === "all") return getConfessions(false, "all", 1)
+        setActiveCategory('all')
     }
 
 
@@ -706,6 +726,7 @@ export default function Feed(props) {
 
                 <Footer />
                 <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
+                <i className={`fa fa-refresh goUpArrow refreshIcon ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={refreshFeed}></i>
 
                 {/* REFRESH BUTTON */}
                 {commentsModal.visibility === false && changes && <RefreshButton />}

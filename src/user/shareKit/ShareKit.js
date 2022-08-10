@@ -9,7 +9,7 @@ const ShareKit = (props) => {
 
     // CREATE OBJECT WITH PROPS FOR SHAREBLOCK
     const shareBlockProps = {
-        url: `${origin}/confession/${data.confession_id}`,
+        url: `${origin}/shareconfession/${data.confession_id}`,
         button: ShareButtonRoundSquare,
         buttons: [
             { network: 'Twitter', icon: FaTwitter },

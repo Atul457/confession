@@ -275,7 +275,7 @@ export default function Login() {
         let loginResponseCont = document.getElementById('loginResponseCont');
         let loginEmail = document.getElementById('loginEmail');
         let loginPassword = document.getElementById('loginPassword');
-        let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        let regex = /^[\d\D]+@[a-zA-Z0-9.-]+\.[\d\D]{2,4}$/;
         loginResponseCont.innerHTML = "";
 
         if (email.trim() === '') {

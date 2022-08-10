@@ -214,7 +214,7 @@ export default function Register() {
         let regEmailErrorCont = document.getElementById('regEmailErrorCont');
         let regPasswordErrorCont = document.getElementById('regPasswordErrorCont');
         let regRPasswordErrorCont = document.getElementById('regRPasswordErrorCont');
-        let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        let regex = /^[\d\D]+@[a-zA-Z0-9.-]+\.[\d\D]{2,4}$/;
 
         //IF LOGIN IS BEING DONE USING SOCIAL LOGIN THEN NO VALIDATION IS DONE
         if (usingSocialLogin === false) {
@@ -230,6 +230,7 @@ export default function Register() {
                 return false;
             } else {
                 regEmailErrorCont.innerHTML = '';
+                regDisplayErrorCont.innerHTML = ''
             }
 
             if (password.trim() === '') {

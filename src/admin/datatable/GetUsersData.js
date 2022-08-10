@@ -55,7 +55,7 @@ export const GetUsersData = () => {
             nextLabel={<i className="fa fa-chevron-right" aria-hidden="true"></i>}
             forcePage={page}
             onPageChange={page => handlePagination(page)}
-            pageCount={Math.ceil(usersCount / noOfRowsPerPage) || 1}z
+            pageCount={Math.ceil(usersCount / noOfRowsPerPage) || 1}
             breakLabel={'...'}
             pageRangeDisplayed={2}
             marginPagesDisplayed={2}
