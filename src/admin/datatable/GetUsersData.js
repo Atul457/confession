@@ -103,8 +103,14 @@ export const GetUsersData = () => {
                 <button className="btn btn-success mx-auto pl-1 btn-sm w-100" onClick={(e) => handleAction(row.id, row.status, e.target)}>Active</button> :
                 <button className="btn btn-danger mx-auto pl-1 btn-sm w-100" onClick={(e) => handleAction(row.id, row.status, e.target)}>InActive</button>,
             button: true,
-            allowOverflow: true,
+            allowOverflow: true
         },
+        {
+            selector: row => row.created_at.split(" ")[0],
+            sortable: true,
+            width: "180px",
+            name: "Created at"
+        }
     ]
 
 
