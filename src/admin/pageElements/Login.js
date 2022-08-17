@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../../images/appLogo.svg';
 import loginLogo from '../../images/loginLogo.svg';
-import Footer from "./common/Footer";
 import auth from '../behindScenes/Auth/AuthCheck';
 import { useNavigate } from "react-router-dom";
 import SiteLoader from '../../user/pageElements/components/SiteLoader';
@@ -104,32 +103,6 @@ export default function Login() {
                             bottomLogo={loginLogo}
                         />
 
-
-                        {/* <div className="container py-md-4 p-3 preventFooter">
-                            <div className="row py-md-2 py-0 loginPageBoxShadow boxShadow"> */}
-                        {/* <div className="col-12 col-md-6 loginPageLeftOuterCont loginPageLeftOuterContAdmin">
-                                    <div className="container-fluid pb-4">
-                                        <div className="col-9 mx-auto">
-                                            <div className="row">
-                                                <div className="col-12">
-                                                    <div className="confesstText text-center">
-                                                        Admin Login
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 loginInfoCont">
-                                                    Login with your account to Manage confessions, manage categories,
-                                                    manage reported post...
-                                                </div>
-                                                <div className="col-12">
-                                                    <div className="confessImgCont">
-                                                        <img src={twoPersonIcon} alt="" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> */}
-
                         <div className="rightColumn">
                             <div className="container-fluid rightMainFormCont">
 
@@ -140,10 +113,6 @@ export default function Login() {
                                         <label htmlFor="userName" className="loginPageFields">Email</label>
                                         <div className="refreshBtnDiv loginEmailField">
                                             <input type="email" className="form-control" name="email" value={email} id="userName" placeholder="e,g. JohDoe123" onChange={(e) => setEmail(e.target.value)} />
-                                            {/* <span className="fieldIcon">
-                                                <img src={userIcon} alt="" className="blueIcon" />
-                                                <img src={userIconI} alt="" className="grayIcon" />
-                                            </span> */}
 
                                         </div>
                                         <div className="errorCont" id="loginEmail"></div>
@@ -153,10 +122,6 @@ export default function Login() {
                                         <label htmlFor="password" className="loginPageFields">Password</label>
                                         <div className="refreshBtnDiv loginPassField">
                                             <input type="password" name="password" className="form-control" id="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                                            {/* <span className="fieldIcon">
-                                                <img src={lockIcon} alt="" className="blueIcon" />
-                                                <img src={lockIconI} alt="" className="grayIcon" />
-                                            </span> */}
                                         </div>
                                         <div className="errorCont" id="loginPassword"></div>
                                     </div>
@@ -173,10 +138,6 @@ export default function Login() {
 
                             </div>
                         </div>
-                        {/* </div>
-                        </div> */}
-
-                        {/* <Footer /> */}
                     </div>)
                     : <SiteLoader />
             }

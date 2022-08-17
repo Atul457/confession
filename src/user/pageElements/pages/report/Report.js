@@ -186,11 +186,11 @@ export default function Report() {
             setSubmittable(false);
 
             let responseContR = document.getElementById('responseContR');
-            let fileSize = parseInt(e.target.files[0].size / 1000);
+            let fileSize = parseInt(e.target.files[0].size / 2000);
             responseContR.innerHTML = '';
 
             if (fileSize > fs) {
-                responseContR.innerHTML = '[Max FileSize: 1000KB], No file selected';
+                responseContR.innerHTML = '[Max FileSize: 2000KB], No file selected';
                 setIsImgLoading(false);
                 setSelectedFile('');
                 setErrorOrSuccess(false);
@@ -324,7 +324,7 @@ export default function Report() {
                                         accept=".jpeg, .png, .jpg, .gif"
                                         onChange={(e) => { toBase64(e) }}
                                     />
-                                    <label htmlFor="uploadReportImages" className="createPostLabels">Upload Image</label>
+                                    <label htmlFor="uploadReportImages" className="createPostLabels cp">Upload Image</label>
                                 </div>
                             </div>
 
@@ -372,12 +372,6 @@ export default function Report() {
                                 <div className="container-fluid rightMainCreatePostFormCont px-0">
 
                                     <div className="head">
-                                        {/* <div className="recaptchaFeed text-right justify-content-center mb-2"> */}
-                                        {/* {!auth() && <ReCAPTCHA
-                                                sitekey="6LfOYpAeAAAAACg8L8vo8s7U1keZJwF_xrlfN-o9"
-                                                onChange={verifyRecaptcha}
-                                            />} */}
-                                        {/* </div> */}
 
                                         <div className='exceptRecap'>
 
@@ -412,7 +406,7 @@ export default function Report() {
                                                 className="btn doPostBtn exceptRecapFields report">
                                                 {isLoading ? <div className="spinnerSizePost spinner-border text-white" role="status">
                                                     <span className="sr-only">Loading...</span>
-                                                </div> : "Register Complain"}</button>
+                                                </div> : "Register Complaint"}</button>
 
                                         </div>
                                     </div>

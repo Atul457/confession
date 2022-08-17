@@ -19,7 +19,7 @@
 /* touch-action: pan-x pan-y;
 height: 100% */
 
-.hideForNow{
+.hideForNow {
     display: none !important;
 }
 
@@ -1227,6 +1227,7 @@ input.switch12:focus {
 }
 
 .uploadImgWrapper {
+    cursor: pointer;
     margin-bottom: 10px;
 }
 
@@ -1236,6 +1237,8 @@ input.switch12:focus {
     margin-bottom: 0px;
 }
 
+
+.cp,
 .createPostLabels[for="uploadImages"],
 .uploadImgWrapper[for="uploadImages"] {
     cursor: pointer;
@@ -3463,14 +3466,13 @@ a.headerNavLinks.active::after {
 }
 
 .exceptRecap {
-    width: calc(100% - 310px);
-    display: flex;
-    justify-content: center;
-    box-sizing: border-box;
-    padding: 0px 30px;
-    min-width: 590px;
     align-items: center;
-    margin-left: 310px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: end;
+    min-width: 590px;
+    padding: 0px;
+    width: 100%;
 }
 
 .exceptRecapFields {
@@ -4560,7 +4562,7 @@ button.modalFootBtns.btn a:hover {
 
 @media(max-width:767px) {
 
-    .subCommentsCount{
+    .subCommentsCount {
         font-size: 9px;
     }
 
@@ -5888,7 +5890,7 @@ button.modalFootBtns.btn a:hover {
         text-align: left !important;
     }
 
-    .refreshIcon{
+    .refreshIcon {
         font-size: 35px !important;
         bottom: 102px !important;
     }

@@ -186,11 +186,11 @@ export default function CreatePost(props) {
 
             setIsImgLoading(true);
             setSubmittable(false);
-            let fileSize = parseInt(e.target.files[0].size / 1000);
+            let fileSize = parseInt(e.target.files[0].size / 2000);
             responseCont.innerHTML = '';
 
             if (fileSize > fs) {
-                responseCont.innerHTML = '[Max FileSize: 1000KB], No file selected';
+                responseCont.innerHTML = '[Max FileSize: 2000KB], No file selected';
                 setIsImgLoading(false);
                 setSelectedFile('');
                 setErrorOrSuccess(false);
@@ -241,15 +241,6 @@ export default function CreatePost(props) {
         };
     }
     //IN PROGRESS
-
-
-    // const verifyRecaptcha = (value) => {
-    //     setRecaptchaKey(value);
-
-    //     setTimeout(() => {
-    //         setRecaptchaKey("")
-    //     }, 120000);
-    // }
 
 
     // REMOVE UPLOADED IMAGE
@@ -325,7 +316,7 @@ export default function CreatePost(props) {
                                         name="images"
                                         onChange={(e) => { toBase64(e) }}
                                     />
-                                    <label htmlFor="uploadImages" className="createPostLabels">Upload Images if there are any</label>
+                                    <label htmlFor="uploadImages" className="createPostLabels cp">Upload Images if there are any</label>
                                 </div>
                             </div>
 

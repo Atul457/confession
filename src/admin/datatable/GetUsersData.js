@@ -249,9 +249,3 @@ export const GetUsersData = () => {
     )
 
 }
-
-
-
-
-
-
