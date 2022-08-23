@@ -28,6 +28,7 @@ export default function Chat() {
     }
 
     const params = useParams();
+    const [showFriendsList, setShowFriendsList] = useState(false);
     const dispatch = useDispatch();
     const chatRef = useRef();
     const [toggleView, setToggleView] = useState({
@@ -37,6 +38,7 @@ export default function Chat() {
     });
     const [userDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
     const [typedMessage, setTypedMessage] = useState("");
+    const [error, setError] = useState("");
     const [refreshOrNot, setRefreshOrNot] = useState(false);
     const [lastId, setLastId] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -209,7 +211,7 @@ export default function Chat() {
         return () => {
             clearInterval(interval);
         }
-    }, [lastId]);
+    }, [lastId, chatterDetails]);
 
     const openUnFriendModal = (friend_id, index) => {
         dispatch(
@@ -344,7 +346,7 @@ export default function Chat() {
                     config: { token: userDetails.token, page: pageNoToSet },
                 });
 
-                if (lastId === false) {
+                if (lastId === false || res.data.last_id !== lastId) {
                     setLastId(res.data.last_id);
                 }
 
@@ -428,20 +430,18 @@ export default function Chat() {
     }
 
     const scrollToMyRef = () => {
-        if (chatRef.current.scrollTop==0)
-        {
+        if (chatRef.current.scrollTop == 0) {
             document.querySelector('.lastMessage').scrollIntoView({ behavior: 'smooth', block: 'end' });
             const ref = document.querySelector('.messagesCont')
             if (ref)
                 ref.scrollTop = (ref.scrollTop + 30);
         }
-        else
-        {
+        else {
             const scroll = chatRef.current.scrollHeight - chatRef.current.clientHeight;
             if (chatRef?.current)
                 chatRef.current.scrollTo(0, scroll);
         }
-       
+
     };
 
 
@@ -488,7 +488,7 @@ export default function Chat() {
 
             setTypedMessage("");
         } else {
-            setTypedMessage("Please type something...");
+            setError("Please type something...");
         }
         preventDoubleClick(false);
     }
@@ -827,24 +827,35 @@ export default function Chat() {
                                             Something went wrong
                                         </div>) :
 
-                                            <div className={`friendsRequestsMainCont ${myRequests.data.count ? '' : 'hiddenReqCont'}`}>
-                                                <span className="chatPageHeaders">
+                                            <div
+                                                className={`friendsRequestsMainCont ${myRequests.data.count ? '' : 'hiddenReqCont'}`}>
+                                                <span
+                                                    className="chatPageHeaders toggleListHeader"
+                                                    role="button"
+                                                    onClick={() => setShowFriendsList(!showFriendsList)}>
                                                     Friend Requests
-                                                </span>
 
-                                                {/* SHOWS ALL THE USERS WHO HAVE REQUESTED TO YOU */}
-                                                {((myRequests.data.count)
-                                                    ?
-                                                    (myRequests.data.requests && (myRequests.data.requests).map((requester, index) => {
-                                                        return index < 2 && <Requests
-                                                            key={`${index}${requester.imgUrl}${requester.requesterName}${requester.requestersTotalSharedConf}`}
-                                                            updateFriendCount={updateFriendCount}
-                                                            request_id={requester.request_id}
-                                                            imgUrl={requester.image === '' ? userIcon : requester.image}
-                                                            requesterName={requester.name}
-                                                            requestersTotalSharedConf={requester.no_of_confessions} />
-                                                    }))
-                                                    : <div className="endListMessage px-0 px-md-2">End of requests</div>)}
+                                                    {showFriendsList ?
+                                                        <i className="fa fa-minus" aria-hidden="true"></i> :
+                                                        <i className="fa fa-plus" aria-hidden="true" ></i>}
+                                                </span>
+                                                <div className={`friendsRequestsMainCont togglableList ${showFriendsList ? "" : "shrinkRequestsCont"}`}>
+
+                                                    {/* SHOWS ALL THE USERS WHO HAVE REQUESTED TO YOU */}
+                                                    {((myRequests.data.count)
+                                                        ?
+                                                        (myRequests.data.requests && (myRequests.data.requests).map((requester, index) => {
+                                                            return <Requests
+                                                                key={`${index}${requester.imgUrl}${requester.requesterName}${requester.requestersTotalSharedConf}`}
+                                                                updateFriendCount={updateFriendCount}
+                                                                request_id={requester.request_id}
+                                                                imgUrl={requester.image === '' ? userIcon : requester.image}
+                                                                requesterName={requester.name}
+                                                                requestersTotalSharedConf={requester.no_of_confessions} />
+                                                        }))
+
+                                                        : <div className="endListMessage px-0 px-md-2">End of requests</div>)}
+                                                </div>
                                             </div>) : (<div className="text-center">
                                                 <div className="spinner-border pColor text-center" role="status">
                                                     <span className="sr-only">Loading...</span>
@@ -964,20 +975,35 @@ export default function Chat() {
                                             <div className="inputToAddComment textAreaToComment chat">
 
                                                 <TextareaAutosize
-                                                    onFocus={() => handleBounce(true)}
+                                                    onFocus={() => {
+                                                        handleBounce(true)
+                                                        setError("")
+                                                    }}
                                                     onBlur={() => handleBounce(false)}
                                                     type="text"
                                                     rows='1'
                                                     value={typedMessage}
                                                     onKeyDown={(e) => { checkKeyPressed(e) }}
-                                                    onChange={(e) => { setTypedMessage(e.target.value) }} className="form-control my-3">
+                                                    onChange={(e) => {
+                                                        setTypedMessage(e.target.value)
+                                                        if (e.target.value !== "") {
+                                                            setError("")
+                                                        }
+                                                    }} className="form-control my-3">
 
                                                 </TextareaAutosize>
+
+                                                {error !== "" &&
+                                                    <div className="errorCont">
+                                                        {error}
+                                                    </div>}
                                             </div>
                                             <div className="arrowToAddComment chat" type="button" id="sendMessageChat" onClick={() => { sendMessage() }}>
                                                 <img src={forwardIcon} alt="" className="forwardIconContImgForChat" />
                                             </div>
                                         </div>
+
+
                                         {/* MESSAGEBOX */}
                                     </>
                                 }

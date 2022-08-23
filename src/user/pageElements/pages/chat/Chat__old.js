@@ -428,9 +428,18 @@ export default function Chat() {
     }
 
     const scrollToMyRef = () => {
-        const scroll = chatRef.current.scrollHeight - chatRef.current.clientHeight;
-        if (chatRef?.current)
-            chatRef.current.scrollTo(0, scroll);
+        if (chatRef.current.scrollTop == 0) {
+            document.querySelector('.lastMessage').scrollIntoView({ behavior: 'smooth', block: 'end' });
+            const ref = document.querySelector('.messagesCont')
+            if (ref)
+                ref.scrollTop = (ref.scrollTop + 30);
+        }
+        else {
+            const scroll = chatRef.current.scrollHeight - chatRef.current.clientHeight;
+            if (chatRef?.current)
+                chatRef.current.scrollTo(0, scroll);
+        }
+
     };
 
 
@@ -704,6 +713,8 @@ export default function Chat() {
             requests: false,
             chat: true,
         })
+        setMessages([])
+        setCount(0)
     }
     const showRequests = () => {
         setToggleView({

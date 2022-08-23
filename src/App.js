@@ -35,6 +35,8 @@ import ProtectedRoute from './user/ProtectedRoute';
 import getIP from './helpers/getIP';
 import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
 import { Navigate } from 'react-router-dom';
+// import firebaseApp from './configs/firebaseconfig';
+// import * as firebase from 'firebase/messaging';
 
 
 //GOOGLE TAG MANAGER
@@ -59,6 +61,17 @@ function App() {
   const [categories, setCategories] = useState(false);
   const [categoriesResults, setCategoriesResults] = useState(true);
   const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
+
+  // firebase
+  // useEffect(() => {
+  //   const messaging = firebase.getMessaging(firebaseApp)
+  //   firebase.requirePermission().then(() => {
+  //     return firebase.getToken()
+  //   }).then(token => {
+  //     console.log({ token })
+  //   })
+  // }, [])
+
 
   useEffect(() => {
     auth();
