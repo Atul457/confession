@@ -38,7 +38,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getMyToken, onMessageListener } from './configs/firebaseconfig';
 import toastMethods from './helpers/components/Toaster';
-import { getFCMToken, IsTokenSent, runFbOrNot, setFCMToken, setTokenSentFlag } from './configs/firebaseToken';
+import { runFbOrNot, setFCMToken, setTokenSentFlag } from './configs/firebaseToken';
 
 
 //GOOGLE TAG MANAGER
@@ -76,17 +76,19 @@ function App() {
   }
 
   useEffect(() => {
-    let case1 = auth() && (userDetails !== "" && (IsTokenSent() === false) || !getFCMToken().status)
-    let case2 = (IsTokenSent() === false && auth()) || (IsTokenSent() === true && getFCMToken().status)
-    if ((case1 || case2) && runFbOrNot) {
+    const getPermission = async () => {
+      if (Notification.permission !== "granted")
+        await Notification.requestPermission()
+    }
+    getPermission()
+    if (auth()) {
       getMyToken(setToken)
     }
   }, [userDetails])
 
   useEffect(() => {
-    if ((token !== "" && getFCMToken().token !== token) && runFbOrNot) {
+    if (token !== "") {
       const saveDeviceId = async () => {
-        console.log("device token sent")
         let obj = {
           data: {
             "device_id": token
@@ -100,6 +102,7 @@ function App() {
           if (res.data.status === true) {
             setFCMToken(token)
             setTokenSentFlag(true)
+            console.log("token saved")
           } else {
             setUserDetails(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '')
             setTokenSentFlag(false)
@@ -196,7 +199,7 @@ function App() {
     }
 
     loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=6LcFvPEfAAAAAL7pDU8PGSIvTJfysBDrXlBRMWgt`, function () {
-      console.log("V3 loaded!");
+      // console.log("V3 loaded!");
     })
     //END OF LOAD RECAPTCHA V3
 

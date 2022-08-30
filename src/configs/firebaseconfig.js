@@ -22,7 +22,6 @@ if (runFbOrNot) {
 // Gets the token and sets it to a state variable
 export const getMyToken = setToken => {
     firebase.getToken(messaging).then(token => {
-        console.log("got token")
         setToken(token)
     }).catch(err => {
         console.log(err)
