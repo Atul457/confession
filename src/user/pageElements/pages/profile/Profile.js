@@ -834,6 +834,7 @@ export default function Profile() {
                                                             return <Post
                                                                 isNotFriend={post.isNotFriend}
                                                                 key={index}
+                                                                slug={post.slug}
                                                                 deletable={deletable}
                                                                 post_as_anonymous={false}
                                                                 deletePostModal={deletePostModal}

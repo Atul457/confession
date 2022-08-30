@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/confessionNew/static/css/main.25ae3fdd.css",
-    "main.js": "/confessionNew/static/js/main.e53d24b7.js",
+    "main.css": "/confessionNew/static/css/main.e15b9c0c.css",
+    "main.js": "/confessionNew/static/js/main.19111a50.js",
     "static/js/787.7b2783aa.chunk.js": "/confessionNew/static/js/787.7b2783aa.chunk.js",
     "static/media/loginLogo.svg": "/confessionNew/static/media/loginLogo.2727c5bf82b4d2c7dd6632a328467d72.svg",
     "static/media/createPostLogo.svg": "/confessionNew/static/media/createPostLogo.d22d70fe94e37e5f92461501b5d5459b.svg",
@@ -12,6 +12,7 @@
     "static/media/contactUsLogo.svg": "/confessionNew/static/media/contactUsLogo.bad9ff9e7bd039935db8729439037755.svg",
     "static/media/registerLogo.svg": "/confessionNew/static/media/registerLogo.de468e17839276e9fd0f5b84a0c40bee.svg",
     "static/media/playball_400-webfont.woff": "/confessionNew/static/media/playball_400-webfont.995851dc8710001a174d.woff",
+    "static/media/applogo12.jpg": "/confessionNew/static/media/applogo12.1bbf7956c8491f7c98a6.jpg",
     "static/media/instaSocial.svg": "/confessionNew/static/media/instaSocial.3ee8424020eb8f754705a39c15fa8bd6.svg",
     "static/media/chatterImg.png": "/confessionNew/static/media/chatterImg.879ae7737b256f09643e.png",
     "static/media/dpImg.png": "/confessionNew/static/media/dpImg.3bc33c60ab01105af046.png",
@@ -50,12 +51,12 @@
     "static/media/mobileProfileIcon.svg": "/confessionNew/static/media/mobileProfileIcon.ecbf7f76a6a2454a6de920bfbf966f20.svg",
     "static/media/confessIcon.svg": "/confessionNew/static/media/confessIcon.ce4ca7840e51967af6c206ab2c760611.svg",
     "static/media/confessIconActive.svg": "/confessionNew/static/media/confessIconActive.891ead1e20e742dd8c3775c5b15d1394.svg",
-    "main.25ae3fdd.css.map": "/confessionNew/static/css/main.25ae3fdd.css.map",
-    "main.e53d24b7.js.map": "/confessionNew/static/js/main.e53d24b7.js.map",
+    "main.e15b9c0c.css.map": "/confessionNew/static/css/main.e15b9c0c.css.map",
+    "main.19111a50.js.map": "/confessionNew/static/js/main.19111a50.js.map",
     "787.7b2783aa.chunk.js.map": "/confessionNew/static/js/787.7b2783aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.25ae3fdd.css",
-    "static/js/main.e53d24b7.js"
+    "static/css/main.e15b9c0c.css",
+    "static/js/main.19111a50.js"
   ]
 }

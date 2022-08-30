@@ -390,7 +390,7 @@ export default function Post(props) {
                     ShareReducer.sharekitShow &&
                     <ShareKit
                         postData={{
-                            confession_id: props.postId,
+                            confession_id: props.slug,
                             description: props.postedComment,
                         }}
                         closeShareReqPopUp={closeShareReqPopUp} />}

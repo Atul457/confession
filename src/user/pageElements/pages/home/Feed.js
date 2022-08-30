@@ -655,6 +655,7 @@ export default function Feed(props) {
                                                                     handleCommentsModal={handleCommentsModal}
                                                                     updateConfessionData={updateConfessionData}
                                                                     key={`fConf${index}`}
+                                                                    slug={post.slug}
                                                                     createdAt={post.created_at}
                                                                     post_as_anonymous={post.post_as_anonymous}
                                                                     curid={post.user_id === '0' ? false : post.user_id} category_id={post.category_id} profileImg={post.profile_image}

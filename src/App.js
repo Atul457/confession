@@ -13,7 +13,7 @@ import CommentsGot from "../src/user/pageElements/pages/comments/CommentsGot";
 import AdminCommentsGot from './admin/pageElements/CommentsGot';
 import SiteLoader from "./user/pageElements/components/SiteLoader";
 import AdminLogin from './admin/pageElements/Login';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import auth from './user/behindScenes/Auth/AuthCheck';
 import UserProfile from '../src/user/pageElements/pages/profile/UserProfile';
 import Privacy from '../src/user/pageElements/pages/privacyPolicy/Privacy';
@@ -29,14 +29,16 @@ import VerifyEmail from './user/pageElements/components/VerifyEmail';
 import Terms from './user/pageElements/pages/terms';
 import CookiePolicy from './user/pageElements/pages/cookie';
 import Recapv3 from './user/pageElements/components/Recapv3';
-import AuthCheck from "./user/behindScenes/Auth/AuthCheck"
 // import ReactPixel from 'react-facebook-pixel';
 import ProtectedRoute from './user/ProtectedRoute';
 import getIP from './helpers/getIP';
 import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
 import { Navigate } from 'react-router-dom';
-// import firebaseApp from './configs/firebaseconfig';
-// import * as firebase from 'firebase/messaging';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getMyToken, onMessageListener } from './configs/firebaseconfig';
+import toastMethods from './helpers/components/Toaster';
+import { getFCMToken, IsTokenSent, runFbOrNot, setFCMToken, setTokenSentFlag } from './configs/firebaseToken';
 
 
 //GOOGLE TAG MANAGER
@@ -49,6 +51,7 @@ TagManager.initialize(tagManagerArgs);
 // ReactPixel.init('1638738963149766', null, options);
 // ReactPixel.fbq('track', 'PageView');
 
+export const AuthContext = createContext(auth())
 
 getIP()
 
@@ -58,19 +61,69 @@ function App() {
     event: 'pageview'
   });
 
-  const [categories, setCategories] = useState(false);
-  const [categoriesResults, setCategoriesResults] = useState(true);
-  const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
 
-  // firebase
-  // useEffect(() => {
-  //   const messaging = firebase.getMessaging(firebaseApp)
-  //   firebase.requirePermission().then(() => {
-  //     return firebase.getToken()
-  //   }).then(token => {
-  //     console.log({ token })
-  //   })
-  // }, [])
+  const [categories, setCategories] = useState(false);
+  const [toggle, setToggle] = useState(false)
+  const [categoriesResults, setCategoriesResults] = useState(true);
+  const [token, setToken] = useState("")
+  const [userDetails, setUserDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
+
+  const setAuth = () => {
+    setUserDetails(() => {
+      if (auth() && userDetails !== "") return userDetails
+      return auth() && userDetails === "" ? JSON.parse(localStorage.getItem("userDetails")) : ''
+    })
+  }
+
+  useEffect(() => {
+    let case1 = auth() && (userDetails !== "" && (IsTokenSent() === false) || !getFCMToken().status)
+    let case2 = (IsTokenSent() === false && auth()) || (IsTokenSent() === true && getFCMToken().status)
+    if ((case1 || case2) && runFbOrNot) {
+      getMyToken(setToken)
+    }
+  }, [userDetails])
+
+  useEffect(() => {
+    if ((token !== "" && getFCMToken().token !== token) && runFbOrNot) {
+      const saveDeviceId = async () => {
+        console.log("device token sent")
+        let obj = {
+          data: {
+            "device_id": token
+          },
+          token: userDetails.token,
+          method: "post",
+          url: "updatedeviceid"
+        }
+        try {
+          const res = await fetchData(obj)
+          if (res.data.status === true) {
+            setFCMToken(token)
+            setTokenSentFlag(true)
+          } else {
+            setUserDetails(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '')
+            setTokenSentFlag(false)
+          }
+        } catch (err) {
+          setUserDetails(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '')
+          setTokenSentFlag(false)
+          console.log(err);
+        }
+      }
+      saveDeviceId()
+    }
+  }, [token])
+
+
+
+  useEffect(() => {
+    if (auth() && runFbOrNot) {
+      onMessageListener().then(payload => {
+        toastMethods.info(payload.data["gcm.notification.text"] ?? "A new message arrived")
+        setToggle(!toggle)
+      }).catch(err => console.log('failed cause: ', err));
+    }
+  }, [userDetails, toggle])
 
 
   useEffect(() => {
@@ -102,7 +155,7 @@ function App() {
     getData();
 
     const getProfileData = async () => {
-      if (AuthCheck()) {
+      if (auth()) {
         let obj = {
           data: {},
           token: token,
@@ -157,184 +210,194 @@ function App() {
     return children
   }
 
-
   return (
-    <>
-      {categories ?
-        <Router>
-          <Switch>
+    <AuthContext.Provider value={setAuth}>
+      <>
+        {categories ?
+          <Router>
+            <Switch>
 
-            {/* ADMIN ROUTES */}
-            <Route path="talkplacepanel" element={<AdminLogin />} />
+              {/* ADMIN ROUTES */}
+              <Route path="talkplacepanel" element={<AdminLogin />} />
 
-            {/* DASHBOARD */}
-            <Route path="dashboard" element={<Dashboard categories={categories} />} />
-            {/* DASHBOARD */}
+              {/* FIREBASE TEST ROUTE */}
+              <Route path="firebase192" element={<div style={{
+                width: "95%",
+                margin: "0 auto",
+                wordBreak: "break-all"
+              }}>{token !== "" && token}</div>} />
+              {/* FIREBASE TEST ROUTE */}
 
-            {/* COMMENTS */}
-            <Route path="dashboard/confession/:postId" element={<AdminCommentsGot />} />
-            {/* COMMENTS */}
+              {/* DASHBOARD */}
+              <Route path="dashboard" element={<Dashboard categories={categories} />} />
+              {/* DASHBOARD */}
 
-            {/* USERS */}
-            <Route path="admin/users" element={<Users />} />
-            {/* USERS */}
+              {/* COMMENTS */}
+              <Route path="dashboard/confession/:postId" element={<AdminCommentsGot />} />
+              {/* COMMENTS */}
 
-            {/* REPORTED USERS */}
-            <Route path="admin/reported" element={<ReportedUsers />} />
-            {/* REPORTED USERS */}
+              {/* USERS */}
+              <Route path="admin/users" element={<Users />} />
+              {/* USERS */}
 
-            {/* COMPLAINTS */}
-            <Route path="admin/complaints" element={<Complaints />} />
-            {/* COMPLAINTS */}
+              {/* REPORTED USERS */}
+              <Route path="admin/reported" element={<ReportedUsers />} />
+              {/* REPORTED USERS */}
 
-            {/* ADMIN ROUTES */}
+              {/* COMPLAINTS */}
+              <Route path="admin/complaints" element={<Complaints />} />
+              {/* COMPLAINTS */}
+
+              {/* ADMIN ROUTES */}
 
 
 
-            {/* USER ROUTES */}
+              {/* USER ROUTES */}
 
-            {/* ADMOB PAGE */}
-            {/* <Route path="admob" element={<AdMob />}>
+              {/* ADMOB PAGE */}
+              {/* <Route path="admob" element={<AdMob />}>
             </Route> */}
-            {/* ADMOB PAGE */}
+              {/* ADMOB PAGE */}
 
 
-            {/* FBLOGIN PAGE */}
-            <Route path="fblogin" element={<FbLogin />}>
-            </Route>
-            {/* FBLOGIN PAGE */}
+              {/* FBLOGIN PAGE */}
+              <Route path="fblogin" element={<FbLogin />}>
+              </Route>
+              {/* FBLOGIN PAGE */}
 
 
-            {/* PROFILE PAGE OF OTHERS*/}
-            <Route path="userProfile/:userId" element={<UserProfile />}>
-            </Route>
-            {/* PROFILE PAGE OF OTHERS*/}
+              {/* PROFILE PAGE OF OTHERS*/}
+              <Route path="userProfile/:userId" element={<UserProfile />}>
+              </Route>
+              {/* PROFILE PAGE OF OTHERS*/}
 
 
-            {/* REDIRECT PAGE IF NOT FOUND*/}
-            <Route path="*" element={<Feed categories={categories} />}>
-            </Route>
-            {/* REDIRECT PAGE IF NOT FOUND*/}
+              {/* REDIRECT PAGE IF NOT FOUND*/}
+              <Route path="*" element={<Feed categories={categories} />}>
+              </Route>
+              {/* REDIRECT PAGE IF NOT FOUND*/}
 
 
-            {/* PRIVACY PAGE */}
-            <Route path="privacy" element={<Privacy />}>
-            </Route>
-            {/* PRIVACY PAGE */}
+              {/* PRIVACY PAGE */}
+              <Route path="privacy" element={<Privacy />}>
+              </Route>
+              {/* PRIVACY PAGE */}
 
 
-            {/* PRIVACY PAGE */}
-            <Route path="recap" element={<Recapv3 />}>
-            </Route>
-            {/* PRIVACY PAGE */}
+              {/* PRIVACY PAGE */}
+              <Route path="recap" element={<Recapv3 />}>
+              </Route>
+              {/* PRIVACY PAGE */}
 
 
-            {/* TERMS PAGE */}
-            <Route path="terms" element={<Terms />}>
-            </Route>
-            {/* TERMS PAGE */}
+              {/* TERMS PAGE */}
+              <Route path="terms" element={<Terms />}>
+              </Route>
+              {/* TERMS PAGE */}
 
 
-            {/* Cookie Policy PAGE */}
-            <Route path="cookie" element={<CookiePolicy />}>
-            </Route>
-            {/* Cookie Policy PAGE */}
+              {/* Cookie Policy PAGE */}
+              <Route path="cookie" element={<CookiePolicy />}>
+              </Route>
+              {/* Cookie Policy PAGE */}
 
 
-            {/* FEED PAGE */}
-            <Route path="home" element={<Feed categories={categories} />}>
-            </Route>
-            {/* FEED PAGE */}
+              {/* FEED PAGE */}
+              <Route path="home" element={<Feed categories={categories} />}>
+              </Route>
+              {/* FEED PAGE */}
 
 
-            {/* PROFILE PAGE */}
-            <Route path="profile" element={<Profile />}>
-            </Route>
-            {/* PROFILE PAGE */}
+              {/* PROFILE PAGE */}
+              <Route path="profile" element={<Profile />}>
+              </Route>
+              {/* PROFILE PAGE */}
 
 
-            {/* CHAT PAGE */}
-            <Route path="chat" element={<Chat />}>
-              <Route index element={<Chat />} />
-              <Route path=":chatterId" element={<Chat />} />
-            </Route>
-            {/* CHAT PAGE */}
+              {/* CHAT PAGE */}
+              <Route path="chat" element={<Chat />}>
+                <Route index element={<Chat />} />
+                <Route path=":chatterId" element={<Chat />} />
+              </Route>
+              {/* CHAT PAGE */}
 
 
-            {/* REPORT PAGE */}
-            <Route path="report" element={<Report />}>
-            </Route>
-            {/* REPORT PAGE */}
+              {/* REPORT PAGE */}
+              <Route path="report" element={<Report />}>
+              </Route>
+              {/* REPORT PAGE */}
 
 
-            {/* CREATEPOST PAGE */}
-            <Route path="createPost" element={<CreatePost categories={categories} />}>
-            </Route>
-            {/* CREATEPOST PAGE */}
+              {/* CREATEPOST PAGE */}
+              <Route path="createPost" element={<CreatePost categories={categories} />}>
+              </Route>
+              {/* CREATEPOST PAGE */}
 
 
-            {/* LOGIN PAGE */}
-            <Route path="login" element={<ProtectedRouteLogin isLoggedIn={auth()}><Login /></ProtectedRouteLogin>}>
-              {/* <Route index element={<Login />} /> */}
-            </Route>
-            {/* LOGIN PAGE */}
+              {/* LOGIN PAGE */}
+              <Route path="login" element={<ProtectedRouteLogin isLoggedIn={auth()}><Login /></ProtectedRouteLogin>}>
+                {/* <Route index element={<Login />} /> */}
+              </Route>
+              {/* LOGIN PAGE */}
 
 
-            {/* VERIFYEMAIL PAGE */}
-            <Route path="verifyemail/:userId/:token" element={<VerifyEmail />}>
-            </Route>
-            {/* VERIFYEMAIL PAGE */}
+              {/* VERIFYEMAIL PAGE */}
+              <Route path="verifyemail/:userId/:token" element={<VerifyEmail />}>
+              </Route>
+              {/* VERIFYEMAIL PAGE */}
 
 
-            {/* RESETPASSWORD PAGE */}
-            <Route path="resetpassword/:userId/:token" element={<ResetPassword />}>
-            </Route>
-            {/* RESETPASSWORD PAGE */}
+              {/* RESETPASSWORD PAGE */}
+              <Route path="resetpassword/:userId/:token" element={<ResetPassword />}>
+              </Route>
+              {/* RESETPASSWORD PAGE */}
 
 
-            {/* REGISTER PAGE */}
-            <Route path="register" element={<Register />}>
-            </Route>
-            {/* REGISTER PAGE */}
+              {/* REGISTER PAGE */}
+              <Route path="register" element={<Register />}>
+              </Route>
+              {/* REGISTER PAGE */}
 
 
-            {/* ADDNEWFRIENDS PAGE */}
-            <Route path="addfriends" element={<AddNewFriends />}>
-            </Route>
-            {/* ADDNEWFRIENDS PAGE */}
+              {/* ADDNEWFRIENDS PAGE */}
+              <Route path="addfriends" element={<AddNewFriends />}>
+              </Route>
+              {/* ADDNEWFRIENDS PAGE */}
 
 
-            {/* MESSAGES PAGE */}
-            {/* <Route path="messages" element={<Messages />}>
+              {/* MESSAGES PAGE */}
+              {/* <Route path="messages" element={<Messages />}>
             </Route> */}
-            {/* MESSAGES PAGE */}
+              {/* MESSAGES PAGE */}
 
 
-            {/* REQUESTSGOT PAGE */}
-            <Route path="requests" element={<ProtectedRoute><RequestsGot /></ProtectedRoute>}>
-              <Route index element={<RequestsGot />} />
-            </Route>
-            {/* REQUESTSGOT PAGE */}
+              {/* REQUESTSGOT PAGE */}
+              <Route path="requests" element={<ProtectedRoute><RequestsGot /></ProtectedRoute>}>
+                <Route index element={<RequestsGot />} />
+              </Route>
+              {/* REQUESTSGOT PAGE */}
 
 
-            {/* COMMENTSGOT PAGE */}
-            <Route path="confession/:postId" element={<CommentsGot categories={categories} />}>
-            </Route>
-            {/* COMMENTSGOT PAGE */}
+              {/* COMMENTSGOT PAGE */}
+              <Route path="confession/:postId" element={<CommentsGot categories={categories} />}>
+              </Route>
+              {/* COMMENTSGOT PAGE */}
 
-            {/* USER ROUTES */}
+              {/* USER ROUTES */}
 
-          </Switch>
-        </Router>
-        :
-        (
-          categoriesResults ?
-            <SiteLoader /> :
-            (<div className="alert alert-danger" role="alert">
-              Server Error... Please try again
-            </div>)
-        )}
-    </>
+            </Switch>
+          </Router>
+          :
+          (
+            categoriesResults ?
+              <SiteLoader /> :
+              (<div className="alert alert-danger" role="alert">
+                Server Error... Please try again
+              </div>)
+          )}
+        <ToastContainer />
+      </>
+    </AuthContext.Provider>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import userIcon from '../../../images/userAcc.svg'
 import logoutIcon from '../../../images/logoutIcon.svg'
 import friendRequests from '../../../images/friendRequests.svg'
@@ -34,11 +34,12 @@ import _ from 'lodash';
 import SocialLinksModal from '../Modals/SocialLinksModal';
 import openSLinksModalActionCreators from '../../../redux/actions/socialLinksModal';
 import { pulsationHelper } from '../../../helpers/pulsationHelper';
-
-
+import { AuthContext } from '../../../App';
+import { removeFCMToken, setTokenSentFlag } from '../../../configs/firebaseToken';
 
 export default function Header(props) {
 
+    const authContext = useContext(AuthContext)
     const ShareReducer = useSelector(store => store.ShareReducer);
     const verifyEState = useSelector(store => store.VerifyEmail);
     const notificationReducer = useSelector(store => store.notificationReducer);
@@ -57,6 +58,8 @@ export default function Header(props) {
 
     useEffect(() => {
         pulsationHelper()
+        // Dont remove this line
+        if (auth()) authContext()
     }, [])
 
 
@@ -206,6 +209,8 @@ export default function Header(props) {
         SetAuth(0);
         localStorage.removeItem("privacyAccepted");
         localStorage.setItem("userDetails", "");
+        setTokenSentFlag(false)
+        removeFCMToken(false)
 
         let obj = {
             data: {},
@@ -283,7 +288,7 @@ export default function Header(props) {
                 className='notiDivsLinkTag'
                 key={'notiDivs' + curr.confession_id + 'type' + curr.type + Math.floor(Math.random() * 1000000)}
                 onClick={() => { dispatch(closeNotiPopup()) }}
-                to={`/confession/${curr.confession_id}`}>
+                to={`/confession/${curr.slug}`}>
                 <>
                     {index > 0 && <hr className="m-0" />}
                     <div type="button" className={`takeActionOptions takeActionOptionsOnHov textDecNone py-2 ${curr.is_unread === 1 ? 'unread' : ''}`}>
@@ -409,13 +414,14 @@ export default function Header(props) {
                                             <div className="notifications"
                                                 onClick={toggleNotificationCont}
                                                 pulsate='07-07-22,pulsatingIcon mobile'>
-                                                {notificationReducer.newNotifications ?
-                                                    <img src={bellNewNoti} alt="" className="notificationIcon headerUserAccIcon" /> :
-                                                    <img src={bell} alt="" className="notificationIcon headerUserAccIcon" />}
 
-                                                {notificationReducer.newNotifications ?
-                                                    <img src={orangeBellNewNoti} alt="" className="notificationIcon headerUserAccIcon mobIcon" /> :
-                                                    <img src={bellActive} alt="" className="notificationIcon headerUserAccIcon mobIcon" />}
+                                                <img src={bell} alt="" className="notificationIcon headerUserAccIcon" />
+
+                                                <img src={bellActive} alt="" className="notificationIcon headerUserAccIcon mobIcon" />
+
+                                                {notificationReducer.newNotifications && (
+                                                    <span className="requestIndicator"></span>
+                                                )}
                                             </div>
 
                                             {notificationReducer.isVisible &&
@@ -439,7 +445,7 @@ export default function Header(props) {
                                             {showProfileOption && <div className="takeAction p-1 pb-0 d-block">
                                                 <Link to="/profile" className="textDecNone border-bottom">
                                                     <div type="button" className="profileImgWithEmail takeActionOptions d-flex align-items-center mt-2 textDecNone">
-                                                        <span className="profileHeaderImage mr-2 ml-2">
+                                                        <span className="profileHeaderImage">
                                                             <img src={profile.image === '' ? mobileProfileIcon : profile.image} alt="" />
                                                         </span>
                                                         <div className="nameEmailWrapperHeader">
@@ -466,7 +472,7 @@ export default function Header(props) {
                                                         <>
                                                             <hr className="m-0" />
                                                             <div type="button" className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
-                                                                <img src={friendRequests} alt="" className='profilePopUpIcons friendReqIcon' />
+                                                                <img src={friendRequests} alt="" className='profilePopUpIcons friendReqIcon diff' />
                                                                 <span className="viewProfileNcommentsCont">
                                                                     <div className='userProfileHeading'>
                                                                         Friend requests

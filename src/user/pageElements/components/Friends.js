@@ -28,7 +28,7 @@ export default function Friends(props) {
         <div className={`requesterDesc boxShadow`}>
 
             <div className="friendsListProfile d-flex align-items-center w-100">
-                <span className="friendRequestsHImgCont mr-1">
+                <span className="friendRequestsHImgCont">
                     <img src={props.imgUrl} alt="" className='friendsProfileImg'/>
                 </span>
                 <div className="infoOfRequesterCont">

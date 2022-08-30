@@ -1,4 +1,6 @@
 import { initializeApp } from 'firebase/app';
+import * as firebase from 'firebase/messaging';
+import { runFbOrNot } from './firebaseToken';
 
 const config = {
     apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
@@ -10,5 +12,33 @@ const config = {
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENTID
 }
 
-const firebaseApp = initializeApp(config)
-export default firebaseApp
+// Initilazing the app
+let firebaseApp, messaging;
+if (runFbOrNot) {
+    firebaseApp = initializeApp(config)
+    messaging = firebase.getMessaging(firebaseApp)
+}
+
+// Gets the token and sets it to a state variable
+export const getMyToken = setToken => {
+    firebase.getToken(messaging).then(token => {
+        console.log("got token")
+        setToken(token)
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+// Runs in foreground
+export const onMessageListener = () => {
+    if (runFbOrNot) {
+        return new Promise((resolve) => {
+            firebase.onMessage(messaging, (payload) => {
+                resolve(payload);
+            });
+        });
+    } else {
+
+    }
+
+}

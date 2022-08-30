@@ -376,6 +376,7 @@ export default function UserProfile() {
                                                 {(conf.confDetails).map((post, index) => {
                                                     return <Post
                                                         index={index}
+                                                        slug={post.slug}
                                                         post_as_anonymous={false}
                                                         viewcount={post.viewcount}
                                                         updateConfessionData={updateConfessionData}
