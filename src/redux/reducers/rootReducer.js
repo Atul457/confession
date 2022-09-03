@@ -12,9 +12,15 @@ import notificationReducer from './notificationReducer';
 import socialLinksModalReducer from './socialLinksModalReducer';
 import postBoxStateReducer from './postBoxStateReducer';
 import { unFriendReducer } from './unFriendReducer';
+import reportComModalReducer from './reportComModalReducer';
+import avatarModalReducer from './avatarModalReducer/avatarModalReducer';
+import commRBYModalReducer from './commRBYModalReducer';
+import avatarsIntroModalReducer from './avatarsIntroModalReducer/avatarsIntroModalReducer';
+import shareWithLoveReducer from './shareWithLoveReducer';
 
 
 const rootReducer = combineReducers({
+    avatarsIntroModalReducer,
     Terms,
     GetFriend,
     VerifyEmail,
@@ -27,7 +33,11 @@ const rootReducer = combineReducers({
     notificationReducer,
     socialLinksModalReducer,
     postBoxStateReducer,
-    unFriendReducer
+    unFriendReducer,
+    reportComModalReducer,
+    avatarModalReducer,
+    commRBYModalReducer,
+    shareWithLoveReducer
 })
 
 export default rootReducer

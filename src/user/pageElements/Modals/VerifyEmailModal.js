@@ -1,7 +1,6 @@
 import Button from '@restart/ui/esm/Button';
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../../commonApi';
 import auth from '../../behindScenes/Auth/AuthCheck';
 import everifyLogo from "../../../images/everifyLogo.png";
@@ -13,9 +12,7 @@ export default function VerifyEmailModal(props) {
 
     const verifyEState = useSelector(store => store.VerifyEmail);
     const dispatch = useDispatch();
-
     const [email, setEmail] = useState("");
-    const history = useNavigate();
     const [error, setError] = useState({ visible: true, content: "" });
     const [userDetails] = useState(() => {
         if (auth()) {

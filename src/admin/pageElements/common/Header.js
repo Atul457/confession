@@ -170,6 +170,14 @@ export default function Header(props) {
                                             </NavLink>
                                         </div>
 
+                                        <div className="linkBtns">
+                                            <NavLink to="/admin/reportedComments" className="headerNavLinks">
+                                                <i className={`fa fa-file moveABit adminHeaderIcons  ${currentUrl === "admin/reportedComments" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                <span className={`headLinkName ${currentUrl === "admin/reportedComments" ? "activeLinkOfHeader" :
+                                                    ""}`}>Reported Comments</span>
+                                            </NavLink>
+                                        </div>
+
                                         {
                                             authenticated[0] ? <div className="linkBtns">
                                                 <NavLink to="/admin/complaints" className="headerNavLinks">

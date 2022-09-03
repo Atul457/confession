@@ -1221,6 +1221,25 @@ input.switch12:focus {
     padding: 15px;
 }
 
+.cstmUploadFileCont.feedPage {
+    margin: 0px 15px 0px 0px !important;
+    padding: 5px;
+    width: 55px;
+    padding: 0px;
+    border: unset;
+    height: 45px;
+}
+
+.cstmUploadFileCont.feedPage.feedMb15 {
+    margin-bottom: 15px !important;
+}
+
+.wrapperBtnsImages {
+    width: calc(100% - 500px);
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 .uploadImgWrapper img {
     width: 45px;
     margin-right: 5px;
@@ -2112,6 +2131,9 @@ span.offlineColor {
 
 .headerUserAccIcon {
     top: initial;
+    width: 27.99px;
+    height: 27.99px;
+    border-radius: 50%;
     display: inline-block;
 }
 
@@ -2197,6 +2219,7 @@ span.offlineColor {
     width: 110px !important;
     height: 60px;
 }
+
 
 .imgContForPreviewImg.fetched {
     display: flex;
@@ -2549,8 +2572,21 @@ span.facebookMobIcon {
 }
 
 .selectNpostBtnCont {
+    width: 100%;
+    position: relative;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+}
+
+.heartCompCont {
+    position: absolute;
+    left: 0px;
+}
+
+.feedSPbtnsWrapper {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .postCreatedTime {
@@ -3114,11 +3150,12 @@ span.facebookMobIcon {
 }
 
 .editDelComment {
+    display: flex;
+    align-items: center;
     position: absolute;
     top: 4px;
     right: 25px;
     font-size: 22px !important;
-    height: 37px;
     color: var(--primaryColor);
 }
 
@@ -3235,6 +3272,11 @@ span.facebookMobIcon {
 
 .adminHeaderIcons {
     font-size: 19px;
+    margin-right: 5px;
+}
+
+.adminHeaderIconsLastTwo {
+    font-size: 15px;
     margin-right: 5px;
 }
 
@@ -3472,6 +3514,154 @@ a.headerNavLinks.active::after {
     top: -4px;
 }
 
+.avtarsCollection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: fit-content;
+    transition: all 2s ease-in-out;
+}
+
+.avtarNdefaultImgCont i {
+    font-size: 40px;
+}
+
+.avatarPlaceholderImages {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.heartComp {
+    cursor: pointer;
+    height: 62px;
+    width: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.heartComp img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: .3s ease;
+}
+
+.heartComp img:last-child {
+    opacity: 0;
+    bottom: -8px;
+    position: absolute;
+}
+
+.heartComp:hover img:first-child {
+    opacity: 0;
+}
+
+.heartComp:hover img:last-child {
+    opacity: 1;
+}
+
+.avtarsCollection .avatar {
+    max-width: 80px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    width: 100%;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.avtarNdefaultImgCont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.avtarNdefaultImgCont .avatarMImages {
+    max-width: 90px;
+    width: 100%;
+    margin: 10px 15px;
+    border-radius: 50%;
+    height: 90px;
+}
+
+.currSelectedAvatar {
+    border-color: #07bc0c !important;
+}
+
+.selectedAvatar {
+    border-bottom: 1px solid;
+    padding-bottom: 20px;
+    width: 40%;
+    margin: 0 auto 20px auto;
+}
+
+.profilePicOptions {
+    padding: 30px 10px 10px !important;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.avatarModal {
+    z-index: 999999;
+}
+
+.profilePicOptions button {
+    margin: 10px 5px;
+    width: 213px;
+    padding: 6px;
+}
+
+.commRepByUserModal {
+    width: 100%;
+    padding: 0px 30px;
+}
+
+.reportComByUser {
+    text-align: left;
+    width: 60%;
+}
+
+.reportComByUserCrDate {
+    width: 40%;
+    text-align: left;
+}
+
+.singleReportUser .head {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.singleReportUser {
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+.viewReportedComment {
+    font-size: 20px;
+    margin-left: 30px;
+    color: var(--primaryColor) !important;
+    cursor: pointer;
+}
+
+.selectedAvatar img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 .editCommentIcon {
     cursor: pointer;
 }
@@ -3481,6 +3671,12 @@ a.headerNavLinks.active::after {
     color: var(--primaryColor);
     width: 17px;
     margin-right: 10px;
+}
+
+.reportComIcon {
+    margin-left: 10px;
+    font-size: 21px;
+    cursor: pointer;
 }
 
 .editCommentIcon.profile {
@@ -3850,6 +4046,20 @@ a.headerNavLinks.active::after {
     margin-top: 10px;
 }
 
+.imgPreviewCont.feed {
+    margin-top: 0px;
+}
+
+.uploadeImgWrapper.feed {
+    width: 55px;
+    height: 45px;
+    float: right;
+}
+
+.createPostImgPrev.feed {
+    width: 100%;
+}
+
 
 
 
@@ -4045,6 +4255,25 @@ input.switch12.profile:checked {
 
 input.switch12.profile {
     margin-right: 0px;
+}
+
+.avatarsGroup {
+    height: 90px;
+    margin: 0px 15px;
+}
+
+
+.glow {
+    animation: placeholder-glow 2s ease-in-out infinite;
+    background-color: rgb(108, 117, 125) !important;
+    vertical-align: middle;
+    cursor: wait;
+    background-color: currentColor;
+    opacity: .5;
+}
+
+.hiddenAvatar {
+    display: none;
 }
 
 /*****Vishal Css End*****/
@@ -4297,6 +4526,10 @@ button.modalFootBtns.btn a:hover {
     animation: pulsatingIconPulsate 3.2s infinite;
 }
 
+/* .createPostLabels.feed {
+    display: none;
+} */
+
 .pulsatingIcon:hover:after {
     transform: scale(2.45);
     opacity: 1;
@@ -4398,6 +4631,28 @@ button.modalFootBtns.btn a:hover {
     bottom: 35px;
 }
 
+.selectNpostBtnCont input[type="file"] {
+    display: none;
+}
+
+.uploadImgFeedCont {
+    display: flex;
+    align-items: center;
+}
+
+.uploadImgFeedCont .uploadImgWrapper {
+    margin-bottom: 0px;
+}
+
+.uploadImgFeedCont .uploadImgWrapper img {
+    height: 41px;
+}
+
+
+
+
+
+
 
 
 
@@ -4462,8 +4717,50 @@ button.modalFootBtns.btn a:hover {
         max-width: 56px;
     }
 
+    .uploadeImgWrapper.feed {
+        float: right;
+        margin-left: 15px;
+        margin-right: unset;
+    }
+}
+
+
+@media(max-width:1200px) {
+
+    .imgContForPreviewImg.feed {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .uploadImgFeedCont {
+        justify-content: center;
+        width: 55px;
+        height: 45px;
+    }
+
     .selectNpostBtnCont {
         margin: 10px 0px;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .createPostImgPrev.feed {
+        width: 100%;
+        /* margin: 10px 0px; */
+    }
+
+    .wrapperBtnsImages {
+        width: 100%;
+        flex-direction: row-reverse;
+        align-items: flex-start;
+    }
+
+    .cstmUploadFileCont.feedPage {
+        margin-bottom: 15px !important;
+        max-width: unset;
+        height: unset;
+        margin-left: 15px !important;
+        justify-content: center;
     }
 }
 
@@ -4475,6 +4772,16 @@ button.modalFootBtns.btn a:hover {
 @media(max-width:991px) and (min-width:768px) {
     .timeStamp {
         font-size: 9px;
+    }
+
+    .avatarsGroup {
+        height: 57px;
+    }
+
+    .avtarNdefaultImgCont .avatarMImages {
+        max-width: 57px;
+        margin: 10px 5px;
+        height: 57px;
     }
 
     .socialLinksIconWrapperFeed {
@@ -5288,6 +5595,7 @@ button.modalFootBtns.btn a:hover {
     } */
 
     .headerUserAccIcon.mobIcon {
+        border-radius: 50%;
         display: inline-block;
     }
 
@@ -5823,15 +6131,6 @@ button.modalFootBtns.btn a:hover {
         width: 17px;
     }
 
-
-
-
-
-    /* new  */
-    /* .chatPageOuter {
-        height: 100vh !important;
-    } */
-
     .footer {
         height: 75px !important;
     }
@@ -6012,6 +6311,96 @@ button.modalFootBtns.btn a:hover {
         width: 60px;
         border: 1px solid #ccc;
     }
+
+    .cstmUploadFileCont.feedPage {
+        margin-right: 0px !important;
+    }
+
+    .feedSPbtnsWrapper {
+        width: 100%;
+    }
+
+    .imgNerrorWrapper.feed {
+        padding: 0px;
+    }
+
+    .uploadeImgWrapper.feed {
+        width: 55px;
+        height: 45px;
+    }
+
+    .createPostImgPrev.mobileView.feed {
+        margin-top: 17px;
+        width: 100%;
+    }
+
+    .createPostImgPrev.feed {
+        display: flex;
+        margin: 0px !important;
+        padding: 0px;
+    }
+
+    .avtarsCollection .avatar {
+        max-width: unset;
+        width: 43px;
+    }
+
+    .avatarPlaceholderImages {
+        width: 43px;
+        height: 43px;
+    }
+
+    .selectedAvatar img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .privacyBody.avatar {
+        padding: 20px 10px 20px;
+    }
+
+    .adminHeaderIcons {
+        font-size: 23px;
+        margin-right: 5px;
+    }
+
+    .adminHeaderIconsLastTwo {
+        font-size: 23px;
+        margin-right: 5px;
+    }
+
+    .avtarNdefaultImgCont .avatarMImages {
+        max-width: 40px;
+        height: unset;
+        width: 100%;
+        margin: 10px 5px;
+        border-radius: 50%;
+    }
+
+    .avatarsGroup {
+        height: 40px;
+    }
+
+    .avtarNdefaultImgCont i {
+        font-size: 20px;
+    }
+
+    .avatarIntro .modal-header h6 {
+        font-size: 15px;
+    }
+
+    .avatarIntro .modal-body {
+        padding-top: 20px !important;
+    }
+
+    .avatarIntro .regions {
+        margin-top: 20px;
+    }
+
+    .avatarIntro .modalFootBtns {
+        margin-bottom: 10px;
+    }
+
 
 }
 

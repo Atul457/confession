@@ -50,7 +50,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
     const updateComment = () => {
         if (editedComment.trim() === "") {
-            setRequiredError({ ...requiredError, updateError: "This is required field" });
+            setRequiredError({ ...requiredError, updateError: "This field is required" });
         } else {
             setRequiredError({ ...requiredError, updateError: "" });
             updatSubComments(props.comment_id, editedComment, index);
@@ -65,7 +65,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
         ref = document.querySelector(`#sendSubComment${subcommentId}`);
 
         if (ref.value.trim() === '')
-            return setRequiredError({ ...requiredError, replyError: "This is required field" });
+            return setRequiredError({ ...requiredError, replyError: "This field is required" });
 
         commentData = {
             confession_id: commentsModalReducer.state?.postId ?? postId,

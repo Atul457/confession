@@ -90,7 +90,7 @@ export default function CommentsGot(props) {
 
         setRequiredError('');
         if (comment === '') {
-            setRequiredError('This is required field');
+            setRequiredError('This field is required');
             return false;
         }
         _comment = comment;

@@ -435,8 +435,11 @@ export default function Header(props) {
 
                                         <div className="authProfileIcon" onClick={HandleShowHide}>
                                             <span className="requestsIndicatorNuserIconCont" type="button">
-                                                <img src={userIcon} alt="" className="userAccIcon headerUserAccIcon" />
-                                                <img src={mobileProfileIcon} alt="" className="userAccIcon headerUserAccIcon mobIcon" />
+
+                                                <img src={profile.image === '' ? userIcon : profile.image} alt="" className='userAccIcon headerUserAccIcon'/>
+
+                                                <img src={profile.image === '' ? mobileProfileIcon : profile.image} alt="" className='userAccIcon headerUserAccIcon mobIcon' />
+                                                
                                                 {requestsIndicator > 0 && (
                                                     <span className="requestIndicator"></span>
                                                 )}

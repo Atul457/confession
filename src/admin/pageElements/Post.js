@@ -143,7 +143,7 @@ export default function Post(props) {
         preventDoubleClick(true);
 
         if (comment.trim() === '') {
-            setRequiredError('This is required field');
+            setRequiredError('This field is required');
             setComment('');
             preventDoubleClick(false);
             return false;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import commentCountIcon from '../../../images/commentCountIcon.svg';
 import upvote from '../../../images/upvote.svg';
-import upvoted from '../../../images/upvoted.svg';
 import { Modal } from 'react-bootstrap';
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/Auth/SetAuth';
@@ -24,24 +23,10 @@ import { resetCModal, updateCModalState } from '../../../redux/actions/commentsM
 
 export default function CommentGotModal({ categories, ...rest }) {
 
-
-    const handleCommentsModal = () => {
-        //ON THE BASIS OF THIS ID THE POST DATA RELATED TO THIS MODAL POST WILL BE CHANGED
-        rest.updateConfessionData((state.viewcount + 1), sharedBy, state.index);
-        var data = {
-            "postId": null,
-            "visibility": false,
-            "index": state.index,
-            "viewcount": (state.viewcount + 1)
-        }
-        rest.handleCommentsModal(data);
-    }
-
     let history = useNavigate();
     const { state } = useSelector(state => state.commentsModalReducer);
     let maxChar = 2000;
     const dispatch = useDispatch();
-    const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("adminDetails")) : '');
     const [confessionData, setConfessionData] = useState(false);
     const [sharekit, toggleSharekit, ShareKit] = useShareKit();
     const [isWaitingRes, setIsWaitingRes] = useState(true);
@@ -113,7 +98,7 @@ export default function CommentGotModal({ categories, ...rest }) {
         setRequiredError('');
 
         if (comment === '') {
-            setRequiredError('This is required field');
+            setRequiredError('This field is required');
             preventDoubleClick(false);
             return false;
         }

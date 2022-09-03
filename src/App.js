@@ -20,7 +20,7 @@ import Privacy from '../src/user/pageElements/pages/privacyPolicy/Privacy';
 import Dashboard from './admin/pageElements/Dashboard';
 import { fetchData } from './commonApi';
 import { Users } from './admin/pageElements/Users';
-import { BrowserRouter as Router, Routes as Switch, Route, } from "react-router-dom";
+import { BrowserRouter as Router, Routes as Switch, Route } from "react-router-dom";
 import { ReportedUsers } from './admin/pageElements/ReportedUsers';
 import { Complaints } from './admin/pageElements/Complaints';
 import FbLogin from './user/pageElements/components/FbLogin';
@@ -39,6 +39,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getMyToken, onMessageListener } from './configs/firebaseconfig';
 import toastMethods from './helpers/components/Toaster';
 import { runFbOrNot, setFCMToken, setTokenSentFlag } from './configs/firebaseToken';
+import { ReportedComments } from './admin/pageElements/ReportedComments';
 
 
 //GOOGLE TAG MANAGER
@@ -122,7 +123,7 @@ function App() {
   useEffect(() => {
     if (auth() && runFbOrNot) {
       onMessageListener().then(payload => {
-        toastMethods.info(payload.data["gcm.notification.text"] ?? "A new message arrived")
+        toastMethods.info(payload.data["gcm.notification.text"] ?? "A new message arrived", payload.data)
         setToggle(!toggle)
       }).catch(err => console.log('failed cause: ', err));
     }
@@ -223,14 +224,6 @@ function App() {
               {/* ADMIN ROUTES */}
               <Route path="talkplacepanel" element={<AdminLogin />} />
 
-              {/* FIREBASE TEST ROUTE */}
-              <Route path="firebase192" element={<div style={{
-                width: "95%",
-                margin: "0 auto",
-                wordBreak: "break-all"
-              }}>{token !== "" && token}</div>} />
-              {/* FIREBASE TEST ROUTE */}
-
               {/* DASHBOARD */}
               <Route path="dashboard" element={<Dashboard categories={categories} />} />
               {/* DASHBOARD */}
@@ -245,6 +238,10 @@ function App() {
 
               {/* REPORTED USERS */}
               <Route path="admin/reported" element={<ReportedUsers />} />
+              {/* REPORTED USERS */}
+
+              {/* REPORTED USERS */}
+              <Route path="admin/reportedcomments" element={<ReportedComments />} />
               {/* REPORTED USERS */}
 
               {/* COMPLAINTS */}
@@ -389,6 +386,8 @@ function App() {
               {/* USER ROUTES */}
 
             </Switch>
+
+            <ToastContainer />
           </Router>
           :
           (
@@ -398,7 +397,6 @@ function App() {
                 Server Error... Please try again
               </div>)
           )}
-        <ToastContainer />
       </>
     </AuthContext.Provider>
   );
@@ -407,5 +405,3 @@ function App() {
 
 
 export default App;
-
-

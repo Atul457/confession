@@ -21,8 +21,11 @@ import DeleteConfessionModal from '../../Modals/DeleteConfessionModal';
 import editCommentIcon from '../../../../images/editCommentIcon.png';
 import PofileModal from '../../Modals/PofileModal';
 import AppLogo from '../../components/AppLogo';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import ReportCommentModal from '../../Modals/ReportCommentModal';
+import { toggleAvatarModal } from '../../../../redux/actions/avatarSelModalAC';
+import AvatarSelModal from '../../Modals/AvatarSelModal';
+import defaultIcon from '../../../../images/mobileProfileIcon.svg';
 
 const deletePostModalIniVal = { visible: false, data: { postId: null, index: null } };
 
@@ -44,6 +47,7 @@ export default function Profile() {
 
     let maxRequestsToshow = 5;
     const unread = useRef();
+    const dispatch = useDispatch()
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
@@ -143,11 +147,14 @@ export default function Profile() {
     const updateProfile = async () => {
         if (runOrNot) {
 
+            // console.log(profileImg.data)
+
             let data = {
                 image: profileImg.data,
                 post_as_anonymous: profile.post_as_anonymous,
                 display_name: profile.display_name,
-                view_previous_invoice: (profile.view_previous_invoice).toString()
+                view_previous_invoice: (profile.view_previous_invoice).toString(),
+                is_avatar: profile.is_avatar
             }
 
             let obj = {
@@ -319,8 +326,22 @@ export default function Profile() {
 
 
     const changeProfilePic = () => {
-        let profilePicRef = document.querySelector('#profilePicP');
-        profilePicRef.click();
+        let profileImage = profile.image === "" ? defaultIcon : profile.image
+        dispatch(toggleAvatarModal({
+            visible: true,
+            defaultImg: profileImage
+        }))
+    }
+
+    const uploadImage = link => {
+        setRunOrNot(true);
+        setProfileImg({
+            ...profileImg,
+            data: link,
+            isLoading: false,
+            is_avatar: 1
+        })
+        setProfile({ ...profile, image: link, is_avatar: 1 });
     }
 
 
@@ -345,9 +366,10 @@ export default function Profile() {
             reader = new FileReader();
             reader.onloadend = async () => {
                 base64String = reader.result;
+
                 data = {
                     "image": base64String,
-                    folder: "user-images"
+                    folder: "user-images",
                 };
 
 
@@ -363,9 +385,10 @@ export default function Profile() {
                         setProfileImg({
                             ...profileImg,
                             data: res.data.imagepath,
-                            isLoading: false
+                            isLoading: false,
+                            is_avatar: 0
                         })
-                        setProfile({ ...profile, image: res.data.imagepath });
+                        setProfile({ ...profile, image: res.data.imagepath, is_avatar: 0 });
                     } else {
                         setProfileImg({
                             ...profileImg,
@@ -905,6 +928,11 @@ export default function Profile() {
                     <Footer />
                 </div>
                 : <SiteLoader />}
+
+            {/* Modals */}
+            <ReportCommentModal />
+            <AvatarSelModal uploadImage={uploadImage} />
+            {/* Modals */}
         </div>
     )
 }

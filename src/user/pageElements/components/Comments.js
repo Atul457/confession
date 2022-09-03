@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCommentField, setUpdateFieldCModal, updateCModalState } from '../../../redux/actions/commentsModal';
 import { getToken } from '../../../helpers/getToken';
 import _ from 'lodash';
+import { toggleReportComModal } from "../../../redux/actions/reportcommentModal"
+import { closeCModal } from "../../../redux/actions/commentsModal"
 
 
 export default function Comments(props) {
@@ -79,7 +81,7 @@ export default function Comments(props) {
         }
 
         if (editedComment.trim() === "") {
-            setRequiredError({ ...requiredError, updateError: "This is required field" });
+            setRequiredError({ ...requiredError, updateError: "This field is required" });
         } else {
             setRequiredError({ ...requiredError, updateError: "" });
             props.updateComment(commentData);
@@ -127,7 +129,7 @@ export default function Comments(props) {
             ref = document.querySelector(`#textarea${props.commentId}`);
 
             if (ref.value.trim() === "") {
-                return setRequiredError({ ...requiredError, replyError: "This is required field" });
+                return setRequiredError({ ...requiredError, replyError: "This field is required" });
             }
             _comment = ref.value;
 
@@ -346,6 +348,18 @@ export default function Comments(props) {
         setShowSubComments({ ...showSubComments, isBeingExpanded: true, isShown: true })
     }
 
+    // Open the modal to report the comment
+    const openReportCommModal = () => {
+        dispatch(toggleReportComModal({
+            visible: true,
+            isReported: props.isReported,
+            data: {
+                confessionId: props.postId,
+                commentId: props.commentId
+            }
+        }))
+        dispatch(closeCModal())
+    }
 
     return (
         <div className={`overWritePostWithCommentWr`}>
@@ -383,12 +397,24 @@ export default function Comments(props) {
                         {DateConverter(props.created_at)}
                     </span>
 
-                    {props.is_editable === 1 &&
-                        <div className='editDelComment'>
-                            <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
-                            {commentsModalReducer.updateField.comment_id !== props.commentId ? <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} /> : ''}
-                        </div>
-                    }
+
+                    {console.log(props.isReported)}
+                    <div className='editDelComment'>
+                        {props.is_editable === 1 ?
+                            <>
+                                <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
+                                {commentsModalReducer.updateField.comment_id !== props.commentId ? <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} /> : ''}
+                                {(auth() && props.isReported !== 2) ? <i
+                                    className="fa fa-exclamation-circle reportComIcon"
+                                    aria-hidden="true"
+                                    onClick={openReportCommModal}></i> : null}
+                            </> :
+                            (auth() && props.isReported !== 2) ? <i
+                                className="fa fa-exclamation-circle reportComIcon"
+                                aria-hidden="true"
+                                onClick={openReportCommModal}></i> : null
+                        }
+                    </div>
 
                 </div>
                 <div className="postBody">
@@ -488,6 +514,7 @@ export default function Comments(props) {
                         <div className="subcommentsMainCont">
                             {subComments.data.map((subcomment, index) => {
                                 return <SubComments
+                                    isReported={subcomment.isReported}
                                     isLastIndex={subComments.data.length === index + 1}
                                     deleteSubComment={deleteSubComment}
                                     addNewSubComment={addNewSubComment}

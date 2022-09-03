@@ -14,6 +14,7 @@ import useCommentsModal from '../../../utilities/useCommentsModal';
 import RefreshButton from '../../../refreshButton/RefreshButton';
 import AppLogo from '../../components/AppLogo';
 import { useSelector } from 'react-redux';
+import ReportCommentModal from '../../Modals/ReportCommentModal';
 
 
 export default function UserProfile() {
@@ -427,6 +428,10 @@ export default function UserProfile() {
                     <Footer />
                 </div>
                 : <SiteLoader />}
+
+            {/* ReportCommentModal */}
+            <ReportCommentModal />
+            {/* ReportCommentModal */}
         </div>
     )
 }

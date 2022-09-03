@@ -71,7 +71,7 @@ export default function CommentGotModal({ categories, ...rest }) {
         {
             setRequiredError('');
             if (comment === '') {
-                setRequiredError('This is required field');
+                setRequiredError('This field is required');
                 return false;
             }
             _comment = comment;
@@ -712,6 +712,7 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                 >
                                                                     {commentsArr.map((post, index) => {
                                                                         return <Comments
+                                                                            isReported={post.isReported}
                                                                             isLastIndex={commentsArr.length === index + 1}
                                                                             updateSingleCommentData
                                                                             ={updateSingleCommentData}

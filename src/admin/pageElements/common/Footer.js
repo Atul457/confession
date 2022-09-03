@@ -20,14 +20,14 @@ export default function Footer() {
 
     return (
         <footer className="col-12 d-block d-md-none footer">
-            <div className="linksCont container-fluid">
+            <div className="linksCont container-fluid pt-2">
                 <div className="linkBtns">
                     <Link to="/admin/users" className="linkBtnsAnchor headerLinks">
 
                         <i className={`fa fa-user moveABit adminHeaderIcons ${currentUrl === "admin/users" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
-                        <span
+                        {/* <span
                             className={`footLinkName ${currentUrl === "admin/users" ? "activeLinkOfHeader" : ""}`}>Users
-                        </span>
+                        </span> */}
 
                     </Link>
                 </div>
@@ -35,16 +35,25 @@ export default function Footer() {
                     <Link to="/admin/reported" className="linkBtnsAnchor">
 
                         <i className={`fa fa-flag-o moveABit adminHeaderIcons  ${currentUrl === "admin/reported" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
-                        <span className={`footLinkName ${currentUrl === "admin/reported" ? "activeLinkOfHeader" :
-                            ""}`}>Reported Users</span>
+                        {/* <span className={`footLinkName ${currentUrl === "admin/reported" ? "activeLinkOfHeader" :
+                            ""}`}>Reported Users</span> */}
 
                     </Link>
                 </div>
                 <div className="linkBtns">
+                    <Link to="/admin/reportedComments" className="linkBtnsAnchor">
+
+                        <i className={`fa fa-file adminHeaderIconsLastTwo  ${currentUrl === "admin/complaints" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
+                        {/* <span className={`footLinkName ${currentUrl === "admin/complaints" ? "activeLinkOfHeader" : ""}`}>Reported Comments</span> */}
+
+                    </Link>
+                </div>
+
+                <div className="linkBtns">
                     <Link to="/admin/complaints" className="linkBtnsAnchor">
 
-                        <i className={`fa fa-align-justify adminHeaderIcons  ${currentUrl === "admin/complaints" ? "oColor" : "text-white"}`} aria-hidden="true" style={{fontSize : "15px"}}></i>
-                        <span className={`footLinkName ${currentUrl === "admin/complaints" ? "activeLinkOfHeader" : ""}`}>Complaints</span>
+                        <i className={`fa fa-align-justify adminHeaderIconsLastTwo  ${currentUrl === "admin/complaints" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
+                        {/* <span className={`footLinkName ${currentUrl === "admin/complaints" ? "activeLinkOfHeader" : ""}`}>Complaints</span> */}
 
                     </Link>
                 </div>

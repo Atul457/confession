@@ -18,7 +18,7 @@ export const openCModal = payload => {
 }
 
 
-export const closeCModal = payload => {
+export const closeCModal = () => {
     return {
         type: commentsModActions.CLOSEMODAL,
     }

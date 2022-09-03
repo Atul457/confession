@@ -5,6 +5,10 @@ import Post from '../../components/Post';
 import Category from '../../components/Category';
 import manWithHorn from '../../../../images/manWithHorn.png';
 import instaSocial from '../../../../images/instaSocial.svg'
+import removeImgIcon from '../../../../images/removeImgIcon.png';
+import uploadImages from '../../../../images/uploadImages.svg';
+
+import ExtValidator from '../../../../extensionValidator/ExtValidator';
 import TwitterSocial from '../../../../images/TwitterSocial.svg'
 import tiktokSocial from '../../../../images/tiktokSocial.svg'
 import fbSocial from '../../../../images/fbSocial.svg'
@@ -28,6 +32,10 @@ import { changeCancelled, changeRequested, closeFRModal, toggleLoadingFn } from 
 import { setPostBoxState } from '../../../../redux/actions/postBoxState';
 import _ from 'lodash';
 import { pulsationHelper } from '../../../../helpers/pulsationHelper';
+import ReportCommentModal from '../../Modals/ReportCommentModal';
+import AvatarsIntroModal from '../../Modals/AvatarsIntroModal';
+import { toggleAvatarIntroModal } from '../../../../redux/actions/avatarsIntroModalAc/avatarsIntroModalAc';
+import { HeartComponent } from '../../components/sharepostwithlove/Sharepostwithlove';
 
 
 export default function Feed(props) {
@@ -45,6 +53,8 @@ export default function Feed(props) {
     let noOfChar = 2000;
     const [pageNo, setPageNo] = useState(1);
     const dispatch = useDispatch();
+    const reportModalReducer = useSelector(state => state.reportComModalReducer)
+    const avatarsIntroModalReducer = useSelector(state => state.avatarsIntroModalReducer)
     const [confCount, setConfCount] = useState(0);
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const friendReqModalReducer = useSelector(state => state.friendReqModalReducer);
@@ -60,12 +70,21 @@ export default function Feed(props) {
     const [activeCategory, setActiveCategory] = useState((AC2S) !== '' ? `${AC2S}` : `all`);
     const [confessions, setConfessions] = useState(false);
     const [confessionResults, setConfessionResults] = useState(true);
-    // const afterHowManyShowAdd = useState(9);    //AFTER THIS MUCH SHOW ADDS
+    const [afterHowManyShowAdd] = useState(7);    //AFTER THIS MUCH SHOW ADDS
     const [isLoading, setIsLoading] = useState(false);
     const [errorOrSuccess, setErrorOrSuccess] = useState(true);
     const [selectedCat, setSelectedCat] = useState(postBoxStateReducer.selectedCat ?? "");
     const [categoryShow, setCategoryShow] = useState(false);
     const [adSlots, setAdSlots] = useState([]);
+
+    // Upload img box states
+    const [selectedFile, setSelectedFile] = useState('');
+    const [submittable, setSubmittable] = useState(true);
+    const [base64Src, setBase64Src] = useState([]);
+    const [imgPathArr, setImgPathArr] = useState([]);
+    const [isImgLoading, setIsImgLoading] = useState(false);
+    let fs = 1024; //Sets the max file size that can be sent
+    // Upload img box states
 
 
     //CUSTOM HOOK
@@ -79,6 +98,13 @@ export default function Feed(props) {
         isConfessionBeingPost: false
     });
 
+    // Avatar intro modal
+    const openAvatarModal = () => {
+        setTimeout(() => {
+            dispatch(toggleAvatarIntroModal({ visible: true }))
+        }, 10 * 1000);
+    }
+
     const acceptPrivacy = () => {
         setPrivacyModal({ ...privacyModal, visible: false });
         localStorage.setItem("privacyAccepted", 1);
@@ -88,6 +114,10 @@ export default function Feed(props) {
     useEffect(() => {
         pulsationHelper()
         if (actCategory?.state?.openFeatures === true) openFeaturesDelay();
+        if (avatarsIntroModalReducer?.isShown === false) {
+            dispatch(toggleAvatarIntroModal({ isShown: true }))
+            openAvatarModal();
+        }
     }, [])
 
 
@@ -159,8 +189,104 @@ export default function Feed(props) {
             setConfessions(false);
             setConfessionResults(false);    //SERVER ERROR
         }
-
     }
+
+    // Remove uploaded image
+    const removeImg = (indexToBeRemoved) => {
+        setSubmittable(false);
+
+        let base64SrcArr = base64Src.filter((elem, index) => {
+            return index !== indexToBeRemoved && elem
+        })
+
+        let imgPathArrN = imgPathArr.filter((elem, index) => {
+            return index !== indexToBeRemoved && elem
+        })
+
+        setBase64Src(base64SrcArr);
+        setImgPathArr(imgPathArrN);
+
+        setTimeout(() => {
+            setSubmittable(true);
+        }, 1200);
+    }
+    // Remove uploaded image
+
+    //IN PROGRESS
+    const toBase64 = (e) => {
+
+        let responseCont = document.getElementById('responseCont');
+        responseCont.innerText = "";
+
+        if (e.target.files[0]) {
+
+            let fileObj;
+            fileObj = e.target.files[0];
+
+            //PREVENTS UNSPECIFIED EXTENSION FILESS
+            if (!ExtValidator(fileObj)) {
+                setErrorOrSuccess(prevState => !prevState === false && !prevState);
+                responseCont.innerText = "Supported file types are gif, jpg, jpeg, png";
+                return false;
+            }
+
+            setIsImgLoading(true);
+            setSubmittable(false);
+            let fileSize = parseInt(e.target.files[0].size / 2000);
+            responseCont.innerHTML = '';
+
+            if (fileSize > fs) {
+                responseCont.innerHTML = '[Max FileSize: 2000KB], No file selected';
+                setIsImgLoading(false);
+                setSelectedFile('');
+                setErrorOrSuccess(false);
+                setSubmittable(true);
+                return false;
+            }
+            setSubmittable(false);
+            // get a reference to the file        
+            const file = e.target.files[0];
+
+            // encode the file using the FileReader API
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                // use a regex to remove data url part
+                let arr = base64Src;
+                arr.push(reader.result);
+                setBase64Src(arr);
+                const base64String = reader.result;
+
+                // log to console
+                // logs wL2dvYWwgbW9yZ...
+                setSelectedFile(base64String);
+                let data = {
+                    "image": base64String,
+                    "folder": "post-images"
+                };
+
+                let obj = {
+                    data: data,
+                    token: "",
+                    method: "post",
+                    url: "uploadimage"
+                }
+                try {
+                    const res = await fetchData(obj)
+                    if (res.data.status === true) {
+                        let arr = imgPathArr;
+                        arr.push(res.data.imagepath);
+                        setImgPathArr(arr);
+                        setIsImgLoading(false);
+                        setSubmittable(true);
+                    }
+                } catch {
+                    console.log("some error occured");
+                }
+            };
+            reader.readAsDataURL(file);
+        };
+    }
+    //IN PROGRESS
 
 
     // UPDATES THE ACTIVECATEGORY
@@ -178,137 +304,143 @@ export default function Feed(props) {
     //POSTS CONFESSION FROM FEED PAGE
     const postConfession = async () => {
 
-        setIsLoading(true);
-        updatePostBtn(true);
+        if (submittable) {
 
-        let postConfessionArr,
-            token = '',
-            loggedInUserData,
-            post_as_anonymous = 1,
-            feedDescErrorCont = document.getElementById("feedDescErrorCont"),
-            feedPostConfResponseCont = document.getElementById("feedPostConfResponseCont"),
-            description = document.getElementById("description");
+            setIsLoading(true);
+            updatePostBtn(true);
 
-        let recapToken = ""
+            let postConfessionArr,
+                token = '',
+                loggedInUserData,
+                post_as_anonymous = 1,
+                feedDescErrorCont = document.getElementById("responseCont"),
+                feedPostConfResponseCont = feedDescErrorCont,
+                description = document.getElementById("description");
 
-        window.grecaptcha.ready(() => {
-            window.grecaptcha.execute("6LcFvPEfAAAAAL7pDU8PGSIvTJfysBDrXlBRMWgt", { action: 'submit' }).then(token => {
-                recapToken = token;
-                executePostConfession();
+            let recapToken = ""
+
+            window.grecaptcha.ready(() => {
+                window.grecaptcha.execute("6LcFvPEfAAAAAL7pDU8PGSIvTJfysBDrXlBRMWgt", { action: 'submit' }).then(token => {
+                    recapToken = token;
+                    executePostConfession();
+                });
             });
-        });
 
-        const executePostConfession = async () => {
+            const executePostConfession = async () => {
 
-            if (description.value.trim() !== '') {
-                feedDescErrorCont.innerText = "";
-                if (auth()) {
-                    loggedInUserData = localStorage.getItem("userDetails");
-                    loggedInUserData = JSON.parse(loggedInUserData);
-                    post_as_anonymous = loggedInUserData.profile.post_as_anonymous;
-                    token = loggedInUserData.token;
-                    recapToken = "";
-                }
-                else if (recapToken === '') {
-                    updatePostBtn(false);
-                    feedDescErrorCont.innerText = "Recaptcha is required";
-                    return false;
-                }
-
-                if (selectedCat === '') {
-                    updatePostBtn(false);
-                    setIsLoading(false);
-                    feedDescErrorCont.innerText = "Please select a category";
-                    return false;
-                }
-
-                if (auth() && post_as_anonymous === 0) {
-                    if (postAlertReducer.postAnyway === false) {
-                        dispatch(postAlertActionCreators.openModal());
+                if (description.value.trim() !== '') {
+                    feedDescErrorCont.innerText = "";
+                    if (auth()) {
+                        loggedInUserData = localStorage.getItem("userDetails");
+                        loggedInUserData = JSON.parse(loggedInUserData);
+                        post_as_anonymous = loggedInUserData.profile.post_as_anonymous;
+                        token = loggedInUserData.token;
+                        recapToken = "";
+                    }
+                    else if (recapToken === '') {
                         updatePostBtn(false);
-                        setIsLoading(false);
+                        feedDescErrorCont.innerText = "Recaptcha is required";
                         return false;
                     }
-                }
 
-                postConfessionArr = {
-                    "description": description.value,
-                    "category_id": selectedCat,
-                    "post_as_anonymous": post_as_anonymous,
-                    "image": "",
-                    "code": token === '' ? recapToken : ''
-                };
-
-                //PRIVAY MODAL :: RUNS IF NOT AUTHENTICATED
-                if (!auth()) {
-                    if (localStorage.getItem("privacyAccepted") ? (parseInt(localStorage.getItem("privacyAccepted")) !== 1 ? true : false) : true) {
-                        setPrivacyModal({ ...privacyModal, isConfessionBeingPost: true, visible: true })
+                    if (selectedCat === '') {
                         updatePostBtn(false);
                         setIsLoading(false);
-                        return false;
-                    }
-                }
-
-
-
-                let obj = {
-                    data: postConfessionArr,
-                    token: token,
-                    method: "post",
-                    url: "createconfession"
-                }
-
-
-                try {
-                    const response = await fetchData(obj);
-                    if (response.data.status === true) {
-                        feedDescErrorCont.innerText = "";
-                        setErrorOrSuccess(true);
-                        description.value = '';
-                        setSelectedCat("");
-                        getConfessions(false, activeCategory, 1);
-                        feedPostConfResponseCont.innerHTML = response.data.message;
-                    } else {
                         setErrorOrSuccess(false);
-                        feedPostConfResponseCont.innerHTML = response.data.message;
+                        feedDescErrorCont.innerText = "Please select a category";
+                        return false;
                     }
 
-                    updatePostBtn(false);
-                    setIsLoading(false);
-                    setSelectedCat("");
-                    //RESETS THE SELECT BOX
-                    let selectRef = document.querySelector('#selectedCategory');
-                    selectRef.selectedIndex = 0;
+                    if (auth() && post_as_anonymous === 0) {
+                        if (postAlertReducer.postAnyway === false) {
+                            dispatch(postAlertActionCreators.openModal());
+                            updatePostBtn(false);
+                            setIsLoading(false);
+                            return false;
+                        }
+                    }
 
-                    setTimeout(() => {
-                        feedPostConfResponseCont.innerHTML = "";
-                    }, 2000);
+                    postConfessionArr = {
+                        "description": description.value,
+                        "category_id": selectedCat,
+                        "post_as_anonymous": post_as_anonymous,
+                        "image": JSON.stringify(imgPathArr),
+                        "code": token === '' ? recapToken : ''
+                    };
 
-                } catch (err) {
-                    console.log(err);
+                    //PRIVAY MODAL :: RUNS IF NOT AUTHENTICATED
+                    if (!auth()) {
+                        if (localStorage.getItem("privacyAccepted") ? (parseInt(localStorage.getItem("privacyAccepted")) !== 1 ? true : false) : true) {
+                            setPrivacyModal({ ...privacyModal, isConfessionBeingPost: true, visible: true })
+                            updatePostBtn(false);
+                            setIsLoading(false);
+                            return false;
+                        }
+                    }
+
+
+
+                    let obj = {
+                        data: postConfessionArr,
+                        token: token,
+                        method: "post",
+                        url: "createconfession"
+                    }
+
+
+                    try {
+                        const response = await fetchData(obj);
+                        if (response.data.status === true) {
+                            feedDescErrorCont.innerText = "";
+                            setErrorOrSuccess(true);
+                            description.value = '';
+                            setSelectedCat("");
+                            getConfessions(false, activeCategory, 1);
+                            feedPostConfResponseCont.innerHTML = response.data.message;
+                            if (base64Src.length) setBase64Src([])
+                            if (imgPathArr) setImgPathArr([])
+                        } else {
+                            setErrorOrSuccess(false);
+                            feedPostConfResponseCont.innerHTML = response.data.message;
+                        }
+
+                        updatePostBtn(false);
+                        setIsLoading(false);
+                        setSelectedCat("");
+                        //RESETS THE SELECT BOX
+                        let selectRef = document.querySelector('#selectedCategory');
+                        selectRef.selectedIndex = 0;
+
+                        setTimeout(() => {
+                            feedPostConfResponseCont.innerHTML = "";
+                        }, 2000);
+
+                    } catch (err) {
+                        console.log(err);
+                        setErrorOrSuccess(false);
+                        updatePostBtn(false);
+                        setIsLoading(false);
+                        setSelectedCat("");
+                        let selectRef = document.querySelector('#selectedCategory');
+                        selectRef.selectedIndex = 0;
+                        feedPostConfResponseCont.innerHTML = "Server Error, Please try again after some time...";
+                    }
+
+                    if (postAlertReducer.visible === true)
+                        dispatch(postAlertActionCreators.closeModal());
+
+
+                    if (postBoxStateReducer.description !== '' || postBoxStateReducer.selectedCat !== '')
+                        dispatch(setPostBoxState({ feed: { description: '', selectedCat: '' } }));
+
+                }
+                else {
+                    feedDescErrorCont.innerText = "Comment field is required";
                     setErrorOrSuccess(false);
                     updatePostBtn(false);
                     setIsLoading(false);
-                    setSelectedCat("");
-                    let selectRef = document.querySelector('#selectedCategory');
-                    selectRef.selectedIndex = 0;
-                    feedPostConfResponseCont.innerHTML = "Server Error, Please try again after some time...";
                 }
-
-                if (postAlertReducer.visible === true)
-                    dispatch(postAlertActionCreators.closeModal());
-
-
-                if (postBoxStateReducer.description !== '' || postBoxStateReducer.selectedCat !== '')
-                    dispatch(setPostBoxState({ feed: { description: '', selectedCat: '' } }));
-
             }
-            else {
-                feedDescErrorCont.innerText = "This field is required";
-                updatePostBtn(false);
-                setIsLoading(false);
-            }
-
         }
     }
 
@@ -560,45 +692,101 @@ export default function Feed(props) {
                                                 <div className="recaptchaFeed feed w-100">
 
                                                     <div className="selectNpostBtnCont">
-                                                        <div className="form-group createPostInputs createInputSelect mb-0">
-                                                            <select
-                                                                className="form-control"
-                                                                onChange={(e) => setSelectedCat(e.target.value)}
-                                                                id="selectedCategory"
-                                                                defaultValue={selectedCat}
-                                                                name="category">
-                                                                <option value={""}>Select Category </option>
+                                                        {/* <div className="heartCompCont">
+                                                        <HeartComponent />
+                                                        </div> */}
 
-                                                                {/* ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
-                                                                {props.categories ? props.categories.map((element) => {
-                                                                    return <option key={`createPost ${element.id}`} value={element.id}>{(element.category_name).charAt(0) + (element.category_name).slice(1).toLowerCase()}</option>
-                                                                }) : <option value="">Categories not found</option>}
-                                                                {/* END OF ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
+                                                        <div className="wrapperBtnsImages">
+                                                            {/* Upload images cont */}
+                                                            <div className={`cstmUploadFileCont feedPage ${base64Src.length > 0 ? "feedMb15" : ""}`}>
+                                                                <div className="uploadImgFeedCont">
+                                                                    <label htmlFor="uploadImages" className="uploadImgWrapper">
+                                                                        <img src={uploadImages} alt="" className='mr-0' />
+                                                                    </label>
+                                                                    <input
+                                                                        type="file"
+                                                                        className="form-control-file"
+                                                                        id="uploadImages"
+                                                                        accept=".jpg, jpeg, .gif, .png"
+                                                                        name="images"
+                                                                        onChange={(e) => { toBase64(e) }}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            {/* Upload images cont */}
 
-                                                            </select>
-                                                            <img src={downArrowIcon} alt="" type="button" onClick={openSelect} />
-                                                            <span className="d-block errorCont text-danger" id="catErrorCont"></span>
+                                                            {/* End of upload images preview container for web */}
+                                                            {base64Src.length > 0 &&
+                                                                <div className="createPostImgPrev feed">
+                                                                    <div className="form-group imgPreviewCont feed">
+                                                                        <div className="imgContForPreviewImg feed">
+                                                                            {base64Src.map((elem, index) => {
+                                                                                return (<span className="uploadeImgWrapper feed" key={"imgPreviewCont9" + index} value={index} onClick={() => { removeImg(index) }}>
+                                                                                    <img src={elem.toString()} alt="" className='previewImg' />
+                                                                                    <img src={removeImgIcon} alt="" className='removeImgIcon' type="button" />
+                                                                                </span>)
+                                                                            })}
+
+                                                                            {isImgLoading &&
+                                                                                <div className="imgLoader">
+                                                                                    <div className="spinner-border pColor imgLoaderInner" role="status">
+                                                                                        <span className="sr-only">Loading...</span>
+                                                                                    </div>
+                                                                                </div>}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            {/* End of upload images preview container for web */}
                                                         </div>
 
-                                                        <div className="doPostBtn" type="button" id="postConfessionBtn" onClick={() => {
-                                                            if (isLoading === false)
-                                                                postConfession()
-                                                        }}>
-                                                            <div className="">
-                                                                {isLoading === true
-                                                                    ?
-                                                                    <div className="spinner-border whiteSpinner  spinnerSizeFeed" role="status">
-                                                                        <span className="sr-only">Loading...</span>
-                                                                    </div>
-                                                                    :
-                                                                    "Post"}
+                                                        {/* Select cat.. and post btns cont */}
+                                                        <div className="feedSPbtnsWrapper">
+
+                                                            <div className="form-group createPostInputs createInputSelect mb-0">
+                                                                <select
+                                                                    className="form-control"
+                                                                    onChange={(e) => setSelectedCat(e.target.value)}
+                                                                    id="selectedCategory"
+                                                                    defaultValue={selectedCat}
+                                                                    name="category">
+                                                                    <option value={""}>Select Category </option>
+
+                                                                    {/* ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
+                                                                    {props.categories ? props.categories.map((element) => {
+                                                                        return <option key={`createPost ${element.id}`} value={element.id}>{(element.category_name).charAt(0) + (element.category_name).slice(1).toLowerCase()}</option>
+                                                                    }) : <option value="">Categories not found</option>}
+                                                                    {/* END OF ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
+
+                                                                </select>
+                                                                <img src={downArrowIcon} alt="" type="button" onClick={openSelect} />
+                                                                <span className="d-block errorCont text-danger" id="catErrorCont"></span>
+                                                            </div>
+
+                                                            <div className="doPostBtn" type="button" id="postConfessionBtn" onClick={() => {
+                                                                if (isLoading === false)
+                                                                    postConfession()
+                                                            }}>
+                                                                <div className="">
+                                                                    {isLoading === true
+                                                                        ?
+                                                                        <div className="spinner-border whiteSpinner  spinnerSizeFeed" role="status">
+                                                                            <span className="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        :
+                                                                        "Post"}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                 </div>
 
-                                                <div className={`responseCont mb-2 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="feedPostConfResponseCont"></div>
+                                                <div className="w-100 errorFieldsCPost p-0">
+                                                    <div className={`responseCont mt-0 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="responseCont"></div>
+                                                    <span className="d-block errorCont text-danger" id="descErrorCont"></span>
+                                                    <span className="errorCont text-danger" id="catErrorCont"></span>
+                                                </div>
                                             </div>
                                         </div>
                                         {/* POST MAIN CONT START */}
@@ -671,7 +859,7 @@ export default function Feed(props) {
                                                                     is_liked={post.is_liked}
                                                                     sharedBy={post.no_of_comments} />
 
-                                                                {((index + 1) % 10 === 0) &&
+                                                                {((index + 1) % afterHowManyShowAdd === 0) &&
                                                                     <div className="mb-4">
                                                                         <AdMob mainContId={`adIndex${index}`} setAddSlots={setAdSlots} slots={adSlots} />
                                                                     </div>
@@ -752,6 +940,14 @@ export default function Feed(props) {
                         postConfession={postConfession}
                     />
                 </>}
+
+            {/* ReportCommentModal */}
+            {reportModalReducer.visible && <ReportCommentModal />}
+            {/* ReportCommentModal */}
+
+            {/* Avatar intro modal */}
+            {<AvatarsIntroModal />}
+            {/* Avatar intro modal */}
         </div >
     );
 }

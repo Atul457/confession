@@ -1,19 +1,32 @@
 import React from 'react'
 import { toast } from 'react-toastify'
 import appLogo from "../../images/applogo12.jpg"
+import { useNavigate } from 'react-router-dom'
 
 
-const Toaster = ({ message }) => {
+const Toaster = ({ message, confDetails }) => {
+
+    const navigate = useNavigate()
+    const confession_link = `/confession/${confDetails.slug}`
+    const type = parseInt(confDetails.type)
+
+    const navigateToConfession = () => {
+        if (type === 1) return navigate(confession_link)
+        navigate("/chat")
+    }
     return (
-        <div className='toastBody'>
+        <div className='toastBody' onClick={navigateToConfession}>
             <img src={appLogo} width="30" height="20" />
             <span>{message}</span>
         </div>
     )
 }
 
-const toaster = (message, isError) => {
-    toast(<Toaster message={message} isError={isError} />, {
+const toaster = (message, data) => {
+    console.log({
+        dataintoaster: data
+    })
+    toast(<Toaster message={message} confDetails={data} />, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: true,
@@ -23,8 +36,9 @@ const toaster = (message, isError) => {
     })
 }
 
-const info = (message) => {
-    toaster(message, false)
+const info = (message, data) => {
+    console.log(data)
+    toaster(message, data)
 }
 
 const toastMethods = {

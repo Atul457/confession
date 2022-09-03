@@ -146,7 +146,7 @@ export default function Comments(props) {
         ref = document.querySelector(`#textarea${props.commentId}`);
 
         if (ref.value.trim() === "") {
-            return setRequiredError({ ...requiredError, replyError: "This is required field" });
+            return setRequiredError({ ...requiredError, replyError: "This field is required" });
         }
         _comment = ref.value;
 

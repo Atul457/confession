@@ -6,12 +6,13 @@ import forwardIcon from '../../../images/forwardIcon.svg';
 import editCommentIcon from '../../../images/editCommentIcon.svg';
 import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../../helpers/DateConverter';
-import { setCommentField, setUpdateFieldCModal, updateCModalState } from '../../../redux/actions/commentsModal';
+import { closeCModal, setCommentField, setUpdateFieldCModal, updateCModalState } from '../../../redux/actions/commentsModal';
 import { useDispatch, useSelector } from 'react-redux';
 import commentReplyIcon from '../../../images/creplyIcon.svg';
 import { fetchData } from '../../../commonApi';
 import { getToken } from '../../../helpers/getToken';
 import _ from 'lodash';
+import { toggleReportComModal } from '../../../redux/actions/reportcommentModal';
 
 
 const SubComments = ({ data, subcommentId, updatSubComments, index,
@@ -51,7 +52,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
     const updateComment = () => {
         if (editedComment.trim() === "") {
-            setRequiredError({ ...requiredError, updateError: "This is required field" });
+            setRequiredError({ ...requiredError, updateError: "This field is required" });
         } else {
             setRequiredError({ ...requiredError, updateError: "" });
             updatSubComments(props.comment_id, editedComment, index);
@@ -64,7 +65,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
         let ref, token, commentData, obj;
         ref = document.querySelector(`#sendSubComment${subcommentId}`);
         if (ref.value.trim() === '')
-            return setRequiredError({ ...requiredError, replyError: "This is required field" });
+            return setRequiredError({ ...requiredError, replyError: "This field is required" });
 
         commentData = {
             confession_id: commentsModalReducer.state?.postId ?? postId,
@@ -163,6 +164,21 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
         dispatch(setUpdateFieldCModal({ comment_id: "" }));
     }
 
+    // Open the modal to report the comment
+    const openReportCommModal = () => {
+        let confessionId = commentsModalReducer.state?.postId;
+        let commentId = props.comment_id;
+        dispatch(toggleReportComModal({
+            visible: true,
+            isReported: props.isReported,
+            data: {
+                confessionId,
+                commentId
+            }
+        }))
+        dispatch(closeCModal())
+    }
+
 
     return (
         <div className={`postCont overWritePostWithComment subcommentCont ${props.id_path} ${!auth() ? 'notAuth' : ''}`} index={index}>
@@ -199,12 +215,22 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
                     {DateConverter(props.created_at)}
                 </span>
 
-                {props.is_editable === 1 &&
-                    <div className='editDelComment'>
-                        <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
-                        {commentsModalReducer.updateField.comment_id !== props.comment_id ? <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} /> : ''}
-                    </div>
-                }
+                <div className='editDelComment'>
+                    {props.is_editable === 1 ?
+                        <>
+                            <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
+                            {commentsModalReducer.updateField.comment_id !== props.comment_id ? <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} /> : ''}
+                            {(auth() && props.isReported !== 2) ? <i
+                                className="fa fa-exclamation-circle reportComIcon"
+                                aria-hidden="true"
+                                onClick={openReportCommModal}></i> : null}
+                        </> :
+                        (auth() && props.isReported !== 2) ? <i
+                            className="fa fa-exclamation-circle reportComIcon"
+                            aria-hidden="true"
+                            onClick={openReportCommModal}></i> : null
+                    }
+                </div>
 
             </div>
             <div className="postBody">
