@@ -155,12 +155,53 @@ export default function Header(props) {
                                     <div className={`linksCont container-fluid`}>
                                         <div className="linkBtns">
                                             <NavLink to="/admin/users" className="headerNavLinks">
-
                                                 <i className={`fa fa-user moveABit adminHeaderIcons  ${currentUrl === "admin/users" ? "oColor" : ""}`} aria-hidden="true"></i>
                                                 <span
                                                     className={`headLinkName ${currentUrl === "admin/users" ? "activeLinkOfHeader" : ""}`}>Users</span>
                                             </NavLink>
                                         </div>
+
+
+                                        <div className="linkBtns dropdownLink">
+                                            <div className="headerNavLinks">
+                                                <i className={`fa fa-flag-o moveABit adminHeaderIcons ${(currentUrl === "admin/reportedposts" || currentUrl === "admin/reported" || currentUrl === "admin/reportedComments") ? "oColor" : ""}`} />
+                                                <span
+                                                    className={`headLinkName ${(currentUrl === "admin/reportedposts" || currentUrl === "admin/reported" || currentUrl === "admin/reportedComments") ? "activeLinkOfHeader" : ""}`}>Report</span>
+                                                <div className="reportItems">
+                                                    <div className="reportItem">
+                                                        <NavLink to="/admin/reportedposts" className="headerNavLinks">
+                                                            <i className={`fa fa-exclamation-triangle moveABit adminHeaderIcons  ${currentUrl === "admin/reportedposts" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                            <span
+                                                                className={`headLinkName ${currentUrl === "admin/reportedposts" ? "activeLinkOfHeader" : ""}`}>Reported posts</span>
+                                                        </NavLink>
+                                                    </div>
+                                                    <div className="reportItem">
+                                                        <NavLink to="/admin/reported" className="headerNavLinks">
+                                                            <i className={`fa fa-flag-o moveABit adminHeaderIcons  ${currentUrl === "admin/reported" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                            <span className={`headLinkName ${currentUrl === "admin/reported" ? "activeLinkOfHeader" :
+                                                                ""}`}>Reported Users</span>
+                                                        </NavLink>
+                                                    </div>
+                                                    <div className="reportItem">
+                                                        <NavLink to="/admin/reportedComments" className="headerNavLinks">
+                                                            <i className={`fa fa-file moveABit adminHeaderIcons  ${currentUrl === "admin/reportedComments" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                            <span className={`headLinkName ${currentUrl === "admin/reportedComments" ? "activeLinkOfHeader" :
+                                                                ""}`}>Reported Comments</span>
+                                                        </NavLink>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {/* <div className="linkBtns">
+                                            <NavLink to="/admin/reportedposts" className="headerNavLinks">
+                                                <i className={`fa fa-exclamation-triangle moveABit adminHeaderIcons  ${currentUrl === "admin/reportedposts" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                <span
+                                                    className={`headLinkName ${currentUrl === "admin/reportedposts" ? "activeLinkOfHeader" : ""}`}>Reported posts</span>
+                                            </NavLink>
+                                        </div>
+
 
                                         <div className="linkBtns">
                                             <NavLink to="/admin/reported" className="headerNavLinks">
@@ -176,7 +217,7 @@ export default function Header(props) {
                                                 <span className={`headLinkName ${currentUrl === "admin/reportedComments" ? "activeLinkOfHeader" :
                                                     ""}`}>Reported Comments</span>
                                             </NavLink>
-                                        </div>
+                                        </div> */}
 
                                         {
                                             authenticated[0] ? <div className="linkBtns">

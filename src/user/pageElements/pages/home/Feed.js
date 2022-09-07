@@ -35,7 +35,8 @@ import { pulsationHelper } from '../../../../helpers/pulsationHelper';
 import ReportCommentModal from '../../Modals/ReportCommentModal';
 import AvatarsIntroModal from '../../Modals/AvatarsIntroModal';
 import { toggleAvatarIntroModal } from '../../../../redux/actions/avatarsIntroModalAc/avatarsIntroModalAc';
-import { HeartComponent } from '../../components/sharepostwithlove/Sharepostwithlove';
+import { HeartComponent, ShareWithLoveModal } from '../../components/sharepostwithlove/Sharepostwithlove';
+import ReportPostModal from '../../Modals/ReportPostModal';
 
 
 export default function Feed(props) {
@@ -54,6 +55,7 @@ export default function Feed(props) {
     const [pageNo, setPageNo] = useState(1);
     const dispatch = useDispatch();
     const reportModalReducer = useSelector(state => state.reportComModalReducer)
+    const reportPostModalReducer = useSelector(state => state.reportPostModalReducer)
     const avatarsIntroModalReducer = useSelector(state => state.avatarsIntroModalReducer)
     const [confCount, setConfCount] = useState(0);
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
@@ -521,7 +523,6 @@ export default function Feed(props) {
                 return curr;
             }
         })
-        console.log({ userId, action, updatedConfessionArray })
         setConfessions([...updatedConfessionArray]);
     }
 
@@ -534,6 +535,7 @@ export default function Feed(props) {
             ...updatedConfessionNode,
             ...data
         };
+
         updatedConfessionArray[index] = updatedConfessionNode;
         setConfessions([...updatedConfessionArray]);
     }
@@ -692,9 +694,9 @@ export default function Feed(props) {
                                                 <div className="recaptchaFeed feed w-100">
 
                                                     <div className="selectNpostBtnCont">
-                                                        {/* <div className="heartCompCont">
-                                                        <HeartComponent />
-                                                        </div> */}
+                                                        <div className="heartCompCont">
+                                                            <HeartComponent />
+                                                        </div>
 
                                                         <div className="wrapperBtnsImages">
                                                             {/* Upload images cont */}
@@ -838,6 +840,7 @@ export default function Feed(props) {
                                                                     index={index}
                                                                     is_viewed={post.is_viewed}
                                                                     isRegistered={post.isRegistered}
+                                                                    isReported={post.isReported}
                                                                     updateCanBeRequested={updateCanBeRequested}
                                                                     viewcount={post.viewcount}
                                                                     handleCommentsModal={handleCommentsModal}
@@ -945,9 +948,18 @@ export default function Feed(props) {
             {reportModalReducer.visible && <ReportCommentModal />}
             {/* ReportCommentModal */}
 
+            {/* ReportPostsModal */}
+            {reportPostModalReducer.visible && (
+                <ReportPostModal
+                    updatedConfessions={updatedConfessions} />)
+            }
+            {/* ReportPostsModal */}
+
             {/* Avatar intro modal */}
             {<AvatarsIntroModal />}
             {/* Avatar intro modal */}
+
+            <ShareWithLoveModal />
         </div >
     );
 }

@@ -25,6 +25,7 @@ import alFriends from "../../../images/alFriends.svg";
 import useShareRequestPopUp from '../../utilities/useShareRequestPopUp';
 import { openCFRModal } from '../../../redux/actions/friendReqModal';
 import { getToken } from '../../../helpers/getToken';
+import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
 
 
 const checkIsViewPage = (hook) => {
@@ -304,7 +305,8 @@ export default function CommentGotModal({ categories, ...rest }) {
         data = {
             ...(isViewedCheck && viewData),
             ...(likeDislikeCheck && upvoteDownvoteData),
-            no_of_comments: state.no_of_comments
+            no_of_comments: state.no_of_comments,
+            isReported: state.isReported
         }
 
         // RUNS THE UPDATECONFESSIONDATA FUNCTION DEFINED IN POST.JS
@@ -492,6 +494,21 @@ export default function CommentGotModal({ categories, ...rest }) {
         setCommentsArr(originalArray);
     }
 
+    // Open the modal to report the post
+    const openReportPostModal = () => {
+        dispatch(closeCModal())
+        dispatch(toggleReportPostModal({
+            visible: true,
+            isReported: state.isReported,
+            data: {
+                isFiredFromModal: true,
+                confessionId: state.postId,
+                postIndex: state.index
+            }
+        }))
+    }
+
+
     return (
         <>
             <Modal show={state.visibility} size="lg" className="commentsModal" onHide={closeModal}>
@@ -536,6 +553,10 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                 :
                                                 (
                                                     <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0 px-0 px-md-3">
+
+                                                        {(auth() && state.isReported !== 2) && <span className="reportPost" onClick={openReportPostModal}>
+                                                            <i className="fa fa-exclamation-circle reportComIcon" aria-hidden="true"></i>
+                                                        </span>}
 
                                                         <span
                                                             type="button"

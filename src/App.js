@@ -29,7 +29,6 @@ import VerifyEmail from './user/pageElements/components/VerifyEmail';
 import Terms from './user/pageElements/pages/terms';
 import CookiePolicy from './user/pageElements/pages/cookie';
 import Recapv3 from './user/pageElements/components/Recapv3';
-// import ReactPixel from 'react-facebook-pixel';
 import ProtectedRoute from './user/ProtectedRoute';
 import getIP from './helpers/getIP';
 import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
@@ -40,6 +39,7 @@ import { getMyToken, onMessageListener } from './configs/firebaseconfig';
 import toastMethods from './helpers/components/Toaster';
 import { runFbOrNot, setFCMToken, setTokenSentFlag } from './configs/firebaseToken';
 import { ReportedComments } from './admin/pageElements/ReportedComments';
+import { ReportedPosts } from './admin/pageElements/ReportedPosts';
 
 
 //GOOGLE TAG MANAGER
@@ -240,9 +240,13 @@ function App() {
               <Route path="admin/reported" element={<ReportedUsers />} />
               {/* REPORTED USERS */}
 
-              {/* REPORTED USERS */}
+              {/* REPORTED COMMENTS */}
               <Route path="admin/reportedcomments" element={<ReportedComments />} />
-              {/* REPORTED USERS */}
+              {/* REPORTED COMMENTS */}
+
+              {/* REPORTED COMMENTS */}
+              <Route path="admin/reportedposts" element={<ReportedPosts />} />
+              {/* REPORTED COMMENTS */}
 
               {/* COMPLAINTS */}
               <Route path="admin/complaints" element={<Complaints />} />

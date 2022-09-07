@@ -23,9 +23,6 @@ const Toaster = ({ message, confDetails }) => {
 }
 
 const toaster = (message, data) => {
-    console.log({
-        dataintoaster: data
-    })
     toast(<Toaster message={message} confDetails={data} />, {
         position: "top-right",
         autoClose: 3000,
@@ -37,7 +34,6 @@ const toaster = (message, data) => {
 }
 
 const info = (message, data) => {
-    console.log(data)
     toaster(message, data)
 }
 

@@ -7,13 +7,13 @@ const shareWithLoveActions = {
 // Actions creators
 const toggleShareWithLoveModal = payload => {
     return {
-        type: shareWithLoveActions.TOGGLE_REPORT_COM_MODAL,
+        type: shareWithLoveActions.TOGGLE_SHARE_WITH_LOVE_MODAL,
         payload
     }
 }
 const resetShareWithLoveModal = () => {
     return {
-        type: shareWithLoveActions.RESET_REPORT_MODAL
+        type: shareWithLoveActions.RESET_SHARE_WITH_LOVE_MODAL
     }
 }
 

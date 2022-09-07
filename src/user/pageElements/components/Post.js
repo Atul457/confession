@@ -25,8 +25,7 @@ import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
 import DateConverter from '../../../helpers/DateConverter';
 import { openCModal as openCommentsModalFn } from '../../../redux/actions/commentsModal';
 import { openCFRModal } from '../../../redux/actions/friendReqModal';
-
-
+import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
 
 
 export default function Post(props) {
@@ -70,6 +69,8 @@ export default function Post(props) {
             "is_viewed": props.is_viewed,
             "updatedConfessions": props.updatedConfessions,
             "like": props.like,
+            "dislike": props.dislike,
+            "isReported": props.isReported,
             "dislike": props.dislike,
             ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
             "is_liked_prev": props.is_liked,
@@ -367,6 +368,18 @@ export default function Post(props) {
         props.updatedConfessions(index, data)
     }
 
+    // Open the modal to report the post
+    const openReportPostModal = () => {
+        dispatch(toggleReportPostModal({
+            visible: true,
+            isReported: props.isReported,
+            data: {
+                confessionId: props.postId,
+                postIndex: props.index
+            }
+        }))
+    }
+
 
     return (
         <div className="postCont" index={props.index}>
@@ -375,6 +388,10 @@ export default function Post(props) {
                 ShareReducer.selectedPost?.id === props.postId &&
                 ShareReducer.sharekitShow &&
                 <div className="shareKitSpace"></div>}
+
+            {(auth() && props.isReported !== 2) && <span className="reportPost" onClick={openReportPostModal}>
+                <i className="fa fa-exclamation-circle reportComIcon" aria-hidden="true"></i>
+            </span>}
 
             <span
                 type="button"
@@ -442,12 +459,6 @@ export default function Post(props) {
                 ANONYMOUS :: WILL NOT DO ANY THING
                 */}
                     {visitePrevilage(props.curid, props.post_as_anonymous)}
-
-                    {/* {props.isRegistered === 1 ?
-                        <span className='registeredUserIcon'>
-                            <img src={registeredUser} alt="" />
-                        </span>
-                        : ""} */}
 
                     <span className="catCommentBtnCont">
                         <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>

@@ -60,7 +60,6 @@ const PostAlertModal = ({ postConfession, data }) => {
                     Continue posting
                 </Button>
             </Modal.Footer>
-
         </Modal>
     )
 }

@@ -863,8 +863,8 @@ input:focus-visible {
     align-items: center;
     width: 150px !important;
     border-radius: 30px;
-    background: var(--orangeColor);
-    border-color: var(--orangeColor);
+    background: var(--orangeColor) !important;
+    border-color: var(--orangeColor) !important;
     margin-left: 15px;
 }
 
@@ -2064,7 +2064,6 @@ span.offlineColor {
 }
 
 .headerNavLinks {
-    color: var(--primaryColor);
     padding: 0px 10px;
     position: relative;
     display: flex;
@@ -3898,6 +3897,76 @@ a.headerNavLinks.active::after {
     width: 100%;
 }
 
+
+.sharePWLConts {
+    padding: 25px;
+}
+
+.sharePWLHeading {
+    text-align: center;
+    color: var(--primaryColor);
+    font-weight: 500;
+}
+
+.sharePWLBgTiles {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0px;
+    flex-wrap: wrap;
+}
+
+.sharePWLModal {
+    z-index: 999999;
+}
+
+.sharePWLBgTiles .tile {
+    width: 50px;
+    border: 2px solid transparent;
+    height: 50px;
+    cursor: pointer;
+    margin: 7px;
+    border-radius: 10px;
+}
+
+.sharePWLActiveTile {
+    border: 2px solid var(--primaryColor) !important;
+}
+
+.commentsGot .reportPost{
+    right: 60px;
+}
+
+.sharePWLWritePostBox {
+    display: flex;
+    min-height: 230px;
+    justify-content: center;
+    border-radius: 20px;
+    padding: 20px 0px;
+    cursor: pointer;
+    align-items: center;
+    background-size: cover;
+}
+
+.sharePWLMfooter {
+    display: flex;
+    justify-content: end;
+    padding-bottom: 25px;
+    padding-top: 0px;
+}
+
+
+.reportPost {
+    position: absolute;
+    top: 22px;
+    right: 50px;
+    color: var(--primaryColor);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+}
+
 .reqModalFootBtns {
     border-radius: 30px;
     padding: 7px 27px;
@@ -3911,6 +3980,43 @@ a.headerNavLinks.active::after {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.sharePWLWritePostBox>textarea {
+    border: none;
+    padding: 20px;
+    resize: none;
+    text-align: center;
+    width: 100%;
+    font-size: 26px;
+    color: var(--primaryColor);
+    font-weight: bold;
+    background: transparent;
+}
+
+.sharePWLWritePostBox>textarea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+.sharePWLWritePostBox>textarea::-webkit-scrollbar {
+    width: 5px;
+    background-color: #F5F5F5;
+}
+
+.sharePWLWritePostBox>textarea::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: var(--primaryColor);
+}
+
+.sharePWLWritePostBox>textarea::placeholder {
+    color: var(--primaryColor);
+    font-size: 26px;
+    font-weight: bold;
 }
 
 .reqModalFooter {
@@ -4487,6 +4593,44 @@ button.modalFootBtns.btn a:hover {
     bottom: -5px;
 }
 
+.reportItem .headerNavLinks.active::after {
+    all: unset;
+}
+
+.reportItem .headerNavLinks {
+    justify-content: flex-start;
+    color: #fff;
+    padding: 0px;
+}
+
+.reportItems {
+    position: absolute;
+    left: 20px;
+    display: none;
+    background: var(--primaryColor);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 230px;
+    width: fit-content;
+    border-radius: 30px;
+    top: 21px;
+    padding: 10px !important;
+    z-index: 4;
+    height: fit-content;
+    box-shadow: 0px 4px 10px rgb(0 0 0 / 25%);
+}
+
+.reportItems .reportItem {
+    text-align: left;
+    color: var(--whiteColor);
+    margin-bottom: 2px;
+    width: 100%;
+    cursor: pointer;
+    padding: 4px 10px;
+}
+
+
 @keyframes pulsing {
     0% {
         transform: scale(1);
@@ -4617,8 +4761,17 @@ button.modalFootBtns.btn a:hover {
     border-radius: 50%;
 }
 
+.dropdownLink:hover .reportItems {
+    display: flex
+}
+
+.dropdownLink {
+    position: relative;
+}
+
 .headLinkName {
     position: relative;
+    cursor: pointer;
 }
 
 .disabled {
@@ -6401,6 +6554,30 @@ button.modalFootBtns.btn a:hover {
         margin-bottom: 10px;
     }
 
+    .sharePWLWritePostBox>textarea {
+        font-size: 22px;
+    }
+
+    .sharePWLWritePostBox>textarea::placeholder {
+        font-size: 22px;
+    }
+
+    .sharePWLBgTiles .tile {
+        margin: 4px 4px;
+    }
+
+    .backtoHome {
+        margin-top: 4px;
+    }
+
+    .reportItems {
+        left: 30px;
+        top: -119px;
+    }
+
+    .commentsGot .reportPost{
+        right: 38px;
+    }
 
 }
 

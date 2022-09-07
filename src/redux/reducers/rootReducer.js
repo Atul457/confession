@@ -17,9 +17,11 @@ import avatarModalReducer from './avatarModalReducer/avatarModalReducer';
 import commRBYModalReducer from './commRBYModalReducer';
 import avatarsIntroModalReducer from './avatarsIntroModalReducer/avatarsIntroModalReducer';
 import shareWithLoveReducer from './shareWithLoveReducer';
-
+import reportPostModalReducer from './reportPostModalReducer';
+import postRBYModalReducer from './postRBYModalReducer';
 
 const rootReducer = combineReducers({
+    reportPostModalReducer,
     avatarsIntroModalReducer,
     Terms,
     GetFriend,
@@ -37,7 +39,8 @@ const rootReducer = combineReducers({
     reportComModalReducer,
     avatarModalReducer,
     commRBYModalReducer,
-    shareWithLoveReducer
+    shareWithLoveReducer,
+    postRBYModalReducer
 })
 
 export default rootReducer

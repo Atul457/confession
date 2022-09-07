@@ -15,6 +15,7 @@ import RefreshButton from '../../../refreshButton/RefreshButton';
 import AppLogo from '../../components/AppLogo';
 import { useSelector } from 'react-redux';
 import ReportCommentModal from '../../Modals/ReportCommentModal';
+import ReportPostModal from '../../Modals/ReportPostModal';
 
 
 export default function UserProfile() {
@@ -37,9 +38,9 @@ export default function UserProfile() {
     })
 
     //CUSTOM HOOK
-    const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal();
+    const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal()
 
-    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
+    const { commentsModalReducer, reportPostModalReducer } = useSelector(state => state)
 
 
     const [conf, setConf] = useState({
@@ -376,6 +377,7 @@ export default function UserProfile() {
                                             >
                                                 {(conf.confDetails).map((post, index) => {
                                                     return <Post
+                                                        isReported={post.isReported}
                                                         index={index}
                                                         slug={post.slug}
                                                         post_as_anonymous={false}
@@ -431,6 +433,13 @@ export default function UserProfile() {
 
             {/* ReportCommentModal */}
             <ReportCommentModal />
+            {/* ReportCommentModal */}
+
+            {/* ReportCommentModal */}
+            {reportPostModalReducer.visible && (
+                <ReportPostModal
+                    updatedConfessions={updatedConfessions} />)
+            }
             {/* ReportCommentModal */}
         </div>
     )

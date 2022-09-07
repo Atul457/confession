@@ -398,7 +398,6 @@ export default function Comments(props) {
                     </span>
 
 
-                    {console.log(props.isReported)}
                     <div className='editDelComment'>
                         {props.is_editable === 1 ?
                             <>

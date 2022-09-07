@@ -855,6 +855,7 @@ export default function Profile() {
 
                                                         {myConfession.map((post, index) => {
                                                             return <Post
+                                                                isReported={2}
                                                                 isNotFriend={post.isNotFriend}
                                                                 key={index}
                                                                 slug={post.slug}
