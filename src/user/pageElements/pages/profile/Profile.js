@@ -51,7 +51,7 @@ export default function Profile() {
     const dispatch = useDispatch()
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem("userDetails")));
-    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
+    const { commentsModalReducer, avatarModalReducer } = useSelector(state => state);
     const [runOrNot, setRunOrNot] = useState(false);
     const [displayName, setDisplayName] = useState(false);
     const [profile, setProfile] = useState(userDetails.profile);
@@ -935,7 +935,7 @@ export default function Profile() {
 
             {/* Modals */}
             <ReportCommentModal />
-            <AvatarSelModal uploadImage={uploadImage} />
+            {avatarModalReducer.visible && <AvatarSelModal uploadImage={uploadImage} />}
             {/* Modals */}
         </div>
     )

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { avatars } from '../../../helpers/avatars/Avatars';
+import { getKeyProfileLoc } from '../../../helpers/profileHelper';
 import tickIcon from "../../../images/tickIcon.svg"
 import { resetAvatarModal, toggleAvatarModal } from '../../../redux/actions/avatarSelModalAC';
-
+import auth from '../../behindScenes/Auth/AuthCheck';
 
 
 const AvatarSelModal = ({ uploadImage }) => {
@@ -54,6 +55,22 @@ const AvatarSelModal = ({ uploadImage }) => {
             type: 2
         }))
     }
+
+    useEffect(() => {
+        let imgurl
+        if (auth()) {
+            imgurl = getKeyProfileLoc("image")
+            avatars.forEach((curr, index) => {
+                if (curr.src === imgurl) {
+                    dispatch(toggleAvatarModal({
+                        selected: index
+                    }))
+                    return false
+                }
+            })
+        }
+    }, [])
+
 
 
     return (
