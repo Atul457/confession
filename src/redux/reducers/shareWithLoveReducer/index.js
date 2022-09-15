@@ -5,8 +5,12 @@ import { shareWithLoveActions } from "../../actions/shareWithLoveAc/shareWithLov
 // INITIAL STATE
 const initialState = {
     visible: false,
-    staus: apiStatus.IDLE,
-    message: ""
+    status: apiStatus.IDLE,
+    message: "",
+    data: {},
+    appreciationModal: {
+        visible: false
+    }
 };
 
 const shareWithLoveReducer = (state = initialState, action) => {
@@ -15,6 +19,10 @@ const shareWithLoveReducer = (state = initialState, action) => {
             ...state,
             ...action.payload
         };
+        case shareWithLoveActions.TOGGLE_APPRECIATION_MODAL: return {
+            ...state,
+            ...action.payload
+        }
         case shareWithLoveActions.RESET_SHARE_WITH_LOVE_MODAL: return initialState
         default: return state;
     }

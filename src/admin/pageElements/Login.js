@@ -98,7 +98,7 @@ export default function Login() {
                         <LgSidebar
                             logo={logo}
                             middleTitle="Admin Login"
-                            middleTextBody=" Login with your account to Manage confessions, manage categories,
+                            middleTextBody="Login with your account to Manage confessions, manage categories,
                             manage reported post..."
                             bottomLogo={loginLogo}
                         />

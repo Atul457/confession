@@ -13,6 +13,7 @@ import { fetchData } from '../../../commonApi';
 import { getToken } from '../../../helpers/getToken';
 import _ from 'lodash';
 import { toggleReportComModal } from '../../../redux/actions/reportcommentModal';
+import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
 
 
 const SubComments = ({ data, subcommentId, updatSubComments, index,
@@ -86,6 +87,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
             const response = await fetchData(obj);
             if (response.data.status === true) {
                 let data;
+                updateKeyProfileLoc("comments", parseInt(getKeyProfileLoc("comments") ?? 0) + 1)
                 addNewSubComment(response.data.comment);
                 data = { no_of_comments: commentsModalReducer.state.no_of_comments + 1 }
                 dispatch(updateCModalState(data))

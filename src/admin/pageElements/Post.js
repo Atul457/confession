@@ -35,6 +35,11 @@ export default function Post(props) {
     const [lightBox, setLightBox] = useState(false);
     const [adminDetails] = useState(auth() ? JSON.parse(localStorage.getItem("adminDetails")) : '');
     const [deleteConfession, setDeleteConfession] = useState(false);
+    const isCoverTypePost = props.category_id === 0
+    const postBg = isCoverTypePost ? {
+        backgroundImage: `url('${props?.cover_image}')`,
+        name: "post"
+    } : {}
 
     // CUSTOM HOOKS
     const [sharekit, toggleSharekit, ShareKit] = useShareKit();
@@ -63,38 +68,11 @@ export default function Post(props) {
             "updatedConfessions": props.updatedConfessions,
             "like": props.like,
             "dislike": props.dislike,
+            "cover_image": props.cover_image,
             ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
             "is_liked_prev": props.is_liked,
             "updateConfessionData": updateConfessionData
         }))
-
-        // console.log({
-        //     "postId": props.postId,
-        //     "viewcount": props.viewcount,
-        //     "visibility": true,
-        //     "index": props.index,
-        //     "userName": props.userName,
-        //     "postedComment": props.postedComment,
-        //     "category_id": props.category_id,
-        //     "category_name": props.category,
-        //     "confession_id": props.confession_id,
-        //     "created_at": props.createdAt,
-        //     "created_by": props.userName,
-        //     "description": props.postedComment,
-        //     "no_of_comments": props.sharedBy,
-        //     "post_as_anonymous": props.post_as_anonymous,
-        //     "profile_image": props.profileImg,
-        //     "user_id": props.curid,
-        //     "image": props.imgUrl,
-        //     "isNotFriend": props.isNotFriend,
-        //     "is_viewed": props.is_viewed,
-        //     "updatedConfessions": props.updatedConfessions,
-        //     "like": props.like,
-        //     "dislike": props.dislike,
-        //     ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
-        //     "is_liked_prev": props.is_liked,
-        //     "updateConfessionData": updateConfessionData
-        // })
     }
 
     //HANDLES THE COMMENTS MODAL 
@@ -206,44 +184,44 @@ export default function Post(props) {
     }
 
 
-    const upvoteOrDownvote = async (isLiked) => {
+    // const upvoteOrDownvote = async (isLiked) => {
 
-        let is_liked, ip_address, check_ip, token = '', data;
-        is_liked = isLiked ? 1 : 2;
-        ip_address = localStorage.getItem("ip")
-        check_ip = ip_address.split(".").length
-        if (auth()) {
-            token = localStorage.getItem("userDetails");
-            token = JSON.parse(token).token;
-        }
+    //     let is_liked, ip_address, check_ip, token = '', data;
+    //     is_liked = isLiked ? 1 : 2;
+    //     ip_address = localStorage.getItem("ip")
+    //     check_ip = ip_address.split(".").length
+    //     if (auth()) {
+    //         token = localStorage.getItem("userDetails");
+    //         token = JSON.parse(token).token;
+    //     }
 
-        if (check_ip === 4) {
-            let obj = {
-                data: { is_liked, ip_address },
-                token: token,
-                method: "post",
-                url: `likedislike/${props.postId}`
-            }
-            try {
-                data = {
-                    like: isLiked ? props.like + 1 : props.like - 1,
-                    is_liked: isLiked ? 1 : 2
-                }
-                updateConfessionData(props.index, data)
+    //     if (check_ip === 4) {
+    //         let obj = {
+    //             data: { is_liked, ip_address },
+    //             token: token,
+    //             method: "post",
+    //             url: `likedislike/${props.postId}`
+    //         }
+    //         try {
+    //             data = {
+    //                 like: isLiked ? props.like + 1 : props.like - 1,
+    //                 is_liked: isLiked ? 1 : 2
+    //             }
+    //             updateConfessionData(props.index, data)
 
-                const res = await fetchData(obj)
-                // if (res.data.status === true) {
-                // } else {
-                //     console.log(res);
-                // }
-            } catch (error) {
-                console.log(error);
-                console.log("Some error occured");
-            }
-        } else {
-            console.log("Invalid ip");
-        }
-    }
+    //             const res = await fetchData(obj)
+    //             // if (res.data.status === true) {
+    //             // } else {
+    //             //     console.log(res);
+    //             // }
+    //         } catch (error) {
+    //             console.log(error);
+    //             console.log("Some error occured");
+    //         }
+    //     } else {
+    //         console.log("Invalid ip");
+    //     }
+    // }
 
     const updateConfessionData = (index, data) => {
         props.updatedConfessions(index, data)
@@ -256,7 +234,7 @@ export default function Post(props) {
     return (
         <div className="postCont admin" index={props.index}>
 
-            <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
+            <span type="button" className={`sharekitdots withBg ${sharekit === false ? "justify-content-end" : ""}`} onClick={toggleSharekit}>
                 {sharekit && <ShareKit postData={{
                     confession_id: props.postId,
                     description: props.postedComment,
@@ -299,9 +277,6 @@ export default function Post(props) {
                 ANONYMOUS :: WILL NOT DO ANY THING
                 */}
                 <Link className={`textDecNone postUserName`}
-                    // to={props.curid ?
-                    //     `/userProfile/${props.curid}`
-                    //     : ''}
                     to="#"
                 >
                     <span className="userName">
@@ -309,26 +284,20 @@ export default function Post(props) {
                     </span>
                 </Link>
 
-                <span className="catCommentBtnCont">
+                {!isCoverTypePost && <span className="catCommentBtnCont">
                     <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>
-                </span>
+                </span>}
+
                 <span className={`postCreatedTime`}>
                     {DateConverter(props.createdAt)}
                 </span>
-                {/* <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}>
-                    {deleteConfession === true
-                        ?
-                        <div className="spinnerSizePost spinner-border text-white" role="status">
-                            <span className="sr-only">Loading...</span>
-                        </div>
-                        :
-                        "Delete"}
-                </span> */}
             </div>
 
 
-            <div className="postBody">
-                <div className="postedPost" onClick={openCommentsModal}>
+            <div className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
+                onClick={openCommentsModal}
+                style={postBg}>
+                <div className="postedPost mb-2">
                     <Link className="links text-dark" to="#">
                         <pre className="preToNormal post">
                             {props.postedComment}
@@ -357,28 +326,29 @@ export default function Post(props) {
                         </div>
                     </div>
                 }
-
-                {/* Comment field */}
-
-                <div className="container-fluid inputWithForwardCont">
-                    <div className="inputToAddComment textAreaToComment w-100">
-                        <TextareaAutosize
-                            type="text"
-                            maxLength={maxChar}
-                            row='1'
-                            value={comment}
-                            onKeyDown={(e) => { checkKeyPressed(e) }}
-                            onChange={(e) => { setComment(e.target.value) }}
-                            className="form-control my-3">
-                        </TextareaAutosize>
-                    </div>
-                    <div className="arrowToAddComment" id="postDoComment" type="button" onClick={() => { doComment(props.postId) }}>
-                        <img src={forwardIcon} alt="" className="forwardIconContImg" />
-                    </div>
-                </div>
-                <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
-
             </div>
+
+            {/* Comment field */}
+
+            <div className="container-fluid inputWithForwardCont">
+                <div className="inputToAddComment textAreaToComment w-100">
+                    <TextareaAutosize
+                        type="text"
+                        maxLength={maxChar}
+                        row='1'
+                        value={comment}
+                        onKeyDown={(e) => { checkKeyPressed(e) }}
+                        onChange={(e) => { setComment(e.target.value) }}
+                        className="form-control my-3">
+                    </TextareaAutosize>
+                </div>
+                <div className="arrowToAddComment" id="postDoComment" type="button" onClick={() => { doComment(props.postId) }}>
+                    <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                </div>
+            </div>
+            <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
+
+
 
             <div className="postFoot">
                 <div className={`iconsCont`}>

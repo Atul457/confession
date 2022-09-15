@@ -62,7 +62,11 @@ export default function Register() {
                 if (res.data.status === true) {
                     if (res.data.is_registered === 1)  //USER IS REGISTERED, LOGINS THE USER
                     {
-                        localStorage.setItem("userDetails", JSON.stringify(res.data.body));
+
+                        let userDetails = res.data.body
+                        let freshUserDetails = { ...userDetails, profile: { ...userDetails.profile, ...{ comments: userDetails.comments } } };
+                        localStorage.setItem("userDetails", JSON.stringify(freshUserDetails));
+                        // localStorage.setItem("userDetails", JSON.stringify(res.data.body));
                         setAuthenticated(1);
                         SetAuth(1);
                         setErrorOrSuccess(true);
@@ -165,7 +169,11 @@ export default function Register() {
                 if (res.data.status === true) {
                     if (res.data.is_registered === 1)  //USER IS REGISTERED, LOGINS THE USER
                     {
-                        localStorage.setItem("userDetails", JSON.stringify(res.data.body));
+
+                        let userDetails = res.data.body
+                        let freshUserDetails = { ...userDetails, profile: { ...userDetails.profile, ...{ comments: userDetails.comments } } };
+                        localStorage.setItem("userDetails", JSON.stringify(freshUserDetails));
+                        // localStorage.setItem("userDetails", JSON.stringify(res.data.body));
                         setAuthenticated(1);
                         SetAuth(1);
                         setErrorOrSuccess(true);
@@ -283,7 +291,10 @@ export default function Register() {
                 if (res.data.status === true) {
                     setAuthenticated(true);
                     setErrorOrSuccess(true);
-                    localStorage.setItem("userDetails", JSON.stringify(res.data.body));
+                    let userDetails = res.data.body
+                    let freshUserDetails = { ...userDetails, profile: { ...userDetails.profile, ...{ comments: userDetails.comments ?? 0 } } };
+                    localStorage.setItem("userDetails", JSON.stringify(freshUserDetails));
+                    // localStorage.setItem("userDetails", JSON.stringify(res.data.body));
                     SetAuth(1);
                     localStorage.removeItem("adminDetails");
                     localStorage.removeItem("adminAuthenticated");

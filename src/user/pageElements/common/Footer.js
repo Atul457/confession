@@ -32,14 +32,14 @@ export default function Footer() {
 
                     </Link>
                 </div>
-                <div className="linkBtns">
+                {/* <div className="linkBtns">
                     <Link to="/createPost" className="linkBtnsAnchor">
                         <span className="headIconCont">
                             <img src={currentUrl === 'createPost' ? confessIconActive : confessIcon} alt="" />
                         </span>
                         <span className={`footLinkName ${currentUrl === "createPost" ? "activeLinkOfHeader" : ""}`}>Confess/Share</span>
                     </Link>
-                </div>
+                </div> */}
                 {auth()
                     ?
                     <div className="linkBtns">

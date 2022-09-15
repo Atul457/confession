@@ -26,6 +26,7 @@ import DateConverter from '../../../helpers/DateConverter';
 import { openCModal as openCommentsModalFn } from '../../../redux/actions/commentsModal';
 import { openCFRModal } from '../../../redux/actions/friendReqModal';
 import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
+import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
 
 
 export default function Post(props) {
@@ -41,6 +42,11 @@ export default function Post(props) {
     const [comment, setComment] = useState('');
     const [lightBox, setLightBox] = useState(false);
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
+    const isCoverTypePost = props.category_id === 0
+    const postBg = isCoverTypePost ? {
+        backgroundImage: `url('${props?.cover_image}')`,
+        name: "post"
+    } : {}
 
     // CUSTOM HOOKS
     const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
@@ -69,8 +75,10 @@ export default function Post(props) {
             "is_viewed": props.is_viewed,
             "updatedConfessions": props.updatedConfessions,
             "like": props.like,
+            "slug": props.slug,
             "dislike": props.dislike,
             "isReported": props.isReported,
+            "cover_image": props.cover_image,
             "dislike": props.dislike,
             ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
             "is_liked_prev": props.is_liked,
@@ -123,6 +131,7 @@ export default function Post(props) {
             const res = await fetchData(obj)
             if (res.data.status === true) {
                 setComment("");
+                updateKeyProfileLoc("comments", parseInt(getKeyProfileLoc("comments") ?? 0) + 1)
                 props.updateConfessionData(props.viewcount, (props.sharedBy + 1), props.index);
             } else {
                 setRequiredError(res.data.message);
@@ -234,6 +243,7 @@ export default function Post(props) {
         // 1 : SHOW REQUEST
         // 2: SHOW CANCEL 
         // 3: ALREADY FRIEND
+        // 4: SHOW REQUEST ICON IF NOT LOGGED IN 
 
         let profileImage, profileBPlate;
 
@@ -288,6 +298,39 @@ export default function Post(props) {
                         alt=""
                     />
                 </>
+            }
+
+            if (isNotFriend === 4) {
+                return (
+                    <>
+                        {!auth() ? <Link to="/login">
+                            <img
+                                src={canBeRequested}
+                                type="button"
+                                alt=""
+                                className='registeredUserIndicator' />
+                            <img
+                                src={props.profileImg !== '' ? props.profileImg : userIcon}
+                                className="userAccIcon generated"
+                                alt=""
+                            />
+                        </Link> :
+                            <>
+                                <img
+                                    src={canBeRequested}
+                                    type="button"
+                                    alt=""
+                                    onClick={openFrReqModalFn_Post}
+                                    className='registeredUserIndicator' />
+                                <img
+                                    src={props.profileImg !== '' ? props.profileImg : userIcon}
+                                    className="userAccIcon generated"
+                                    onClick={openFrReqModalFn_Post}
+                                    alt=""
+                                />
+                            </>}
+                    </>
+                )
             }
 
             return <img src={profileImage} className="userAccIcon" alt="" />
@@ -395,7 +438,7 @@ export default function Post(props) {
 
             <span
                 type="button"
-                className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""} ${!props.deletable ? "resetRight" : ""}`}
+                className={`sharekitdots withBg ${sharekit === false ? "justify-content-end" : ""} ${!props.deletable ? "resetRight" : ""}`}
                 onClick={() => _toggleShareReqPopUp(props.postId, ShareReducer.selectedPost?.id === props.postId ? !ShareReducer.selectedPost?.value : true)}>
                 {ShareReducer &&
                     ShareReducer.selectedPost?.id === props.postId &&
@@ -460,9 +503,9 @@ export default function Post(props) {
                 */}
                     {visitePrevilage(props.curid, props.post_as_anonymous)}
 
-                    <span className="catCommentBtnCont">
+                    {!isCoverTypePost && <span className="catCommentBtnCont">
                         <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>
-                    </span>
+                    </span>}
 
                     <span className="postCreatedTime">
                         {DateConverter(props.createdAt)}
@@ -479,9 +522,11 @@ export default function Post(props) {
                         : ''}
             </div>
 
-
-            <div className="postBody">
-                <div className="postedPost mb-2" onClick={openCommentsModal}>
+            <div
+                className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
+                onClick={openCommentsModal}
+                style={postBg}>
+                <div className="postedPost mb-2">
                     <Link className="links text-dark" to="#">
                         <pre className="preToNormal post">
                             {props.postedComment}

@@ -1,7 +1,8 @@
 export const postAlertActions = {
     OPENMODAL: "OPENPOSTALERTMODAL",
     CLOSEMODAL: "CLOSEPOSTALERTMODAL",
-    UPDATEMODAL : "UPDATEPSOTALERTMODAL"
+    UPDATEMODAL : "UPDATEPSOTALERTMODAL",
+    UPDATEMODAL_FROM_SWLP: "UPDATEMODAL_FROM_SWLP"
 }
 
 const openPAlertModal = () => {
@@ -23,10 +24,18 @@ const closePAlertModal = () => {
     }
 }
 
+const updateFromSWLP  = payload => {
+    return {
+        type: postAlertActions.UPDATEMODAL_FROM_SWLP,
+        payload
+    }
+}
+
 const postAlertActionCreators = {
     openModal: openPAlertModal,
     closeModal: closePAlertModal,
-    updateModal: updatePAlertModal
+    updateModal: updatePAlertModal,
+    updateFromSWLP
 }
 
 export default postAlertActionCreators;

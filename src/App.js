@@ -38,9 +38,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getMyToken, onMessageListener } from './configs/firebaseconfig';
 import toastMethods from './helpers/components/Toaster';
 import { runFbOrNot, setFCMToken, setTokenSentFlag } from './configs/firebaseToken';
+import ReactPixel from 'react-facebook-pixel';
 import { ReportedComments } from './admin/pageElements/ReportedComments';
 import { ReportedPosts } from './admin/pageElements/ReportedPosts';
-
 
 //GOOGLE TAG MANAGER
 const tagManagerArgs = { gtmId: 'GTM-WP65TWC' }  //DEV
@@ -103,7 +103,7 @@ function App() {
           if (res.data.status === true) {
             setFCMToken(token)
             setTokenSentFlag(true)
-            console.log("token saved")
+            // console.log("token saved")
           } else {
             setUserDetails(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '')
             setTokenSentFlag(false)
@@ -170,7 +170,7 @@ function App() {
           const res = await fetchData(obj)
           if (res.data.status === true) {
             if (userDetails !== '') {
-              let freshUserDetails = { ...userDetails, profile: res.data.user };
+              let freshUserDetails = { ...userDetails, profile: { ...res.data.user, ...{ comments: res.data?.comments } } };
               localStorage.setItem("userDetails", JSON.stringify(freshUserDetails))
             }
           }
@@ -333,8 +333,8 @@ function App() {
 
 
               {/* CREATEPOST PAGE */}
-              <Route path="createPost" element={<CreatePost categories={categories} />}>
-              </Route>
+              {/* <Route path="createPost" element={<CreatePost categories={categories} />}>
+              </Route> */}
               {/* CREATEPOST PAGE */}
 
 

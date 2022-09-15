@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import commentCountIcon from '../../../images/commentCountIcon.svg';
 import upvote from '../../../images/upvote.svg';
+import upvoted from '../../../images/upvoted.svg';
 import { Modal } from 'react-bootstrap';
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/Auth/SetAuth';
@@ -23,10 +24,24 @@ import { resetCModal, updateCModalState } from '../../../redux/actions/commentsM
 
 export default function CommentGotModal({ categories, ...rest }) {
 
+
+    const handleCommentsModal = () => {
+        //ON THE BASIS OF THIS ID THE POST DATA RELATED TO THIS MODAL POST WILL BE CHANGED
+        rest.updateConfessionData((state.viewcount + 1), sharedBy, state.index);
+        var data = {
+            "postId": null,
+            "visibility": false,
+            "index": state.index,
+            "viewcount": (state.viewcount + 1)
+        }
+        rest.handleCommentsModal(data);
+    }
+
     let history = useNavigate();
     const { state } = useSelector(state => state.commentsModalReducer);
     let maxChar = 2000;
     const dispatch = useDispatch();
+    const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("adminDetails")) : '');
     const [confessionData, setConfessionData] = useState(false);
     const [sharekit, toggleSharekit, ShareKit] = useShareKit();
     const [isWaitingRes, setIsWaitingRes] = useState(true);
@@ -41,6 +56,11 @@ export default function CommentGotModal({ categories, ...rest }) {
     const [lightBox, setLightBox] = useState(false);
     const [commentsCount, setCommentsCount] = useState(0);
     const [goDownArrow, setGoDownArrow] = useState(false);
+    const isCoverTypePost = state.category_id === 0
+    const postBg = isCoverTypePost ? {
+        backgroundImage: `url('${state?.cover_image}')`,
+        name: "post"
+    } : {}
 
     const updateComments = (commentId) => {
         setCommentsCount((prevState) => prevState - 1);
@@ -98,7 +118,7 @@ export default function CommentGotModal({ categories, ...rest }) {
         setRequiredError('');
 
         if (comment === '') {
-            setRequiredError('This field is required');
+            setRequiredError('This is required field');
             preventDoubleClick(false);
             return false;
         }
@@ -178,6 +198,7 @@ export default function CommentGotModal({ categories, ...rest }) {
             user_id: state.user_id,
             viewcount: state.viewcount,
             image: state.image,
+            slug: state.slug,
         });
 
         setPostId(state.postId);
@@ -395,8 +416,12 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                 (
                                                     <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0 px-0 px-md-3">
 
+                                                        {console.log(confessionData)}
                                                         <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""} resetRightModal`} onClick={toggleSharekit}>
-                                                            {sharekit && <ShareKit postData={confessionData} />}
+                                                            {sharekit && <ShareKit postData={{
+                                                                confession_id: state.slug,
+                                                                description: state.description,
+                                                            }} />}
                                                             <i className="fa fa-share-alt" aria-hidden="true"></i></span>
 
                                                         {isValidPost ? <div className="postCont modalPostCont">
@@ -420,61 +445,65 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                     </Link>}
 
 
-                                                                <span className="catCommentBtnCont">
-                                                                    <div className="categoryOfUser" type="button">{(confessionData.category_name).charAt(0) + (confessionData.category_name).slice(1).toLowerCase()}</div>
-                                                                </span>
+                                                                {!isCoverTypePost && <span className="catCommentBtnCont">
+                                                                    <div className="categoryOfUser">{(confessionData.category_name).charAt(0) + (confessionData.category_name).slice(1).toLowerCase()}</div>
+                                                                </span>}
+
                                                                 <span className="postCreatedTime">
                                                                     {/* {confessionData.created_at} */}
                                                                     {DateConverter(confessionData.created_at)}
                                                                 </span>
                                                             </div>
-                                                            <div className="postBody">
+                                                            <div
+                                                                className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
+                                                                style={postBg}>
                                                                 <div className="postedPost">
                                                                     <pre className="preToNormal">
                                                                         {confessionData.description}
                                                                     </pre>
                                                                 </div>
+                                                            </div>
 
-                                                                {(confessionData.image !== null && (confessionData.image).length > 0)
-                                                                    &&
-                                                                    (
-                                                                        <div className="form-group imgPreviewCont my-2 mb-0">
-                                                                            <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
-                                                                                {(confessionData.image).map((src) => {
-                                                                                    return (<span className='uploadeImgWrapper fetched'>
-                                                                                        <img src={src} alt="" className="previewImg" />
-                                                                                    </span>)
+                                                            {(confessionData.image !== null && (confessionData.image).length > 0)
+                                                                &&
+                                                                (
+                                                                    <div className="form-group imgPreviewCont my-2 mb-0">
+                                                                        <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
+                                                                            {(confessionData.image).map((src) => {
+                                                                                return (<span className='uploadeImgWrapper fetched'>
+                                                                                    <img src={src} alt="" className="previewImg" />
+                                                                                </span>)
 
-                                                                                })}
-                                                                            </div>
-                                                                        </div>
-                                                                    )
-
-                                                                }
-
-
-                                                                {auth()
-                                                                    ?
-                                                                    <div className="container-fluid inputWithForwardCont">
-                                                                        <div className="inputToAddComment textAreaToComment mb-1 my-md-0">
-                                                                            <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control"></TextareaAutosize>
-
-                                                                        </div>
-                                                                        <div className="arrowToAddComment" type="button" id="commentsModalDoCommentAd" onClick={() => { doComment(state.postId) }}>
-                                                                            <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                                                                            })}
                                                                         </div>
                                                                     </div>
-                                                                    :
-                                                                    <span className="feedPageLoginBtnCont">
-                                                                        <Link to="/login">
-                                                                            <div className="categoryOfUser enhancedStyle" type="button">
-                                                                                Login to comment
-                                                                            </div>
-                                                                        </Link>
-                                                                    </span>
-                                                                }
-                                                                <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
-                                                            </div>
+                                                                )
+
+                                                            }
+
+
+                                                            {auth()
+                                                                ?
+                                                                <div className="container-fluid inputWithForwardCont">
+                                                                    <div className="inputToAddComment textAreaToComment mb-1 my-md-0">
+                                                                        <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control"></TextareaAutosize>
+
+                                                                    </div>
+                                                                    <div className="arrowToAddComment" type="button" id="commentsModalDoCommentAd" onClick={() => { doComment(state.postId) }}>
+                                                                        <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                                                                    </div>
+                                                                </div>
+                                                                :
+                                                                <span className="feedPageLoginBtnCont">
+                                                                    <Link to="/login">
+                                                                        <div className="categoryOfUser enhancedStyle" type="button">
+                                                                            Login to comment
+                                                                        </div>
+                                                                    </Link>
+                                                                </span>
+                                                            }
+                                                            <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
+
 
                                                             <div className="postFoot commmentsGotModal">
                                                                 {auth() === false &&

@@ -41,7 +41,7 @@ const PostAlertModal = ({ postConfession, data }) => {
     }
 
     return (
-        <Modal show={postAlertReducer.visible} onHide={closeModal} centered size="md">
+        <Modal show={postAlertReducer.visible} onHide={closeModal} centered size="md" animation={false}>
             <Modal.Header className='justify-content-between'>
                 <h6>Alert</h6>
                 <span onClick={closeModal} type="button">
@@ -49,7 +49,16 @@ const PostAlertModal = ({ postConfession, data }) => {
                 </span>
             </Modal.Header>
             <Modal.Body className="privacyBody text-left px-4 pt-4">
-                You are about to post with the 'Randomize name' option turned OFF. The post will be shown with your 'Display name'.<br />
+                You are about to post with the
+                <span className='randomizeNameTooltip'>
+                    <span className='fw-bold'>
+                        'Randomize name'
+                    </span>
+                    <div className='tooltipText'>
+                        The option in your profile to get a system-generated name
+                    </div>
+                </span>
+                option turned OFF. The post will be shown with your 'Display name'.<br />
                 Do you want to continue?
             </Modal.Body>
             <Modal.Footer className="pt-0 justify-content-center flex-wrap">

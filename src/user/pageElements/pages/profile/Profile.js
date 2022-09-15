@@ -169,7 +169,7 @@ export default function Profile() {
                 if (res.data.status === true) {
                     let dataToSet = {
                         token: userDetails.token,
-                        profile: { ...res.data.user }
+                        profile: { ...res.data.user, ...{ comments: res.data?.comments } }
                     }
                     setUserDetails(dataToSet);
                     setRunOrNot(false);
@@ -821,6 +821,7 @@ export default function Profile() {
                                     <option value="0">Filter by</option>
                                     <option value="0">All</option>
                                     <option value="1">Unread</option>
+                                    <option value="2">Recent Comments</option>
                                 </select>
                                 <img src={downArrowIcon} alt="" type="button" />
                             </div>
@@ -856,6 +857,7 @@ export default function Profile() {
                                                         {myConfession.map((post, index) => {
                                                             return <Post
                                                                 isReported={2}
+                                                                cover_image={post.cover_image ?? ''}
                                                                 isNotFriend={post.isNotFriend}
                                                                 key={index}
                                                                 slug={post.slug}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaTwitter, FaFacebookF, FaEnvelope, FaLinkedinIn } from 'react-icons/fa';
 import { ShareButtonRoundSquare, ShareBlockStandard } from 'react-custom-share';
+import { copyTextToClipboard } from '../../helpers/copyTextToClipboard';
 
 const ShareKit = (props) => {
 
@@ -18,11 +19,20 @@ const ShareKit = (props) => {
             { network: 'Linkedin', icon: FaLinkedinIn },
         ],
         text: `Check out this anonymous post! - www.thetalkplace.com`,
-        longtext: `${data.description.substr(0,500)}${(data.description).length > 500 ? "..." : ""}`,
+        longtext: `${data.description.substr(0, 500)}${(data.description).length > 500 ? "..." : ""}`,
     };
 
+    const copylink = () => {
+        copyTextToClipboard(`${origin}/confession/${data.confession_id}`)
+    }
+
     return (
-        <ShareBlockStandard {...shareBlockProps} className="shareKitButtonsMainCont"/>
+        <div className="shareKitButtonsMainCont parent">
+            <ShareBlockStandard {...shareBlockProps} className="shareKitButtonsMainCont" />
+            <span className='copyLinkBtn' onClick={copylink}>
+                <i className="fa fa-files-o" aria-hidden="true"></i>
+            </span>
+        </div>
     )
 }
 

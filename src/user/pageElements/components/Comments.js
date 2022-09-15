@@ -16,6 +16,7 @@ import { getToken } from '../../../helpers/getToken';
 import _ from 'lodash';
 import { toggleReportComModal } from "../../../redux/actions/reportcommentModal"
 import { closeCModal } from "../../../redux/actions/commentsModal"
+import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
 
 
 export default function Comments(props) {
@@ -164,6 +165,8 @@ export default function Comments(props) {
             const response = await fetchData(obj)
             props.updateSingleCommentData({ countChild: props.countChild + 1 }, props.index);
             if (response.data.status === true) {
+
+                updateKeyProfileLoc("comments", parseInt(getKeyProfileLoc("comments") ?? 0) + 1)
 
                 // NEW COMMENT
                 if (comment_id === false) {

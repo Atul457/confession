@@ -107,7 +107,11 @@ export default function Login() {
                 if (res.data.status === true) {
                     if (res.data.is_registered === 1) //USER IS REGISTERED, LOGINS THE USER
                     {
-                        localStorage.setItem("userDetails", JSON.stringify(res.data.body));
+
+                        let userDetails = res.data.body
+                        let freshUserDetails = { ...userDetails, profile: { ...userDetails.profile, ...{ comments: userDetails.comments } } };
+                        localStorage.setItem("userDetails", JSON.stringify(freshUserDetails));
+                        // localStorage.setItem("userDetails", JSON.stringify(res.data.body));
                         SetAuth(1);
                         setErrorOrSuccess(true);
                         setAuthenticated(1);
@@ -180,7 +184,10 @@ export default function Login() {
                 if (res.data.status === true) {
                     if (res.data.is_registered === 1)  //USER IS REGISTERED, LOGINS THE USER
                     {
-                        localStorage.setItem("userDetails", JSON.stringify(res.data.body));
+                        let userDetails = res.data.body
+                        let freshUserDetails = { ...userDetails, profile: { ...userDetails.profile, ...{ comments: userDetails.comments } } };
+                        localStorage.setItem("userDetails", JSON.stringify(freshUserDetails));
+                        // localStorage.setItem("userDetails", JSON.stringify(res.data.body));
                         SetAuth(1);
                         setErrorOrSuccess(true);
                         setIsLoading(false)
@@ -250,6 +257,10 @@ export default function Login() {
                 if (res.data.status === true) {
                     setAuthenticated(true);
                     setErrorOrSuccess(true);
+                    let userDetails = res.data.body
+                    let freshUserDetails = { ...userDetails, profile: { ...res.data.user, ...{ comments: res.data?.comments ?? 0 } } };
+                    // console.log(freshUserDetails);
+                        // localStorage.setItem("userDetails", JSON.stringify(freshUserDetails))
                     localStorage.setItem("userDetails", JSON.stringify(res.data.body));
                     SetAuth(1);
                     localStorage.removeItem("adminDetails");
@@ -312,7 +323,9 @@ export default function Login() {
             try {
                 const res = await fetchData(obj)
                 if (res.data.status === true) {
-                    localStorage.setItem("userDetails", JSON.stringify(res.data.body));
+                    let userDetails = res.data.body
+                    let freshUserDetails = { ...userDetails, profile: { ...userDetails.profile, ...{ comments: userDetails.comments } } };
+                    localStorage.setItem("userDetails", JSON.stringify(freshUserDetails));
                     SetAuth(1);
                     setIsLoading(false);
                     setErrorOrSuccess(true);
@@ -350,7 +363,7 @@ export default function Login() {
                         <LgSidebar
                             logo={logo}
                             middleTitle="Login & Start Chatting"
-                            middleTextBody="Login with your account to create confession, comment on confession, add friends, and to do much more..."
+                            middleTextBody="Click the image to POST anonymously. LOGIN to respond to comments, add friends and do so much more!"
                             bottomLogo={loginLogo}
                         />
 

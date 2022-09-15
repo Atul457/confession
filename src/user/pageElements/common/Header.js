@@ -6,8 +6,8 @@ import profileResetPass from '../../../images/profileResetPass.svg'
 import profileIcon from '../../../images/profileIcon.svg'
 import mobileProfileIcon from '../../../images/mobileProfileIcon.svg'
 import homeIconActive from '../../../images/homeIcon.svg'
-import bellNewNoti from '../../../images/bellNewNoti.svg'
-import orangeBellNewNoti from '../../../images/orangeBellNewNoti.svg'
+// import bellNewNoti from '../../../images/bellNewNoti.svg'
+// import orangeBellNewNoti from '../../../images/orangeBellNewNoti.svg'
 import homeIcon from '../../../images/homeIconActive.svg'
 import bell from '../../../images/bell.svg'
 import bellActive from '../../../images/orangebell.svg'
@@ -362,7 +362,7 @@ export default function Header(props) {
                                             </NavLink>
                                         </div>
 
-                                        <div className="linkBtns">
+                                        {/* <div className="linkBtns">
                                             <NavLink to="/createPost" className="headerNavLinks">
                                                 <span className="headIconCont">
                                                     <img src={currentUrl === 'createPost' ? confessIconActive : confessIcon} alt="" />
@@ -370,7 +370,7 @@ export default function Header(props) {
                                                 <span className={`headLinkName ${currentUrl === "createPost" ? "activeLinkOfHeader" :
                                                     ""}`}>Confess/Share</span>
                                             </NavLink>
-                                        </div>
+                                        </div> */}
 
                                         {/* 3x icons are being used */}
 

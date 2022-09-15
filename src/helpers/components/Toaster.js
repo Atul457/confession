@@ -22,6 +22,15 @@ const Toaster = ({ message, confDetails }) => {
     )
 }
 
+const Toaster2 = ({ message }) => {
+    return (
+        <div className='toastBody'>
+            <img src={appLogo} width="30" height="20" />
+            <span>{message}</span>
+        </div>
+    )
+}
+
 const toaster = (message, data) => {
     toast(<Toaster message={message} confDetails={data} />, {
         position: "top-right",
@@ -33,12 +42,29 @@ const toaster = (message, data) => {
     })
 }
 
+const toaster2 = (message) => {
+    toast(<Toaster2 message={message} />, {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+    })
+}
+
 const info = (message, data) => {
     toaster(message, data)
 }
 
-const toastMethods = {
-    info
+const toaster2Info = (message) => {
+    toaster2(message)
 }
+
+const toastMethods = {
+    info,
+    toaster2Info
+}
+
 
 export default toastMethods

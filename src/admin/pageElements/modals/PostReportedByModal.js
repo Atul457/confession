@@ -68,7 +68,6 @@ const PostReportedByModal = () => {
         try {
             const res = await fetchData(obj)
             if (res.data.status === true) {
-                console.log(res.data)
                 if (append === true) {
                     let newConf = [...reportsArr, ...res.data.users];
                     setReportsData({ page: pageNo })
@@ -88,10 +87,6 @@ const PostReportedByModal = () => {
     useEffect(() => {
         reportedBy();
     }, [])
-
-    useEffect(() => {
-        console.log(reportsData)
-    }, [reportsData])
 
 
     // Fetches more users

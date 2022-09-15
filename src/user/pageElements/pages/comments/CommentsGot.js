@@ -29,7 +29,6 @@ import _ from 'lodash';
 
 export default function CommentsGot(props) {
 
-
     let maxChar = 2000;
     const params = useParams();
     let history = useNavigate();
@@ -47,6 +46,11 @@ export default function CommentsGot(props) {
     const [loaded, setLoaded] = useState(false)
     const [reqFulfilled, setReqFullfilled] = useState(false);
     const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal();
+    const isCoverTypePost = props.category_id === 0
+    const postBg = isCoverTypePost ? {
+        backgroundImage: `url('${props?.cover_image}')`,
+        name: "post"
+    } : {}
 
 
     // OPENS THE MODAL
@@ -74,13 +78,14 @@ export default function CommentsGot(props) {
             "is_viewed": confessionData.is_viewed,
             "updatedConfessions": () => { },
             "like": confessionData.like,
+            "slug": confessionData.slug,
             "is_liked": confessionData.is_liked,
             "dislike": confessionData.dislike,
             "is_liked_prev": confessionData.is_liked,
+            "cover_image": confessionData.cover_image,
             "updateConfessionData": updateConfessionData
         }))
     }
-
 
     // POST NEW COMMENT
     const doComment_ = async () => {
@@ -151,7 +156,6 @@ export default function CommentsGot(props) {
                 setIsWaitingRes(false);
                 setConfessionData(response.data.confession);
                 return setLoaded(true);
-
             }
 
             //Handles app in case of no api response
@@ -179,22 +183,14 @@ export default function CommentsGot(props) {
 
     // OPENS THE COMMENTS MODAL FIRST TIME AFTER COMMENT DATA HAS BEEN LOADED
     useEffect(() => {
-        if (loaded && Object.keys(confessionData).length > 0) {
-            openCommentsModal();
-        }
+        if (loaded && Object.keys(confessionData).length > 0) openCommentsModal();
     }, [loaded])
 
 
     // REOPENS THE COMMENTS MODAL ON CONFESSION_ID CHANGE
     useEffect(() => {
-
-        if (params.postId === confessionData.confession_id && !reqFulfilled) {
-            setReqFullfilled(true)
-        }
-
-        if (reqFulfilled)
-            setReqFullfilled(false);
-
+        if (params.postId === confessionData.confession_id && !reqFulfilled) setReqFullfilled(true)
+        if (reqFulfilled) setReqFullfilled(false)
     }, [params.postId])
 
 
@@ -236,22 +232,16 @@ export default function CommentsGot(props) {
                     like: isLiked ? confessionData.like + 1 : confessionData.like - 1,
                     is_liked: isLiked ? 1 : 2
                 }
-
                 updateConfessionData(0, data);
-
                 const res = await fetchData(obj)
-                if (res.data.status === true) {
 
-                } else {
-                    console.log(res);
-                }
+                if (res.data.status === true) {
+                } else console.log(res)
             } catch (error) {
                 console.log(error);
                 console.log("Some error occured");
             }
-        } else {
-            console.log("Invalid ip");
-        }
+        } else console.log("Invalid ip");
     }
 
 
@@ -361,12 +351,15 @@ export default function CommentsGot(props) {
                                                                 <div className="categoryOfUser" type="button">{(confessionData.category_name).charAt(0) + (confessionData.category_name).slice(1).toLowerCase()}</div>
                                                             </span>
                                                             <span className="postCreatedTime">
-                                                                {/* {confessionData.created_at} */}
                                                                 {DateConverter(confessionData.created_at)}
                                                             </span>
                                                         </div>
-                                                        <div className="postBody">
-                                                            <div className="postedPost" onClick={openCommentsModal} type="button">
+                                                        <div className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
+                                                            onClick={openCommentsModal}
+                                                            style={postBg}>
+                                                            <div
+                                                                className="postedPost"
+                                                                type="button">
                                                                 <pre className="preToNormal">
                                                                     {confessionData.description}
                                                                 </pre>
@@ -378,14 +371,16 @@ export default function CommentsGot(props) {
                                                                 (
                                                                     <div className="form-group imgPreviewCont mt-2 mb-0">
                                                                         <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
-                                                                            {(confessionData.image).map((src, index) => {
-                                                                                return (
-                                                                                    <span
-                                                                                        className="uploadeImgWrapper fetched"
-                                                                                        key={`uploadeImgWrapper${index}`}>
-                                                                                        <img src={src} alt="" className='previewImg' />
-                                                                                    </span>)
-                                                                            })}
+                                                                            {
+                                                                                (confessionData.image).map((src, index) => {
+                                                                                    return (
+                                                                                        <span
+                                                                                            className="uploadeImgWrapper fetched"
+                                                                                            key={`uploadeImgWrapper${index}`}>
+                                                                                            <img src={src} alt="" className='previewImg' />
+                                                                                        </span>)
+                                                                                })
+                                                                            }
                                                                         </div>
                                                                     </div>
                                                                 )

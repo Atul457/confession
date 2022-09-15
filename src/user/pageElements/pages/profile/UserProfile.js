@@ -379,6 +379,7 @@ export default function UserProfile() {
                                                     return <Post
                                                         isReported={post.isReported}
                                                         index={index}
+                                                        cover_image={post.cover_image ?? ''}
                                                         slug={post.slug}
                                                         post_as_anonymous={false}
                                                         viewcount={post.viewcount}

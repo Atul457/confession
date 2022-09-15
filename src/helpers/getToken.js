@@ -10,6 +10,16 @@ export const getToken = () => {
     return userData;
 }
 
+export const getUserData = key => {
+    let userData = '';
+    if (auth()) {
+        userData = localStorage.getItem("userDetails");
+        userData = JSON.parse(userData);
+        userData = userData.profile[key]
+    }
+    return userData;
+}
+
 export const getAdminToken = () => {
     let adminDetails = '';
     if (adminAuth()) {

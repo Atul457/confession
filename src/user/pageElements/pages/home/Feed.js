@@ -35,8 +35,9 @@ import { pulsationHelper } from '../../../../helpers/pulsationHelper';
 import ReportCommentModal from '../../Modals/ReportCommentModal';
 import AvatarsIntroModal from '../../Modals/AvatarsIntroModal';
 import { toggleAvatarIntroModal } from '../../../../redux/actions/avatarsIntroModalAc/avatarsIntroModalAc';
-import { HeartComponent, ShareWithLoveModal } from '../../components/sharepostwithlove/Sharepostwithlove';
+import { AppreciationModal, HeartComponent, ShareWithLoveModal } from '../../components/sharepostwithlove/Sharepostwithlove';
 import ReportPostModal from '../../Modals/ReportPostModal';
+import { getKeyProfileLoc } from '../../../../helpers/profileHelper';
 
 
 export default function Feed(props) {
@@ -85,6 +86,8 @@ export default function Feed(props) {
     const [base64Src, setBase64Src] = useState([]);
     const [imgPathArr, setImgPathArr] = useState([]);
     const [isImgLoading, setIsImgLoading] = useState(false);
+    let commentCountReqToPost = 1;
+    let isCondStatified = auth() ? getKeyProfileLoc("comments") > commentCountReqToPost : false
     let fs = 1024; //Sets the max file size that can be sent
     // Upload img box states
 
@@ -308,7 +311,6 @@ export default function Feed(props) {
 
         if (submittable) {
 
-            setIsLoading(true);
             updatePostBtn(true);
 
             let postConfessionArr,
@@ -389,6 +391,7 @@ export default function Feed(props) {
                         url: "createconfession"
                     }
 
+                    setIsLoading(true);
 
                     try {
                         const response = await fetchData(obj);
@@ -694,52 +697,54 @@ export default function Feed(props) {
                                                 <div className="recaptchaFeed feed w-100">
 
                                                     <div className="selectNpostBtnCont">
-                                                        <div className="heartCompCont">
-                                                            <HeartComponent />
-                                                        </div>
-
-                                                        <div className="wrapperBtnsImages">
-                                                            {/* Upload images cont */}
-                                                            <div className={`cstmUploadFileCont feedPage ${base64Src.length > 0 ? "feedMb15" : ""}`}>
-                                                                <div className="uploadImgFeedCont">
-                                                                    <label htmlFor="uploadImages" className="uploadImgWrapper">
-                                                                        <img src={uploadImages} alt="" className='mr-0' />
-                                                                    </label>
-                                                                    <input
-                                                                        type="file"
-                                                                        className="form-control-file"
-                                                                        id="uploadImages"
-                                                                        accept=".jpg, jpeg, .gif, .png"
-                                                                        name="images"
-                                                                        onChange={(e) => { toBase64(e) }}
-                                                                    />
-                                                                </div>
+                                                        <div className="shareIconAndUpImgCont">
+                                                            <div className="heartCompCont">
+                                                                <HeartComponent />
                                                             </div>
-                                                            {/* Upload images cont */}
 
-                                                            {/* End of upload images preview container for web */}
-                                                            {base64Src.length > 0 &&
-                                                                <div className="createPostImgPrev feed">
-                                                                    <div className="form-group imgPreviewCont feed">
-                                                                        <div className="imgContForPreviewImg feed">
-                                                                            {base64Src.map((elem, index) => {
-                                                                                return (<span className="uploadeImgWrapper feed" key={"imgPreviewCont9" + index} value={index} onClick={() => { removeImg(index) }}>
-                                                                                    <img src={elem.toString()} alt="" className='previewImg' />
-                                                                                    <img src={removeImgIcon} alt="" className='removeImgIcon' type="button" />
-                                                                                </span>)
-                                                                            })}
-
-                                                                            {isImgLoading &&
-                                                                                <div className="imgLoader">
-                                                                                    <div className="spinner-border pColor imgLoaderInner" role="status">
-                                                                                        <span className="sr-only">Loading...</span>
-                                                                                    </div>
-                                                                                </div>}
-                                                                        </div>
+                                                            <div className="wrapperBtnsImages">
+                                                                {/* Upload images cont */}
+                                                                <div className={`cstmUploadFileCont feedPage ${base64Src.length > 0 ? "feedMb15" : ""}`}>
+                                                                    <div className="uploadImgFeedCont">
+                                                                        <label htmlFor="uploadImages" className="uploadImgWrapper">
+                                                                            <img src={uploadImages} alt="" className='mr-0' />
+                                                                        </label>
+                                                                        <input
+                                                                            type="file"
+                                                                            className="form-control-file"
+                                                                            id="uploadImages"
+                                                                            accept=".jpg, jpeg, .gif, .png"
+                                                                            name="images"
+                                                                            onChange={(e) => { toBase64(e) }}
+                                                                        />
                                                                     </div>
                                                                 </div>
-                                                            }
-                                                            {/* End of upload images preview container for web */}
+                                                                {/* Upload images cont */}
+
+                                                                {/* End of upload images preview container for web */}
+                                                                {base64Src.length > 0 &&
+                                                                    <div className="createPostImgPrev feed">
+                                                                        <div className="form-group imgPreviewCont feed">
+                                                                            <div className="imgContForPreviewImg feed">
+                                                                                {base64Src.map((elem, index) => {
+                                                                                    return (<span className="uploadeImgWrapper feed" key={"imgPreviewCont9" + index} value={index} onClick={() => { removeImg(index) }}>
+                                                                                        <img src={elem.toString()} alt="" className='previewImg' />
+                                                                                        <img src={removeImgIcon} alt="" className='removeImgIcon' type="button" />
+                                                                                    </span>)
+                                                                                })}
+
+                                                                                {isImgLoading &&
+                                                                                    <div className="imgLoader feed">
+                                                                                        <div className="spinner-border pColor imgLoaderInner" role="status">
+                                                                                            <span className="sr-only">Loading...</span>
+                                                                                        </div>
+                                                                                    </div>}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                {/* End of upload images preview container for web */}
+                                                            </div>
                                                         </div>
 
                                                         {/* Select cat.. and post btns cont */}
@@ -838,6 +843,7 @@ export default function Feed(props) {
                                                             return (<>
                                                                 <Post
                                                                     index={index}
+                                                                    cover_image={post.cover_image ?? ''}
                                                                     is_viewed={post.is_viewed}
                                                                     isRegistered={post.isRegistered}
                                                                     isReported={post.isReported}
@@ -849,7 +855,8 @@ export default function Feed(props) {
                                                                     slug={post.slug}
                                                                     createdAt={post.created_at}
                                                                     post_as_anonymous={post.post_as_anonymous}
-                                                                    curid={post.user_id === '0' ? false : post.user_id} category_id={post.category_id} profileImg={post.profile_image}
+                                                                    curid={post.user_id === '0' ? false : post.user_id}
+                                                                    category_id={post.category_id} profileImg={post.profile_image}
                                                                     postId={post.confession_id}
                                                                     imgUrl={post.image === '' ? '' : post.image}
                                                                     userName={post.created_by}
@@ -923,9 +930,10 @@ export default function Feed(props) {
                 {/* REFRESH BUTTON */}
                 {commentsModal.visibility === false && changes && <RefreshButton />}
 
-            </div>
+            </div >
 
-            {friendReqModalReducer.visible === true &&
+            {
+                friendReqModalReducer.visible === true &&
                 <>
                     <FriendReqModal
                         changeCancelled={changeCancelled}
@@ -934,24 +942,32 @@ export default function Feed(props) {
                         changeRequested={changeRequested}
                         _updateCanBeRequested={updateCanBeRequested}
                     />
-                </>}
+                </>
+            }
 
-            {(document.querySelector('#description') && document.querySelector('#description').value !== '' && postAlertReducer.visible === true) &&
+            {
+                (document.querySelector('#description') && document.querySelector('#description').value !== '' && postAlertReducer.visible === true) &&
                 <>
                     <PostAlertModal
                         data={{ feed: { selectedCat, description: document.querySelector('#description').value } }}
                         postConfession={postConfession}
                     />
-                </>}
+                </>
+            }
+
+            {/* Appriciation Modal */}
+            <AppreciationModal />
+            {/* Appriciation Modal */}
 
             {/* ReportCommentModal */}
             {reportModalReducer.visible && <ReportCommentModal />}
             {/* ReportCommentModal */}
 
             {/* ReportPostsModal */}
-            {reportPostModalReducer.visible && (
-                <ReportPostModal
-                    updatedConfessions={updatedConfessions} />)
+            {
+                reportPostModalReducer.visible && (
+                    <ReportPostModal
+                        updatedConfessions={updatedConfessions} />)
             }
             {/* ReportPostsModal */}
 
@@ -959,7 +975,7 @@ export default function Feed(props) {
             {<AvatarsIntroModal />}
             {/* Avatar intro modal */}
 
-            <ShareWithLoveModal />
+            <ShareWithLoveModal getConfessions={getConfessions} />
         </div >
     );
 }

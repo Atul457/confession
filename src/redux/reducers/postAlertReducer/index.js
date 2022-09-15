@@ -14,6 +14,10 @@ const postAlertReducer = (state = initialState, action) => {
             return initialState;
         case postAlertActions.UPDATEMODAL:
             return { ...state, postAnyway: action.payload };
+        case postAlertActions.UPDATEMODAL_FROM_SWLP:
+            return {
+                ...state, ...action.payload
+            }
         default:
             return state;
     }

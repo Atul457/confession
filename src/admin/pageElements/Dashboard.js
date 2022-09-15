@@ -544,6 +544,7 @@ export default function Dashboard() {
                                       <Post
                                         confession_id={post.confession_id}
                                         isNotFriend={post.isNotFriend}
+                                        cover_image={post.cover_image ?? ''}
                                         like={post.like}
                                         dislike={post.dislike}
                                         is_liked={post.is_liked}
