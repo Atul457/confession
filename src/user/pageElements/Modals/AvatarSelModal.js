@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { avatars } from '../../../helpers/avatars/Avatars';
+import tickIcon from "../../../images/tickIcon.svg"
 import { resetAvatarModal, toggleAvatarModal } from '../../../redux/actions/avatarSelModalAC';
 
 
@@ -101,18 +102,21 @@ const AvatarSelModal = ({ uploadImage }) => {
                         {avatars.map((avatar, index) => {
                             return (
                                 <div
-                                    className={`col-md-3 col-3`}
+                                    className={`col-md-3 col-3 cols`}
                                     key={avatar.link}
                                 >
-                                    <img
-                                        onLoad={() => {
-                                            if (index === avatars.length - 1) {
-                                                setShowImages(true)
-                                            }
-                                        }}
-                                        src={avatar.src}
-                                        className={`avatar ${avatarModalReducer.selected === index ? "currSelectedAvatar" : ""} ${showImages ? '' : 'hiddenAvatar'}`}
-                                        onClick={() => selectAvatar(index)} />
+                                    <span className='avatarIconCont'>
+                                        <img
+                                            onLoad={() => {
+                                                if (index === avatars.length - 1) {
+                                                    setShowImages(true)
+                                                }
+                                            }}
+                                            src={avatar.src}
+                                            className={`avatar ${avatarModalReducer.selected === index ? "currSelectedAvatar" : ""} ${showImages ? '' : 'hiddenAvatar'}`}
+                                            onClick={() => selectAvatar(index)} />
+                                        {avatarModalReducer.selected === index && <img src={tickIcon} className="tickIcon" />}
+                                    </span>
 
                                     <div className={`avatarPlaceholderImages glow ${!showImages ? '' : 'hiddenAvatar'}`}></div>
                                 </div>)

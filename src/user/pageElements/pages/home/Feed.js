@@ -58,8 +58,10 @@ export default function Feed(props) {
     const reportModalReducer = useSelector(state => state.reportComModalReducer)
     const reportPostModalReducer = useSelector(state => state.reportPostModalReducer)
     const avatarsIntroModalReducer = useSelector(state => state.avatarsIntroModalReducer)
+    const verifyEmailReducer = useSelector(state => state.VerifyEmail)
     const [confCount, setConfCount] = useState(0);
-    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
+    const { commentsModalReducer, shareWithLoveReducer } = useSelector(state => state);
+    const { appreciationModal } = shareWithLoveReducer;
     const friendReqModalReducer = useSelector(state => state.friendReqModalReducer);
     const postBoxStateReducer = useSelector(state => state.postBoxStateReducer.feed);
     const postAlertReducer = useSelector(state => state.postAlertReducer);
@@ -86,8 +88,8 @@ export default function Feed(props) {
     const [base64Src, setBase64Src] = useState([]);
     const [imgPathArr, setImgPathArr] = useState([]);
     const [isImgLoading, setIsImgLoading] = useState(false);
-    let commentCountReqToPost = 1;
-    let isCondStatified = auth() ? getKeyProfileLoc("comments") > commentCountReqToPost : false
+    // let commentCountReqToPost = 1;
+    // let isCondStatified = auth() ? getKeyProfileLoc("comments") > commentCountReqToPost : false
     let fs = 1024; //Sets the max file size that can be sent
     // Upload img box states
 
@@ -105,9 +107,12 @@ export default function Feed(props) {
 
     // Avatar intro modal
     const openAvatarModal = () => {
-        setTimeout(() => {
-            dispatch(toggleAvatarIntroModal({ visible: true }))
-        }, 10 * 1000);
+        let commentsModalVisibility = commentsModalReducer.visible,
+            shareWithLoveModalVisibility = shareWithLoveReducer.visible,
+            appreciationModalVisibiltiy = appreciationModal?.visible
+        if (commentsModalVisibility === false && appreciationModalVisibiltiy === false && shareWithLoveModalVisibility === false) {
+            dispatch(toggleAvatarIntroModal({ visible: true, isShown: true }))
+        }
     }
 
     const acceptPrivacy = () => {
@@ -116,13 +121,28 @@ export default function Feed(props) {
     }
 
 
+    // Prevention from being open in sharewithlove modal, and comments got modal
+    useEffect(() => {
+        // only if verify email modal is closed by user then show avatars modal
+        let timeout
+        let isVerifyEmailModalShown = verifyEmailReducer.verified;
+
+        if ((isVerifyEmailModalShown
+            && avatarsIntroModalReducer?.visible === false
+            && avatarsIntroModalReducer?.isShown === false) || (auth() === false && avatarsIntroModalReducer?.isShown === false)) {
+            timeout = setTimeout(() => {
+                openAvatarModal();
+            }, 10000);
+        }
+        return () => {
+            clearTimeout(timeout)
+        }
+    }, [commentsModalReducer, shareWithLoveReducer, verifyEmailReducer.verified])
+
+
     useEffect(() => {
         pulsationHelper()
         if (actCategory?.state?.openFeatures === true) openFeaturesDelay();
-        if (avatarsIntroModalReducer?.isShown === false) {
-            dispatch(toggleAvatarIntroModal({ isShown: true }))
-            openAvatarModal();
-        }
     }, [])
 
 

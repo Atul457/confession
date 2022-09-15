@@ -232,7 +232,7 @@ const AppreciationModal = () => {
             onHide={closeModal}
             centered
             className='sharePWLModal'
-            size="lg">
+            size="md">
             <Modal.Body className="appreciationModalBody">
                 <div className="hurrayImage">
                     <img src={hurray} alt={"appreciation img"} />

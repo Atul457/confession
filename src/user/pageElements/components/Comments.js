@@ -383,7 +383,7 @@ export default function Comments(props) {
 
                     {props.curid !== false ?
 
-                        (<Link className={`textDecNon`}
+                        (<Link className={`textDecNon comment cutDown`}
                             to={props.curid ?
                                 (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
                                 : ''}>

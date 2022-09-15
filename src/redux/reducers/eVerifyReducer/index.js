@@ -10,7 +10,7 @@ const initialState = {
 const VerifyEmail = (state = initialState, action) => {
     switch (action.type) {
         case 'EVERIFY':
-            return action.eVerifyState;
+            return {...state, ...action.eVerifyState};
 
         default:
             return state

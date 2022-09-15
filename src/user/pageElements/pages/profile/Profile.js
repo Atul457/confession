@@ -26,6 +26,7 @@ import ReportCommentModal from '../../Modals/ReportCommentModal';
 import { toggleAvatarModal } from '../../../../redux/actions/avatarSelModalAC';
 import AvatarSelModal from '../../Modals/AvatarSelModal';
 import defaultIcon from '../../../../images/mobileProfileIcon.svg';
+import { getKeyProfileLoc } from '../../../../helpers/profileHelper';
 
 const deletePostModalIniVal = { visible: false, data: { postId: null, index: null } };
 
@@ -169,7 +170,7 @@ export default function Profile() {
                 if (res.data.status === true) {
                     let dataToSet = {
                         token: userDetails.token,
-                        profile: { ...res.data.user, ...{ comments: res.data?.comments } }
+                        profile: { ...res.data.user, ...{ comments: res.data?.comments ?? getKeyProfileLoc("comments") } }
                     }
                     setUserDetails(dataToSet);
                     setRunOrNot(false);

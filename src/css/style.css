@@ -721,7 +721,7 @@ input:focus-visible {
 .postedPost {
     color: var(--textPrimary);
     word-break: break-all;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     text-align: left;
 }
 
@@ -2896,6 +2896,12 @@ span.facebookMobIcon {
     -webkit-box-orient: vertical;
 }
 
+.coverTypePost .preToNormal.post {
+    width: 90%;
+    margin: 0 auto;
+    word-wrap: break-word;
+}
+
 .ellipsesStyle {
     font-weight: 500;
     color: var(--primaryColor);
@@ -4019,7 +4025,7 @@ a.headerNavLinks.active::after {
     cursor: pointer;
     justify-content: center;
     border-radius: 20px;
-    padding: 20px 0px;
+    padding: 20px 20px;
     align-items: center;
     background-size: cover;
 }
@@ -4036,6 +4042,10 @@ a.headerNavLinks.active::after {
     min-height: 40px;
 }
 
+.profile .coverTypePost.addMargin {
+    margin: 20px auto 14px auto;
+}
+
 .sharePWLHeading {
     text-align: center;
     color: var(--primaryColor);
@@ -4049,7 +4059,27 @@ a.headerNavLinks.active::after {
     flex-wrap: wrap;
 }
 
-.sharePWLModal {
+.avatarIconCont {
+    position: relative;
+    float: left;
+    width: fit-content;
+}
+
+.avtarsCollection .cols {
+    display: flex;
+    justify-content: center;
+}
+
+.tickIcon {
+    position: absolute;
+    right: 1px;
+    width: 24px;
+    top: 0px;
+    height: 24px;
+    object-fit: cover;
+}
+
+.modal.show {
     z-index: 999999;
 }
 
@@ -4305,10 +4335,6 @@ a.headerNavLinks.active::after {
 .eVerifyModal .regions.img {
     max-width: 110px;
     width: 100%;
-}
-
-.eVerifyModal {
-    padding: 20px 40px;
 }
 
 .eVerifyModal .regions {
@@ -4571,6 +4597,7 @@ input.switch12.profile {
     box-sizing: border-box;
 }
 
+
 .ljkdjfkl {
     display: none;
 }
@@ -4804,6 +4831,9 @@ button.modalFootBtns.btn a:hover {
     padding: 4px 10px;
 }
 
+.coverTypePost .preToNormal {
+    word-wrap: break-word;
+}
 
 @keyframes pulsing {
     0% {
@@ -5072,7 +5102,7 @@ button.modalFootBtns.btn a:hover {
 @media(max-width:1200px) {
 
     .shareIconAndUpImgCont {
-        width: unset;
+        width: 100%;
     }
 
     .imgContForPreviewImg.feed {
@@ -5109,6 +5139,11 @@ button.modalFootBtns.btn a:hover {
         height: unset;
         margin-left: 15px !important;
         justify-content: center;
+    }
+
+    .modal-dialog {
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -5306,11 +5341,23 @@ button.modalFootBtns.btn a:hover {
 
 
 
-
 @media(max-width:767px) {
+
+    .hurrayImage {
+        margin-bottom: 0px;
+        height: unset;
+    }
+
+    .appreciationModalBody {
+        margin-bottom: 0px;
+    }
 
     .subCommentsCount {
         font-size: 9px;
+    }
+
+    .coverTypePost .postedPost {
+        padding: 10px 20px;
     }
 
     .socialLinksIconWrapperFeed {
@@ -5372,17 +5419,6 @@ button.modalFootBtns.btn a:hover {
         width: 100%;
     }
 
-    .userName {
-        font-size: 13px;
-        word-break: break-all;
-        width: max-content;
-        max-width: 75px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: var(--primaryColor);
-    }
-
     .filterVerbiage {
         padding: 0px 20px 20px 20px;
     }
@@ -5402,7 +5438,6 @@ button.modalFootBtns.btn a:hover {
     .postedPost {
         font-size: 14px;
         text-align: left;
-        min-height: fit-content !important;
     }
 
     .doCommentTitle {
@@ -5574,9 +5609,9 @@ button.modalFootBtns.btn a:hover {
         width: 50%;
     }
 
-    .modal-dialog {
+    /* .modal-dialog {
         margin: 0.7rem 1.2rem;
-    }
+    } */
 
     .doPostBtn {
         margin-top: 10px;
@@ -5868,7 +5903,7 @@ button.modalFootBtns.btn a:hover {
 
     .privacyBody {
         line-height: 20px;
-        padding: 50px 10px 30px;
+        padding: 10px 10px 20px;
     }
 
     .privacyBody.commentsGot {
@@ -6326,6 +6361,7 @@ button.modalFootBtns.btn a:hover {
 
     .profileModal .modal-dialog {
         margin: 0px !important;
+        max-width: unset !important;
     }
 
     .profileModal .modal-body {
@@ -6710,7 +6746,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .privacyBody.avatar {
-        padding: 20px 10px 20px;
+        padding: 20px 10px 10px;
     }
 
     .adminHeaderIcons {
@@ -6789,7 +6825,7 @@ button.modalFootBtns.btn a:hover {
 
     .coverTypePost {
         min-height: 120px;
-        padding: 10px 5px;
+        padding: 10px 0px;
         margin: 0px auto 14px auto;
         width: 100%;
     }
@@ -6804,7 +6840,6 @@ button.modalFootBtns.btn a:hover {
 
     .appreciationModalBody .wish {
         font-size: 16px;
-        margin-top: 20px;
     }
 
     .coverTypePost * {
@@ -6839,8 +6874,62 @@ button.modalFootBtns.btn a:hover {
         width: 150px;
     }
 
+    .sharePWLlabel {
+        display: inline-block !important;
+    }
+
+    .heartComp img:last-child {
+        opacity: 1 !important;
+    }
+
+    .heartComp img:first-child {
+        opacity: 0 !important;
+    }
+
+    .comment.cutDown {
+        width: max-content;
+        max-width: 55px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .userName {
+        font-size: 13px;
+        word-break: break-all;
+        width: max-content;
+        max-width: 55px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--primaryColor);
+    }
+
+    .eVerifyModal .modalFootBtns {
+        margin-bottom: 15px;
+    }
+
+    .eVerifyModal .regions {
+        margin-top: 15px;
+    }
+
+    .tickIcon {
+        width: 16px;
+        height: 16px;
+        right: -1px;
+        top: -3px;
+    }
+
+
 }
 
+@media(max-width:575px) {
+    .modal-dialog {
+        max-width: 90%;
+        margin-left: auto;
+        right: auto;
+    }
+}
 
 @media(max-width:370px) {
     .recaptchaFeed {
@@ -6851,5 +6940,6 @@ button.modalFootBtns.btn a:hover {
         max-width: 45px;
     }
 }
+
 
 /* END OF MEDIAS */

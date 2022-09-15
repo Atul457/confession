@@ -47,6 +47,7 @@ export default function Post(props) {
         backgroundImage: `url('${props?.cover_image}')`,
         name: "post"
     } : {}
+    const isAnyUnreadComment = props?.unread_comments && props?.unread_comments > 0
 
     // CUSTOM HOOKS
     const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
@@ -517,13 +518,13 @@ export default function Post(props) {
                 {
                     (props.unread_comments && props.unread_comments !== 0) ?
                         <span className="unreadPostCommentCount">
-                            {props.unread_comments} New Replies
+                            {props.unread_comments} {props?.unread_comments === 1 ? "New Reply" : "New Replies"}
                         </span>
                         : ''}
             </div>
 
             <div
-                className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
+                className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''} ${isAnyUnreadComment ? 'addMargin' : ''}`}
                 onClick={openCommentsModal}
                 style={postBg}>
                 <div className="postedPost mb-2">

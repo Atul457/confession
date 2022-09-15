@@ -36,6 +36,7 @@ import openSLinksModalActionCreators from '../../../redux/actions/socialLinksMod
 import { pulsationHelper } from '../../../helpers/pulsationHelper';
 import { AuthContext } from '../../../App';
 import { removeFCMToken, setTokenSentFlag } from '../../../configs/firebaseToken';
+import { EVerifyModal } from '../../../redux/actions/everify';
 
 export default function Header(props) {
 
@@ -180,6 +181,8 @@ export default function Header(props) {
                         if (verifyEState.verified === false) {
                             setShowEModal(true);
                         }
+                    } else if (email_verified === 1 && verifyEState.verified === false) {
+                        dispatch(EVerifyModal({ verified: true }))
                     }
 
                 } else {
@@ -200,7 +203,7 @@ export default function Header(props) {
         return () => {
             if (auth()) clearInterval(interval)
         }
-    }, [notificationReducer.data, notificationReducer.messagesCount])
+    }, [notificationReducer.data, notificationReducer.messagesCount, verifyEState])
 
 
 
@@ -436,10 +439,10 @@ export default function Header(props) {
                                         <div className="authProfileIcon" onClick={HandleShowHide}>
                                             <span className="requestsIndicatorNuserIconCont" type="button">
 
-                                                <img src={profile.image === '' ? userIcon : profile.image} alt="" className='userAccIcon headerUserAccIcon'/>
+                                                <img src={profile.image === '' ? userIcon : profile.image} alt="" className='userAccIcon headerUserAccIcon' />
 
                                                 <img src={profile.image === '' ? mobileProfileIcon : profile.image} alt="" className='userAccIcon headerUserAccIcon mobIcon' />
-                                                
+
                                                 {requestsIndicator > 0 && (
                                                     <span className="requestIndicator"></span>
                                                 )}
