@@ -1,5 +1,5 @@
 import Button from '@restart/ui/esm/Button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { avatars } from '../../../helpers/avatars/Avatars';
@@ -115,7 +115,9 @@ const AvatarSelModal = ({ uploadImage }) => {
                                             src={avatar.src}
                                             className={`avatar ${avatarModalReducer.selected === index ? "currSelectedAvatar" : ""} ${showImages ? '' : 'hiddenAvatar'}`}
                                             onClick={() => selectAvatar(index)} />
-                                        {avatarModalReducer.selected === index && <img src={tickIcon} className="tickIcon" />}
+
+                                        {avatarModalReducer.selected === index &&
+                                            <img src={tickIcon} className={`tickIcon ${!showImages ? "invisible" : ""}`} />}
                                     </span>
 
                                     <div className={`avatarPlaceholderImages glow ${!showImages ? '' : 'hiddenAvatar'}`}></div>
