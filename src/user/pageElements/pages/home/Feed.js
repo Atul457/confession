@@ -38,6 +38,8 @@ import { toggleAvatarIntroModal } from '../../../../redux/actions/avatarsIntroMo
 import { AppreciationModal, HeartComponent, ShareWithLoveModal } from '../../components/sharepostwithlove/Sharepostwithlove';
 import ReportPostModal from '../../Modals/ReportPostModal';
 import { getLocalStorageKey } from "../../../../helpers/helpers"
+import RightSideAdComp from '../../../../components/sidebarAds/RightSideAdComp';
+import LeftSideAdComp from '../../../../components/sidebarAds/LeftSideAdComp';
 
 
 export default function Feed(props) {
@@ -629,10 +631,14 @@ export default function Feed(props) {
                             {/* CATEGORYCONT */}
                         </div>
 
+                        <div className="leftSidebarAdd">
+                            <LeftSideAdComp />
+                        </div>
+
 
                         {/* SOCIAL LINKS PANEL */}
                         <div className="leftSidebarFooter">
-                            <div className='categoryHead pb-2'>
+                            <div className='categoryHead pb-1'>
                                 Follow us on
                             </div>
                             <div className='socialLinksIconWrapperFeed'>
@@ -927,6 +933,10 @@ export default function Feed(props) {
 
                         </div>
                     </div>
+                </div>
+
+                <div className="rightsideBarAdd">
+                    <RightSideAdComp />
                 </div>
 
                 {/* PRIVACY MODAL */}

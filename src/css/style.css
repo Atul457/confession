@@ -315,7 +315,7 @@ input::-webkit-textfield-decoration-container {
 
 .leftColumnFeed {
     position: fixed;
-    padding-top: 50px;
+    padding-top: 30px;
     height: 100vh;
     left: 0px;
     background-color: var(--primaryColor);
@@ -461,15 +461,15 @@ input:focus-visible {
 .categoryHead {
     font-weight: bold;
     color: var(--orangeColor);
-    font-size: 18px;
-    padding-bottom: 15px;
+    font-size: 15px;
+    padding-bottom: 5px;
 }
 
 .category {
     white-space: nowrap;
     background: var(--whiteColor);
     border-radius: 30px;
-    padding: 12px 5px;
+    padding: 10px 5px;
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: 'Poppins', sans-serif;
@@ -477,10 +477,10 @@ input:focus-visible {
     text-align: center;
     color: #A8A9A8;
     float: left;
-    font-size: 14px;
+    font-size: 12px;
     margin-right: 10px;
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .lablesColor {
@@ -489,7 +489,7 @@ input:focus-visible {
 
 .socialLinksIconWrapperFeed {
     width: 60%;
-    height: 70px;
+    height: fit-content;
     padding: 0px;
     display: flex;
     justify-content: center;
@@ -506,6 +506,12 @@ input:focus-visible {
     margin-bottom: 0px;
 }
 
+.leftSidebarAdd {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .socialLinksModal ul li {
     display: flex;
     align-items: center;
@@ -514,8 +520,8 @@ input:focus-visible {
 .socialLinksIconWrapperFeed ul li {
     display: flex;
     align-items: center;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     justify-content: center;
     position: relative;
     background: #fff;
@@ -554,7 +560,7 @@ input:focus-visible {
     flex-wrap: wrap;
     height: 170px;
     overflow-y: auto;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 0px 0px 0px 15px;
 }
 
@@ -2209,6 +2215,7 @@ span.offlineColor {
     text-decoration: none;
 }
 
+
 .spinnerSizeFeed {
     width: 15px !important;
     height: 15px !important;
@@ -2330,7 +2337,7 @@ span.offlineColor {
 }
 
 .sharePWLlabel {
-    font-size: 14px;
+    font-size: 12px;
     color: var(--primaryColor);
     font-weight: bold;
     display: none;
@@ -3188,7 +3195,7 @@ span.facebookMobIcon {
 .filterVerbiage {
     padding: 0px 30px 0px 20px;
     color: var(--orangeColor);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -3498,7 +3505,7 @@ span.facebookMobIcon {
 }
 
 .feedMiddleCont {
-    padding: 50px 20px;
+    padding: 15px 20px 5px 20px;
 }
 
 .leftColumn {
@@ -3513,9 +3520,10 @@ span.facebookMobIcon {
 
 
 .leftSidebarFooter {
-    position: unset;
     width: 100%;
     padding: 0px 20px;
+    bottom: 14px;
+    position: absolute;
 }
 
 .leftColumnFeed>.leftColumnWrapper {
@@ -3524,9 +3532,21 @@ span.facebookMobIcon {
 }
 
 .rightColumn {
-    width: calc(100% - 380px);
+    width: calc(100% - 600px);
     background-color: var(--whiteColor);
     border-radius: 25px 0px 0px 25px;
+}
+
+.rightsideBarAdd {
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: fixed;
+    padding-top: 50px;
+    height: 100vh;
+    right: 0px;
+    top: 20px;
 }
 
 .leftColumnWrapper {
@@ -4019,7 +4039,6 @@ a.headerNavLinks.active::after {
 
 .coverTypePost {
     margin: 5px auto 25px auto;
-    width: 85%;
     display: flex;
     min-height: 180px;
     cursor: pointer;
@@ -4430,7 +4449,7 @@ input.switch12.profile:checked {
 .mainParafeed {
     color: var(--primaryColor);
     margin-top: 5px;
-    font-size: 13px;
+    font-size: 12px !important;
     font-weight: 500;
     font-size: 14px;
 }
@@ -5034,14 +5053,14 @@ button.modalFootBtns.btn a:hover {
 
 
 /* MEDIAS */
-@media(min-width:1600px) {
-    .categoriesContainer {
-        height: 360px;
-        overflow-y: auto;
-    }
-}
 
 @media(min-width:1400px) {
+
+    .leftSidebarAdd {
+        height: calc(100% - 390px);
+        align-items: center;
+    }
+
     .registeredUserIndicator {
         width: 12px;
         top: -2px;
@@ -5066,6 +5085,18 @@ button.modalFootBtns.btn a:hover {
         bottom: 20px;
     }
 
+}
+
+@media(min-width:1600px) {
+    .categoriesContainer {
+        height: 270px;
+        overflow-y: auto;
+    }
+
+    .leftSidebarAdd {
+        height: calc(100% - 490px);
+        align-items: center;
+    }
 }
 
 @media(max-width:1200px) and (min-width:992px) {
@@ -5095,6 +5126,12 @@ button.modalFootBtns.btn a:hover {
         float: right;
         margin-left: 15px;
         margin-right: unset;
+    }
+}
+
+@media(max-width:1300px) {
+    .leftSidebarAdd {
+        height: unset;
     }
 }
 

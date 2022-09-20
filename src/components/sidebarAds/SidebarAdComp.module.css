@@ -1,0 +1,14 @@
+.outerAdCont {
+    width: 200px;
+    height: 600px;
+    background: lightgray;
+    margin: 11px 20px;
+    padding: 10px;
+}
+
+.outerLAdCont {
+    width: 220px;
+    height: 220px;
+    padding: 10px;
+    background: lightgray;
+}
