@@ -129,7 +129,7 @@ const ShareWithLoveModal = ({ getConfessions }) => {
                         <div className="sharePWLHeading">
                             Say something positive to inspire or encourage someone else.
                             <br />
-                            We rise by lifting others up.<span className='winkEmoji'>&#128540;</span>
+                            We rise by lifting others up.<span className='winkEmoji'>&#128521;</span>
                         </div>
 
                         <div className="sharePWLBgTiles">

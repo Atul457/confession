@@ -1,7 +1,6 @@
 import toastMethods from "./components/Toaster";
 
 const copyTextToClipboard = (text) => {
-    console.log({ text })
     var input = document.createElement("input");
     input.value = text;
     document.body.appendChild(input);

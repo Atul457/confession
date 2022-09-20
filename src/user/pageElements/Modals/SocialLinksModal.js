@@ -35,7 +35,7 @@ const SocialLinksModal = (props) => {
                             </a>
                         </li>
                         <li>
-                            <a target="blank" href="https://www.instagram.com/the_talkplace">
+                            <a target="blank" href="https://www.instagram.com/the_talkplace_official/">
                                 <img src={instaSocial} alt="instaSocialIcon" />
                             </a>
                         </li>

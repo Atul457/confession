@@ -37,7 +37,7 @@ import AvatarsIntroModal from '../../Modals/AvatarsIntroModal';
 import { toggleAvatarIntroModal } from '../../../../redux/actions/avatarsIntroModalAc/avatarsIntroModalAc';
 import { AppreciationModal, HeartComponent, ShareWithLoveModal } from '../../components/sharepostwithlove/Sharepostwithlove';
 import ReportPostModal from '../../Modals/ReportPostModal';
-import { getKeyProfileLoc } from '../../../../helpers/profileHelper';
+import { getLocalStorageKey } from "../../../../helpers/helpers"
 
 
 export default function Feed(props) {
@@ -124,12 +124,13 @@ export default function Feed(props) {
     // Prevention from being open in sharewithlove modal, and comments got modal
     useEffect(() => {
         // only if verify email modal is closed by user then show avatars modal
-        let timeout
-        let isVerifyEmailModalShown = verifyEmailReducer.verified;
+        let timeout,
+            isVerifyEmailModalShown = verifyEmailReducer.verified,
+            privacyAccepted_ = getLocalStorageKey("privacyAccepted") === "1"
 
         if ((isVerifyEmailModalShown
             && avatarsIntroModalReducer?.visible === false
-            && avatarsIntroModalReducer?.isShown === false) || (auth() === false && avatarsIntroModalReducer?.isShown === false)) {
+            && avatarsIntroModalReducer?.isShown === false) || (auth() === false && avatarsIntroModalReducer?.isShown === false && privacyAccepted_)) {
             timeout = setTimeout(() => {
                 openAvatarModal();
             }, 10000);
@@ -137,7 +138,7 @@ export default function Feed(props) {
         return () => {
             clearTimeout(timeout)
         }
-    }, [commentsModalReducer, shareWithLoveReducer, verifyEmailReducer.verified])
+    }, [commentsModalReducer, shareWithLoveReducer, verifyEmailReducer.verified, privacyModal.accepted])
 
 
     useEffect(() => {
@@ -647,7 +648,7 @@ export default function Feed(props) {
                                         </a>
                                     </li>
                                     <li pulsate='07-07-22,pulsatingIcon social'>
-                                        <a target="blank" href="https://www.instagram.com/the_talkplace">
+                                        <a target="blank" href="https://www.instagram.com/the_talkplace_official/">
                                             <img src={instaSocial} alt="instaSocialIcon" />
                                         </a>
                                     </li>
