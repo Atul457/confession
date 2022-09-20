@@ -315,7 +315,7 @@ input::-webkit-textfield-decoration-container {
 
 .leftColumnFeed {
     position: fixed;
-    padding-top: 30px;
+    padding-top: 50px;
     height: 100vh;
     left: 0px;
     background-color: var(--primaryColor);
@@ -461,15 +461,15 @@ input:focus-visible {
 .categoryHead {
     font-weight: bold;
     color: var(--orangeColor);
-    font-size: 15px;
-    padding-bottom: 5px;
+    font-size: 18px;
+    padding-bottom: 15px;
 }
 
 .category {
     white-space: nowrap;
     background: var(--whiteColor);
     border-radius: 30px;
-    padding: 10px 5px;
+    padding: 12px 5px;
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: 'Poppins', sans-serif;
@@ -477,10 +477,10 @@ input:focus-visible {
     text-align: center;
     color: #A8A9A8;
     float: left;
-    font-size: 12px;
+    font-size: 14px;
     margin-right: 10px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
 }
 
 .lablesColor {
@@ -489,7 +489,7 @@ input:focus-visible {
 
 .socialLinksIconWrapperFeed {
     width: 60%;
-    height: fit-content;
+    height: 70px;
     padding: 0px;
     display: flex;
     justify-content: center;
@@ -506,12 +506,6 @@ input:focus-visible {
     margin-bottom: 0px;
 }
 
-.leftSidebarAdd {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
 .socialLinksModal ul li {
     display: flex;
     align-items: center;
@@ -520,8 +514,8 @@ input:focus-visible {
 .socialLinksIconWrapperFeed ul li {
     display: flex;
     align-items: center;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     justify-content: center;
     position: relative;
     background: #fff;
@@ -560,7 +554,7 @@ input:focus-visible {
     flex-wrap: wrap;
     height: 170px;
     overflow-y: auto;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     padding: 0px 0px 0px 15px;
 }
 
@@ -2215,7 +2209,6 @@ span.offlineColor {
     text-decoration: none;
 }
 
-
 .spinnerSizeFeed {
     width: 15px !important;
     height: 15px !important;
@@ -2337,7 +2330,7 @@ span.offlineColor {
 }
 
 .sharePWLlabel {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--primaryColor);
     font-weight: bold;
     display: none;
@@ -3195,7 +3188,7 @@ span.facebookMobIcon {
 .filterVerbiage {
     padding: 0px 30px 0px 20px;
     color: var(--orangeColor);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
 }
 
@@ -3505,7 +3498,7 @@ span.facebookMobIcon {
 }
 
 .feedMiddleCont {
-    padding: 15px 20px 5px 20px;
+    padding: 50px 20px;
 }
 
 .leftColumn {
@@ -3520,10 +3513,9 @@ span.facebookMobIcon {
 
 
 .leftSidebarFooter {
-    width: 100%;
-    padding: 0px 20px;
-    bottom: 14px;
-    position: absolute;
+   position: unset;
+   width: 100%;
+   padding: 0px 20px;
 }
 
 .leftColumnFeed>.leftColumnWrapper {
@@ -4449,7 +4441,7 @@ input.switch12.profile:checked {
 .mainParafeed {
     color: var(--primaryColor);
     margin-top: 5px;
-    font-size: 12px !important;
+    font-size: 13px !important;
     font-weight: 500;
     font-size: 14px;
 }
@@ -5053,14 +5045,14 @@ button.modalFootBtns.btn a:hover {
 
 
 /* MEDIAS */
+@media(min-width:1600px) {
+    .categoriesContainer {
+        height: 360px;
+        overflow-y: auto;
+    }
+}
 
 @media(min-width:1400px) {
-
-    .leftSidebarAdd {
-        height: calc(100% - 390px);
-        align-items: center;
-    }
-
     .registeredUserIndicator {
         width: 12px;
         top: -2px;
@@ -5085,18 +5077,6 @@ button.modalFootBtns.btn a:hover {
         bottom: 20px;
     }
 
-}
-
-@media(min-width:1600px) {
-    .categoriesContainer {
-        height: 270px;
-        overflow-y: auto;
-    }
-
-    .leftSidebarAdd {
-        height: calc(100% - 490px);
-        align-items: center;
-    }
 }
 
 @media(max-width:1200px) and (min-width:992px) {
@@ -5126,12 +5106,6 @@ button.modalFootBtns.btn a:hover {
         float: right;
         margin-left: 15px;
         margin-right: unset;
-    }
-}
-
-@media(max-width:1300px) {
-    .leftSidebarAdd {
-        height: unset;
     }
 }
 

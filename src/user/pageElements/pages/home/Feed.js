@@ -631,9 +631,9 @@ export default function Feed(props) {
                             {/* CATEGORYCONT */}
                         </div>
 
-                        <div className="leftSidebarAdd">
+                        {/* <div className="leftSidebarAdd">
                             <LeftSideAdComp />
-                        </div>
+                        </div> */}
 
 
                         {/* SOCIAL LINKS PANEL */}
