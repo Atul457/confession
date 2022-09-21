@@ -3513,9 +3513,10 @@ span.facebookMobIcon {
 
 
 .leftSidebarFooter {
-   position: unset;
-   width: 100%;
-   padding: 0px 20px;
+    position: absolute;
+    width: 100%;
+    padding: 0px 20px;
+    bottom: 10px;
 }
 
 .leftColumnFeed>.leftColumnWrapper {
@@ -5111,6 +5112,18 @@ button.modalFootBtns.btn a:hover {
 
 
 @media(max-width:1200px) {
+
+    .leftSidebarFooter {
+        position: unset;
+    }
+
+    .rightsideBarAdd {
+        display: none;
+    }
+
+    .rightColumn {
+        width: calc(100% - 380px);
+    }
 
     .shareIconAndUpImgCont {
         width: 100%;
