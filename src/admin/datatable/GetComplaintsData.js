@@ -107,6 +107,9 @@ export const GetComplaintsData = () => {
             selector: row => !row.name || row.name==='' ? "Anonymous" : row.name, name: "Name", sortable: true, maxWidth: "150px",
         },
         {
+            selector: row => row.email, name: "Email", sortable: true, minWidth: "200px",
+        },
+        {
             selector: row => row.related_issue, name: "Related Issue", sortable: true, minWidth: "200px",
         },
         {

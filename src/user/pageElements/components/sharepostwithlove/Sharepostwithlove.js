@@ -199,12 +199,11 @@ const HeartComponent = () => {
         }))
     }
 
-
-
     return (
         <>
             <div
                 className='heartComp'
+                pulsate='26-09-22,pulsatingIcon mobile'
                 onClick={openSharewithLoveModal}>
                 <img
                     src={heart} alt="heart_image" />

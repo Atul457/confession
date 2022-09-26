@@ -64,8 +64,8 @@ export default function Header(props) {
 
     const logout = async () => {
         SetAuth(0);
-        localStorage.setItem("adminDetails", "");
-        localStorage.setItem("adminAuthenticated", "");
+        localStorage.removeItem("adminDetails", "");
+        localStorage.removeItem("adminAuthenticated", "");
         let obj = {
             data: {},
             token: adminDetails.token,

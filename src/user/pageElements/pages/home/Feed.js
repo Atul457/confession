@@ -37,7 +37,7 @@ import AvatarsIntroModal from '../../Modals/AvatarsIntroModal';
 import { toggleAvatarIntroModal } from '../../../../redux/actions/avatarsIntroModalAc/avatarsIntroModalAc';
 import { AppreciationModal, HeartComponent, ShareWithLoveModal } from '../../components/sharepostwithlove/Sharepostwithlove';
 import ReportPostModal from '../../Modals/ReportPostModal';
-import { getLocalStorageKey } from "../../../../helpers/helpers"
+import { getLocalStorageKey, isAvatarSelectedCurr } from "../../../../helpers/helpers"
 import RightSideAdComp from '../../../../components/sidebarAds/RightSideAdComp';
 import LeftSideAdComp from '../../../../components/sidebarAds/LeftSideAdComp';
 
@@ -122,17 +122,19 @@ export default function Feed(props) {
         localStorage.setItem("privacyAccepted", 1);
     }
 
-
     // Prevention from being open in sharewithlove modal, and comments got modal
     useEffect(() => {
         // only if verify email modal is closed by user then show avatars modal
         let timeout,
             isVerifyEmailModalShown = verifyEmailReducer.verified,
-            privacyAccepted_ = getLocalStorageKey("privacyAccepted") === "1"
+            privacyAccepted_ = getLocalStorageKey("privacyAccepted") === "1",
+            isAvatarSelected = isAvatarSelectedCurr().status
 
         if ((isVerifyEmailModalShown
+            && !isAvatarSelected
             && avatarsIntroModalReducer?.visible === false
             && avatarsIntroModalReducer?.isShown === false) || (auth() === false && avatarsIntroModalReducer?.isShown === false && privacyAccepted_)) {
+            console.log("show avatar")
             timeout = setTimeout(() => {
                 openAvatarModal();
             }, 10000);
@@ -608,7 +610,7 @@ export default function Feed(props) {
 
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid feed_page">
             {commentsModalReducer.visible && <CommentGotModal
                 handleChanges={handleChanges}
                 updateConfessionData={updateConfessionData}

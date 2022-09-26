@@ -669,7 +669,7 @@ export default function Profile() {
                                             </div>
                                         </div>
 
-                                        <Link to="/report" className="w-100">
+                                        <Link to="/report" className="profile_contact_us_link">
                                             <div className="form-group wProfile contantSupportCont mtProfile d-flex">
                                                 <label className="profilePageLabels">Contact Support</label>
                                                 <span className="callingImgSpan">

@@ -3,11 +3,23 @@ import styles from "./SidebarAdComp.module.css"
 
 const RightSideAdComp = () => {
     return (
-        <div className={styles.outerAdCont}>
-            <span>
-                RightSideAdComp
-            </span>
-        </div>
+        <>
+            <div className={styles.outerAdCont}>
+                <span>
+                    square ad
+                </span>
+            </div>
+            <div className={styles.outerAdCont}>
+                <span>
+                    square ad
+                </span>
+            </div>
+            <div className={styles.outerAdCont}>
+                <span>
+                    square ad
+                </span>
+            </div>
+        </>
     )
 }
 

@@ -187,7 +187,6 @@ export default function Login() {
                         let userDetails = res.data.body
                         let freshUserDetails = { ...userDetails, profile: { ...userDetails.profile, ...{ comments: userDetails.comments } } };
                         localStorage.setItem("userDetails", JSON.stringify(freshUserDetails));
-                        // localStorage.setItem("userDetails", JSON.stringify(res.data.body));
                         SetAuth(1);
                         setErrorOrSuccess(true);
                         setIsLoading(false)

@@ -476,6 +476,7 @@ input:focus-visible {
     width: 44%;
     text-align: center;
     color: #A8A9A8;
+    border: none;
     float: left;
     font-size: 14px;
     margin-right: 10px;
@@ -838,9 +839,6 @@ input:focus-visible {
     color: var(--placeholderColor);
 }
 
-.errorFieldsCPost {
-    padding-top: 20px;
-}
 
 .toDoinputToAddComment textarea:focus {
     border-color: var(--primaryColor) !important;
@@ -1276,7 +1274,7 @@ input.switch12:focus {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 25px 0px 10px;
+    padding: 15px 0px 10px;
     width: 100%;
 }
 
@@ -3491,6 +3489,7 @@ span.facebookMobIcon {
 
 .rightColumnFeed {
     margin-left: 380px;
+    border-radius: 0px !important;
 }
 
 .middleContLoginReg {
@@ -3525,21 +3524,26 @@ span.facebookMobIcon {
 }
 
 .rightColumn {
-    width: calc(100% - 600px);
+    width: calc(100% - 380px);
     background-color: var(--whiteColor);
     border-radius: 25px 0px 0px 25px;
+}
+
+.feed_page .rightColumn {
+    width: calc(100% - 600px);
 }
 
 .rightsideBarAdd {
     background: #fff;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     position: fixed;
     padding-top: 50px;
     height: 100vh;
     right: 0px;
     top: 20px;
+    flex-direction: column;
 }
 
 .leftColumnWrapper {
@@ -3615,7 +3619,7 @@ a.headerNavLinks.active::after {
 
 .heartComp {
     cursor: pointer;
-    width: 55px;
+    width: 45px;
     height: 45px;
     display: flex;
     justify-content: center;
@@ -3845,10 +3849,6 @@ a.headerNavLinks.active::after {
     min-width: 590px;
     padding: 0px;
     width: 100%;
-}
-
-.exceptRecapFields {
-    margin-left: 15px;
 }
 
 .categoryHead {
@@ -4530,6 +4530,19 @@ input.switch12.profile:checked {
     margin: 0 auto;
 }
 
+.profile_contact_us_link {
+    text-decoration: none !important;
+}
+
+.profile_contact_us_link label {
+    cursor: pointer;
+}
+
+button.report {
+    min-width: 155px;
+    width: 100%;
+}
+
 .round11 {
     border: 1px solid #ffffff4d;
     border-radius: 100%;
@@ -4759,6 +4772,43 @@ button.modalFootBtns.btn a:hover {
     padding-left: 10px;
     position: absolute;
     right: 0px;
+}
+
+.max_chars_desc_cont {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.maxCharCreatePost .textAreaLimit {
+    position: unset;
+}
+
+.errors_cont_report span {
+    padding-left: 15px;
+}
+
+.max_chars_desc_cont>* {
+    padding-top: 5px;
+}
+
+.errors_cont_report {
+    display: flex;
+}
+
+.max_chars_desc_cont .textAreaLimit {
+    position: unset;
+}
+
+.report_email_input {
+    font-size: 12px;
+    border-color: var(--primaryColor) !important;
+}
+
+.report_email_input_cont {
+    width: 100%;
+    max-width: 270px;
 }
 
 .replyCont {
@@ -5121,7 +5171,8 @@ button.modalFootBtns.btn a:hover {
         display: none;
     }
 
-    .rightColumn {
+    .rightColumn,
+    .feed_page .rightColumn {
         width: calc(100% - 380px);
     }
 
@@ -5177,6 +5228,11 @@ button.modalFootBtns.btn a:hover {
 
 
 @media(max-width:991px) and (min-width:768px) {
+
+    .feedMiddleCont.profile {
+        padding: 50px 0px;
+    }
+
     .timeStamp {
         font-size: 9px;
     }
@@ -5305,7 +5361,8 @@ button.modalFootBtns.btn a:hover {
     }
 
     .rightColumnFeed,
-    .posFixedForHeader {
+    .posFixedForHeader,
+    .feed_page .rightColumn {
         width: calc(100% - 280px);
         margin-left: 280px;
         padding: 15px 10px 0px !important;
@@ -5321,11 +5378,11 @@ button.modalFootBtns.btn a:hover {
 
     .rightMainCreatePostFormCont .head {
         flex-wrap: wrap;
+        justify-content: end;
     }
 
     .exceptRecap {
         padding: 0px;
-        justify-content: flex-start;
         margin-top: 20px;
         margin-left: 0px;
     }
@@ -5798,7 +5855,7 @@ button.modalFootBtns.btn a:hover {
 
     .leftColumn,
     .rightColumn {
-        width: 100%;
+        width: 100% !important;
     }
 
     .leftColumnWrapper {
@@ -6031,6 +6088,7 @@ button.modalFootBtns.btn a:hover {
 
     .rightColumnFeed {
         border-radius: 0px !important;
+        width: 100% !important;
     }
 
     .createPostOuterCont {
@@ -6055,7 +6113,6 @@ button.modalFootBtns.btn a:hover {
         margin-left: 0px !important;
         max-width: 100%;
         height: 115px;
-        margin-bottom: 10px !important;
     }
 
     .exceptRecap {
@@ -6131,6 +6188,22 @@ button.modalFootBtns.btn a:hover {
     .maxCharCreatePost {
         display: flex;
         justify-content: flex-end;
+    }
+
+    .max_chars_desc_cont {
+        flex-direction: column;
+        padding: 0px 30px;
+        align-items: flex-start;
+    }
+
+    .errors_cont_report {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .errors_cont_report span {
+        padding-left: 0px;
     }
 
     .forBottomBorder {
@@ -6393,7 +6466,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .profileModal .modal-content {
-        margin-top: 150px !important;
+        margin-top: 170px !important;
     }
 
     .profileFriendsContModal {
@@ -6677,6 +6750,10 @@ button.modalFootBtns.btn a:hover {
         box-shadow: inset 0 0 0 2px var(--whiteColor);
     }
 
+    .heartComp.pulsatingIcon.mobile:before {
+        box-shadow: inset 0 0 0 2px var(--primaryColor);
+    }
+
     .hiddenReqCont {
         display: block;
     }
@@ -6882,7 +6959,7 @@ button.modalFootBtns.btn a:hover {
 
     .heartComp {
         margin-bottom: 10px;
-        width: 55px;
+        width: 45px;
         height: 45px;
         margin-right: 10px;
     }
@@ -6944,6 +7021,11 @@ button.modalFootBtns.btn a:hover {
         top: -3px;
     }
 
+    .report_email_input_cont {
+        max-width: unset;
+        padding: 0px 30px;
+        margin-bottom: 20px;
+    }
 
 }
 

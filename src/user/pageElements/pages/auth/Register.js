@@ -15,6 +15,7 @@ import googleIcon from '../../../../images/googleIcon.png';
 import fbIcon from '../../../../images/fbIcon.png';
 import LgSidebar from '../../components/common/LgSidebar';
 import useFeaturesModal from '../../../utilities/useFeaturesModal';
+import { setLocalStoragekey } from '../../../../helpers/helpers';
 
 
 export default function Register() {
@@ -294,7 +295,7 @@ export default function Register() {
                     let userDetails = res.data.body
                     let freshUserDetails = { ...userDetails, profile: { ...userDetails.profile, ...{ comments: userDetails.comments ?? 0 } } };
                     localStorage.setItem("userDetails", JSON.stringify(freshUserDetails));
-                    // localStorage.setItem("userDetails", JSON.stringify(res.data.body));
+                    setLocalStoragekey("privacyAccepted", 1)
                     SetAuth(1);
                     localStorage.removeItem("adminDetails");
                     localStorage.removeItem("adminAuthenticated");

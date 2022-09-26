@@ -234,7 +234,6 @@ export default function CommentsGot(props) {
                 }
                 updateConfessionData(0, data);
                 const res = await fetchData(obj)
-
                 if (res.data.status === true) {
                 } else console.log(res)
             } catch (error) {

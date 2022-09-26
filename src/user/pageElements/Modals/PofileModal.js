@@ -13,7 +13,7 @@ const PofileModal = (props) => {
     // console.log({ requests: props.myRequests.requests})
 
     return (
-        <Modal show={props.visible} centered size="xl" onHide={props.hideProfileModal} className="profileModal">
+        <Modal show={props.visible} centered size="xl" onHide={props.hideProfileModal} className="profileModal pl-0">
             <Modal.Body className=" text-left mx-0">
                 <div className="postsHeadingProfile mt-0">
                     Friends List

@@ -7,30 +7,45 @@ import downArrowIcon from '../../../../images/downArrow.png';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import { useNavigate } from "react-router-dom";
 import { fetchData } from '../../../../commonApi';
-// import ReCAPTCHA from 'react-google-recaptcha';
 import ExtValidator from '../../../../extensionValidator/ExtValidator';
 import contactUsLogo from '../../../../images/contactUsLogo.svg';
 import TextareaAutosize from 'react-textarea-autosize';
+import reportCategories from "./reportCategory.json"
+
+// Yup imports
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+// Helpers
+import { getKeyProfileLoc } from '../../../../helpers/profileHelper';
+
+const reportSchema = yup.object().shape({
+    email: yup.string().email().required(),
+    description: yup.string().required(),
+    related_issue: yup.string().required()
+});
 
 
 export default function Report() {
 
     let history = useNavigate();
+
+    const { register, formState: { errors }, handleSubmit } = useForm({
+        mode: "onChange",
+        resolver: yupResolver(reportSchema)
+    })
     const [reportReason, setReportReason] = useState(false);
-    const [reportValue, setReportValue] = useState('');
     const [selectedFile, setSelectedFile] = useState('');
-    const [description, setDescription] = useState("");
     const [submittable, setSubmittable] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [errorOrSuccess, setErrorOrSuccess] = useState(true);
     const [base64Src, setBase64Src] = useState([]);
     const [imgPathArr, setImgPathArr] = useState([]);
     const [isImgLoading, setIsImgLoading] = useState(false);
-    // const [recaptchaKey, setRecaptchaKey] = useState("");
     let noOfChar = 2000;
 
     let fs = 1024; //SETS THE MAX FILE SIZE THAT CAN BE SENT
-
 
     //PREVENTS IMG DATA FROM BEING SENT EMPTY
     useEffect(() => {
@@ -38,34 +53,7 @@ export default function Report() {
     }, [selectedFile])
 
     useEffect(() => {
-        setReportReason([
-            {
-                id: 1,
-                name: "Rude Behaviour"
-            },
-            {
-                id: 2,
-                name: "Communication Delay"
-            },
-            {
-                id: 3,
-                name: "Malfunction or Bug"
-            },
-            {
-                id: 4,
-                name: "Language Problem"
-            }
-            ,
-            {
-                id: 5,
-                name: "General enquiry"
-            }
-            ,
-            {
-                id: 6,
-                name: "Request a Feature"
-            }
-        ]);    //Dummy 
+        setReportReason(reportCategories);
     }, [])
 
 
@@ -77,18 +65,14 @@ export default function Report() {
     }
 
 
-    async function validateFrom()     // Validates the form
+    async function validateFrom(data)     // Validates the form
     {
         preventDoubleClick(true);
-        let loggedInUserData;
-        let descErrorContR = document.getElementById('descErrorContR'), token = '';
-        let reportErrorCont = document.getElementById('reportErrorCont');
-        let responseContR = document.getElementById('responseContR');
-        let capthaErrorContR = document.getElementById('capthaErrorContR');
-        responseContR.innerHTML = '';
-        capthaErrorContR.innerText = '';
-        let recapToken = "";
+        let responseContR = document.getElementById('responseContR'),
+            recapToken,
+            token
 
+        responseContR.innerHTML = ''
 
         window.grecaptcha.ready(() => {
             window.grecaptcha.execute("6LcFvPEfAAAAAL7pDU8PGSIvTJfysBDrXlBRMWgt", { action: 'submit' }).then(token => {
@@ -99,67 +83,45 @@ export default function Report() {
 
         const executePostConfession = async () => {
 
-            if (auth()) {
-                loggedInUserData = localStorage.getItem("userDetails");
-                loggedInUserData = JSON.parse(loggedInUserData);
-                token = loggedInUserData.token;
-            } else if (recapToken === '') {
-                capthaErrorContR.innerText = "Recaptcha is required";
-                preventDoubleClick(false);
-                return false;
+            token = getKeyProfileLoc("token", true);
+            setIsLoading(true);
+
+            let createReportArr = {
+                ...data,
+                "message": data.description,
+                "code": recapToken,
+                "image": JSON.stringify(imgPathArr),
+            };
+
+
+            let obj = {
+                data: createReportArr,
+                token: token ?? "",
+                method: "post",
+                url: "postcomplains"
             }
 
-            if (description.trim() === '') {
-                descErrorContR.innerHTML = 'Report/Bug is a required field.';
-                preventDoubleClick(false);
-                return false;
-            } else {
-                descErrorContR.innerHTML = '';
-            }
-            if (reportValue.trim() === '') {
-                reportErrorCont.innerHTML = 'Related problem is a required field.';
-                preventDoubleClick(false);
-                return false;
-            }
-            else {
-                reportErrorCont.innerHTML = '';
-                setIsLoading(true);
-                let createReportArr = {
-                    "message": description,
-                    "related_issue": reportValue,
-                    "image": JSON.stringify(imgPathArr),
-                    "code": token === '' ? recapToken : ''
-                };
-
-
-                let obj = {
-                    data: createReportArr,
-                    token: token,
-                    method: "post",
-                    url: "postcomplains"
-                }
-
-                try {
-                    const res = await fetchData(obj)
-                    if (res.data.status === true) {
-                        setErrorOrSuccess(true);
-                        responseContR.innerHTML = res.data.message;
-                        setTimeout(() => {
-                            history("/home");
-                        }, 2000);
-                    } else {
-                        setErrorOrSuccess(false);
-                        responseContR.innerHTML = res.data.message;
-                    }
-                    setIsLoading(false);
-                } catch {
+            try {
+                const res = await fetchData(obj)
+                if (res.data.status === true) {
+                    setErrorOrSuccess(true);
+                    responseContR.innerHTML = res.data.message;
+                    setTimeout(() => {
+                        history("/home");
+                    }, 2000);
+                } else {
                     setErrorOrSuccess(false);
-                    setIsLoading(false);
-                    responseContR.innerHTML = "Server Error, Please try again after some time...";
+                    responseContR.innerHTML = res.data.message;
                 }
-
-                preventDoubleClick(false);
+                setIsLoading(false);
+            } catch {
+                setErrorOrSuccess(false);
+                setIsLoading(false);
+                responseContR.innerHTML = "Server Error, Please try again after some time...";
             }
+
+            preventDoubleClick(false);
+
         }
     }
 
@@ -265,22 +227,17 @@ export default function Report() {
         }, 1200);
     }
 
-    // const verifyRecaptcha = (value) => {
-    //     setRecaptchaKey(value);
-
-    //     setTimeout(() => {
-    //         setRecaptchaKey("")
-    //     }, 120000);
-    // }
-
     return (
-        <div className="container-fluid">
+        <div className="container-fluid report">
             <div className="row outerContWrapper">
                 <Header links={true} fullWidth={true} />
 
                 <div className="preventHeader">preventHead</div>
 
-                <form className="col-12 p-0 m-0 bg-white createPostOuterCont">
+                <form
+                    className="col-12 p-0 m-0 bg-white createPostOuterCont"
+                    onSubmit={handleSubmit(validateFrom)}
+                >
                     <div className="container py-md-4 p-3 preventFooter">
 
                         <div className="row py-0 py-md-2 ">
@@ -295,20 +252,12 @@ export default function Report() {
                         <div className="row py-0 py-md-2 createPostBoxShadow boxShadow">
                             <div className="uploadImgNPostCont">
                                 <div className="writePostCreatePostTxt">
-                                    <TextareaAutosize className="form-control createPostTextArea pt-3"
-                                        minRows="5" name="comments"
-                                        defaultValue={description}
-                                        onChange={(e) => {
-                                            setDescription(e.target.value)
-                                        }}
-                                        id="textAreaDescriptionR"
+                                    <TextareaAutosize
+                                        className="form-control createPostTextArea pt-3"
+                                        {...register("description")}
+                                        minRows="5"
                                         maxLength={noOfChar}>
                                     </TextareaAutosize>
-                                    <div className="maxCharCreatePost">
-                                        <span className="textAreaLimit">
-                                            [ Max-Characters:{noOfChar} ]
-                                        </span>
-                                    </div>
                                 </div>
 
 
@@ -325,6 +274,29 @@ export default function Report() {
                                         onChange={(e) => { toBase64(e) }}
                                     />
                                     <label htmlFor="uploadReportImages" className="createPostLabels cp">Upload Image</label>
+                                </div>
+                            </div>
+
+                            <div className="maxCharCreatePost max_chars_desc_cont">
+                                <span className="textAreaLimit">
+                                    [ Max-Characters:{noOfChar} ]
+                                </span>
+
+                                <div className="errors_cont_report">
+                                    {
+                                        errors && errors?.description?.message !== ""
+                                        &&
+                                        <span className="d-block errorCont text-danger mt-0">
+                                            {errors?.description?.message.replace("description", "Report/Bug")}
+                                        </span>
+                                    }
+                                    {
+                                        errors && errors?.related_issue?.message !== ""
+                                        &&
+                                        <span className="d-block errorCont text-danger mt-0">
+                                            {errors?.related_issue?.message.replace("related_issue", "Related problem")}
+                                        </span>
+                                    }
                                 </div>
                             </div>
 
@@ -356,10 +328,7 @@ export default function Report() {
                                 {/* END OF UPLOAD IMAGES MOBILE PREVIEW CONTAINER */}
 
 
-                                <div className="w-100 mt-0 mb-2 errorFieldsCPost">
-                                    <span className="d-block errorCont text-danger mt-0" id="descErrorContR"></span>
-                                    <span className="d-block errorCont text-danger mt-0" id="reportErrorCont">
-                                    </span>
+                                <div className="w-100 mt-0 errorFieldsCPost">
                                     <div className={`responseCont mt-0 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="responseContR"></div>
                                     <span className="d-block errorCont text-danger text-center" id="capthaErrorContR"></span>
                                 </div>
@@ -373,14 +342,29 @@ export default function Report() {
 
                                     <div className="head">
 
+                                        <div className="report_email_input_cont">
+                                            <input
+                                                className='form-control report_email_input'
+                                                placeholder='Email'
+                                                readOnly={getKeyProfileLoc("email") ? true : false}
+                                                defaultValue={getKeyProfileLoc("email") ?? ""}
+                                                {...register("email")}
+                                                type="email" />
+                                            {
+                                                errors && errors?.email?.message !== ""
+                                                &&
+                                                <span className="d-block errorCont text-danger mt-0" id="reportErrorCont">
+                                                    {errors?.email?.message}
+                                                </span>
+                                            }
+                                        </div>
+
                                         <div className='exceptRecap'>
 
                                             <div className="createPostInputs exceptRecapFields selectCategory">
                                                 <select
                                                     className="form-control report"
-                                                    id="relatedProblem"
-                                                    name="report"
-                                                    onChange={(e) => setReportValue(e.target.value)}>
+                                                    {...register("related_issue")}>
                                                     <option value="">Select related problem</option>
 
                                                     {/* ADDS REPORT REASONS TO THE SELECT BOX AS OPTIONS */}
@@ -401,8 +385,7 @@ export default function Report() {
                                             <button
                                                 id="postReportBtn"
                                                 disabled={!submittable}
-                                                type="button"
-                                                onClick={() => { validateFrom() }}
+                                                type="submit"
                                                 className="btn doPostBtn exceptRecapFields report">
                                                 {isLoading ? <div className="spinnerSizePost spinner-border text-white" role="status">
                                                     <span className="sr-only">Loading...</span>
