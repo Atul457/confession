@@ -295,11 +295,13 @@ export default function Post(props) {
 
 
             <div className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
-                onClick={openCommentsModal}
+                {...(isCoverTypePost && { onClick: openCommentsModal })}
                 style={postBg}>
                 <div className="postedPost mb-2">
                     <Link className="links text-dark" to="#">
-                        <pre className="preToNormal post">
+                        <pre
+                            {...(!isCoverTypePost && { onClick: openCommentsModal })}
+                            className="preToNormal post">
                             {props.postedComment}
                         </pre>
                         {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import AdSense from 'react-adsense';
+// import AdSense from 'react-adsense';
 
 // ads with no set-up
 
@@ -19,4 +19,39 @@ const AdSense_ = () => {
     )
 }
 
+const AdSenseSideAd = () => {
+
+    const maxWidthToShowAd = 1200
+    let windowWidth = window.innerWidth,
+        showAd = windowWidth > maxWidthToShowAd
+
+    useEffect(() => {
+        if (showAd) (window.adsbygoogle = window.adsbygoogle || []).push({});
+        const handleShowAd = () => {
+            windowWidth = window.innerWidth
+            if (windowWidth < maxWidthToShowAd) showAd = false
+            if (windowWidth > maxWidthToShowAd) showAd = true
+        }
+
+        window.addEventListener("resize", handleShowAd)
+
+        return () => {
+            window.removeEventListener("resize", handleShowAd)
+        }
+    }, [])
+
+    if (showAd)
+        return (
+            <ins className="adsbygoogle"
+                style={{ "display": "block" }}
+                data-ad-client="ca-pub-7031631451622714"
+                data-ad-slot="8349198779"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+        )
+
+    return null
+}
+
 export default AdSense_
+export { AdSenseSideAd }

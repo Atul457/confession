@@ -209,6 +209,10 @@ input::-webkit-textfield-decoration-container {
     background-color: var(--primaryColor);
 }
 
+.feed_page .outerContWrapper {
+    background-color: var(--whiteColor);
+}
+
 .mainHead {
     background: var(--whiteColor);
     padding: 0px 30px;
@@ -315,7 +319,7 @@ input::-webkit-textfield-decoration-container {
 
 .leftColumnFeed {
     position: fixed;
-    padding-top: 50px;
+    padding-top: 30px;
     height: 100vh;
     left: 0px;
     background-color: var(--primaryColor);
@@ -1760,10 +1764,12 @@ span.offlineColor {
 
 .requesterDesc img {
     width: 40px;
+    height: 40px;
 }
 
 .friendRequestsHeaderImg {
     width: 30px !important;
+    height: 30px !important;
 }
 
 .friendRequestsHeaderImg.right {
@@ -3546,6 +3552,10 @@ span.facebookMobIcon {
     flex-direction: column;
 }
 
+.feedMiddleCont.profile {
+    width: 90%;
+}
+
 .leftColumnWrapper {
     display: flex;
     flex-direction: column;
@@ -5116,6 +5126,7 @@ button.modalFootBtns.btn a:hover {
 
     .friendRequestsHeaderImg {
         width: 32px !important;
+        height: 32px !important;
     }
 
     .userImageContChatOutest {
@@ -5291,6 +5302,7 @@ button.modalFootBtns.btn a:hover {
 
     .friendRequestsHeaderImg {
         width: 25px !important;
+        height: 25px !important;
     }
 
     .userImageContChatCont {
@@ -5560,6 +5572,7 @@ button.modalFootBtns.btn a:hover {
 
     .friendRequestsHeaderImg {
         width: 32px !important;
+        height: 32px !important;
     }
 
     .singleChatCont .timeStamp {

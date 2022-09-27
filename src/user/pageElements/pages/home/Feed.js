@@ -122,6 +122,7 @@ export default function Feed(props) {
         localStorage.setItem("privacyAccepted", 1);
     }
 
+
     // Prevention from being open in sharewithlove modal, and comments got modal
     useEffect(() => {
         // only if verify email modal is closed by user then show avatars modal
@@ -134,7 +135,6 @@ export default function Feed(props) {
             && !isAvatarSelected
             && avatarsIntroModalReducer?.visible === false
             && avatarsIntroModalReducer?.isShown === false) || (auth() === false && avatarsIntroModalReducer?.isShown === false && privacyAccepted_)) {
-            console.log("show avatar")
             timeout = setTimeout(() => {
                 openAvatarModal();
             }, 10000);

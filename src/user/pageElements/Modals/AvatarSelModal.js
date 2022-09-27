@@ -61,7 +61,12 @@ const AvatarSelModal = ({ uploadImage }) => {
         if (auth()) {
             imgurl = getKeyProfileLoc("image")
             avatars.forEach((curr, index) => {
-                if (curr.src === imgurl) {
+                let src = curr.src
+                src = src.split("/")
+                imgurl = `${imgurl}`.split("/")
+                src = src[src.length - 1]
+                imgurl = imgurl[imgurl.length - 1]
+                if (src === imgurl) {
                     dispatch(toggleAvatarModal({
                         selected: index
                     }))

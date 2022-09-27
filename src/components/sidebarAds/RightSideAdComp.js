@@ -1,23 +1,14 @@
 import React from 'react'
+// import { AdSenseSideAd } from '../../user/pageElements/components/AdSense'
 import styles from "./SidebarAdComp.module.css"
 
 const RightSideAdComp = () => {
     return (
         <>
             <div className={styles.outerAdCont}>
-                <span>
-                    square ad
-                </span>
-            </div>
-            <div className={styles.outerAdCont}>
-                <span>
-                    square ad
-                </span>
-            </div>
-            <div className={styles.outerAdCont}>
-                <span>
-                    square ad
-                </span>
+                <div className={styles.rightSideAdCont}>
+                    {/* <AdSenseSideAd /> */}
+                </div>
             </div>
         </>
     )

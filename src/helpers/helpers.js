@@ -26,7 +26,12 @@ const isAvatarSelectedCurr = () => {
         imgurl = getKeyProfileLoc("image")
         if (imgurl && imgurl.indexOf("avatar") !== -1)
             avatars.forEach((curr, index) => {
-                if (curr.src === imgurl) {
+                let src = curr.src
+                src = src.split("/")
+                imgurl = `${imgurl}`.split("/")
+                src = src[src.length - 1]
+                imgurl = imgurl[imgurl.length - 1]
+                if (src === imgurl) {
                     check = messageGenerator(true, "Avatar is selected", {
                         currentSelected: curr.src,
                         avatarImageIndex: index
