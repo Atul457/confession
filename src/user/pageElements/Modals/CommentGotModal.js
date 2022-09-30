@@ -67,7 +67,6 @@ export default function CommentGotModal({ categories, ...rest }) {
         name: "post"
     } : {}
 
-
     const _doComment = async (comment_id = false, editedComment = "") => {
 
         var arr, _comment, userData;
@@ -622,9 +621,7 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                 </span>}
 
                                                                 <span className="postCreatedTime">
-                                                                    {/* {confessionData.created_at} */}
                                                                     {DateConverter(confessionData.created_at ?? state.created_at)}
-
                                                                 </span>
                                                             </div>
                                                             <div

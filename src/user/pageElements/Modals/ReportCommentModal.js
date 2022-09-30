@@ -62,7 +62,7 @@ const ReportCommentModal = () => {
             <Modal.Header className='justify-content-between'>
                 <h6>Report Comment</h6>
             </Modal.Header>
-            <Modal.Body className="privacyBody text-center">
+            <Modal.Body className="privacyBody text-center report_com_modalbody">
                 {reportModalReducer.isReported === 0 ? "Are you sure, you want to report this comment?" :
                     "You already have reported this comment"}
 

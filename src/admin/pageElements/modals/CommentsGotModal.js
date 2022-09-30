@@ -415,8 +415,6 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                 :
                                                 (
                                                     <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0 px-0 px-md-3">
-
-                                                        {console.log(confessionData)}
                                                         <span type="button" className={`sharekitdots ${sharekit === false ? "justify-content-end" : ""} resetRightModal`} onClick={toggleSharekit}>
                                                             {sharekit && <ShareKit postData={{
                                                                 confession_id: state.slug,

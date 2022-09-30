@@ -907,7 +907,7 @@ export default function Chat() {
                                                     </div>
                                                     <hr className="m-0 mt-2" />
                                                     <div type="button" className="takeActionOptions chat mt-2 textDecNone px-3" onClick={() => { performAction("clear") }}>
-                                                        <i className="fa fa-trash pr-1 pl-2" aria-hidden="true"></i>
+                                                        <i className="fa fa-trash" aria-hidden="true"></i>
                                                         Clear chat
                                                     </div>
                                                 </div>
@@ -1025,17 +1025,22 @@ export default function Chat() {
                     <h6>Report User</h6>
                 </Modal.Header>
 
-                <Modal.Body className="privacyBody">
+                <Modal.Body className="privacyBody report_com_modalbody">
                     {chatterDetails.is_userreport !== 1 ?
-                        <p>Are you sure, you want to report the user?</p> :
-                        <p>Already reported</p>
+                        <p className='mb-0'>Are you sure, you want to report the user?</p> :
+                        <p className='mb-0' >You already have reported this user.</p>
                     }
                 </Modal.Body>
 
-                <Modal.Footer className="pt-0">
-                    <Button className="modalFootBtns btn" variant="secondary" onClick={handleReportModal}>
-                        Cancel
-                    </Button>
+                <Modal.Footer className="pt-0 justify-content-center">
+                    {chatterDetails.is_userreport !== 1 ?
+                        <Button className="modalFootBtns btn" variant="secondary" onClick={handleReportModal}>
+                            Cancel
+                        </Button>
+                        :
+                        <Button className="modalFootBtns btn" variant="secondary" onClick={handleReportModal}>
+                            Done
+                        </Button>}
                     {chatterDetails.is_userreport !== 1 &&
                         <>
                             <Button className="modalFootBtns btn" variant="primary" onClick={doReport}>

@@ -1,12 +1,10 @@
 import React from 'react';
-import homeIconActive from '../../../images/homeIcon.png';
-import homeIcon from '../../../images/homeIconM.png'
-import confessIcon from '../../../images/confessIconM.png'
-import confessIconActive from '../../../images/confessIconActive.png'
+import homeIconActive from '../../../images/homeIcon.svg';
+import homeIcon from '../../../images/homeIconM.svg'
 import inboxIcon from '../../../images/inboxIconM.png'
-import inboxIconActive from '../../../images/inboxIconActive.png'
-import contactUsActiveIcon from '../../../images/contactUsIconActive.png';
-import contactUsIcon from '../../../images/contactUsMobIcon.png';
+import inboxIconActive from '../../../images/inboxIconActive.svg'
+import contactUsActiveIcon from '../../../images/contactUsIconActive.svg';
+import contactUsIcon from '../../../images/contactUsMobIcon.svg';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import { useSelector } from 'react-redux';
@@ -32,14 +30,7 @@ export default function Footer() {
 
                     </Link>
                 </div>
-                {/* <div className="linkBtns">
-                    <Link to="/createPost" className="linkBtnsAnchor">
-                        <span className="headIconCont">
-                            <img src={currentUrl === 'createPost' ? confessIconActive : confessIcon} alt="" />
-                        </span>
-                        <span className={`footLinkName ${currentUrl === "createPost" ? "activeLinkOfHeader" : ""}`}>Confess/Share</span>
-                    </Link>
-                </div> */}
+
                 {auth()
                     ?
                     <div className="linkBtns">

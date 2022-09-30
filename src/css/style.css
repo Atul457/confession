@@ -1590,6 +1590,17 @@ span.offlineColor {
     height: 1rem;
 }
 
+.wrapper_upperCont {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.chatter_footer {
+    justify-content: space-between;
+    width: 100%;
+}
+
 .forBottomBorder {
     margin-bottom: 0px;
     padding: 11px 20px;
@@ -1952,15 +1963,6 @@ span.offlineColor {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-/* .takeAction,
-.takeActionNotiNotiProfile {
-    width: 170px !important;
-    border-radius: 12px;
-    padding: 3px !important;
-    right: 50px !important;
-    top: 40px !important;
-    position: absolute !important;
-} */
 
 .hideTheElem {
     display: none !important;
@@ -1979,6 +1981,13 @@ span.offlineColor {
     color: var(--whiteColor);
     margin-bottom: 2px;
     width: 100%;
+}
+
+.takeActionOptions .fa-trash {
+    padding-right: 4px;
+    padding-left: 8px;
+    position: relative;
+    font-size: 16px;
 }
 
 .takeActionOptions.chat {
@@ -2000,6 +2009,10 @@ span.offlineColor {
     height: 56px;
     width: 100%;
     color: #fff !important;
+}
+
+.moveBackFromChat {
+    display: none;
 }
 
 .boxShadow {
@@ -2640,12 +2653,12 @@ span.facebookMobIcon {
 }
 
 .heartCompCont {
-    position: relative;
-    left: 0px;
+    position: fixed;
     display: flex;
     align-items: center;
-    /* margin-right: 15px;
-    margin-bottom: 15px; */
+    bottom: 34px;
+    right: 140px;
+    z-index: 99;
 }
 
 .feedSPbtnsWrapper {
@@ -3025,6 +3038,7 @@ span.facebookMobIcon {
 
 .profileChatArrowImg {
     width: 25px !important;
+    height: 25px !important;
     position: absolute;
     right: 0px;
 }
@@ -3210,7 +3224,7 @@ span.facebookMobIcon {
 
 .deletePostIcon {
     position: absolute;
-    top: 12px;
+    top: 14px;
     right: 0px;
     font-size: 22px !important;
     height: 37px;
@@ -4041,7 +4055,7 @@ a.headerNavLinks.active::after {
 }
 
 .coverTypePost {
-    margin: 5px auto 25px auto;
+    margin: 5px auto 15px auto;
     display: flex;
     min-height: 180px;
     cursor: pointer;
@@ -4469,6 +4483,10 @@ input.switch12.profile:checked {
     border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
     border-radius: 0px;
     margin-top: 0px;
+}
+
+.friendsListProfile {
+    cursor: pointer;
 }
 
 .allChatsCont .infinite-scroll-component {
@@ -5094,11 +5112,9 @@ button.modalFootBtns.btn a:hover {
     height: 41px;
 }
 
-
-
-
-
-
+.commentsGot .inputWithForwardCont {
+    margin-top: 5px;
+}
 
 
 
@@ -5724,6 +5740,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .moveBackFromChat {
+        display: inline-block;
         font-size: 18px;
         position: relative;
         left: 10px;
@@ -6551,7 +6568,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .editDelComment {
-        right: 0px;
+        right: -16px;
     }
 
     .deleteCategory.admin {
@@ -6787,6 +6804,7 @@ button.modalFootBtns.btn a:hover {
     .refreshIcon {
         font-size: 35px !important;
         bottom: 102px !important;
+        right: 30px !important;
     }
 
     .shrinkRequestsCont,
@@ -6967,7 +6985,9 @@ button.modalFootBtns.btn a:hover {
     }
 
     .heartCompCont {
-        position: relative;
+        /* display: none !important; */
+        right: 70px;
+        bottom: 88px;
     }
 
     .heartComp {
@@ -7038,6 +7058,14 @@ button.modalFootBtns.btn a:hover {
         max-width: unset;
         padding: 0px 30px;
         margin-bottom: 20px;
+    }
+
+    .report_com_modalbody {
+        padding-top: 30px;
+    }
+
+    .commentsGot .inputWithForwardCont {
+        margin-top: 10px;
     }
 
 }

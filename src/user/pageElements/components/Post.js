@@ -15,7 +15,7 @@ import "react-awesome-lightbox/build/style.css";
 import { fetchData } from '../../../commonApi';
 import useShareKit from '../../utilities/useShareKit';
 import TextareaAutosize from 'react-textarea-autosize';
-import shareKitIcon from "../../../images/shareKitIcon.png";
+import shareKitIcon from "../../../images/actionIconImg.svg";
 import canBeRequested from "../../../images/canBeRequested.svg";
 import alRequested from "../../../images/alRequested.svg";
 import alFriends from "../../../images/alFriends.svg";

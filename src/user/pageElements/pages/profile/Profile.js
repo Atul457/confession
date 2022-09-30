@@ -5,7 +5,7 @@ import Post from '../../components/Post';
 import Requests from '../../components/Requests';
 import pen from '../../../../images/whitepen.png';
 import downArrowIcon from '../../../../images/downArrow.png';
-import supportIcon from '../../../../images/contactUsIconActive.png';
+import supportIcon from '../../../../images/contactUsIconActive.svg';
 import { Link } from "react-router-dom";
 import SiteLoader from '../../components/SiteLoader';
 import { useNavigate } from "react-router-dom";

@@ -407,8 +407,6 @@ export default function Feed(props) {
                         }
                     }
 
-
-
                     let obj = {
                         data: postConfessionArr,
                         token: token,
@@ -957,7 +955,7 @@ export default function Feed(props) {
 
 
                 <Footer />
-                <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
+                {/* <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i> */}
                 <i className={`fa fa-refresh goUpArrow refreshIcon ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={refreshFeed}></i>
 
                 {/* REFRESH BUTTON */}

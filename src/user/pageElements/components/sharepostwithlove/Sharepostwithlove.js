@@ -201,6 +201,7 @@ const HeartComponent = () => {
 
     return (
         <>
+            <span onClick={openSharewithLoveModal} className='sharePWLlabel'>Spread the Love</span>
             <div
                 className='heartComp'
                 pulsate='26-09-22,pulsatingIcon mobile'
@@ -210,7 +211,6 @@ const HeartComponent = () => {
                 <img
                     src={heartHovered} alt="heart_hovered_image" />
             </div>
-            <span onClick={openSharewithLoveModal} className='sharePWLlabel'>Spread the Love</span>
         </>
     )
 }

@@ -25,7 +25,7 @@ export default function Friends(props) {
     }
 
     return (
-        <div className={`requesterDesc boxShadow`}>
+        <div className={`requesterDesc boxShadow`} onClick={setChatToOpen}>
 
             <div className="friendsListProfile d-flex align-items-center w-100">
                 <span className="friendRequestsHImgCont">
@@ -36,7 +36,7 @@ export default function Friends(props) {
                     <div className="requesterCountOfSharedConfessions">Shared {props.no_of_confessions} confessions</div>
 
                 </div>
-                <img src={rightArrowIcon} alt="" className="profileChatArrowImg" type="button" onClick={setChatToOpen} />
+                <img src={rightArrowIcon} alt="" className="profileChatArrowImg" type="button" />
             </div>
 
         </div>

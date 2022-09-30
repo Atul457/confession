@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import rejectRequest from '../../../images/rejectRequest.png'
-import acceptRequest from '../../../images/acceptRequest.png'
+import rejectRequest from '../../../images/rejectRequest.svg'
+import acceptRequest from '../../../images/acceptRequest.svg'
 
 export default function Requests(props) {
 

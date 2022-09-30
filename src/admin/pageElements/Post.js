@@ -183,46 +183,6 @@ export default function Post(props) {
         }
     }
 
-
-    // const upvoteOrDownvote = async (isLiked) => {
-
-    //     let is_liked, ip_address, check_ip, token = '', data;
-    //     is_liked = isLiked ? 1 : 2;
-    //     ip_address = localStorage.getItem("ip")
-    //     check_ip = ip_address.split(".").length
-    //     if (auth()) {
-    //         token = localStorage.getItem("userDetails");
-    //         token = JSON.parse(token).token;
-    //     }
-
-    //     if (check_ip === 4) {
-    //         let obj = {
-    //             data: { is_liked, ip_address },
-    //             token: token,
-    //             method: "post",
-    //             url: `likedislike/${props.postId}`
-    //         }
-    //         try {
-    //             data = {
-    //                 like: isLiked ? props.like + 1 : props.like - 1,
-    //                 is_liked: isLiked ? 1 : 2
-    //             }
-    //             updateConfessionData(props.index, data)
-
-    //             const res = await fetchData(obj)
-    //             // if (res.data.status === true) {
-    //             // } else {
-    //             //     console.log(res);
-    //             // }
-    //         } catch (error) {
-    //             console.log(error);
-    //             console.log("Some error occured");
-    //         }
-    //     } else {
-    //         console.log("Invalid ip");
-    //     }
-    // }
-
     const updateConfessionData = (index, data) => {
         props.updatedConfessions(index, data)
     }
@@ -242,14 +202,6 @@ export default function Post(props) {
                 <i className="fa fa-share-alt" aria-hidden="true"></i>
             </span>
 
-            {/* <span type="button" className="categoryOfUser deleteCategory" onClick={deleteConfessionFunc}> */}
-            {/* {deleteConfession === true
-                    ?
-                    <div className="spinnerSizePost spinner-border text-white" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                    :
-                    "Delete"} */}
 
             <i className="fa fa-trash pr-3 deletePostIcon" type="button" aria-hidden="true" onClick={deleteConfessionFunc}></i>
             {/* </span> */}

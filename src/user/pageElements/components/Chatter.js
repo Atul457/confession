@@ -24,14 +24,16 @@ export default function Chatter(props) {
                     <img src={props.imgUrl} alt="" className="userImageContChat" />
                 </span>
                 <div className="singleChatterUserName">
-                    <div className="upperCont">
-                        <span className="text-capitalize" onClick={openChat}>
-                            {props.chatterName}
-                        </span>
+                    <div className='wrapper_upperCont'>
+                        <div className="upperCont" onClick={openChat}>
+                            <span className="text-capitalize">
+                                {props.chatterName}
+                            </span>
+                        </div>
                         <i className="fa fa-ellipsis-v showChatArrCont" aria-hidden="true" onClick={unFriend}></i>
                     </div>
-                    <div className="lastMessageNtimeWrapper">
-                        <div className="chatterUserDesc" onClick={openChat}>
+                    <div className="lastMessageNtimeWrapper chatter_footer" onClick={openChat}>
+                        <div className="chatterUserDesc">
                             {props.chatterDesc}
                         </div>
                         <span className="timeStamp">

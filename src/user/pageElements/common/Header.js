@@ -9,17 +9,15 @@ import homeIconActive from '../../../images/homeIcon.svg'
 import homeIcon from '../../../images/homeIconActive.svg'
 import bell from '../../../images/bell.svg'
 import bellActive from '../../../images/orangebell.svg'
-import confessIcon from '../../../images/confessIcon.svg'
-import confessIconActive from '../../../images/confessIconActive.svg'
 import inboxIcon from '../../../images/inboxIcon.svg'
-import inboxIconActive from '../../../images/inboxIconActive.png'
+import inboxIconActive from '../../../images/inboxIconActive.svg'
 import { Link, NavLink, useParams } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import SetAuth from '../../behindScenes/SetAuth';
 import { useLocation } from 'react-router';
 import { fetchData } from '../../../commonApi';
-import contactUsActiveIcon from '../../../images/contactUsIconActive.png';
-import contactUsIcon from '../../../images/contactUsIcon.png';
+import contactUsActiveIcon from '../../../images/contactUsIconActive.svg';
+import contactUsIcon from '../../../images/contactUsIcon.svg';
 import VerifyEmailModal from '../Modals/VerifyEmailModal';
 import { useDispatch, useSelector } from 'react-redux';
 import socialLinksIcon from '../../../images/socialLinksIcon.svg';
@@ -361,16 +359,6 @@ export default function Header(props) {
                                                     className={`headLinkName ${currentUrl === "home" ? "activeLinkOfHeader" : ""}`}>Home</span>
                                             </NavLink>
                                         </div>
-
-                                        {/* <div className="linkBtns">
-                                            <NavLink to="/createPost" className="headerNavLinks">
-                                                <span className="headIconCont">
-                                                    <img src={currentUrl === 'createPost' ? confessIconActive : confessIcon} alt="" />
-                                                </span>
-                                                <span className={`headLinkName ${currentUrl === "createPost" ? "activeLinkOfHeader" :
-                                                    ""}`}>Confess/Share</span>
-                                            </NavLink>
-                                        </div> */}
 
                                         {/* 3x icons are being used */}
 

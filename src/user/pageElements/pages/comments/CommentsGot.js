@@ -24,7 +24,8 @@ import useCommentsModal from '../../../utilities/useCommentsModal';
 import { getToken } from '../../../../helpers/getToken';
 import viewsCountIcon from '../../../../images/viewsCountIcon.svg';
 import _ from 'lodash';
-
+import ReportPostModal from '../../Modals/ReportPostModal';
+import ReportCommentModal from '../../Modals/ReportCommentModal';
 
 
 export default function CommentsGot(props) {
@@ -34,7 +35,11 @@ export default function CommentsGot(props) {
     let history = useNavigate();
     const dispatch = useDispatch();
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
-    const commentsModalReducer = useSelector(state => state.commentsModalReducer);
+    const {
+        commentsModalReducer,
+        reportPostModalReducer,
+        reportComModalReducer: reportModalReducer
+    } = useSelector(state => state);
     const [confessionData, setConfessionData] = useState(false);
     const [isWaitingRes, setIsWaitingRes] = useState(true);
     const [isServerErr, setIsServerErr] = useState(false);
@@ -46,9 +51,9 @@ export default function CommentsGot(props) {
     const [loaded, setLoaded] = useState(false)
     const [reqFulfilled, setReqFullfilled] = useState(false);
     const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal();
-    const isCoverTypePost = props.category_id === 0
+    const isCoverTypePost = confessionData?.category_id === 0
     const postBg = isCoverTypePost ? {
-        backgroundImage: `url('${props?.cover_image}')`,
+        backgroundImage: `url('${confessionData?.cover_image}')`,
         name: "post"
     } : {}
 
@@ -80,6 +85,7 @@ export default function CommentsGot(props) {
             "like": confessionData.like,
             "slug": confessionData.slug,
             "is_liked": confessionData.is_liked,
+            "isReported": confessionData.isReported,
             "dislike": confessionData.dislike,
             "is_liked_prev": confessionData.is_liked,
             "cover_image": confessionData.cover_image,
@@ -346,9 +352,9 @@ export default function CommentsGot(props) {
                                                                 </Link>}
 
 
-                                                            <span className="catCommentBtnCont">
+                                                            {!isCoverTypePost && <span className="catCommentBtnCont">
                                                                 <div className="categoryOfUser" type="button">{(confessionData.category_name).charAt(0) + (confessionData.category_name).slice(1).toLowerCase()}</div>
-                                                            </span>
+                                                            </span>}
                                                             <span className="postCreatedTime">
                                                                 {DateConverter(confessionData.created_at)}
                                                             </span>
@@ -363,53 +369,53 @@ export default function CommentsGot(props) {
                                                                     {confessionData.description}
                                                                 </pre>
                                                             </div>
+                                                        </div>
 
 
-                                                            {(confessionData.image !== null && (confessionData.image).length > 0)
-                                                                &&
-                                                                (
-                                                                    <div className="form-group imgPreviewCont mt-2 mb-0">
-                                                                        <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
-                                                                            {
-                                                                                (confessionData.image).map((src, index) => {
-                                                                                    return (
-                                                                                        <span
-                                                                                            className="uploadeImgWrapper fetched"
-                                                                                            key={`uploadeImgWrapper${index}`}>
-                                                                                            <img src={src} alt="" className='previewImg' />
-                                                                                        </span>)
-                                                                                })
-                                                                            }
-                                                                        </div>
-                                                                    </div>
-                                                                )
-                                                            }
-
-
-                                                            {auth()
-                                                                ?
-                                                                <div className="container-fluid inputWithForwardCont">
-                                                                    <div className="inputToAddComment textAreaToComment w-100">
-                                                                        <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control my-3"></TextareaAutosize>
-
-                                                                    </div>
-                                                                    <div type="button" id="postButtonComGot" className="arrowToAddComment" onClick={() => { doComment() }}>
-                                                                        <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                                                        {(confessionData.image !== null && (confessionData.image).length > 0)
+                                                            &&
+                                                            (
+                                                                <div className="form-group imgPreviewCont mt-2 mb-0">
+                                                                    <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
+                                                                        {
+                                                                            (confessionData.image).map((src, index) => {
+                                                                                return (
+                                                                                    <span
+                                                                                        className="uploadeImgWrapper fetched"
+                                                                                        key={`uploadeImgWrapper${index}`}>
+                                                                                        <img src={src} alt="" className='previewImg' />
+                                                                                    </span>)
+                                                                            })
+                                                                        }
                                                                     </div>
                                                                 </div>
-                                                                :
-                                                                <span className="feedPageLoginBtnCont">
-                                                                    <Link to="/login">
-                                                                        <div className="categoryOfUser enhancedStyle" type="button">
-                                                                            Login to comment
-                                                                        </div>
-                                                                    </Link>
-                                                                </span>
-                                                            }
+                                                            )
+                                                        }
 
 
-                                                            <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
-                                                        </div>
+                                                        {auth()
+                                                            ?
+                                                            <div className="container-fluid inputWithForwardCont">
+                                                                <div className="inputToAddComment textAreaToComment w-100">
+                                                                    <TextareaAutosize type="text" maxLength={maxChar} row='1' value={comment} onKeyDown={(e) => { checkKeyPressed(e) }} onChange={(e) => { setComment(e.target.value) }} className="form-control my-3"></TextareaAutosize>
+
+                                                                </div>
+                                                                <div type="button" id="postButtonComGot" className="arrowToAddComment" onClick={() => { doComment() }}>
+                                                                    <img src={forwardIcon} alt="" className="forwardIconContImg" />
+                                                                </div>
+                                                            </div>
+                                                            :
+                                                            <span className="feedPageLoginBtnCont">
+                                                                <Link to="/login">
+                                                                    <div className="categoryOfUser enhancedStyle" type="button">
+                                                                        Login to comment
+                                                                    </div>
+                                                                </Link>
+                                                            </span>
+                                                        }
+
+
+                                                        <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
 
                                                         <div className="postFoot">
                                                             {auth() === false &&
@@ -477,6 +483,18 @@ export default function CommentsGot(props) {
                 </div>
                 :
                 <SiteLoader />}
+
+            {/* ReportPostsModal */}
+            {
+                reportPostModalReducer.visible && (
+                    <ReportPostModal
+                        updatedConfessions={updateConfessionData} />)
+            }
+            {/* ReportPostsModal */}
+
+            {/* ReportCommentModal */}
+            {reportModalReducer.visible && <ReportCommentModal />}
+            {/* ReportCommentModal */}
 
         </div>
     );

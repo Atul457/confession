@@ -39,8 +39,6 @@ export default function Comments(props) {
         }
     }, [commentsModalReducer.updateField.comment_id])
 
-
-
     useEffect(() => {
         if (commentsModalReducer.commentField.comment_id === props.commentId) {
             let ref = document.querySelector(`#textarea${props.commentId}`)
@@ -144,7 +142,6 @@ export default function Comments(props) {
         }
         else      //UPDATE COMMENT
         {
-
             commentData = {
                 confession_id: props.postId,
                 comment_id,
@@ -350,6 +347,8 @@ export default function Comments(props) {
     const openSubComments = () => {
         setShowSubComments({ ...showSubComments, isBeingExpanded: true, isShown: true })
     }
+
+
 
     // Open the modal to report the comment
     const openReportCommModal = () => {
