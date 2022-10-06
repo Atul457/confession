@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchData } from '../../../commonApi';
+import { getKeyProfileLoc } from '../../../helpers/profileHelper';
+import auth from '../../behindScenes/Auth/AuthCheck';
 import VerifyInfoModal from '../Modals/VerifyInfoModal';
 
 
@@ -16,6 +18,7 @@ export default function VerifyEmail() {
     var userId = params.userId;
     var token = params.token;
     var length = token.length;
+    const differentUserLoggedInMssg = "Account could not be verified. Please make sure that you are logged in using the same email on which the verification link was sent."
 
     useEffect(() => {
         if (userId && token && (length > 20)) {
@@ -30,9 +33,15 @@ export default function VerifyEmail() {
                 try {
                     const res = await fetchData(obj)
                     if (res.data.status === true) {
+                        if (auth() && getKeyProfileLoc("user_id") !== userId)
+                            return setVerifyIModal({
+                                ...VerifyIModal,
+                                message: differentUserLoggedInMssg,
+                                showLogginBtn: true,
+                                visible: true
+                            })
                         history("/login");
                     } else {
-                        console.log(res);
                         setVerifyIModal({
                             ...VerifyIModal,
                             message: res.data.message,
@@ -58,6 +67,10 @@ export default function VerifyEmail() {
 
 
     return (
-        <VerifyInfoModal visible={VerifyIModal.visible} message={VerifyIModal.message} redirect={closeModal} />
+        <VerifyInfoModal
+            visible={VerifyIModal.visible}
+            showLogginBtn={VerifyIModal?.showLogginBtn ?? false}
+            message={VerifyIModal.message}
+            redirect={closeModal} />
     );
 }

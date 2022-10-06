@@ -84,7 +84,7 @@ export default function Profile() {
     });
     const [profileImg, setProfileImg] = useState({
         isLoading: false,
-        data: "",
+        data: getKeyProfileLoc("image") ?? "",
         isError: false
     });
 
@@ -174,6 +174,10 @@ export default function Profile() {
                     }
                     setUserDetails(dataToSet);
                     setRunOrNot(false);
+                    setProfileImg({
+                        isLoading: false,
+                        ...profileImg, data: res.data.user?.image
+                    })
                     setProfile({ ...res.data.user })
                     localStorage.setItem("userDetails", JSON.stringify(dataToSet));
                 } else {
@@ -386,7 +390,6 @@ export default function Profile() {
                         setProfileImg({
                             ...profileImg,
                             data: res.data.imagepath,
-                            isLoading: false,
                             is_avatar: 0
                         })
                         setProfile({ ...profile, image: res.data.imagepath, is_avatar: 0 });
@@ -564,14 +567,14 @@ export default function Profile() {
                                                     <span className="profilePicCont">
                                                         {profileImg.isLoading
                                                             ?
-                                                            (<div className="spinner-border pColor" role="status">
+                                                            (<div className="spinner-border text-white w-25 h-25" role="status">
                                                                 <span className="sr-only">Loading...</span>
                                                             </div>)
                                                             :
                                                             (
                                                                 <span className="profilePicCont">
                                                                     <img
-                                                                        src={profile.image === "" ? userIcon : profile.image}
+                                                                        src={profileImg.data === "" ? userIcon : profileImg.data}
                                                                         className="loggedInUserPic"
                                                                         type="button"
                                                                         alt=""

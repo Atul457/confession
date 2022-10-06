@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import Post from '../../components/Post';
@@ -39,7 +39,6 @@ import { AppreciationModal, HeartComponent, ShareWithLoveModal } from '../../com
 import ReportPostModal from '../../Modals/ReportPostModal';
 import { getLocalStorageKey, isAvatarSelectedCurr } from "../../../../helpers/helpers"
 import RightSideAdComp from '../../../../components/sidebarAds/RightSideAdComp';
-import LeftSideAdComp from '../../../../components/sidebarAds/LeftSideAdComp';
 
 
 export default function Feed(props) {
@@ -70,10 +69,8 @@ export default function Feed(props) {
     const [AC2S, setAC2] = useState(() => {
         if (actCategory.state && !actCategory?.state?.openFeatures)
             return actCategory.state.active;
-        else
-            return "";
+        return "";
     });
-    const [goDownArrow, setGoDownArrow] = useState(false);
     const [activeCategory, setActiveCategory] = useState((AC2S) !== '' ? `${AC2S}` : `all`);
     const [confessions, setConfessions] = useState(false);
     const [confessionResults, setConfessionResults] = useState(true);
@@ -90,6 +87,8 @@ export default function Feed(props) {
     const [base64Src, setBase64Src] = useState([]);
     const [imgPathArr, setImgPathArr] = useState([]);
     const [isImgLoading, setIsImgLoading] = useState(false);
+    const heartCompRef = useRef(null)
+    const goDownArrowRef = useRef(null)
     // let commentCountReqToPost = 1;
     // let isCondStatified = auth() ? getKeyProfileLoc("comments") > commentCountReqToPost : false
     let fs = 1024; //Sets the max file size that can be sent
@@ -321,7 +320,6 @@ export default function Feed(props) {
 
     // UPDATES THE ACTIVECATEGORY
     const updateActiveCategory = (activeCat) => {
-        setGoDownArrow(false);
         setConfessions(false);
         setConfCount(1);
         setPageNo(1);
@@ -510,12 +508,20 @@ export default function Feed(props) {
     useEffect(() => {
         const scroll = () => {
             let scroll = document.querySelector("html").scrollTop;
+            let secondPostElem = document.querySelector(".postCont:nth-child(1)")
+            secondPostElem = secondPostElem?.getBoundingClientRect()?.top + 500
+            if (secondPostElem < 0) heartCompRef?.current.classList.remove("hideHeartComp")
+            else heartCompRef?.current.classList.add("hideHeartComp")
             if (scroll > 3000) {
-                setGoDownArrow(true);
-            } else {
-                setGoDownArrow(false);
+                goDownArrowRef?.current.classList.remove("hideHeartComp")
+                heartCompRef?.current.classList.remove("move_right")
+            }
+            else {
+                goDownArrowRef?.current.classList.add("hideHeartComp")
+                heartCompRef?.current.classList.add("move_right")
             }
         }
+
         document.addEventListener("scroll", scroll);
         return () => {
             document.removeEventListener("scroll", scroll);
@@ -725,7 +731,10 @@ export default function Feed(props) {
 
                                                     <div className="selectNpostBtnCont">
                                                         <div className="shareIconAndUpImgCont">
-                                                            <div className="heartCompCont">
+                                                            {/* dddd */}
+                                                            <div
+                                                                className="heartCompCont hideHeartComp"
+                                                                ref={heartCompRef}>
                                                                 <HeartComponent />
                                                             </div>
 
@@ -956,7 +965,12 @@ export default function Feed(props) {
 
                 <Footer />
                 {/* <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i> */}
-                <i className={`fa fa-refresh goUpArrow refreshIcon ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={refreshFeed}></i>
+                <i
+                    ref={goDownArrowRef}
+                    className={`fa fa-refresh goUpArrow refreshIcon`}
+                    aria-hidden="true"
+                    type="button"
+                    onClick={refreshFeed}></i>
 
                 {/* REFRESH BUTTON */}
                 {commentsModal.visibility === false && changes && <RefreshButton />}
