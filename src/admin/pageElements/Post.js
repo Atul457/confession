@@ -261,7 +261,7 @@ export default function Post(props) {
                                 ||
                                 (props.postedComment).split("\n").length > 5 ?
                                 <>
-                                    {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} className="viewMoreBtn pl-1">view more</span>
+                                    {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} onClick={openCommentsModal} className="viewMoreBtn pl-1">view more</span>
                                 </> : ''
                         }
                     </Link>

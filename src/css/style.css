@@ -2154,6 +2154,10 @@ span.offlineColor {
     border-radius: 50%;
 }
 
+.modal {
+    padding-right: 0px !important;
+}
+
 .headerUserAccIcon {
     top: initial;
     width: 27.99px;
