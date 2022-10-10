@@ -1,0 +1,200 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+// Helpers
+import DateConverter from '../../../../helpers/DateConverter'
+import { doCommentService, likeDislikeService } from '../../services/forumServices'
+
+// Image imports
+import userIcon from "../../../../images/userAcc.svg"
+import commentReplyIcon from "../../../../images/creplyIcon.svg"
+import upvoted from "../../../../images/upvoted.svg"
+import upvote from "../../../../images/upvote.svg"
+import { forumHandlers, postComment, reportForumCommAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
+
+// Component imports
+import CommentBox from '../CommentBox'
+import { apiStatus } from '../../../../helpers/status'
+import { reportedFormStatus } from './ForumCommProvider'
+
+
+
+const ForumSubComment = (props) => {
+
+    // Hooks and vars
+    const {
+        comment: currSubComment,
+        auth,
+        loggedInUserId,
+        dispatch,
+        commentBox: { commentId: activeComBoxId },
+        doCommentVars,
+        rootDetails,
+        isAllowedToComment
+    } = props
+
+    let {
+        comment_by,
+        created_at,
+        profile_image = "",
+        user_id = false,
+        comment_id: commentId,
+        subCommentIndex,
+        isReported,
+        is_liked = 0
+    } = currSubComment
+
+    const { handleCommentsAcFn } = forumHandlers,
+        isMyComment = loggedInUserId === user_id,
+        isCommentBoxVisible = auth() && commentId === activeComBoxId
+
+    const {
+        navigate,
+        forum_id,
+        commentsCount,
+        page,
+        postCommentReducer,
+    } = doCommentVars
+
+
+    // Functions
+
+    // Opens report forum comment modal
+    const openReportCommentModal = () => {
+        dispatch(reportForumCommAcFn({
+            visible: true,
+            status: apiStatus.IDLE,
+            message: "",
+            data: {
+                forum_id,
+                is_for_subcomment: false,
+                parent_comment_index: rootDetails?.commentIndex,
+                comment_index: subCommentIndex,
+                comment_id: commentId,
+                isReported: isReported === reportedFormStatus.reported,
+                is_for_subcomment: true
+            }
+        }))
+    }
+
+    // Like dislike
+    const upvoteOrDownvote = async (isLiked) => {
+        likeDislikeService({
+            isLiked,
+            dispatch,
+            forum_id,
+            parent_comment_index: rootDetails?.commentIndex,
+            is_for_sub_comment: true,
+            commentIndex: subCommentIndex,
+            commentId
+        })
+    }
+
+    // Do comment
+    const doComment = commentBoxRef => {
+        doCommentService({
+            commentBoxRef,
+            postComment,
+            dispatch,
+            navigate,
+            isSubComment: true,
+            forum_id,
+            usedById: commentId,
+            parent_root_info: {
+                parent_id: commentId,
+                root_id: rootDetails?.commentId,
+                parentIndex: rootDetails?.commentIndex
+            },
+            commentsCount,
+            page
+        })
+    }
+
+    // Toggles reply btn and comment/edit comment field
+    const toggleReplyBtn = () => {
+        dispatch(handleCommentsAcFn({
+            commentBox: {
+                ...(!isCommentBoxVisible && { commentId })
+            }
+        }))
+    }
+
+    profile_image = profile_image === "" ? userIcon : profile_image
+
+    return (
+        <div className='postCont'>
+
+            {/* Report comment */}
+            {(auth() && isReported !== 2) && <span className="reportPost" onClick={openReportCommentModal}>
+                <i className="fa fa-exclamation-circle reportComIcon" aria-hidden="true"></i>
+            </span>}
+            {/* Report comment */}
+
+            <div className="postContHeader commentsContHeader">
+                <span className="commentsGotProfileImg">
+                    <img src={profile_image} alt="user_profile_image" />
+                </span>
+
+                {user_id !== false ?
+                    <Link className={`forum_com_p_link`}
+                        to={(auth ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `/userProfile/${user_id}`)}>
+                        <span className="userName">
+                            {comment_by}
+                        </span>
+                    </Link>
+                    :
+                    (<span className="userName">
+                        {comment_by}
+                    </span>)
+                }
+
+                <span className="postCreatedTime">
+                    {created_at ? DateConverter(created_at) : null}
+                </span>
+            </div>
+
+            <div className="postBody">
+                <div className="postedPost mb-0">
+                    <pre className="preToNormal">
+                        {currSubComment?.comment}
+                    </pre>
+
+                    {isAllowedToComment &&
+                        <div className="replyCont">
+                            <span className="reply_btn">
+                                <div onClick={toggleReplyBtn}>
+                                    <img src={commentReplyIcon} alt="" className='replyIcon' />
+                                    <span className='pl-2'>Reply</span>
+                                </div>
+
+
+                                {/* like dislike */}
+                                {
+                                    <div className='iconsMainCont'>
+                                        <div className={`upvote_downvote_icons_cont buttonType`}>
+                                            {is_liked === 1 ?
+                                                <img src={upvoted} alt="" onClick={() => upvoteOrDownvote(false)} /> :
+                                                <img src={upvote} alt="" onClick={() => upvoteOrDownvote(true)} />}
+                                            <span className='count'>{props.like}</span>
+                                        </div>
+                                    </div>
+                                }
+                                {/* like dislike */}
+
+                            </span>
+
+                            {isCommentBoxVisible ?
+                                <CommentBox
+                                    auth={auth}
+                                    usedById={commentId}
+                                    postCommentReducer={postCommentReducer}
+                                    doComment={doComment} /> :
+                                null}
+                        </div>}
+                </div>
+            </div>
+        </div >
+    )
+}
+
+export default ForumSubComment

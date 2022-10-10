@@ -17,6 +17,13 @@ const messageGenerator = (status = false, message = '', data = {}) => {
     return { status, message, data }
 }
 
+const resHandler = res => {
+    const { data } = res
+    if (data.status === true)
+        return data
+    throw new Error(res?.data?.message ?? "Something went wrong")
+}
+
 
 // Checks whether or not avatar image is used on profile currently
 const isAvatarSelectedCurr = () => {
@@ -48,4 +55,13 @@ const isAvatarSelectedCurr = () => {
     return check
 }
 
-export { getLocalStorageKey, isAvatarSelectedCurr, setLocalStoragekey }
+const areAtLastPage = (pageSize = 20, commentsCount = 0, currPage) => {
+    var totalPages, isAtLastPage = false;
+    pageSize = 20;
+    totalPages = Math.ceil(commentsCount / pageSize);
+    totalPages = totalPages === 0 ? (totalPages + 1) : totalPages;
+    isAtLastPage = totalPages === currPage
+    return isAtLastPage
+}
+
+export { getLocalStorageKey, isAvatarSelectedCurr, setLocalStoragekey, resHandler, areAtLastPage }

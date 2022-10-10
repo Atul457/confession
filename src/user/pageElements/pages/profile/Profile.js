@@ -145,13 +145,12 @@ export default function Profile() {
         }
     }
 
+
     const updateProfile = async () => {
         if (runOrNot) {
 
-            // console.log(profileImg.data)
-
             let data = {
-                image: profileImg.data,
+                image: profileImg.imagepath,
                 post_as_anonymous: profile.post_as_anonymous,
                 display_name: profile.display_name,
                 view_previous_invoice: (profile.view_previous_invoice).toString(),
@@ -176,7 +175,8 @@ export default function Profile() {
                     setRunOrNot(false);
                     setProfileImg({
                         isLoading: false,
-                        ...profileImg, data: res.data.user?.image
+                        ...profileImg,
+                        data: res.data.user?.image
                     })
                     setProfile({ ...res.data.user })
                     localStorage.setItem("userDetails", JSON.stringify(dataToSet));
@@ -344,6 +344,7 @@ export default function Profile() {
             ...profileImg,
             data: link,
             isLoading: false,
+            imagepath: "",
             is_avatar: 1
         })
         setProfile({ ...profile, image: link, is_avatar: 1 });
@@ -389,7 +390,7 @@ export default function Profile() {
                     if (res.data.status === true) {
                         setProfileImg({
                             ...profileImg,
-                            data: res.data.imagepath,
+                            imagepath: res.data.imagepath,
                             is_avatar: 0
                         })
                         setProfile({ ...profile, image: res.data.imagepath, is_avatar: 0 });
@@ -410,7 +411,6 @@ export default function Profile() {
     };
 
     const fetchMoreConfessions = () => {
-        // console.log(unread?.current?.value);
         getData((confData + 1), true);
     }
 

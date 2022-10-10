@@ -4,7 +4,6 @@ import uploadImages from '../../../../images/uploadImages.png';
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import downArrowIcon from '../../../../images/downArrow.png';
-import auth from '../../../behindScenes/Auth/AuthCheck';
 import { useNavigate } from "react-router-dom";
 import { fetchData } from '../../../../commonApi';
 import ExtValidator from '../../../../extensionValidator/ExtValidator';

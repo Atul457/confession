@@ -1,46 +1,32 @@
+import React, { useState, useEffect, createContext } from 'react';
+import TagManager from 'react-gtm-module'
+
+
+// Styles
 import './App.css';
 import './css/style.css';
-import Feed from "../src/user/pageElements/pages/home/Feed";
-import Login from "../src/user/pageElements/pages/auth/Login";
-import Register from "../src/user/pageElements/pages/auth/Register";
-import CreatePost from "../src/user/pageElements/pages/create/CreatePost";
-import Chat from "../src/user/pageElements/pages/chat/Chat";
-import Report from "../src/user/pageElements/pages/report/Report";
-import Profile from "../src/user/pageElements/pages/profile/Profile";
-import AddNewFriends from "./user/pageElements/components/AddNewFriends";
-import RequestsGot from "../src/user/pageElements/pages/requests/RequestsGot";
-import CommentsGot from "../src/user/pageElements/pages/comments/CommentsGot";
-import AdminCommentsGot from './admin/pageElements/CommentsGot';
-import SiteLoader from "./user/pageElements/components/SiteLoader";
-import AdminLogin from './admin/pageElements/Login';
-import React, { useState, useEffect, createContext } from 'react';
-import auth from './user/behindScenes/Auth/AuthCheck';
-import UserProfile from '../src/user/pageElements/pages/profile/UserProfile';
-import Privacy from '../src/user/pageElements/pages/privacyPolicy/Privacy';
-import Dashboard from './admin/pageElements/Dashboard';
-import { fetchData } from './commonApi';
-import { Users } from './admin/pageElements/Users';
-import { BrowserRouter as Router, Routes as Switch, Route } from "react-router-dom";
-import { ReportedUsers } from './admin/pageElements/ReportedUsers';
-import { Complaints } from './admin/pageElements/Complaints';
-import FbLogin from './user/pageElements/components/FbLogin';
-import TagManager from 'react-gtm-module'
-import VerifyEmail from './user/pageElements/components/VerifyEmail';
-import Terms from './user/pageElements/pages/terms';
-import CookiePolicy from './user/pageElements/pages/cookie';
-import Recapv3 from './user/pageElements/components/Recapv3';
-import ProtectedRoute from './user/ProtectedRoute';
-import getIP from './helpers/getIP';
-import ResetPassword from './user/pageElements/pages/resetPassword/ResetPassword';
-import { Navigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getMyToken, onMessageListener } from './configs/firebaseconfig';
+
+// Custom component imports
+import SiteLoader from "./user/pageElements/components/SiteLoader";
+import Routes from './routes/Routes';
+
+// Helpers
+import { fetchData } from './commonApi';
+import auth from './user/behindScenes/Auth/AuthCheck';
+import getIP from './helpers/getIP';
 import toastMethods from './helpers/components/Toaster';
+
+// Firebase
+import { getMyToken, onMessageListener } from './configs/firebaseconfig';
 import { runFbOrNot, setFCMToken, setTokenSentFlag } from './configs/firebaseToken';
+
+// Redux
+import { forumHandlers } from './redux/actions/forumsAc/forumsAc';
+import { useDispatch } from 'react-redux';
+
 import ReactPixel from 'react-facebook-pixel';
-import { ReportedComments } from './admin/pageElements/ReportedComments';
-import { ReportedPosts } from './admin/pageElements/ReportedPosts';
+import forumTypes from "./components/forums/forumTypes.json"
 
 //GOOGLE TAG MANAGER
 const tagManagerArgs = { gtmId: 'GTM-WP65TWC' }  //DEV
@@ -64,6 +50,7 @@ function App() {
 
 
   const [categories, setCategories] = useState(false);
+  const dispatch = useDispatch()
   const [toggle, setToggle] = useState(false)
   const [categoriesResults, setCategoriesResults] = useState(true);
   const [token, setToken] = useState("")
@@ -204,204 +191,27 @@ function App() {
     })
     //END OF LOAD RECAPTCHA V3
 
+    let { handleForumsTypesAcFn, handleForumsTagsAcFn } = forumHandlers
+
+
+    dispatch(handleForumsTypesAcFn({ data: forumTypes }))
+
   }, [])
 
+  useEffect(() => {
+    if (categories.length) dispatch(forumHandlers.handleForumCatsAcFn({ data: categories }))
+  }, [categories])
 
-  const ProtectedRouteLogin = ({ children, isLoggedIn }) => {
-    if (isLoggedIn)
-      return <Navigate to="/home" />
-
-    return children
-  }
 
   return (
     <AuthContext.Provider value={setAuth}>
-      <>
-        {categories ?
-          <Router>
-            <Switch>
-
-              {/* ADMIN ROUTES */}
-              <Route path="talkplacepanel" element={<AdminLogin />} />
-
-              {/* DASHBOARD */}
-              <Route path="dashboard" element={<Dashboard categories={categories} />} />
-              {/* DASHBOARD */}
-
-              {/* COMMENTS */}
-              <Route path="dashboard/confession/:postId" element={<AdminCommentsGot />} />
-              {/* COMMENTS */}
-
-              {/* USERS */}
-              <Route path="admin/users" element={<Users />} />
-              {/* USERS */}
-
-              {/* REPORTED USERS */}
-              <Route path="admin/reported" element={<ReportedUsers />} />
-              {/* REPORTED USERS */}
-
-              {/* REPORTED COMMENTS */}
-              <Route path="admin/reportedcomments" element={<ReportedComments />} />
-              {/* REPORTED COMMENTS */}
-
-              {/* REPORTED COMMENTS */}
-              <Route path="admin/reportedposts" element={<ReportedPosts />} />
-              {/* REPORTED COMMENTS */}
-
-              {/* COMPLAINTS */}
-              <Route path="admin/complaints" element={<Complaints />} />
-              {/* COMPLAINTS */}
-
-              {/* ADMIN ROUTES */}
-
-
-
-              {/* USER ROUTES */}
-
-              {/* ADMOB PAGE */}
-              {/* <Route path="admob" element={<AdMob />}>
-            </Route> */}
-              {/* ADMOB PAGE */}
-
-
-              {/* FBLOGIN PAGE */}
-              <Route path="fblogin" element={<FbLogin />}>
-              </Route>
-              {/* FBLOGIN PAGE */}
-
-
-              {/* PROFILE PAGE OF OTHERS*/}
-              <Route path="userProfile/:userId" element={<UserProfile />}>
-              </Route>
-              {/* PROFILE PAGE OF OTHERS*/}
-
-
-              {/* REDIRECT PAGE IF NOT FOUND*/}
-              <Route path="*" element={<Feed categories={categories} />}>
-              </Route>
-              {/* REDIRECT PAGE IF NOT FOUND*/}
-
-
-              {/* PRIVACY PAGE */}
-              <Route path="privacy" element={<Privacy />}>
-              </Route>
-              {/* PRIVACY PAGE */}
-
-
-              {/* PRIVACY PAGE */}
-              <Route path="recap" element={<Recapv3 />}>
-              </Route>
-              {/* PRIVACY PAGE */}
-
-
-              {/* TERMS PAGE */}
-              <Route path="terms" element={<Terms />}>
-              </Route>
-              {/* TERMS PAGE */}
-
-
-              {/* Cookie Policy PAGE */}
-              <Route path="cookie" element={<CookiePolicy />}>
-              </Route>
-              {/* Cookie Policy PAGE */}
-
-
-              {/* FEED PAGE */}
-              <Route path="home" element={<Feed categories={categories} />}>
-              </Route>
-              {/* FEED PAGE */}
-
-
-              {/* PROFILE PAGE */}
-              <Route path="profile" element={<Profile />}>
-              </Route>
-              {/* PROFILE PAGE */}
-
-
-              {/* CHAT PAGE */}
-              <Route path="chat" element={<Chat />}>
-                <Route index element={<Chat />} />
-                <Route path=":chatterId" element={<Chat />} />
-              </Route>
-              {/* CHAT PAGE */}
-
-
-              {/* REPORT PAGE */}
-              <Route path="report" element={<Report />}>
-              </Route>
-              {/* REPORT PAGE */}
-
-
-              {/* CREATEPOST PAGE */}
-              {/* <Route path="createPost" element={<CreatePost categories={categories} />}>
-              </Route> */}
-              {/* CREATEPOST PAGE */}
-
-
-              {/* LOGIN PAGE */}
-              <Route path="login" element={<ProtectedRouteLogin isLoggedIn={auth()}><Login /></ProtectedRouteLogin>}>
-                {/* <Route index element={<Login />} /> */}
-              </Route>
-              {/* LOGIN PAGE */}
-
-
-              {/* VERIFYEMAIL PAGE */}
-              <Route path="verifyemail/:userId/:token" element={<VerifyEmail />}>
-              </Route>
-              {/* VERIFYEMAIL PAGE */}
-
-
-              {/* RESETPASSWORD PAGE */}
-              <Route path="resetpassword/:userId/:token" element={<ResetPassword />}>
-              </Route>
-              {/* RESETPASSWORD PAGE */}
-
-
-              {/* REGISTER PAGE */}
-              <Route path="register" element={<Register />}>
-              </Route>
-              {/* REGISTER PAGE */}
-
-
-              {/* ADDNEWFRIENDS PAGE */}
-              <Route path="addfriends" element={<AddNewFriends />}>
-              </Route>
-              {/* ADDNEWFRIENDS PAGE */}
-
-
-              {/* MESSAGES PAGE */}
-              {/* <Route path="messages" element={<Messages />}>
-            </Route> */}
-              {/* MESSAGES PAGE */}
-
-
-              {/* REQUESTSGOT PAGE */}
-              <Route path="requests" element={<ProtectedRoute><RequestsGot /></ProtectedRoute>}>
-                <Route index element={<RequestsGot />} />
-              </Route>
-              {/* REQUESTSGOT PAGE */}
-
-
-              {/* COMMENTSGOT PAGE */}
-              <Route path="confession/:postId" element={<CommentsGot categories={categories} />}>
-              </Route>
-              {/* COMMENTSGOT PAGE */}
-
-              {/* USER ROUTES */}
-
-            </Switch>
-
-            <ToastContainer />
-          </Router>
-          :
-          (
-            categoriesResults ?
-              <SiteLoader /> :
-              (<div className="alert alert-danger" role="alert">
-                Server Error... Please try again
-              </div>)
-          )}
-      </>
+      {categories ? <Routes categories={categories} /> :
+        (
+          categoriesResults ? <SiteLoader /> : (
+            <div className="alert alert-danger" role="alert">
+              Server Error... Please try again
+            </div>)
+        )}
     </AuthContext.Provider>
   );
 }

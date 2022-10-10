@@ -163,6 +163,13 @@ export default function CommentsGot(props) {
                 setConfessionData(response.data.confession);
                 return setLoaded(true);
             }
+            else {
+                if ("newslug" in response.data) {
+                    const linkToRedirect = `/confession/${response.data?.newslug}`
+                    setIsValidPost(true)
+                    return history(linkToRedirect)
+                }
+            }
 
             //Handles app in case of no api response
             setIsValidPost(false);

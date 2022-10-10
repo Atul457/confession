@@ -5,9 +5,11 @@ import inboxIcon from '../../../images/inboxIconM.png'
 import inboxIconActive from '../../../images/inboxIconActive.svg'
 import contactUsActiveIcon from '../../../images/contactUsIconActive.svg';
 import contactUsIcon from '../../../images/contactUsMobIcon.svg';
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import { useSelector } from 'react-redux';
+import confessIconActive from '../../../images/confessIconActive.svg'
+import confessIcon from '../../../images/confessIconM.svg'
 
 
 export default function Footer() {
@@ -22,7 +24,7 @@ export default function Footer() {
         <footer className="col-12 d-block d-md-none footer">
             <div className="linksCont container-fluid">
                 <div className="linkBtns">
-                    <Link to="/home" className="linkBtnsAnchor headerLinks">
+                    <Link to="/home" className="linkBtnsAnchor">
                         <span className="headIconCont">
                             <img src={currentUrl === 'home' ? homeIconActive : homeIcon} alt="" />
                         </span>
@@ -30,6 +32,21 @@ export default function Footer() {
 
                     </Link>
                 </div>
+
+                {
+                    auth() ?
+                        <div className="linkBtns">
+                            <NavLink to="/forums" className="linkBtnsAnchor">
+                                <span className="headIconCont">
+                                    <img src={confessIconActive} alt="confessIconActive" className='active' />
+                                    <img src={confessIcon} alt="confessIcon" className='inactive' />
+                                </span>
+                                <span className={`footLinkName ${currentUrl === "forums" ? "activeLinkOfHeader" :
+                                    ""}`}>Forums</span>
+                            </NavLink>
+                        </div>
+                        : null
+                }
 
                 {auth()
                     ?

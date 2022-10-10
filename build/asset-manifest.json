@@ -1,12 +1,11 @@
 {
   "files": {
-    "main.css": "/confessionNew/static/css/main.c58dc63f.css",
-    "main.js": "/confessionNew/static/js/main.cab2df19.js",
+    "main.css": "/confessionNew/static/css/main.2fa76db0.css",
+    "main.js": "/confessionNew/static/js/main.fe97546f.js",
     "static/js/787.7b2783aa.chunk.js": "/confessionNew/static/js/787.7b2783aa.chunk.js",
     "static/media/loginLogo.svg": "/confessionNew/static/media/loginLogo.2727c5bf82b4d2c7dd6632a328467d72.svg",
     "static/media/avatarGroup.png": "/confessionNew/static/media/avatarGroup.ccd9bdedebafb3c1ee2e.png",
     "static/media/hurray.gif": "/confessionNew/static/media/hurray.5156690981b27dcc1ca7.gif",
-    "static/media/createPostLogo.svg": "/confessionNew/static/media/createPostLogo.d22d70fe94e37e5f92461501b5d5459b.svg",
     "static/media/carousel1.svg": "/confessionNew/static/media/carousel1.cccdbd4902f2b370a5e1d90420fd414e.svg",
     "static/media/carousel2.svg": "/confessionNew/static/media/carousel2.65c5cc233ce069ed4d2d91acf7049736.svg",
     "static/media/manWithHorn.png": "/confessionNew/static/media/manWithHorn.810798c624f39067732c.png",
@@ -23,8 +22,10 @@
     "static/media/socialLinksIcon.svg": "/confessionNew/static/media/socialLinksIcon.41f772abaa765d1d2a70f6d94a4a5f50.svg",
     "static/media/appLogo.svg": "/confessionNew/static/media/appLogo.fd1e94437b14cb98d724623cc09aafb6.svg",
     "static/media/uploadImages.svg": "/confessionNew/static/media/uploadImages.3f91198f161a9b1de65b0a65a1aa2a17.svg",
+    "static/media/pinIcon.svg": "/confessionNew/static/media/pinIcon.95f3c1b7f45bf70e6fb4ef33fa1e0a12.svg",
     "static/media/alFriends.svg": "/confessionNew/static/media/alFriends.a8c8edf940958c749052b6838fc4d888.svg",
     "static/media/alRequested.svg": "/confessionNew/static/media/alRequested.de53e5b2225436a8b6050a134699bdc8.svg",
+    "static/media/reportForumIcon.svg": "/confessionNew/static/media/reportForumIcon.eac209e1ed921cdacaceea72351100d7.svg",
     "static/media/tiktokSocial.svg": "/confessionNew/static/media/tiktokSocial.5caff66b184f71ede8914b0fa89eff53.svg",
     "static/media/canBeRequested.svg": "/confessionNew/static/media/canBeRequested.285461be9df628c7733d5e6d4ee27014.svg",
     "index.html": "/confessionNew/index.html",
@@ -32,6 +33,7 @@
     "static/media/commentCountIcon.svg": "/confessionNew/static/media/commentCountIcon.c0e5e1cdd46d58b68db36a08324d6356.svg",
     "static/media/friendRequests.svg": "/confessionNew/static/media/friendRequests.8f8d38412fa3b30db74921bc8396ccd0.svg",
     "static/media/logoutIcon.svg": "/confessionNew/static/media/logoutIcon.a0c0aff3ec121f34c0d2612e7d12596e.svg",
+    "static/media/pinnedIcon.svg": "/confessionNew/static/media/pinnedIcon.2ad01427d994e91c0c661c473fef539f.svg",
     "static/media/upvote.svg": "/confessionNew/static/media/upvote.42bba6db7fc688254162df2b78e6a4cc.svg",
     "static/media/editCommentIcon.svg": "/confessionNew/static/media/editCommentIcon.c960d0990b557bd34adefbffa9a3b903.svg",
     "static/media/contactUsIcon.svg": "/confessionNew/static/media/contactUsIcon.59de7d66085668aa5e65bf75735b3938.svg",
@@ -59,13 +61,17 @@
     "static/media/googleIcon.svg": "/confessionNew/static/media/googleIcon.9a7800d06783d80a1c12249a8ca58e9d.svg",
     "static/media/userAcc.svg": "/confessionNew/static/media/userAcc.ad626c265645d970ca7c7b2c1a65fb9e.svg",
     "static/media/mobileProfileIcon.svg": "/confessionNew/static/media/mobileProfileIcon.ecbf7f76a6a2454a6de920bfbf966f20.svg",
+    "static/media/confessIconM.svg": "/confessionNew/static/media/confessIconM.2cac7d5ceb6e8df4dd7899f85ab7be69.svg",
+    "static/media/confessIcon.svg": "/confessionNew/static/media/confessIcon.ce4ca7840e51967af6c206ab2c760611.svg",
+    "static/media/confessIconActive.svg": "/confessionNew/static/media/confessIconActive.891ead1e20e742dd8c3775c5b15d1394.svg",
+    "static/media/actionIcon.svg": "/confessionNew/static/media/actionIcon.d7eb451f87851b6a53f09840bbb75f7b.svg",
     "static/media/actionIconImg.svg": "/confessionNew/static/media/actionIconImg.817b8fb076c3ae8c2b63db380aa3d31e.svg",
-    "main.c58dc63f.css.map": "/confessionNew/static/css/main.c58dc63f.css.map",
-    "main.cab2df19.js.map": "/confessionNew/static/js/main.cab2df19.js.map",
+    "main.2fa76db0.css.map": "/confessionNew/static/css/main.2fa76db0.css.map",
+    "main.fe97546f.js.map": "/confessionNew/static/js/main.fe97546f.js.map",
     "787.7b2783aa.chunk.js.map": "/confessionNew/static/js/787.7b2783aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c58dc63f.css",
-    "static/js/main.cab2df19.js"
+    "static/css/main.2fa76db0.css",
+    "static/js/main.fe97546f.js"
   ]
 }

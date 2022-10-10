@@ -1,0 +1,251 @@
+// Helpers
+import { fetchData } from "../../../commonApi"
+import { areAtLastPage, resHandler } from "../../../helpers/helpers"
+import { getKeyProfileLoc } from "../../../helpers/profileHelper"
+import { apiStatus } from "../../../helpers/status"
+import { forumHandlers, handleSingleForumCommAcFn, mutateForumFn, usersToTagAcFn } from "../../../redux/actions/forumsAc/forumsAc"
+import auth from "../../../user/behindScenes/Auth/AuthCheck"
+import SetAuth from "../../../user/behindScenes/SetAuth"
+import { showSubCommentsFn, subComIniVal } from "../detailPage/comments/ForumCommProvider"
+
+// Sends comment
+const doCommentService = async ({
+    commentBoxRef,
+    postComment,
+    dispatch,
+    commentId = null,
+    updateComment = false,
+    navigate = () => { },
+    forum_id,
+    usedById = "",
+    error = "",
+    commentsCount = 1,
+    page = 0,
+    parent_root_info = {
+        parent_id: "",
+        root_id: "",
+        parentIndex: ""
+    },
+    isSubComment = false
+}) => {
+
+    const { value: postedCommet } = commentBoxRef
+    const { handleCommentsAcFn } = forumHandlers
+    let obj, data
+
+    if (postedCommet === '')
+        return dispatch(postComment({
+            message: "This is required field",
+            status: apiStatus.REJECTED,
+            usedById
+        }))
+    if (error !== "") dispatch(postComment({ message: "", status: apiStatus.IDLE, usedById }))
+    commentBoxRef.value = ""
+
+    if (!auth()) {
+        SetAuth(0);
+        return navigate("/login");
+    }
+
+    data = {
+        forum_id,
+        comment: postedCommet,
+        post_as_anonymous: getKeyProfileLoc("post_as_anonymous"),
+        ...parent_root_info,
+        ...(updateComment && { comment_id: commentId })
+    }
+
+    obj = {
+        data,
+        token: getKeyProfileLoc("token", true) ?? "",
+        method: "post",
+        url: "postforumcomment"
+    }
+
+    try {
+        // update comment half done
+        if (updateComment) {
+            dispatch(handleSingleForumCommAcFn({
+                comment_index: parent_root_info?.parentIndex,
+                is_for_sub_comment: false,
+                data: {
+                    comment: postedCommet
+                }
+            }))
+
+            dispatch(handleCommentsAcFn({ updateBox: {} }))
+
+            return false
+        }
+
+        // update comment half done
+
+        dispatch(postComment({ status: apiStatus.LOADING, usedById }))
+        const response = await fetchData(obj),
+            { message, comment } = resHandler(response)
+
+        dispatch(postComment({
+            status: apiStatus.FULFILLED,
+            message
+        }))
+
+        if (isSubComment) {
+            dispatch(forumHandlers?.handleCommentAcFn({
+                append: true,
+                commentIndex: parent_root_info?.parentIndex,
+                data: {
+                    ...comment
+                }
+            }))
+        } else
+            if (areAtLastPage(20, commentsCount, page))   //APPENDS
+            {
+                dispatch(forumHandlers.handleComments({
+                    append: true,
+                    data: {
+                        ...comment,
+                        subComments: {
+                            ...(showSubCommentsFn(0)),
+                            ...subComIniVal
+                        }
+                    }
+                }))
+            }
+
+        setTimeout(() => {
+            dispatch(postComment({ message: "", status: apiStatus.IDLE }))
+        }, 1000)
+    }
+    catch (err) {
+        setTimeout(() => {
+            dispatch(postComment({ message: err?.message ?? 'Something went wrong', status: apiStatus.REJECTED }))
+        }, 1000)
+    }
+}
+
+const likeDislikeService = async ({
+    isLiked,
+    forum_id,
+    commentId,
+    dispatch,
+    like,
+    commentIndex,
+    parent_comment_index,
+    is_for_sub_comment = false,
+}) => {
+    let is_liked, ip_address, check_ip;
+    is_liked = isLiked ? 1 : 2;
+    ip_address = localStorage.getItem("ip")
+    check_ip = ip_address.split(".").length
+    let data
+
+    if (check_ip === 4) {
+        let obj = {
+            data: { is_liked, ip_address },
+            token: getKeyProfileLoc("token", true) ?? "",
+            method: "post",
+            url: `likedislikeforumcommet/${forum_id}/${commentId}`
+        }
+        try {
+            data = {
+                like: isLiked ? like + 1 : like - 1,
+                is_liked: isLiked ? 1 : 2
+            }
+
+            if (is_for_sub_comment)
+                dispatch(handleSingleForumCommAcFn({
+                    comment_index: commentIndex,
+                    parent_comment_index,
+                    is_for_sub_comment,
+                    data
+                }))
+            else
+                dispatch(handleSingleForumCommAcFn({
+                    comment_index: commentIndex,
+                    is_for_sub_comment,
+                    data
+                }))
+
+            await fetchData(obj)
+
+        } catch (error) {
+            console.log(error);
+            console.log("Some error occured");
+        }
+    } else {
+        console.log("Invalid ip");
+    }
+}
+
+// Pins/Unpins the forum
+const pinForumService = async ({
+    dispatch,
+    isPinned,
+    forum_id,
+    forum_index
+}) => {
+
+    let obj;
+
+    dispatch(mutateForumFn({
+        forum_index,
+        data_to_mutate: { is_pinned: isPinned ? 0 : 1 }
+    }))
+
+    obj = {
+        token: getKeyProfileLoc("token", true),
+        method: "get",
+        url: `setfavforum/${forum_id}/${isPinned ? 0 : 1}`
+    }
+
+    try {
+        let res = await fetchData(obj)
+        res = resHandler(res)
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+// Returns users to be tagged
+const getUsersToTagService = async ({
+    strToSearch,
+    forum_id,
+    dispatch
+}) => {
+    let obj;
+    let data = {
+        search: strToSearch
+    }
+
+    obj = {
+        token: getKeyProfileLoc("token", true) ?? "",
+        method: "post",
+        url: `gettaguser/${forum_id}`,
+        data
+    }
+
+    try {
+        let res = await fetchData(obj)
+        res = resHandler(res)
+        dispatch(usersToTagAcFn({
+            data: res.users,
+            status: apiStatus.FULFILLED,
+            strToSearch
+        }))
+    } catch (error) {
+        dispatch(usersToTagAcFn({
+            message: error?.message,
+            status: apiStatus.REJECTED
+        }))
+    }
+}
+
+
+
+export {
+    doCommentService,
+    likeDislikeService,
+    pinForumService,
+    getUsersToTagService
+}

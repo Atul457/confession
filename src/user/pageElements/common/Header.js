@@ -8,6 +8,8 @@ import mobileProfileIcon from '../../../images/mobileProfileIcon.svg'
 import homeIconActive from '../../../images/homeIcon.svg'
 import homeIcon from '../../../images/homeIconActive.svg'
 import bell from '../../../images/bell.svg'
+import confessIcon from '../../../images/confessIcon.svg'
+import confessIconActive from '../../../images/confessIconActive.svg'
 import bellActive from '../../../images/orangebell.svg'
 import inboxIcon from '../../../images/inboxIcon.svg'
 import inboxIconActive from '../../../images/inboxIconActive.svg'
@@ -360,6 +362,18 @@ export default function Header(props) {
                                             </NavLink>
                                         </div>
 
+                                        {auth() &&
+                                            <div className="linkBtns">
+                                                <NavLink to="/forums" className="headerNavLinks">
+                                                    <span className="headIconCont">
+                                                        <img src={confessIconActive} alt="confessIconActive" className='active' />
+                                                        <img src={confessIcon} alt="confessIcon" className='inactive' />
+                                                    </span>
+                                                    <span className={`headLinkName ${currentUrl === "forums" ? "activeLinkOfHeader" :
+                                                        ""}`}>Forums</span>
+                                                </NavLink>
+                                            </div>}
+
                                         {/* 3x icons are being used */}
 
                                         {
@@ -424,7 +438,7 @@ export default function Header(props) {
                                         <div className="authProfileIcon" onClick={HandleShowHide}>
                                             <span className="requestsIndicatorNuserIconCont" type="button">
 
-                                                <img src={profile.image === '' ? userIcon : profile.image} alt="" className='userAccIcon headerUserAccIcon' />
+                                                <img src={profile?.image === '' ? userIcon : profile?.image} alt="" className='userAccIcon headerUserAccIcon' />
 
                                                 <img src={profile.image === '' ? mobileProfileIcon : profile.image} alt="" className='userAccIcon headerUserAccIcon mobIcon' />
 
