@@ -58,7 +58,7 @@ const requestedStatus = {
 const forum_types = {
     private: 2,
     public: 1,
-    closed: 0
+    closed: 3
 }
 
 const reportedFormStatus = {
@@ -73,6 +73,62 @@ const isAllowedToComment = currForum => {
     return allowToComment
 }
 
+const customStyles = {
+    option: (provided, state) => ({
+        ...provided,
+        padding: "5px 13px",
+        color: "#495057",
+        background: "#fff",
+    }),
+    control: (styles) => ({ ...styles, backgroundColor: 'transparent', padding: "3px 0px 3px 13px" }),
+    dropdownIndicator: (styles) => ({ ...styles, backgroundColor: 'transparent', paddingRight: 0, color: "#495057" }),
+    clearIndicator: (styles) => ({ ...styles, color: "#495057", background: "#2E4C6D !important" }),
+    multiValueRemove: (styles) => ({
+        ...styles,
+        background: "#2E4C6D !important"
+    }),
+    placeholder: () => ({
+        color: "#495057"
+    }),
+    menuList: (provided, state) => ({
+        ...provided,
+        overflowY: 'auto',
+        position: "relative",
+        width: "100%",
+        zIndex: 99999999,
+    }),
+    menuPortal: (provided, state) => ({
+        background: "red"
+    }),
+    indicatorsContainer: (provided, state) => ({
+        display: 'none'
+    }),
+    multiValue: () => ({
+        background: '#2E4C6D',
+        borderRadius: 50,
+        padding: "3px 10px",
+        margin: "2px 5px",
+        color: '#fff',
+        display: 'inline-flex',
+    }),
+    singleValue: (provided, state) => {
+        const opacity = state.isDisabled ? 0.5 : 1;
+        const transition = 'opacity 300ms';
+        return { ...provided, opacity, transition, color: '#fff', padding: 8, fontSize: 13, fontWeight: 600 };
+    },
+    valueContainer: () => ({
+        display: 'flex',
+        alignItems: 'center',
+        background: "transparent",
+        flexWrap: "wrap",
+        justifyContent: 'flex-start',
+    }),
+    multiValueLabel: () => ({
+        color: "#fff"
+    })
+}
+
+
 export {
     showSubCommentsFn,
     showSubComValue,
@@ -81,5 +137,6 @@ export {
     requestedStatus,
     forum_types,
     reportedFormStatus,
-    isAllowedToComment
+    isAllowedToComment,
+    customStyles
 }

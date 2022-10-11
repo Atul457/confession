@@ -111,6 +111,7 @@ const ForumComments = props => {
         data: append ? [...comments, ...commentsInRes] : commentsInRes,
         page, count
       }
+      console.log("worked again")
       dispatch(forumHandlers.handleCommentsAcFn(dataToSend))
 
     } catch (error) {
@@ -133,7 +134,7 @@ const ForumComments = props => {
     )
 
   if (status === apiStatus.REJECTED)
-    return <div class="alert alert-danger" role="alert">
+    return <div className="alert alert-danger" role="alert">
       {message}
     </div>
 

@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom'
 
 // Helpers
 import DateConverter from '../../../../helpers/DateConverter'
-import { doCommentService, likeDislikeService } from '../../services/forumServices'
+import { deleteForumCommService, doCommentService, likeDislikeService } from '../../services/forumServices'
 
 // Image imports
 import userIcon from "../../../../images/userAcc.svg"
 import commentReplyIcon from "../../../../images/creplyIcon.svg"
 import upvoted from "../../../../images/upvoted.svg"
 import upvote from "../../../../images/upvote.svg"
+import editCommentIcon from "../../../../images/editCommentIcon.svg"
+
+// Redux
 import { forumHandlers, postComment, reportForumCommAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
 
 // Component imports
@@ -28,6 +31,7 @@ const ForumSubComment = (props) => {
         loggedInUserId,
         dispatch,
         commentBox: { commentId: activeComBoxId },
+        updateBox: { commentId: activeUpdateComBoxId },
         doCommentVars,
         rootDetails,
         isAllowedToComment
@@ -46,7 +50,8 @@ const ForumSubComment = (props) => {
 
     const { handleCommentsAcFn } = forumHandlers,
         isMyComment = loggedInUserId === user_id,
-        isCommentBoxVisible = auth() && commentId === activeComBoxId
+        isCommentBoxVisible = auth() && commentId === activeComBoxId,
+        isUpdateComBoxVisible = auth() && activeUpdateComBoxId === commentId
 
     const {
         navigate,
@@ -89,13 +94,50 @@ const ForumSubComment = (props) => {
             commentId
         })
     }
+    // Open update comment box
+    const openUpdateComBox = () => {
+        dispatch(handleCommentsAcFn({
+            updateBox: {
+                ...(!isCommentBoxVisible && { commentId })
+            }
+        }))
+    }
 
     // Do comment
-    const doComment = commentBoxRef => {
+    const doComment = (commentBoxRef, updateComment = false) => {
+
+        // const doComment = (commentBoxRef, updateComment = false) => {
+        //     doCommentService({
+        //         commentBoxRef,
+        //         postComment,
+        //         ...(updateComment === true && {
+        //             updateComment,
+        //             commentId
+        //         }),
+        //         dispatch,
+        //         navigate,
+        //         forum_id,
+        //         isSubComment: true,
+        //         usedById: commentId,
+        //         parent_root_info: {
+        //             parent_id: commentId,
+        //             root_id: commentId,
+        //             parentIndex: subCommentIndex
+        //         },
+        //         commentsCount,
+        //         page
+        //     })
+        // }
+
         doCommentService({
             commentBoxRef,
             postComment,
             dispatch,
+            postComment,
+            ...(updateComment === true && {
+                updateComment,
+                commentId
+            }),
             navigate,
             isSubComment: true,
             forum_id,
@@ -105,8 +147,24 @@ const ForumSubComment = (props) => {
                 root_id: rootDetails?.commentId,
                 parentIndex: rootDetails?.commentIndex
             },
+            subCommentIndex,
             commentsCount,
             page
+        })
+    }
+
+
+    // DELETES THE COMMENT
+    const deleteCommentFunc = async () => {
+        // console.log({ sent: commentId })
+        deleteForumCommService({
+            postComment,
+            dispatch,
+            forum_id,
+            isSubComment: true,
+            commentId: commentId,
+            parent_comment_index: rootDetails?.commentIndex,
+            comment_index: subCommentIndex
         })
     }
 
@@ -121,8 +179,18 @@ const ForumSubComment = (props) => {
 
     profile_image = profile_image === "" ? userIcon : profile_image
 
+
     return (
-        <div className='postCont'>
+        <div className={`postCont overWritePostWithComment subcommentCont upperView ${currSubComment?.id_path ?? ""}`}>
+
+            {/* Edit/Delete comment */}
+            {(auth && currSubComment?.is_editable === 1) ?
+                <div className='edit_delete_com_forum'>
+                    <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
+                    {!isUpdateComBoxVisible ? <img src={editCommentIcon} className='editCommentIcon' onClick={openUpdateComBox} /> : null}
+                </div>
+                : null}
+            {/* Edit/Delete comment */}
 
             {/* Report comment */}
             {(auth() && isReported !== 2) && <span className="reportPost" onClick={openReportCommentModal}>
@@ -158,6 +226,15 @@ const ForumSubComment = (props) => {
                     <pre className="preToNormal">
                         {currSubComment?.comment}
                     </pre>
+
+                    {/* Update box */}
+                    {isUpdateComBoxVisible ? <CommentBox
+                        usedById={commentId}
+                        isForUpdateCom={true}
+                        postCommentReducer={postCommentReducer}
+                        doComment={doComment} /> : null}
+                    {/* Update box */}
+
 
                     {isAllowedToComment &&
                         <div className="replyCont">

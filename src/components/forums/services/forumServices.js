@@ -3,7 +3,8 @@ import { fetchData } from "../../../commonApi"
 import { areAtLastPage, resHandler } from "../../../helpers/helpers"
 import { getKeyProfileLoc } from "../../../helpers/profileHelper"
 import { apiStatus } from "../../../helpers/status"
-import { forumHandlers, handleSingleForumCommAcFn, mutateForumFn, usersToTagAcFn } from "../../../redux/actions/forumsAc/forumsAc"
+import { deleteForumCommSubcomAcFn, forumHandlers, handleSingleForumCommAcFn, mutateForumFn, usersToTagAcFn } from "../../../redux/actions/forumsAc/forumsAc"
+import { searchAcFn } from "../../../redux/actions/searchAc/searchAc"
 import auth from "../../../user/behindScenes/Auth/AuthCheck"
 import SetAuth from "../../../user/behindScenes/SetAuth"
 import { showSubCommentsFn, subComIniVal } from "../detailPage/comments/ForumCommProvider"
@@ -26,7 +27,8 @@ const doCommentService = async ({
         root_id: "",
         parentIndex: ""
     },
-    isSubComment = false
+    isSubComment = false,
+    subCommentIndex = null
 }) => {
 
     const { value: postedCommet } = commentBoxRef
@@ -63,22 +65,6 @@ const doCommentService = async ({
     }
 
     try {
-        // update comment half done
-        if (updateComment) {
-            dispatch(handleSingleForumCommAcFn({
-                comment_index: parent_root_info?.parentIndex,
-                is_for_sub_comment: false,
-                data: {
-                    comment: postedCommet
-                }
-            }))
-
-            dispatch(handleCommentsAcFn({ updateBox: {} }))
-
-            return false
-        }
-
-        // update comment half done
 
         dispatch(postComment({ status: apiStatus.LOADING, usedById }))
         const response = await fetchData(obj),
@@ -88,29 +74,60 @@ const doCommentService = async ({
             status: apiStatus.FULFILLED,
             message
         }))
-
         if (isSubComment) {
-            dispatch(forumHandlers?.handleCommentAcFn({
-                append: true,
-                commentIndex: parent_root_info?.parentIndex,
-                data: {
-                    ...comment
-                }
-            }))
-        } else
-            if (areAtLastPage(20, commentsCount, page))   //APPENDS
-            {
-                dispatch(forumHandlers.handleComments({
-                    append: true,
+
+            if (updateComment) {
+                dispatch(handleSingleForumCommAcFn({
+                    parent_comment_index: parent_root_info?.parentIndex,
+                    is_for_sub_comment: true,
+                    comment_index: subCommentIndex,
                     data: {
-                        ...comment,
-                        subComments: {
-                            ...(showSubCommentsFn(0)),
-                            ...subComIniVal
-                        }
+                        comment: postedCommet
                     }
                 }))
+
+                dispatch(handleCommentsAcFn({ updateBox: {} }))
             }
+            // Update
+            else
+                dispatch(forumHandlers?.handleCommentAcFn({
+                    append: true,
+                    commentIndex: parent_root_info?.parentIndex,
+                    data: {
+                        ...comment
+                    }
+                }))
+        } else {
+            // update comment
+            if (updateComment) {
+                dispatch(handleSingleForumCommAcFn({
+                    comment_index: parent_root_info?.parentIndex,
+                    is_for_sub_comment: false,
+                    data: {
+                        comment: postedCommet
+                    }
+                }))
+
+                dispatch(handleCommentsAcFn({ updateBox: {} }))
+            }
+
+            // update comment
+            else {
+                if (areAtLastPage(20, commentsCount, page))   //APPENDS
+                {
+                    dispatch(forumHandlers.handleComments({
+                        append: true,
+                        data: {
+                            ...comment,
+                            subComments: {
+                                ...(showSubCommentsFn(0)),
+                                ...subComIniVal
+                            }
+                        }
+                    }))
+                }
+            }
+        }
 
         setTimeout(() => {
             dispatch(postComment({ message: "", status: apiStatus.IDLE }))
@@ -207,6 +224,73 @@ const pinForumService = async ({
 
 }
 
+// DELETES THE COMMENT
+const deleteForumCommService = async ({
+    dispatch = () => { },
+    commentId = null,
+    parent_comment_index = null,
+    forum_id,
+    commentsCount = 0,
+    isSubComment = false,
+    comment_index = null
+}) => {
+    console.log({ got: commentId })
+    let obj;
+
+    if (isSubComment) {
+        let indexArr = [], forum_id;
+        console.log(commentId)
+        const ids = document.querySelectorAll(`.abc${commentId}`);
+        ids.forEach(curr => indexArr.push(curr.getAttribute("index")))
+        indexArr = [...new Set(indexArr)]
+        indexArr = indexArr.reverse();
+        const arrayOfNodesIndexes = [...indexArr, comment_index]
+        console.log({ arrayOfNodesIndexes, is_for_sub_comment: isSubComment })
+        dispatch(deleteForumCommSubcomAcFn({
+            comment_index,
+            parent_comment_index,
+            arrayOfNodesIndexes,
+            isSubComment
+        }))
+
+        // UPDATES THE COMMENTSGOTMODAL COMMENT COUNT
+        // data = { no_of_comments: parseInt(commentsModalReducer.state.no_of_comments) - delCommentCount };
+        // dispatch(updateCModalState(data));
+
+        return
+    }
+
+    return
+
+    // dispatch(mutateForumFn({
+    //     forum_index,
+    //     data_to_mutate: { is_pinned: isPinned ? 0 : 1 }
+    // }))
+
+    obj = {
+        token: getKeyProfileLoc("token", true),
+        method: "get",
+        url: `deletforumecomment/${forum_id}/${commentId}`
+    }
+    console.log(obj)
+
+    if (isSubComment) return console.log("subcomment")
+    else {
+        dispatch(deleteForumCommSubcomAcFn({ comment_index }))
+        const { handleForum } = forumHandlers
+    }
+
+    return
+
+    try {
+        let res = await fetchData(obj)
+        res = resHandler(res)
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
 // Returns users to be tagged
 const getUsersToTagService = async ({
     strToSearch,
@@ -242,10 +326,55 @@ const getUsersToTagService = async ({
 }
 
 
+// Returns users to be tagged
+const getForumsNConfessions = async ({
+    strToSearch,
+    type = 0,
+    dispatch,
+    page = 1,
+    append = false
+}) => {
+    let obj;
+    let data = {
+        search: strToSearch,
+        type,
+        page
+    }
+
+    obj = {
+        token: getKeyProfileLoc("token", true) ?? "",
+        method: "post",
+        url: `search`,
+        data
+    }
+    try {
+        dispatch(searchAcFn({
+            status: apiStatus.LOADING
+        }))
+        let res = await fetchData(obj)
+        res = resHandler(res)
+        dispatch(searchAcFn({
+            data: res.posts,
+            status: apiStatus.FULFILLED,
+            strToSearch,
+            append,
+            ...(res.posts.length === 0 && {hasMore: false})
+        }))
+    } catch (error) {
+        dispatch(searchAcFn({
+            message: error?.message,
+            status: apiStatus.REJECTED
+        }))
+    }
+}
+
+
 
 export {
     doCommentService,
     likeDislikeService,
     pinForumService,
-    getUsersToTagService
+    getUsersToTagService,
+    getForumsNConfessions,
+    deleteForumCommService
 }

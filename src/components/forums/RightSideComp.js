@@ -58,9 +58,9 @@ const Tabs = ({ activeTab, setActiveTab }) => {
             {activeTab == 1 ?
                 <div
                     onClick={openCreateSForumModal}
-                    class="doPostBtn" style={{ padding: "10px", height: "40px" }}
+                    className="doPostBtn create_forum_btn"
                     type="button">
-                    <i class="fa fa-plus text-white pr-1" aria-hidden="true"></i> Add New Forums
+                    <i className="fa fa-plus text-white pr-1" aria-hidden="true"></i> Add New Forums
                 </div>
                 : null}
 

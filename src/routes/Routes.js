@@ -43,6 +43,7 @@ import Recapv3 from '../user/pageElements/components/Recapv3';
 import ProtectedRoute from '../user/ProtectedRoute';
 import ResetPassword from '../user/pageElements/pages/resetPassword/ResetPassword';
 import ForumDetailPage from '../user/pageElements/pages/forums/ForumDetailPage';
+import Search from '../user/pageElements/pages/search/Search';
 
 
 const Routes = ({ categories }) => {
@@ -199,6 +200,11 @@ const Routes = ({ categories }) => {
                     <Route path="addfriends" element={<AddNewFriends />}>
                     </Route>
                     {/* ADDNEWFRIENDS PAGE */}
+
+                    {/* SEARCH PAGE */}
+                    <Route path="search" element={<Search />}>
+                    </Route>
+                    {/* SEARCH PAGE */}
 
 
                     {/* MESSAGES PAGE */}

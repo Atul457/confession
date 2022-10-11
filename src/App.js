@@ -50,6 +50,7 @@ function App() {
 
 
   const [categories, setCategories] = useState(false);
+  const [tags, setTags] = useState(false);
   const dispatch = useDispatch()
   const [toggle, setToggle] = useState(false)
   const [categoriesResults, setCategoriesResults] = useState(true);
@@ -143,6 +144,27 @@ function App() {
         console.log(err);
       }
     }
+    async function getTags() {
+      let obj = {
+        data: {},
+        token: token,
+        method: "get",
+        url: "gettags"
+      }
+      try {
+        const res = await fetchData(obj)
+        if (res.data.status === true) {
+          const tagsArr = res.data.tags?.map(curr => ({ value: curr, label: curr }))
+          setTags(tagsArr);
+        } else {
+          setTags(false);   //HANDLES APP IN CASE OF NO API RESPONSE
+        }
+      } catch (err) {
+        setTags(false);
+        console.log(err);
+      }
+    }
+    getTags();
     getData();
 
     const getProfileData = async () => {
@@ -199,13 +221,18 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (categories.length) dispatch(forumHandlers.handleForumCatsAcFn({ data: categories }))
+    if (categories?.length) dispatch(forumHandlers.handleForumCatsAcFn({ data: categories }))
   }, [categories])
 
+  useEffect(() => {
+    if (tags?.length) {
+      dispatch(forumHandlers.handleForumsTagsAcFn({ data: tags }))
+    }
+  }, [tags])
 
   return (
     <AuthContext.Provider value={setAuth}>
-      {categories ? <Routes categories={categories} /> :
+      {categories && tags ? <Routes categories={categories} /> :
         (
           categoriesResults ? <SiteLoader /> : (
             <div className="alert alert-danger" role="alert">

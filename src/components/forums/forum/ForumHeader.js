@@ -22,6 +22,7 @@ const ForumHeader = props => {
     const {
         name,
         category_name,
+        is_only_to_show = false,
         created_at,
         forum_index,
         actionBox,
@@ -104,38 +105,41 @@ const ForumHeader = props => {
                     {created_at ? DateConverter(created_at) : null}
                 </div>
             </div>
+            {!is_only_to_show ?
+                <span span
+                    className='forum_action_icon'
+                >
+                    <img src={actionIcon} className="shareKitImgIcon" />
+                    <>
+                        {isActionBoxVisible
+                            ?
+                            // ActionBox
+                            (<div className={`shareReqCont share_req_cont_forums`} onClick={toggleForumAcboxFn}>
+                                {!hideJoinDiv &&
+                                    <>
+                                        <div className="shareReqRows user" type="button" onClick={openReqToJoinModal}>
+                                            <img src={requested ? cancelFriend : addFriend} />
+                                            <span>
+                                                {requested ? "Cancel request" : "Request to Join"}
+                                            </span>
+                                        </div>
+                                        <div className='shareReqDivider'></div>
+                                    </>
+                                }
 
-            <span
-                className='forum_action_icon'
-            >
-                <img src={actionIcon} className="shareKitImgIcon" />
-                {isActionBoxVisible
-                    ?
-                    // ActionBox
-                    (<div className={`shareReqCont share_req_cont_forums`} onClick={toggleForumAcboxFn}>
-                        {!hideJoinDiv &&
-                            <>
-                                <div className="shareReqRows user" type="button" onClick={openReqToJoinModal}>
-                                    <img src={requested ? cancelFriend : addFriend} />
-                                    <span>
-                                        {requested ? "Cancel request" : "Request to Join"}
-                                    </span>
+                                <div onClick={openReportModal} className={`shareReqRows user w-100 ${hideJoinDiv ? "add_padding" : ""}`} type="button">
+                                    <img src={reportForumIcon} className="report_forum_icon" />
+                                    <span>Report</span>
                                 </div>
-                                <div className='shareReqDivider'></div>
-                            </>
-                        }
+                            </div>)
+                            // ActionBox
+                            :
+                            null}
+                    </>
+                </span> : null
+            }
 
-                        <div onClick={openReportModal} className={`shareReqRows user w-100 ${hideJoinDiv ? "add_padding" : ""}`} type="button">
-                            <img src={reportForumIcon} className="report_forum_icon" />
-                            <span>Report</span>
-                        </div>
-                    </div>)
-                    // ActionBox
-                    :
-                    null}
-            </span>
-
-        </div>
+        </div >
     )
 }
 

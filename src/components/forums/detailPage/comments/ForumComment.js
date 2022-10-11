@@ -18,12 +18,12 @@ import ForumSubComments from './ForumSubComments'
 import { getKeyProfileLoc } from '../../../../helpers/profileHelper'
 import { fetchData } from '../../../../commonApi'
 import { apiStatus } from '../../../../helpers/status'
-import { doCommentService, likeDislikeService } from '../../services/forumServices'
+import { deleteForumCommService, doCommentService, likeDislikeService } from '../../services/forumServices'
 import CommentBox from '../CommentBox'
 import { reportedFormStatus } from './ForumCommProvider'
 
 // Redux
-import { forumHandlers, postComment, reportForumCommAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
+import { deleteForumCommSubcomAcFn, forumHandlers, postComment, reportForumCommAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
 
 
 const ForumComment = (props) => {
@@ -42,6 +42,7 @@ const ForumComment = (props) => {
     forum_id,
     commentBox: { commentId: activeComBoxId },
     updateBox: { commentId: activeUpdateComBoxId },
+    updateBox,
     commentBox
   } = props
   let {
@@ -181,7 +182,7 @@ const ForumComment = (props) => {
       dispatch,
       navigate,
       forum_id,
-      isSubComment: true,
+      isSubComment: updateComment ? false : true,
       usedById: commentId,
       parent_root_info: {
         parent_id: commentId,
@@ -214,8 +215,29 @@ const ForumComment = (props) => {
     }))
   }
 
-  // DELETES THE COMMENT
+  // DELETES THE COMMENT  
   const deleteCommentFunc = async () => {
+    // console.log({ subComments: subComments.data ?? [], length: subComments?.data?.length ?? 0 })
+    // console.log({
+    //   postComment,
+    //   dispatch,
+    //   forum_id,
+    //   isSubComment: false,
+    //   usedById: commentId,
+    //   commentsCount: subComments?.data?.length ?? 0
+    // })
+    deleteForumCommService({
+      postComment,
+      dispatch,
+      forum_id,
+      isSubComment: false,
+      usedById: commentId,
+      commentIndex,
+      commentsCount: subComments?.data?.length ?? 0
+    })
+    // dispatch(deleteForumCommSubcomAcFn({ commentIndex }))
+    // deleteForumCommSubcomAcFn
+
     // let confessionId = props.postId;
     // let commentId = props.commentId;
 
@@ -252,7 +274,7 @@ const ForumComment = (props) => {
     )
 
   if (subComments?.status === apiStatus.REJECTED)
-    return <div class="alert alert-danger" role="alert">
+    return <div className="alert alert-danger" role="alert">
       {subComments?.message}
     </div>
 
@@ -360,6 +382,7 @@ const ForumComment = (props) => {
         isAllowedToComment={isAllowedToComment}
         commentIndex={commentIndex}
         forum_id={forum_id}
+        updateBox={updateBox}
         doCommentVars={doCommentVars}
         commentBox={commentBox}
         subComments={subComments}

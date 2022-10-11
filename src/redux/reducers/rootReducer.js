@@ -20,8 +20,10 @@ import shareWithLoveReducer from './shareWithLoveReducer';
 import reportPostModalReducer from './reportPostModalReducer';
 import postRBYModalReducer from './postRBYModalReducer';
 import { forumsReducer } from './forumsReducer/forumsReducer';
+import SearchReducer from './searchReducer/searchReducer';
 
 const rootReducer = combineReducers({
+    SearchReducer,
     reportPostModalReducer,
     avatarsIntroModalReducer,
     Terms,
@@ -42,7 +44,7 @@ const rootReducer = combineReducers({
     commRBYModalReducer,
     shareWithLoveReducer,
     postRBYModalReducer,
-    forumsReducer
+    forumsReducer,
 })
 
 export default rootReducer

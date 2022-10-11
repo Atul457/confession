@@ -16,6 +16,7 @@ import { resHandler } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
 
 
+
 const WhatsNew = () => {
 
     // Hooks and vars

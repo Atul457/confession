@@ -283,6 +283,75 @@ input::-webkit-textfield-decoration-container {
     justify-content: flex-start;
 }
 
+.search_box {
+    position: relative;
+}
+
+.search_types_cont {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.search_types_cont>.search_type {
+    text-transform: capitalize;
+    white-space: nowrap;
+    background: var(--primaryColor);
+    border-radius: 30px;
+    padding: 12px 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Poppins', sans-serif;
+    width: fit-content;
+    min-width: 110px;
+    text-align: center;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 10px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.posts_wrapper {
+    max-height: 800px;
+}
+
+.search_types_cont>.search_type.active {
+    background-color: var(--orangeColor);
+}
+
+.search_page {
+    width: 100%;
+}
+
+.search_results_str {
+    font-weight: 600;
+    color: var(--primaryColor);
+    margin-bottom: 20px;
+}
+
+.seach_boxinput {
+    position: absolute;
+    z-index: 10;
+    bottom: -60px;
+    border: none;
+    background: rgba(46, 76, 109, 0.3);
+    padding: 10px;
+    border-radius: 34px;
+    width: 230px;
+}
+
+.seach_boxinput:focus,
+.seach_boxinput:focus-visible {
+    border-bottom: 0px !important;
+}
+
+.sub_comments .postContHeader {
+    padding-bottom: 10px !important;
+}
+
 .secCheckText {
     color: var(--blackColor);
     font-weight: 600;
@@ -5167,8 +5236,36 @@ button.modalFootBtns.btn a:hover {
 .forum_tabs_cont {
     width: 100%;
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
+}
+
+.forum_tabs_cont .forums_tab {
+    margin-bottom: 10px;
+}
+
+.create_forum_modal_body {
+    padding: 10px 20px 10px !important;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.create_forum_modal_body button[type="submit"] {
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+.links_cont {
+    height: 50px;
+}
+
+.forum_tabs_cont .doPostBtn.create_forum_btn {
+    padding: 10px;
+    height: 40px;
+    width: unset !important;
+    margin: 0px 0px 10px 0px;
 }
 
 .forum_cont {
@@ -5176,7 +5273,6 @@ button.modalFootBtns.btn a:hover {
 }
 
 .forums_tabs_comps_holder {
-    padding-top: 20px;
     width: 100%;
 }
 

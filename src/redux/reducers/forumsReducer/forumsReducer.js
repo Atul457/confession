@@ -207,6 +207,68 @@ const forumsReducer = (state = initialstate, action) => {
                 }
         });
 
+        case forumAcs.DELETE_FORUM_COM_OR_SUB_COM: return produce(state, draft => {
+            const { comment_index } = action.payload
+            // For subcomment
+            if (action.payload?.is_for_sub_comment) {
+                const {
+                    parent_comment_index,
+                    comment_index: sub_comment_index,
+                    arrayOfNodesIndexes
+                } = action.payload
+
+
+                // let originalArray = [], delCommentCount, data;
+                // originalArray.push(...subComments.data);
+                // arrayOfNodesIndexes.forEach(curr => { originalArray.splice(curr, 1) });
+                // delCommentCount = arrayOfNodesIndexes.length;
+                // setSubComments({ ...subComments, data: [...originalArray] });
+
+                var subComments = current(draft.detailPage.comments.data[parent_comment_index].subComments)
+                console.log({ subComments })
+                // var arrCopy = [...comments.data ?? []]
+                // arrCopy.splice(comment_index, 1)
+                // draft.detailPage.comments = {
+                //     ...comments,
+                //     count: comments.count - 1,
+                //     data: [...arrCopy]
+                // }
+
+
+
+                // let originalArray = [], delCommentCount, data;
+                // originalArray.push(...subComments.data);
+                // arrayOfNodesIndexes.forEach(curr => { originalArray.splice(curr, 1) });
+                // delCommentCount = arrayOfNodesIndexes.length;
+                // setSubComments({ ...subComments, data: [...originalArray] });
+
+                // let arr = [...current(draft.detailPage.comments.data[parent_comment_index].subComments.data) ?? []]
+                // arr.splice(sub_comment_index, 1)
+                // draft.detailPage.comments.data[parent_comment_index].subComments.data = arr ?? []
+
+
+                // draft.detailPage.comments.data[parent_comment_index].subComments.data[sub_comment_index] = {
+                //     ...draft.detailPage.comments?.data[parent_comment_index]?.subComments?.data[sub_comment_index],
+                //     ...action.payload.data
+                // }
+
+                // draft.detailPage.comments.data[parent_comment_index].subComments.data[sub_comment_index] = {
+                //     ...draft.detailPage.comments?.data[parent_comment_index]?.subComments?.data[sub_comment_index],
+                //     ...action.payload.data
+                // }
+            } else {
+                // console.log("first")
+                var comments = current(draft.detailPage.comments)
+                var arrCopy = [...comments.data ?? []]
+                arrCopy.splice(comment_index, 1)
+                draft.detailPage.comments = {
+                    ...comments,
+                    count: comments.count - 1,
+                    data: [...arrCopy]
+                }
+            }
+        });
+
         case forumAcs.SET_SINGLE_SUB_COMMENT: return produce(state, draft => {
             const { subCommentIndex, commentIndex } = action.payload
             draft.detailPage.comments.data[commentIndex].subComments.data[subCommentIndex] = {

@@ -1,16 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchData } from '../../commonApi'
 import { resHandler } from '../../helpers/helpers'
 import * as yup from 'yup';
 import { apiStatus } from '../../helpers/status'
-import { createForumModalFnAc, forumHandlers, reqToJoinModalAcFn } from '../../redux/actions/forumsAc/forumsAc'
+import { createForumModalFnAc, forumHandlers } from '../../redux/actions/forumsAc/forumsAc'
 import { ShowResComponent } from '../HelperComponents'
 import { getKeyProfileLoc } from "../../helpers/profileHelper"
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import forum_types_arr from '../forums/forumTypes.json';
+import CreatableSelect from 'react-select/creatable';
+import classnames from 'classnames'
+import { customStyles } from '../forums/detailPage/comments/ForumCommProvider'
 
 const CreateFormModal = () => {
 
@@ -20,6 +23,8 @@ const CreateFormModal = () => {
     category_id: yup.string().required(),
     type: yup.string().required()
   });
+  const [tagsArr, setTagsArr] = useState([])
+  const tagError = false;
 
   const { handleForums } = forumHandlers
   const { register, formState: { errors }, handleSubmit } = useForm({
@@ -30,7 +35,7 @@ const CreateFormModal = () => {
   let error = Object.values(errors)
   error = error.length ? error[0] : ""
 
-  const { modals, categories } = useSelector(state => state.forumsReducer)
+  const { modals, categories, tags } = useSelector(state => state.forumsReducer)
   const { createForumModal } = modals
   const isError = createForumModal.status === apiStatus.REJECTED
   const message = createForumModal?.message
@@ -73,17 +78,26 @@ const CreateFormModal = () => {
   }
 
   const onSubmit = async (data) => {
+
+    if (!tagsArr?.length) return dispatch(createForumModalFnAc({
+      status: apiStatus.REJECTED,
+      message: "select at least one tag"
+    }))
+
     data = {
       ...data,
-      "image": null,
+      "image": "[]",
       post_as_anonymous: getKeyProfileLoc("post_as_anonymous"),
-      tags: ["A", "B"]
+      tags: tagsArr,
+      type: +data?.type
     }
 
     let token = getKeyProfileLoc("token", true) ?? "";
     dispatch(createForumModalFnAc({
-      status: apiStatus.LOADING
+      status: apiStatus.LOADING,
+      message: ""
     }))
+
 
     let obj = {
       data,
@@ -109,6 +123,10 @@ const CreateFormModal = () => {
     }
   }
 
+  const TagsHandle = (action) => {
+    const tgg = action.map(curr => curr.value)
+    setTagsArr(tgg)
+  }
 
 
   return (
@@ -124,7 +142,7 @@ const CreateFormModal = () => {
             <i className="fa fa-times" aria-hidden="true"></i>
           </span>
         </Modal.Header>
-        <Modal.Body className="privacyBody friendReqModalBody">
+        <Modal.Body className="create_forum_modal_body">
           <form
             className="col-12 p-0 m-0 bg-white createPostOuterCont my-4"
             onSubmit={handleSubmit(onSubmit)}
@@ -168,22 +186,34 @@ const CreateFormModal = () => {
 
             </select>
 
+            <CreatableSelect
+              isMulti
+              isClearable={true}
+              onChange={TagsHandle}
+              options={tags?.data ?? []}
+              components={{
+                NoOptionsMessage: () => <div className='text-center'>No tags to show</div>
+              }}
+              onMenuScrollToTop={true}
+              className={classnames("basic-multi-select", { "is-invalid": tagError })}
+              classNamePrefix="select"
+              styles={customStyles}
+            />
+
+
             {error?.message && error?.message !== "" ?
-              <ShowResComponent isError={true} message={error?.message} classList="w-100 text-center pb-2" />
+              <ShowResComponent isError={true} message={error?.message} classList="w-100 text-center pb-2 mt-3" />
               : null}
 
             {message && message !== "" ?
-              <ShowResComponent isError={isError} message={message} classList="w-100 text-center pb-2" />
+              <ShowResComponent isError={isError} message={message} classList="w-100 text-center pb-2 mt-3" />
               : null}
 
             <Button
               className="reqModalFootBtns"
-              style={{
-                margin: "0 auto",
-                "marginBottom": "20px"
-              }}
               variant="primary"
               type="submit"
+              disabled={isLoading}
             >
               {isLoading ?
                 <div className="spinner-border text-white" role="status">

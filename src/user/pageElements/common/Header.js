@@ -1,6 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import userIcon from '../../../images/userAcc.svg'
 import logoutIcon from '../../../images/logoutIcon.svg'
+import searchIcon from '../../../images/searchIcon.svg'
+import searchIconActive from '../../../images/searchIconActive.svg'
 import friendRequests from '../../../images/friendRequests.svg'
 import profileResetPass from '../../../images/profileResetPass.svg'
 import profileIcon from '../../../images/profileIcon.svg'
@@ -35,14 +37,21 @@ import { pulsationHelper } from '../../../helpers/pulsationHelper';
 import { AuthContext } from '../../../App';
 import { removeFCMToken, setTokenSentFlag } from '../../../configs/firebaseToken';
 import { EVerifyModal } from '../../../redux/actions/everify';
+import { getForumsNConfessions } from '../../../components/forums/services/forumServices';
+import { useNavigate } from 'react-router-dom';
+import { searchAcFn } from '../../../redux/actions/searchAc/searchAc';
 
 export default function Header(props) {
 
     const authContext = useContext(AuthContext)
+    const history = useNavigate()
     const ShareReducer = useSelector(store => store.ShareReducer);
+    const SearchReducer = useSelector(store => store.SearchReducer);
     const verifyEState = useSelector(store => store.VerifyEmail);
+    const searchBoxRef = useRef(null)
     const notificationReducer = useSelector(store => store.notificationReducer);
     const socialLinksModalReducer = useSelector(store => store.socialLinksModalReducer);
+    const [searchbox, setSearchbox] = useState(false)
     const dispatch = useDispatch();
     const params = useParams();
     const pathname = useLocation().pathname.replace("/", "");
@@ -118,6 +127,10 @@ export default function Header(props) {
             }))
         }
     }
+
+    // useEffect(() => {
+
+    // }, [SearchReducer.data])
 
     useEffect(() => {
         if (ShareReducer.selectedPost?.value) {
@@ -261,6 +274,22 @@ export default function Header(props) {
         dispatch(closeNotiPopup());
     }
 
+    const toggleSearchBox = () => {
+
+        if (SearchReducer.visible) {
+            history("/")
+            return dispatch(searchAcFn({
+                visible: false
+            }))
+        }
+
+        dispatch(searchAcFn({
+            visible: true
+        }))
+        history("/search")
+
+    }
+
 
     const getNotiHtml = () => {
         let data, arr, html, count = 0;
@@ -329,6 +358,20 @@ export default function Header(props) {
     // OPENS SOCIAL LINKS MODAL
     const openSocialLinksModal = () => {
         dispatch(openSLinksModalActionCreators.openModal());
+    }
+
+    const checkKeyPressed = (event) => {
+
+        getForumsNConfessions({
+            strToSearch: event.target.value,
+            dispatch,
+            type: SearchReducer?.type
+        })
+
+        dispatch(searchAcFn({
+            searchStr: event.target.value
+        }))
+
     }
 
 
@@ -412,6 +455,26 @@ export default function Header(props) {
                             {auth() ?
                                 (
                                     <>
+                                        {/* Search icon */}
+                                        <div className="authProfileIcon noti search_box_cont">
+                                            <div className="notifications"
+                                                onClick={toggleSearchBox}
+                                                pulsate='07-07-22,pulsatingIcon mobile'>
+                                                <img src={!SearchReducer.visible ? searchIcon : searchIconActive} alt="" className="notificationIcon headerUserAccIcon" />
+                                            </div>
+                                            {SearchReducer.visible ?
+                                                (
+                                                    <input
+                                                        type="text"
+                                                        onKeyDown={checkKeyPressed}
+                                                        placeholder='Search'
+                                                        ref={searchBoxRef}
+                                                        className="seach_boxinput" />
+                                                )
+                                                : null}
+                                        </div>
+                                        {/* Search icon */}
+
                                         <div className="authProfileIcon noti">
                                             <div className="notifications"
                                                 onClick={toggleNotificationCont}

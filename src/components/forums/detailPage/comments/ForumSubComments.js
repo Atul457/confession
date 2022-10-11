@@ -24,6 +24,7 @@ const ForumSubComments = props => {
         loggedInUserId,
         commentIndex,
         commentBox,
+        updateBox = { commentId: null },
         parent_created_at,
         countChild,
         rootDetails,
@@ -56,7 +57,7 @@ const ForumSubComments = props => {
 
     const getSubComments = () => {
         if (showUpperView) return (
-            <div className="postCont overWritePostWithComment subcommentCont upperView" onClick={openSubComments}>
+            <div className={`postCont overWritePostWithComment subcommentCont upperView`} onClick={openSubComments}>
                 <div className="postContHeader commentsContHeader">
                     <span className="commentsGotProfileImg">
                         <img src={userIcon} alt="" />
@@ -91,6 +92,7 @@ const ForumSubComments = props => {
                 {
                     subCommentsArr.map((comment, index) => {
                         return <ForumSubComment
+                            updateBox={updateBox}
                             key={`${comment.id}${index}`}
                             isAllowedToComment={isAllowedToComment}
                             auth={auth}
@@ -119,7 +121,7 @@ const ForumSubComments = props => {
         )
 
     if (status === apiStatus.REJECTED)
-        return <div class="alert alert-danger" role="alert">
+        return <div className="alert alert-danger" role="alert">
             {message}
         </div>
 

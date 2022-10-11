@@ -18,6 +18,7 @@ const forumAcs = {
     "HANDLE_SINGLE_FORUM_COMMENT": "HANDLE_SINGLE_FORUM_COMMENT",
     "USERS_TO_TAG": "USERS_TO_TAG",
     "CREATE_FORUM_MODAL_F": "CREATE_FORUM_MODAL_F",
+    "DELETE_FORUM_COM_OR_SUB_COM": "DELETE_FORUM_COM_OR_SUB_COM_F",
 }
 
 const reqToJoinModalAcFn = payload => {
@@ -104,6 +105,13 @@ const handleSingleForumCommAcFn = payload => {
     }
 }
 
+const deleteForumCommSubcomAcFn = payload => {
+    return {
+        type: forumAcs.DELETE_FORUM_COM_OR_SUB_COM,
+        payload
+    }
+}
+
 const createForumModalFnAc = payload => {
     return {
         type: forumAcs.CREATE_FORUM_MODAL_F,
@@ -162,5 +170,6 @@ export {
     reportForumCommAcFn,
     handleSingleForumCommAcFn,
     usersToTagAcFn,
-    createForumModalFnAc
+    createForumModalFnAc,
+    deleteForumCommSubcomAcFn
 }
