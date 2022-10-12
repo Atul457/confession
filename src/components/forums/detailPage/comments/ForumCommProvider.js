@@ -90,10 +90,11 @@ const customStyles = {
     placeholder: () => ({
         color: "#495057"
     }),
-    menuList: (provided, state) => ({
+    menuList: (provided) => ({
         ...provided,
         overflowY: 'auto',
-        position: "relative",
+        height: 100,
+        position: "absolute",
         width: "100%",
         zIndex: 99999999,
     }),

@@ -327,19 +327,23 @@ const getUsersToTagService = async ({
 
 
 // Returns users to be tagged
-const getForumsNConfessions = async ({
-    strToSearch,
-    type = 0,
-    dispatch,
-    page = 1,
-    append = false
-}) => {
-    let obj;
-    let data = {
-        search: strToSearch,
-        type,
-        page
-    }
+const getForumsNConfessions = async ({ SearchReducer, selectedCategory }) => {
+    const {
+        type = 0,
+        dispatch,
+        page = 1,
+        activeCategory,
+        append = false,
+        searchedWith = "",
+    } = SearchReducer
+
+    let obj,
+        data = {
+            search: searchedWith,
+            type,
+            page,
+            "category_id": selectedCategory ?? activeCategory
+        }
 
     obj = {
         token: getKeyProfileLoc("token", true) ?? "",
@@ -353,12 +357,15 @@ const getForumsNConfessions = async ({
         }))
         let res = await fetchData(obj)
         res = resHandler(res)
-        dispatch(searchAcFn({
-            data: res.posts,
-            status: apiStatus.FULFILLED,
-            strToSearch,
+        console.log({
             append,
-            ...(res.posts.length === 0 && {hasMore: false})
+            reducerdata: SearchReducer?.data,
+            data: append ? [...SearchReducer?.data, ...res.posts] : res.posts
+        })
+        dispatch(searchAcFn({
+            data: append ? [...SearchReducer?.data, ...res.posts] : res.posts,
+            status: apiStatus.FULFILLED,
+            hasMore: res.posts.length > 0
         }))
     } catch (error) {
         dispatch(searchAcFn({

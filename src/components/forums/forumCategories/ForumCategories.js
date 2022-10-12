@@ -7,16 +7,20 @@ import { forumHandlers } from '../../../redux/actions/forumsAc/forumsAc'
 
 // Helpers
 import { apiStatus } from '../../../helpers/status'
+import { searchAcFn } from '../../../redux/actions/searchAc/searchAc'
+import { getForumsNConfessions } from '../services/forumServices'
 
 
 const ForumCategories = () => {
 
     // Hooks and vars
     const { categories: categoriesRed } = useSelector(state => state.forumsReducer),
+        SearchReducer = useSelector(state => state.SearchReducer),
         { data: categories, activeCategory } = categoriesRed,
         location = useLocation()?.pathname,
         navigate = useNavigate(),
         dispatch = useDispatch()
+
 
     useEffect(() => {
         dispatch(forumHandlers.handleCommentsAcFn({
@@ -40,6 +44,7 @@ const ForumCategories = () => {
             <div className="categoriesContainer w-100">
                 {categories.map((category, cindex) => {
                     return <Category
+                        SearchReducer={SearchReducer}
                         location={location}
                         activeCategory={activeCategory}
                         navigate={navigate}
@@ -64,18 +69,36 @@ const Category = props => {
         cindex,
         activeCategory,
         location,
-        navigate
+        navigate,
+        SearchReducer
     } = props;
     const dispatch = useDispatch(),
         isActiveCategory = activeCategory === cindex,
         forumHomePageLink = "/forums",
-        isForumHomePage = location === forumHomePageLink
+        searchPageLink = "/search",
+        isForumHomePage = location === forumHomePageLink,
+        isSearchPage = location === searchPageLink
 
     const switchCategory = categoryToActivate => {
         let isSameCatClicked = activeCategory === categoryToActivate,
             allCategories = 0;
         categoryToActivate = isSameCatClicked ? allCategories : categoryToActivate
         dispatch(forumHandlers.handleForumCatsAcFn({ activeCategory: categoryToActivate }))
+
+        if (isSearchPage) {
+            dispatch(searchAcFn({
+                activeCategory: categoryToActivate
+            }))
+            return getForumsNConfessions({
+                selectedCategory: categoryToActivate,
+                SearchReducer: {
+                    ...SearchReducer,
+                    dispatch,
+                    page: 1,
+                    append: false,
+                }
+            })
+        }
         if (!isForumHomePage) {
             navigate(forumHomePageLink)
         }

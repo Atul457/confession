@@ -12,7 +12,7 @@ import { apiStatus } from '../../../helpers/status'
 
 // helpers
 import { fetchData } from '../../../commonApi'
-import { resHandler } from '../../../helpers/helpers'
+import { resHandler, scrollToTop } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
 
 
@@ -37,6 +37,9 @@ const WhatsNew = () => {
         getForums(true)
     }, [activeCategory])
 
+    useEffect(() => {
+        scrollToTop()
+    }, [])
 
     // Functions
 

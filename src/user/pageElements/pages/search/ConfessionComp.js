@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import forwardIcon from '../../../../images/forwardIcon.svg';
 import upvote from '../../../../images/upvote.svg';
 import commentCountIcon from '../../../../images/commentCountIcon.svg';
 import viewsCountIcon from '../../../../images/viewsCountIcon.svg';
@@ -7,39 +6,18 @@ import upvoted from '../../../../images/upvoted.svg';
 import { Link } from "react-router-dom";
 import userIcon from '../../../../images/userAcc.svg';
 import Lightbox from "react-awesome-lightbox";
-import { useNavigate } from "react-router-dom";
 import "react-awesome-lightbox/build/style.css";
-import TextareaAutosize from 'react-textarea-autosize';
-import shareKitIcon from "../../../../images/actionIconImg.svg";
 import canBeRequested from "../../../../images/canBeRequested.svg";
 import alRequested from "../../../../images/alRequested.svg";
 import alFriends from "../../../../images/alFriends.svg";
-import { useDispatch, useSelector } from 'react-redux';
-import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../../helpers/profileHelper';
 import auth from '../../../behindScenes/Auth/AuthCheck';
-import { fetchData } from '../../../../commonApi';
-import useShareKit from '../../../utilities/useShareKit';
-import useShareRequestPopUp from '../../../utilities/useShareRequestPopUp';
-import { togglemenu, toggleSharekitMenu } from '../../../../redux/actions/share';
-
 import DateConverter from '../../../../helpers/DateConverter';
-import { openCModal as openCommentsModalFn } from '../../../../redux/actions/commentsModal';
-import { openCFRModal } from '../../../../redux/actions/friendReqModal';
-import { toggleReportPostModal } from '../../../../redux/actions/reportPostModal';
-import SetAuth from '../../../behindScenes/SetAuth';
 
 
 const ConfessionComp = (props) => {
 
-  let history = useNavigate();
-  let maxChar = 2000;
-  const dispatch = useDispatch();
-  const ShareReducer = useSelector(store => store.ShareReducer);
-  const [requiredError, setRequiredError] = useState('');
-  const friendReqState = useSelector(state => state.friendReqModalReducer)
   const authenticated = useState(auth());
   const noOfWords = useState(200);    //IN POST AFTER THESE MUCH CHARACTERS SHOWS VIEWMORE BUTTON
-  const [comment, setComment] = useState('');
   const [lightBox, setLightBox] = useState(false);
   const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
   const isCoverTypePost = props.category_id === 0
@@ -48,194 +26,6 @@ const ConfessionComp = (props) => {
     name: "post"
   } : {}
   const isAnyUnreadComment = props?.unread_comments && props?.unread_comments > 0
-
-  // CUSTOM HOOKS
-  const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
-  const [sharekit, toggleSharekit, ShareKit, hideShareKit] = useShareKit();
-
-  const openCommentsModal = () => {
-    dispatch(openCommentsModalFn({
-      "postId": props.postId,
-      "viewcount": props.viewcount,
-      "visibility": true,
-      "index": props.index,
-      "userName": props.userName,
-      "postedComment": props.postedComment,
-      "category_id": props.category_id,
-      "category_name": props.category,
-      "confession_id": props.confession_id,
-      "created_at": props.createdAt,
-      "created_by": props.userName,
-      "description": props.postedComment,
-      "no_of_comments": props.sharedBy,
-      "post_as_anonymous": props.post_as_anonymous,
-      "profile_image": props.profileImg,
-      "user_id": props.curid,
-      "image": props.imgUrl,
-      "isNotFriend": props.isNotFriend,
-      "is_viewed": props.is_viewed,
-      "updatedConfessions": props.updatedConfessions,
-      "like": props.like,
-      "slug": props.slug,
-      "dislike": props.dislike,
-      "isReported": props.isReported,
-      "cover_image": props.cover_image,
-      "dislike": props.dislike,
-      ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
-      "is_liked_prev": props.is_liked,
-      "updateConfessionData": updateConfessionData
-    }))
-
-    dispatch(togglemenu({
-      id: null, value: false, isPost: true
-    }))
-  }
-
-  const preventDoubleClick = (runOrNot) => {
-    var elem = document.querySelector('#userPostCommentIcon');
-    runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;
-  }
-
-  const doComment = async (postId) => {
-    setRequiredError('');
-    preventDoubleClick(true);
-
-    if (comment.trim() === '') {
-      setRequiredError('This field is required');
-      setComment('');
-      preventDoubleClick(false);
-      return false;
-    }
-    let _comment = comment;
-    setComment("");
-    let userData = localStorage.getItem("userDetails");
-    if (userData === "" || userData === null) {
-      SetAuth(0);
-      history("/login");
-    }
-
-    userData = JSON.parse(userData).token;
-    let arr = {
-      "confession_id": postId,
-      "comment": _comment,
-      "is_admin": 0
-    }
-
-
-    let obj = {
-      data: arr,
-      token: userData,
-      method: "post",
-      url: "postcomment"
-    }
-    try {
-      const res = await fetchData(obj)
-      if (res.data.status === true) {
-        setComment("");
-        updateKeyProfileLoc("comments", parseInt(getKeyProfileLoc("comments") ?? 0) + 1)
-        props.updateConfessionData(props.viewcount, (props.sharedBy + 1), props.index);
-      } else {
-        setRequiredError(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      console.log("Some error occured");
-    }
-    preventDoubleClick(false);
-
-  }
-
-
-  // SUBMITS THE DATA ON ENTER AND CREATES A NEW PARA ON SHIFT+ENTER KEY
-  const betterCheckKeyPressed = () => {
-    var timer;
-    return (event) => {
-      if (window.innerWidth > 767) {
-        if (event.keyCode === 13 && event.shiftKey) {
-          setComment(comment);
-        } else if (event.keyCode === 13 && !event.shiftKey) {
-          event.preventDefault();
-          //PREVENTS DOUBLE MESSAGE SEND
-          clearInterval(timer);
-          timer = setTimeout(() => {
-            doComment(props.postId);
-          }, 100);
-        }
-      }
-    }
-  }
-
-  const deletePost = () => {
-    props.deletePostModal(props.postId, props.index);
-  }
-
-  const checkKeyPressed = betterCheckKeyPressed();
-
-  const _toggleShareReqPopUp = (id, value) => {
-
-    dispatch(togglemenu({
-      id, value, "isPost": true
-    }))
-
-    dispatch(
-      toggleSharekitMenu(false, true)
-    )
-
-    if (sharekit) {
-      hideShareKit();
-    } else {
-      toggleShareReqPopUp();
-
-      if (shareReqPopUp === true) {
-        hideShareKit();
-      }
-    }
-
-  }
-
-  const _toggleSharekit = (id, value) => {
-    dispatch(
-      toggleSharekitMenu(value, true)
-    )
-    dispatch(togglemenu({
-      id, value: false, isPost: true
-    }))
-
-    if (shareReqPopUp) {
-      closeShareReqPopUp();
-    }
-    toggleSharekit();
-  }
-
-  const openFrReqModalFn_Post = () => {
-    dispatch(openCFRModal({
-      cancelReq: props.isNotFriend === 2 ? true : false,
-      userId: (friendReqState.requested === true || friendReqState.cancelled) ?
-        friendReqState.data.userId :
-        props.curid
-    }))
-
-    // other === requested
-    // 2 === cancel the requst
-
-    // openFrReqModalFn();
-    dispatch(togglemenu({
-      id: null, value: false, isPost: true
-    }))
-
-    dispatch(
-      toggleSharekitMenu(false, true)
-    )
-    toggleShareReqPopUp();
-    hideShareKit();
-  }
-
-
-  const closeShareMenu = () => {
-    dispatch(togglemenu({
-      id: null, value: false, isPost: false
-    }))
-  }
 
   const ProfileIcon = (profileImg, isNotFriend) => {
 
@@ -258,12 +48,10 @@ const ConfessionComp = (props) => {
             src={canBeRequested}
             type="button"
             alt=""
-            onClick={openFrReqModalFn_Post}
             className='registeredUserIndicator' />
           <img
             src={props.profileImg !== '' ? props.profileImg : userIcon}
             className="userAccIcon generated"
-            onClick={openFrReqModalFn_Post}
             alt=""
           />
         </>
@@ -273,13 +61,11 @@ const ConfessionComp = (props) => {
         return <>
           <img
             src={alFriends}
-            onClick={openFrReqModalFn_Post}
             type="button"
             alt=""
             className='registeredUserIndicator' />
           <img
             src={props.profileImg !== '' ? props.profileImg : userIcon}
-            onClick={openFrReqModalFn_Post}
             className="userAccIcon"
             alt=""
           />
@@ -321,12 +107,10 @@ const ConfessionComp = (props) => {
                   src={canBeRequested}
                   type="button"
                   alt=""
-                  onClick={openFrReqModalFn_Post}
                   className='registeredUserIndicator' />
                 <img
                   src={props.profileImg !== '' ? props.profileImg : userIcon}
                   className="userAccIcon generated"
-                  onClick={openFrReqModalFn_Post}
                   alt=""
                 />
               </>}
@@ -373,114 +157,8 @@ const ConfessionComp = (props) => {
   }
 
 
-  const upvoteOrDownvote = async (isLiked) => {
-
-    let is_liked, ip_address, check_ip, token = '', data;
-    is_liked = isLiked ? 1 : 2;
-    ip_address = localStorage.getItem("ip")
-    check_ip = ip_address.split(".").length
-    if (auth()) {
-      token = localStorage.getItem("userDetails");
-      token = JSON.parse(token).token;
-    }
-
-    if (check_ip === 4) {
-      let obj = {
-        data: { is_liked, ip_address },
-        token: token,
-        method: "post",
-        url: `likedislike/${props.postId}`
-      }
-      try {
-        data = {
-          like: isLiked ? props.like + 1 : props.like - 1,
-          is_liked: isLiked ? 1 : 2
-        }
-        updateConfessionData(props.index, data)
-
-        const res = await fetchData(obj)
-      } catch (error) {
-        console.log(error);
-        console.log("Some error occured");
-      }
-    } else {
-      console.log("Invalid ip");
-    }
-  }
-
-  const updateConfessionData = (index, data) => {
-    props.updatedConfessions(index, data)
-  }
-
-  // Open the modal to report the post
-  const openReportPostModal = () => {
-    dispatch(toggleReportPostModal({
-      visible: true,
-      isReported: props.isReported,
-      data: {
-        confessionId: props.postId,
-        postIndex: props.index
-      }
-    }))
-  }
-
-
   return (
     <div className="postCont" index={props.index}>
-
-      {ShareReducer &&
-        ShareReducer.selectedPost?.id === props.postId &&
-        ShareReducer.sharekitShow &&
-        <div className="shareKitSpace"></div>}
-
-      {(auth() && props.isReported !== 2) && <span className="reportPost" onClick={openReportPostModal}>
-        <i className="fa fa-exclamation-circle reportComIcon" aria-hidden="true"></i>
-      </span>}
-
-      <span
-        type="button"
-        className={`sharekitdots withBg ${sharekit === false ? "justify-content-end" : ""} ${!props.deletable ? "resetRight" : ""}`}
-        onClick={() => _toggleShareReqPopUp(props.postId, ShareReducer.selectedPost?.id === props.postId ? !ShareReducer.selectedPost?.value : true)}>
-        {ShareReducer &&
-          ShareReducer.selectedPost?.id === props.postId &&
-          ShareReducer.selectedPost?.isPost === true &&
-          ShareReducer.sharekitShow &&
-          <ShareKit
-            postData={{
-              confession_id: props.slug,
-              description: props.postedComment,
-            }}
-            closeShareReqPopUp={closeShareReqPopUp} />}
-        <img src={shareKitIcon} className="shareKitImgIcon" />
-      </span>
-
-      {/* SHARE/REQUEST POPUP */}
-
-      {ShareReducer &&
-        ShareReducer.selectedPost?.id === props.postId &&
-        ShareReducer.selectedPost?.value === true &&
-        ShareReducer.selectedPost?.isPost === true &&
-        <ShareRequestPopUp
-          toggleSharekit={
-            () => _toggleSharekit(props.postId, !ShareReducer.sharekitShow?.value)
-          }
-          isNotFriend={props.isNotFriend}
-          openFrReqModalFn={openFrReqModalFn_Post}
-          closeShareMenu={closeShareMenu}
-        />}
-
-      {/*
-                CANCELREQ :
-                0 : SHOW NOTHING
-                1 : SHOW REQUEST
-                2: SHOW CANCEL 
-                3: ALREADY FRIEND
-            */}
-
-      {/* IF POST IS DELETABLE THE DELETE ICON WILL BE SHOWN */}
-      {props.deletable === true && <i className="fa fa-trash pr-3 deletePostIcon" type="button" aria-hidden="true" onClick={deletePost}></i>}
-
-
       <div className="postContHeader">
         {lightBox && (
           props.imgUrl && ((props.imgUrl).length !== 0 && ((props.imgUrl).length > 1
@@ -494,7 +172,6 @@ const ConfessionComp = (props) => {
           <span className="userImage userImageFeed">
             {ProfileIcon(props.profileImg, props.isNotFriend)}
           </span>
-
 
           {/* NOT ANONYMOUS :: OPENS CURRENT LOGGED IN USER'S PROFILE,
                 IF THE POST IS POSTED BY THE LOGGED IN USER, AND HE HAD NOT POSTED THE POST AS ANONYMOUS,
@@ -525,12 +202,10 @@ const ConfessionComp = (props) => {
       <Link className="links text-dark" to={`/confession/${props?.slug}`}>
         <div
           className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''} ${isAnyUnreadComment ? 'addMargin' : ''}`}
-          {...(isCoverTypePost && { onClick: openCommentsModal })}
           style={postBg}>
           <div className="postedPost mb-2">
             <>
               <pre
-                {...(!isCoverTypePost && { onClick: openCommentsModal })}
                 className="preToNormal post"
               >
                 {props.postedComment}
@@ -540,7 +215,7 @@ const ConfessionComp = (props) => {
                   ||
                   (props.postedComment).split("\n").length > 5 ?
                   <>
-                    {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} onClick={openCommentsModal} className="viewMoreBtn pl-1">view more</span>
+                    {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} className="viewMoreBtn pl-1">view more</span>
                   </> : ''
               }
             </>
@@ -566,29 +241,6 @@ const ConfessionComp = (props) => {
         </div>
       </Link>
 
-      {/* {authenticated[0] === true &&
-        (
-          <>
-            <div className="container-fluid inputWithForwardCont">
-              <div className="textAreaToComment w-100">
-                <TextareaAutosize
-                  type="text"
-                  maxLength={maxChar}
-                  row='1'
-                  value={comment}
-                  onKeyDown={(e) => { checkKeyPressed(e) }}
-                  onChange={(e) => { setComment(e.target.value) }}
-                  className="form-control">
-                </TextareaAutosize>
-              </div>
-              <div className="arrowToAddComment" id="userPostCommentIcon" type="button" onClick={() => { doComment(props.postId) }}>
-                <img src={forwardIcon} alt="" className="forwardIconContImg" />
-              </div>
-            </div>
-            <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
-          </>
-        )
-      } */}
       <Link className="links text-dark" to={`/confession/${props?.slug}`}>
         <div className="postFoot">
 
@@ -602,11 +254,11 @@ const ConfessionComp = (props) => {
             </span>}
 
           <div className={`iconsCont ${authenticated[0] === false ? 'mainDesignOnWrap' : ''}`}>
-            <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button" onClick={openCommentsModal}>
+            <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
               <img src={viewsCountIcon} alt="" />
               <span className="count">{props.viewcount ? props.viewcount : 0}</span>
             </div>
-            <div className="upvote_downvote_icons_cont" type="button" onClick={openCommentsModal}>
+            <div className="upvote_downvote_icons_cont" type="button">
               <img src={commentCountIcon} alt="" />
               <span className="count">{props.sharedBy}</span>
             </div>
@@ -616,8 +268,8 @@ const ConfessionComp = (props) => {
               <div className='iconsMainCont'>
                 <div className={`upvote_downvote_icons_cont buttonType`}>
                   {props.is_liked === 1 ?
-                    <img src={upvoted} alt="" onClick={() => upvoteOrDownvote(false)} /> :
-                    <img src={upvote} alt="" onClick={() => upvoteOrDownvote(true)} />}
+                    <img src={upvoted} alt="" /> :
+                    <img src={upvote} alt="" />}
                   <span className='count'>{props.like}</span>
                 </div>
               </div>

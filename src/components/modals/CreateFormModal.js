@@ -14,9 +14,12 @@ import forum_types_arr from '../forums/forumTypes.json';
 import CreatableSelect from 'react-select/creatable';
 import classnames from 'classnames'
 import { customStyles } from '../forums/detailPage/comments/ForumCommProvider'
+import TextareaAutosize from 'react-textarea-autosize'
+
 
 const CreateFormModal = () => {
 
+  const [nfsw, setNfsw] = useState(false);
   const createForumSchema = yup.object().shape({
     title: yup.string().required(),
     description: yup.string().required(),
@@ -25,13 +28,14 @@ const CreateFormModal = () => {
   });
   const [tagsArr, setTagsArr] = useState([])
   const tagError = false;
+  let noOfChar = 250;
+  let noOfCharsTitle = 50;
 
   const { handleForums } = forumHandlers
-  const { register, formState: { errors }, handleSubmit } = useForm({
+  const { register, formState: { errors }, formState, handleSubmit, getValues } = useForm({
     mode: "onChange",
     resolver: yupResolver(createForumSchema)
   })
-
   let error = Object.values(errors)
   error = error.length ? error[0] : ""
 
@@ -86,9 +90,10 @@ const CreateFormModal = () => {
 
     data = {
       ...data,
+      is_nsw: nfsw ? 1 : 0,
       "image": "[]",
       post_as_anonymous: getKeyProfileLoc("post_as_anonymous"),
-      tags: tagsArr,
+      tags: JSON.stringify(tagsArr),
       type: +data?.type
     }
 
@@ -97,7 +102,6 @@ const CreateFormModal = () => {
       status: apiStatus.LOADING,
       message: ""
     }))
-
 
     let obj = {
       data,
@@ -147,14 +151,26 @@ const CreateFormModal = () => {
             className="col-12 p-0 m-0 bg-white createPostOuterCont my-4"
             onSubmit={handleSubmit(onSubmit)}
           >
+
+            <div className='w-100 mb-3'>
             <input
-              className="form-control mb-3"
-              placeholder='Title'
+              className="form-control"
+              placeholder={`Title [Max-Characters:${noOfCharsTitle}]`}
+              maxLength={noOfCharsTitle}
               {...register("title")} />
-            <input
-              className="form-control mb-3"
-              placeholder='Description'
-              {...register("description")} />
+              <span className="textAreaLimit">[ Max-Characters:{noOfCharsTitle} ]</span>
+            </div>
+
+            <div className='w-100 mb-3'>
+              <TextareaAutosize
+                className="form-control"
+                placeholder={`Description`}
+                {...register("description")}
+                minRows="5"
+                maxLength={noOfChar}>
+              </TextareaAutosize>
+              <span className="textAreaLimit">[ Max-Characters:{noOfChar} ]</span>
+            </div>
 
             <select
               className="form-control mb-3"
@@ -191,14 +207,31 @@ const CreateFormModal = () => {
               isClearable={true}
               onChange={TagsHandle}
               options={tags?.data ?? []}
+              placeholder="Enter tags"
               components={{
                 NoOptionsMessage: () => <div className='text-center'>No tags to show</div>
               }}
               onMenuScrollToTop={true}
-              className={classnames("basic-multi-select", { "is-invalid": tagError })}
+              className={classnames("basic-multi-select mb-3", { "is-invalid": tagError })}
               classNamePrefix="select"
               styles={customStyles}
             />
+
+            <div className='w-100 mb-3 nfsw_cont'>
+              <div className="toggler_nfsw_cont">
+                <label htmlFor="">NFSW</label>
+                <input
+                  type="checkbox"
+                  className="switch12"
+                  id="TweightRadio"
+                  onChange={(e) => { setNfsw(e.target.checked) }}
+                  defaultValue={nfsw ? 1 : 0}
+                  checked={nfsw} />
+              </div>
+              <div className='descr'>
+                Users will need to confirm that they are of over legal age to view the content in the forum
+              </div>
+            </div>
 
 
             {error?.message && error?.message !== "" ?

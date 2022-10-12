@@ -9,7 +9,9 @@ const initialState = {
     page: 1,
     visible: false,
     hasMore: true,
-    searchStr: ""
+    searchStr: "",
+    searchedWith: "",
+    activeCategory: "all"
 }
 
 
@@ -17,8 +19,7 @@ const SearchReducer = (state = initialState, action) => {
     switch (action.type) {
         case searchAcs.SEARCH_ALL: return {
             ...state,
-            ...action.payload,
-            data: [...(action?.payload?.append ? state.data : action.payload?.data ?? [])]
+            ...action.payload
         };
 
         default:

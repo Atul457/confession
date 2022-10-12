@@ -64,4 +64,12 @@ const areAtLastPage = (pageSize = 20, commentsCount = 0, currPage) => {
     return isAtLastPage
 }
 
-export { getLocalStorageKey, isAvatarSelectedCurr, setLocalStoragekey, resHandler, areAtLastPage }
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+    })
+}
+
+export { getLocalStorageKey, isAvatarSelectedCurr, setLocalStoragekey, resHandler, areAtLastPage, scrollToTop }

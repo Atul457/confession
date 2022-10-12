@@ -16,6 +16,16 @@ import { getForumsNConfessions } from '../../../../components/forums/services/fo
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 
+// const messageTypes = {
+//    "top" : 0,
+//    "post": 1,
+//    "forum": 2,
+//    "tags": 3
+// }
+
+const messages = ["No results found", "No Posts found", "No Forums found", "No Tags found"]
+
+
 const Search = () => {
 
     // Hooks and vars
@@ -24,16 +34,15 @@ const Search = () => {
     const {
         data: posts,
         status: postStatus,
-        message, searchStr,
+        searchedWith = "",
         type = 0,
         page,
         hasMore
     } = SearchReducer
-    const { forumTypes } = useSelector(state => state.forumsReducer)
+    const { forumTypes, categories: { activeCategory } } = useSelector(state => state.forumsReducer)
     const confessionType = 1
     const forumType = 2
-
-    console.log(posts)
+    const notFoundMessage = messages[type]
 
     // Functions
 
@@ -80,10 +89,6 @@ const Search = () => {
                         currForum={currPost} />
             })
         )
-
-        return (
-            <h5 className='endListMessage noConfessions'>No Posts found</h5>
-        )
     }
 
 
@@ -94,13 +99,16 @@ const Search = () => {
     }
 
     useEffect(() => {
-        getForumsNConfessions({ type, dispatch })
-    }, [type])
-
-    useEffect(() => {
-        if (page > 1)
-            getForumsNConfessions({ type, dispatch, append: true })
-    }, [page])
+        dispatch(searchAcFn({
+            status: apiStatus.IDLE,
+            message: "",
+            data: [],
+            page: 1,
+            visible: false,
+            hasMore: true,
+            activeCategory: activeCategory ?? "all"
+        }))
+    }, [])
 
 
     const fetchMoreData = () => {
@@ -109,15 +117,30 @@ const Search = () => {
         }))
     }
 
+    useEffect(() => {
+        getForumsNConfessions({ SearchReducer: { ...SearchReducer, dispatch, page: 1, append: false } })
+    }, [type])
+
+    useEffect(() => {
+        if (page === 1) return
+        getForumsNConfessions({ SearchReducer: { ...SearchReducer, dispatch, append: true } })
+    }, [page])
+
+    if (postStatus === apiStatus.REJECTED) {
+        <div className="alert alert-danger" role="alert">
+            Unable to get results
+        </div>
+    }
+
 
     return (
         <>
             <ForumLayoutWrapper>
                 <div className='search_page'>
 
-                    {searchStr?.trim().length > 0 ?
+                    {searchedWith?.trim().length > 0 ?
                         <div className="w-100 search_results_str">
-                            Search Result for “{searchStr ?? ""}”
+                            Search Result for “{searchedWith ?? ""}”
                         </div>
                         : null}
 
@@ -142,15 +165,38 @@ const Search = () => {
 
                     {posts ?
                         <div className='posts_wrapper'>
-                            <InfiniteScroll
-                                scrollThreshold="80%"
-                                endMessage={<div className=" text-center endListMessage mt-4 pb-3">End of Posts</div>}
-                                dataLength={posts.length}
-                                next={fetchMoreData}
-                                hasMore={hasMore}
-                            >
-                                {renderPost(posts)}
-                            </InfiniteScroll>
+                            {
+                                (postStatus === apiStatus.LOADING && page === 1)
+                                    ?
+                                    <div className="text-center">
+                                        <div className="spinner-border pColor" role="status">
+                                            <span className="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                    :
+                                    (posts.length > 0 ?
+                                        <InfiniteScroll
+                                            scrollThreshold="80%"
+                                            endMessage={<div className=" text-center endListMessage mt-4 pb-3">End of Posts</div>}
+                                            dataLength={posts.length}
+                                            next={fetchMoreData}
+                                            hasMore={hasMore}
+                                            loader={
+                                                <div className="text-center mb-5">
+                                                    <div className="spinner-border pColor text-center" role="status">
+                                                        <span className="sr-only">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        >
+                                            {renderPost(posts)}
+                                        </InfiniteScroll>
+                                        :
+                                        <h5 className='endListMessage noConfessions'>
+                                            {notFoundMessage}
+                                        </h5>
+                                    )
+                            }
                         </div>
                         :
                         null}

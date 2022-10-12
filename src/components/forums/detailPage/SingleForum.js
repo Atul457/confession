@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // Custom components
 import ForumFooter from '../forum/ForumFooter';
@@ -26,6 +26,9 @@ const SingleForum = props => {
         postCommentReducer,
         comments: { count: commentsCount, page = 1 }
     } = props
+    const location = useLocation()
+
+    // cameFromSearch
     const navigate = useNavigate()
     const { isAllowedToComment = false } = currForum
     const { forum_id } = currForum,
@@ -104,12 +107,12 @@ const SingleForum = props => {
     return (
         <>
             <div className='w-100 mb-3'>
-                <Link to="/forums" className='backtoHome'>
+                <Link to={`/${location?.state?.cameFromSearch ? "search" : "forums"}`} className='backtoHome'>
                     <span className='mr-2'>
                         <i className="fa fa-chevron-left" aria-hidden="true"></i>
                         <i className="fa fa-chevron-left" aria-hidden="true"></i>
                     </span>
-                    Go back to forums
+                    {location?.state?.cameFromSearch === true ? "Go back to search" : "Go back to forums"}
                 </Link>
             </div>
             <div className='postCont forum_cont single_forum'>

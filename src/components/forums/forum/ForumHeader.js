@@ -99,7 +99,7 @@ const ForumHeader = props => {
                     {name}
                 </div>
                 <div className="category_name">
-                    {category_name}
+                    {(category_name).charAt(0) + ((category_name).slice(1).toLowerCase())}
                 </div>
                 <div className="forum_timestamp postCreatedTime">
                     {created_at ? DateConverter(created_at) : null}

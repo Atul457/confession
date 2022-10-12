@@ -27,6 +27,7 @@ import { openCFRModal } from '../../../redux/actions/friendReqModal';
 import { getToken } from '../../../helpers/getToken';
 import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
+import { searchAcFn } from '../../../redux/actions/searchAc/searchAc';
 
 
 const checkIsViewPage = (hook) => {
@@ -320,10 +321,9 @@ export default function CommentGotModal({ categories, ...rest }) {
         // RUNS THE UPDATECONFESSIONDATA FUNCTION DEFINED IN POST.JS
         state.updateConfessionData(state.index, data);
 
-        dispatch(resetCModal())
+        // if (path) history(-1);
 
-        if (path)
-            history(-1);
+        dispatch(resetCModal())
     }
 
 
@@ -503,18 +503,18 @@ export default function CommentGotModal({ categories, ...rest }) {
     }
 
     // Open the modal to report the post
-    // const openReportPostModal = () => {
-    //     dispatch(closeCModal())
-    //     dispatch(toggleReportPostModal({
-    //         visible: true,
-    //         isReported: state.isReported,
-    //         data: {
-    //             isFiredFromModal: true,
-    //             confessionId: state.postId,
-    //             postIndex: state.index
-    //         }
-    //     }))
-    // }
+    const openReportPostModal = () => {
+        dispatch(closeCModal())
+        dispatch(toggleReportPostModal({
+            visible: true,
+            isReported: state.isReported,
+            data: {
+                isFiredFromModal: true,
+                confessionId: state.postId,
+                postIndex: state.index
+            }
+        }))
+    }
 
 
     return (
@@ -562,11 +562,11 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                 (
                                                     <section className="sharekitWrapper col-lg-12 col-md-12 col-12 mt-3 mt-lg-0 px-0 px-md-3">
 
-                                                        {/* {(auth() && state.isReported !== 2) && <span className="reportPost" onClick={openReportPostModal}>
+                                                        {(auth() && state.isReported !== 2) && <span className="reportPost" onClick={openReportPostModal}>
                                                             <i className="fa fa-exclamation-circle reportComIcon" aria-hidden="true"></i>
-                                                        </span>} */}
+                                                        </span>}
 
-                                                        {/* <span
+                                                        <span
                                                             type="button"
                                                             className={`sharekitdots resetRightModal ${sharekit === false ? "justify-content-end" : ""}`}
                                                             onClick={() => _toggleShareReqPopUp(state.postId, ShareReducer.selectedPost?.id === state.postId ? !ShareReducer.selectedPost?.value : true)}>
@@ -580,7 +580,7 @@ export default function CommentGotModal({ categories, ...rest }) {
                                                                     }}
                                                                     closeShareReqPopUp={closeShareReqPopUp} />}
                                                             <img src={shareKitIcon} className="shareKitImgIcon" />
-                                                        </span> */}
+                                                        </span>
 
                                                         {ShareReducer &&
                                                             ShareReducer.selectedPost?.id === state.postId &&

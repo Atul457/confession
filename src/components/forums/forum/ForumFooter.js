@@ -21,6 +21,7 @@ const ForumFooter = (props) => {
     // Hooks and vars
     const {
         viewcount,
+        is_only_to_show = false,
         no_of_comments,
         forum_type,
         currForum,
@@ -91,7 +92,7 @@ const ForumFooter = (props) => {
                 }
             </div>
 
-            {showPin ? <span className="pinnForum" onClick={pinForumFn}>
+            {(!is_only_to_show && showPin) ? <span className="pinnForum" onClick={pinForumFn}>
                 <img
                     src={!isPinned ? pinIcon : pinnedIcon}
                     alt="pin_forum_icon" />

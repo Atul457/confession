@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/confessionNew/static/css/main.21299a86.css",
-    "main.js": "/confessionNew/static/js/main.d60b3a31.js",
+    "main.css": "/confessionNew/static/css/main.fba63171.css",
+    "main.js": "/confessionNew/static/js/main.09350a79.js",
     "static/js/787.7b2783aa.chunk.js": "/confessionNew/static/js/787.7b2783aa.chunk.js",
     "static/media/loginLogo.svg": "/confessionNew/static/media/loginLogo.2727c5bf82b4d2c7dd6632a328467d72.svg",
     "static/media/avatarGroup.png": "/confessionNew/static/media/avatarGroup.ccd9bdedebafb3c1ee2e.png",
@@ -47,6 +47,8 @@
     "static/media/inboxIcon.svg": "/confessionNew/static/media/inboxIcon.e93e205521ab362e8df03b2518d8294c.svg",
     "static/media/viewsCountIcon.svg": "/confessionNew/static/media/viewsCountIcon.121cb0ca5559cd81e368d5a3db0aea35.svg",
     "static/media/profileIcon.svg": "/confessionNew/static/media/profileIcon.b3e92afe6e13d4dcc1eddc6acb49fc8a.svg",
+    "static/media/searchIcon.svg": "/confessionNew/static/media/searchIcon.b378273a7d678701688444d707c38418.svg",
+    "static/media/searchIconActive.svg": "/confessionNew/static/media/searchIconActive.8ebac4d80dcfff1d3ffccc627e612c1a.svg",
     "static/media/upvoted.svg": "/confessionNew/static/media/upvoted.2149e56d01889af1effb2be0b069a0a6.svg",
     "static/media/creplyIcon.svg": "/confessionNew/static/media/creplyIcon.fb799a171b579a4fcbd37b9d0ac9464b.svg",
     "static/media/orangebell.svg": "/confessionNew/static/media/orangebell.c56565cbcc26a15bf47a3685a69d356f.svg",
@@ -66,12 +68,12 @@
     "static/media/confessIconActive.svg": "/confessionNew/static/media/confessIconActive.891ead1e20e742dd8c3775c5b15d1394.svg",
     "static/media/actionIcon.svg": "/confessionNew/static/media/actionIcon.d7eb451f87851b6a53f09840bbb75f7b.svg",
     "static/media/actionIconImg.svg": "/confessionNew/static/media/actionIconImg.817b8fb076c3ae8c2b63db380aa3d31e.svg",
-    "main.21299a86.css.map": "/confessionNew/static/css/main.21299a86.css.map",
-    "main.d60b3a31.js.map": "/confessionNew/static/js/main.d60b3a31.js.map",
+    "main.fba63171.css.map": "/confessionNew/static/css/main.fba63171.css.map",
+    "main.09350a79.js.map": "/confessionNew/static/js/main.09350a79.js.map",
     "787.7b2783aa.chunk.js.map": "/confessionNew/static/js/787.7b2783aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.21299a86.css",
-    "static/js/main.d60b3a31.js"
+    "static/css/main.fba63171.css",
+    "static/js/main.09350a79.js"
   ]
 }

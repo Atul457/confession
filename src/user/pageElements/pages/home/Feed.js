@@ -14,6 +14,7 @@ import tiktokSocial from '../../../../images/tiktokSocial.svg'
 import fbSocial from '../../../../images/fbSocial.svg'
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import downArrowIcon from '../../../../images/downArrow.png';
+import confessionBanner from '../../../../images/confessionBanner.png';
 import InfiniteScroll from "react-infinite-scroll-component";
 import PrivacyModal from '../../Modals/PrivacyModal';
 import { fetchData } from '../../../../commonApi';
@@ -690,27 +691,15 @@ export default function Feed(props) {
                                         {/* POST MAIN CONT START */}
                                         <div className="postCont hideBoxShadow">
                                             <div className="doCommentContHeader container-fluid">
-                                                <span className="confessImgContInCaptha col-12 col-md-3">
-                                                    <img src={manWithHorn} alt="" />
-                                                </span>
-                                                <div className="doCommentTitle col-12 col-md-9">
-                                                    <div>What's The Talk Place About?</div>
-                                                    <div className='mainParafeed'>
-                                                        It's a safe space to share your thoughts ANONYMOUSLY.<br /> It's our contribution to mental health and the fight against the growing rate of depression.<br /> To get stuff off your chest, just select a Category and POST.<br />
-                                                        Create an account to make ANONYMOUS friends, comment on posts, and get notified when people respond or send friend requests.<br />
-                                                        Be honest and authentic; we're not afraid of crazy.<br /> Just be KIND with your responses. 😊
-
-                                                    </div>
-                                                    <div className='mainParafeed mt-0'>
-                                                        Love the app? Don't forget to share!
-                                                    </div>
-                                                    <div className='mainParafeed mt-1 font-weight-bold'>
-                                                        You're anonymous.
-                                                    </div>
+                                                <div className="doCommentTitle">
+                                                    Spread Love. Make Friends. Confess and Share your true feelings. You are anonymous
+                                                </div>
+                                                <div className="confessImgContInCaptha">
+                                                    <img src={confessionBanner} alt="" />
                                                 </div>
                                             </div>
                                             <div className="postBody">
-                                                <span className="d-block errorCont text-danger my-2" id="feedDescErrorCont"></span>
+                                                {/* <span className="d-block errorCont text-danger my-2" id="feedDescErrorCont"></span> */}
                                                 <div className="container-fluid inputWithForwardCont">
                                                     <div className="col-12 inputToAddComment toDoinputToAddComment">
                                                         <TextareaAutosize

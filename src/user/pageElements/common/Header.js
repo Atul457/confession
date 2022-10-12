@@ -40,6 +40,8 @@ import { EVerifyModal } from '../../../redux/actions/everify';
 import { getForumsNConfessions } from '../../../components/forums/services/forumServices';
 import { useNavigate } from 'react-router-dom';
 import { searchAcFn } from '../../../redux/actions/searchAc/searchAc';
+import { apiStatus } from '../../../helpers/status';
+import { scrollToTop } from '../../../helpers/helpers';
 
 export default function Header(props) {
 
@@ -51,7 +53,6 @@ export default function Header(props) {
     const searchBoxRef = useRef(null)
     const notificationReducer = useSelector(store => store.notificationReducer);
     const socialLinksModalReducer = useSelector(store => store.socialLinksModalReducer);
-    const [searchbox, setSearchbox] = useState(false)
     const dispatch = useDispatch();
     const params = useParams();
     const pathname = useLocation().pathname.replace("/", "");
@@ -275,9 +276,7 @@ export default function Header(props) {
     }
 
     const toggleSearchBox = () => {
-
         if (SearchReducer.visible) {
-            history("/")
             return dispatch(searchAcFn({
                 visible: false
             }))
@@ -286,7 +285,6 @@ export default function Header(props) {
         dispatch(searchAcFn({
             visible: true
         }))
-        history("/search")
 
     }
 
@@ -360,19 +358,57 @@ export default function Header(props) {
         dispatch(openSLinksModalActionCreators.openModal());
     }
 
-    const checkKeyPressed = (event) => {
+    const checkKeyPressed = (event, updateValue = true) => {
+        const isSearchPage = pathname === "search"
+        const value = event.target.value;
+        if (updateValue) {
+            if (isSearchPage)
+                scrollToTop()
 
-        getForumsNConfessions({
-            strToSearch: event.target.value,
-            dispatch,
-            type: SearchReducer?.type
-        })
+            dispatch(searchAcFn({
+                searchStr: value,
+            }))
+        }
+        if (event.code === "Enter") {
+            dispatch(searchAcFn({
+                visible: false,
+                searchedWith: value,
+                page: 1
+            }))
 
-        dispatch(searchAcFn({
-            searchStr: event.target.value
-        }))
+            getForumsNConfessions({
+                SearchReducer: {
+                    ...SearchReducer,
+                    searchedWith: value,
+                    dispatch,
+                    append: false
+                }
+            })
+        }
+
+        if (event.code === "Enter" && !isSearchPage) return history("/search")
 
     }
+
+    useEffect(() => {
+        const listener = (e) => {
+            const toIgnore = ["seach_boxinput", "headerUserAccIcon", "search_box"]
+            const elementClass = e.target.classList
+            let ignorableItem = false;
+            toIgnore.forEach(curr => {
+                if (elementClass.contains(curr)) ignorableItem = true
+            })
+            if (!ignorableItem) {
+                dispatch(searchAcFn({ visible: false }))
+            }
+        }
+        if (SearchReducer.visible) {
+            document.addEventListener("click", listener)
+        }
+        return () => {
+            document.removeEventListener("click", listener)
+        }
+    }, [SearchReducer.visible])
 
 
     return (
@@ -457,16 +493,19 @@ export default function Header(props) {
                                     <>
                                         {/* Search icon */}
                                         <div className="authProfileIcon noti search_box_cont">
-                                            <div className="notifications"
+                                            <div className="notifications search_box"
                                                 onClick={toggleSearchBox}
                                                 pulsate='07-07-22,pulsatingIcon mobile'>
-                                                <img src={!SearchReducer.visible ? searchIcon : searchIconActive} alt="" className="notificationIcon headerUserAccIcon" />
+                                                <img src={searchIconActive} alt="" className="headerUserAccIcon mobile_view" />
+                                                <img src={!SearchReducer.visible ? searchIcon : searchIconActive} alt="" className={`headerUserAccIcon web_view`} />
                                             </div>
                                             {SearchReducer.visible ?
                                                 (
                                                     <input
                                                         type="text"
-                                                        onKeyDown={checkKeyPressed}
+                                                        value={SearchReducer?.searchStr ?? ""}
+                                                        onChange={(e) => checkKeyPressed(e)}
+                                                        onKeyDown={(e) => checkKeyPressed(e, false)}
                                                         placeholder='Search'
                                                         ref={searchBoxRef}
                                                         className="seach_boxinput" />

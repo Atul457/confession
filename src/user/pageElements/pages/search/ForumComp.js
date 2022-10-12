@@ -52,7 +52,8 @@ const ForumComp = (props) => {
     forum_id: currForum?.forum_id,
     forum_index,
     dispatch,
-    currForum
+    currForum,
+    is_only_to_show: true
   }
 
 
@@ -62,7 +63,7 @@ const ForumComp = (props) => {
     <div className='postCont forum_cont'>
       <ForumHeader {...forumHeaderProps} />
       <div className="postedPost">
-        <Link className="links text-dark" to={`/forums/${slug}`}>
+        <Link className="links text-dark" to={`/forums/${slug}`} state={{ cameFromSearch: true }}>
           <pre className="preToNormal post forum_desc">
             {currForum?.description}
           </pre>
