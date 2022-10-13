@@ -8,7 +8,7 @@ import { resetReportPostModal, toggleReportPostModal } from '../../../redux/acti
 import { reOpenCModal, updateCModalState } from '../../../redux/actions/commentsModal';
 
 
-const ReportPostModal = ({ updatedConfessions }) => {
+const ReportPostModal = ({ updatedConfessions = () => { },  }) => {
 
     // Hooks
     const dispatch = useDispatch()
@@ -24,8 +24,10 @@ const ReportPostModal = ({ updatedConfessions }) => {
                 visible: false,
                 ...(updateOrNot === true && { isReported: 1 })
             }))
-            if (updateOrNot === true)
+            if (updateOrNot === true) {
                 dispatch(updateCModalState({ isReported: 1 }))
+                updateConfessionData({ isReported: 1 })
+            }
             dispatch(reOpenCModal())
         } else {
             if (updateOrNot === true) {
@@ -39,7 +41,6 @@ const ReportPostModal = ({ updatedConfessions }) => {
 
     // Update confession
     const updateConfessionData = dataToUpdate => {
-        console.log("update post fired")
         let { postIndex } = reportPostModalReducer.data
         updatedConfessions(postIndex, dataToUpdate)
     }

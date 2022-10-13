@@ -3,6 +3,7 @@ import userIcon from '../../../images/userAcc.svg'
 import logoutIcon from '../../../images/logoutIcon.svg'
 import searchIcon from '../../../images/searchIcon.svg'
 import searchIconActive from '../../../images/searchIconActive.svg'
+import follow_usIcon from '../../../images/follow_usIcon.svg'
 import friendRequests from '../../../images/friendRequests.svg'
 import profileResetPass from '../../../images/profileResetPass.svg'
 import profileIcon from '../../../images/profileIcon.svg'
@@ -295,6 +296,9 @@ export default function Header(props) {
         arr = [{ iconClass: "fa fa-comments", label: "You have got a new comment on your post" },
         { iconClass: "fa fa-envelope", label: "You have got a new reply on your comment" },
         { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
+        { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
+        { iconClass: "fa fa-comment-o", label: "You have got a new comment on your forum" },
+        { iconClass: "fa fa-comment-o", label: "You have got a new request on your forum" },
         { iconClass: "fa fa-ban", label: "No new notifications" }]
 
 
@@ -306,16 +310,23 @@ export default function Header(props) {
 
         }
 
+        // console.log(first)
+
+        let link = "",
+            typeOfForum = 4
 
         html = data.map((curr, index) => {
             if (curr.is_unread === 1)
                 count++;
 
+            link = `/${(+curr.type === typeOfForum ? "forums" : "confession")}/${curr.slug
+                }`;
+
             return <Link
                 className='notiDivsLinkTag'
                 key={'notiDivs' + curr.confession_id + 'type' + curr.type + Math.floor(Math.random() * 1000000)}
                 onClick={() => { dispatch(closeNotiPopup()) }}
-                to={`/confession/${curr.slug}`}>
+                to={link}>
                 <>
                     {index > 0 && <hr className="m-0" />}
                     <div type="button" className={`takeActionOptions takeActionOptionsOnHov textDecNone py-2 ${curr.is_unread === 1 ? 'unread' : ''}`}>
@@ -479,14 +490,14 @@ export default function Header(props) {
                                 : ''}
 
 
-                            <div
+                            {!auth() ? <div
                                 className='socialLinksIconWrapper authProfileIcon'
                                 pulsate='07-07-22,pulsatingIcon mobile'>
                                 <img
                                     src={socialLinksIcon}
                                     alt="socialLinksIcon"
                                     onClick={openSocialLinksModal} />
-                            </div>
+                            </div> : null}
 
                             {auth() ?
                                 (
@@ -575,6 +586,23 @@ export default function Header(props) {
                                                             }
                                                         </span>
                                                     </div>
+                                                </Link>
+                                                <hr className="m-0" />
+                                                <div
+                                                    type="button"
+                                                    onClick={openSocialLinksModal}
+                                                    className="takeActionOptions takeActionOptionsOnHov textDecNone py-2">
+                                                    <img
+                                                        src={follow_usIcon}
+                                                        alt="socialLinksIcon"
+                                                        className='profilePopUpIcons' />
+                                                    <span className="viewProfileNcommentsCont">
+                                                        <div className='userProfileHeading'>
+                                                            Follow us
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                                <Link to="/profile" className="textDecNone border-bottom">
                                                     {requestsIndicator > 0 ?
                                                         <>
                                                             <hr className="m-0" />

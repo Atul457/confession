@@ -111,7 +111,6 @@ const ForumComments = props => {
         data: append ? [...comments, ...commentsInRes] : commentsInRes,
         page, count
       }
-      console.log("worked again")
       dispatch(forumHandlers.handleCommentsAcFn(dataToSend))
 
     } catch (error) {

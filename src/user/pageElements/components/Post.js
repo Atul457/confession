@@ -522,15 +522,13 @@ export default function Post(props) {
                         </span>
                         : ''}
             </div>
-
             <div
                 className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''} ${isAnyUnreadComment ? 'addMargin' : ''}`}
-                {...(isCoverTypePost && { onClick: openCommentsModal })}
                 style={postBg}>
-                <div className="postedPost mb-2">
-                    <Link className="links text-dark" to="#">
+
+                <Link className="links text-dark" to={`/confession/${props?.slug}`}>
+                    <div className="postedPost mb-2">
                         <pre
-                            {...(!isCoverTypePost && { onClick: openCommentsModal })}
                             className="preToNormal post"
                         >
                             {props.postedComment}
@@ -540,11 +538,15 @@ export default function Post(props) {
                                 ||
                                 (props.postedComment).split("\n").length > 5 ?
                                 <>
-                                    {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} onClick={openCommentsModal} className="viewMoreBtn pl-1">view more</span>
+                                    {((props.postedComment).split("")).length >= noOfWords[0] && (
+                                        props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>
+                                    }
+                                    <span toberedirectedto={props.postId}
+                                        className="viewMoreBtn pl-1">view more</span>
                                 </> : ''
                         }
-                    </Link>
-                </div>
+                    </div>
+                </Link>
 
                 {/* IF IMG URL WILL BE STRING THEN IMAGES WILL NOT BE SHOWN */}
                 {(props.imgUrl !== null && (props.imgUrl).length > 0 && typeof (props.imgUrl) !== 'string')
@@ -566,7 +568,8 @@ export default function Post(props) {
             </div>
 
 
-            {authenticated[0] === true &&
+            {
+                authenticated[0] === true &&
                 (
                     <>
                         <div className="container-fluid inputWithForwardCont">
@@ -603,14 +606,24 @@ export default function Post(props) {
                     </span>}
 
                 <div className={`iconsCont ${authenticated[0] === false ? 'mainDesignOnWrap' : ''}`}>
-                    <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button" onClick={openCommentsModal}>
-                        <img src={viewsCountIcon} alt="" />
-                        <span className="count">{props.viewcount ? props.viewcount : 0}</span>
-                    </div>
-                    <div className="upvote_downvote_icons_cont" type="button" onClick={openCommentsModal}>
-                        <img src={commentCountIcon} alt="" />
-                        <span className="count">{props.sharedBy}</span>
-                    </div>
+                    <Link className="links text-dark" to={`/confession/${props?.slug}`}>
+                        <div
+                            className="upvote_downvote_icons_cont underlineShareCount ml-0"
+                            type="button"
+                        >
+                            <img src={viewsCountIcon} alt="" />
+                            <span className="count">{props.viewcount ? props.viewcount : 0}</span>
+                        </div>
+                    </Link>
+                    <Link className="links text-dark" to={`/confession/${props?.slug}`}>
+                        <div
+                            className="upvote_downvote_icons_cont"
+                            type="button"
+                        >
+                            <img src={commentCountIcon} alt="" />
+                            <span className="count">{props.sharedBy}</span>
+                        </div>
+                    </Link>
 
                     {(props.hasOwnProperty("is_liked")
                         ?
@@ -634,6 +647,6 @@ export default function Post(props) {
                 </div>
             </div>
 
-        </div>
+        </div >
     )
 }

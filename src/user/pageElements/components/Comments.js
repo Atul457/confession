@@ -106,12 +106,17 @@ export default function Comments(props) {
 
         // UPDATES THE COMMENTSGOTMODAL COMMENT COUNT
         data = { no_of_comments: parseInt(commentsModalReducer.state.no_of_comments) - delCommentCount };
-        dispatch(updateCModalState(data));
+        props.updatePost(data)
+        // dispatch(updateCModalState(data));
     }
 
 
     // CALLS HANDLESUBCOMMENT TO POST AND ADD A NEW COMMENT
     const updatSubComments = (comment_id, editedComment, index) => {
+        console.log({
+            comment_id, editedComment, index
+        })  
+        // props.updatePost
         sendSubComment(comment_id, editedComment, index)
     }
 
@@ -171,6 +176,7 @@ export default function Comments(props) {
                     ref.value = ""
                     data = { no_of_comments: commentsModalReducer.state.no_of_comments + 1 };
                     dispatch(updateCModalState(data))
+                    props.updatePost(data)
                     dispatch(setCommentField({ id: "" }));
 
                     if (showSubComments.isBeingExpanded === true || showSubComments?.keepOpened === true || subComments.data.length < SLOMT) {
@@ -524,6 +530,7 @@ export default function Comments(props) {
                                     root_id={props.commentId}
                                     key={subcomment.comment_id}
                                     data={subcomment}
+                                    updatePost={props.updatePost}
                                     updatSubComments={updatSubComments}
                                     subcommentId={subcomment.comment_id} />
                             })}

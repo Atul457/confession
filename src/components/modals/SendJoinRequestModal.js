@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchData } from '../../commonApi'
@@ -89,22 +89,9 @@ const SendRequestModal = () => {
       const res = await fetchData(obj)
       resHandler(res)
       if (is_cancelled === 0) {
-        // dispatch(reqToJoinModalAcFn({
-        //   data: {
-        //     requested: true,
-        //   },
-        //   status: apiStatus.FULFILLED
-        // }))
         cancelRequest()
       }
       else {
-        // dispatch(reqToJoinModalAcFn({
-        //   data: {
-        //     requested: false,
-        //     message: ""
-        //   },
-        //   status: apiStatus.FULFILLED
-        // }));
         sendRequest()
       }
     } catch (err) {

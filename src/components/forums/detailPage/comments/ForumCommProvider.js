@@ -65,11 +65,13 @@ const reportedFormStatus = {
     reported: 1
 }
 
+const myForum = 2
+
 const isAllowedToComment = currForum => {
     const isClosed = currForum?.type === forum_types.closed
     const isApproved = currForum?.is_requested === requestedStatus.approved
     const isAllowedType = currForum?.type === forum_types.public
-    const allowToComment = !isClosed && (isAllowedType || isApproved)
+    const allowToComment = (!isClosed && (isAllowedType || isApproved) || currForum?.isReported === myForum)
     return allowToComment
 }
 
@@ -79,6 +81,7 @@ const customStyles = {
         padding: "5px 13px",
         color: "#495057",
         background: "#fff",
+        background: "#ebebeb"
     }),
     control: (styles) => ({ ...styles, backgroundColor: 'transparent', padding: "3px 0px 3px 13px" }),
     dropdownIndicator: (styles) => ({ ...styles, backgroundColor: 'transparent', paddingRight: 0, color: "#495057" }),
@@ -97,9 +100,6 @@ const customStyles = {
         position: "absolute",
         width: "100%",
         zIndex: 99999999,
-    }),
-    menuPortal: (provided, state) => ({
-        background: "red"
     }),
     indicatorsContainer: (provided, state) => ({
         display: 'none'
@@ -122,7 +122,7 @@ const customStyles = {
         alignItems: 'center',
         background: "transparent",
         flexWrap: "wrap",
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-start'
     }),
     multiValueLabel: () => ({
         color: "#fff"
@@ -139,5 +139,6 @@ export {
     forum_types,
     reportedFormStatus,
     isAllowedToComment,
-    customStyles
+    customStyles,
+    myForum
 }

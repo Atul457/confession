@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import Forum from '../forum/Forum'
 import SendRequestModal from '../../modals/SendJoinRequestModal'
 import ReportForumModal from '../../../user/pageElements/Modals/ReportForumModal'
+import NfswAlertModal from '../../modals/NfswAlertModal'
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,6 +27,7 @@ const WhatsNew = () => {
         forumTypes,
         modals
     } = useSelector(state => state.forumsReducer)
+    const { modalsReducer: { nfsw_modal } } = useSelector(state => state)
     const { requestToJoinModal, reportForumModal } = modals
     const dispatch = useDispatch()
     const { activeCategory } = categories
@@ -98,8 +100,12 @@ const WhatsNew = () => {
 
             {/* Send join request modal */}
             {requestToJoinModal.visible && <SendRequestModal />}
+
             {/* Report forum modal */}
             {reportForumModal.visible && <ReportForumModal />}
+
+            {/* Nfsw alert modal */}
+            {nfsw_modal.isVisible && <NfswAlertModal nfsw_modal={nfsw_modal} />}
 
         </div>
     )

@@ -199,7 +199,7 @@ const ConfessionComp = (props) => {
             </span>
             : ''}
       </div>
-      <Link className="links text-dark" to={`/confession/${props?.slug}`}>
+      <Link className="links text-dark" to={`/confession/${props?.slug}`} state={{ cameFromSearch: true }}>
         <div
           className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''} ${isAnyUnreadComment ? 'addMargin' : ''}`}
           style={postBg}>
@@ -241,18 +241,18 @@ const ConfessionComp = (props) => {
         </div>
       </Link>
 
-      <Link className="links text-dark" to={`/confession/${props?.slug}`}>
-        <div className="postFoot">
+      <div className="postFoot">
 
-          {authenticated[0] === false &&
-            <span className="feedPageLoginBtnCont postLoginBtnCont">
-              <Link to="/login">
-                <div className="categoryOfUser enhancedStyle mb-0" type="button">
-                  Login to comment
-                </div>
-              </Link>
-            </span>}
+        {authenticated[0] === false &&
+          <span className="feedPageLoginBtnCont postLoginBtnCont">
+            <Link to="/login">
+              <div className="categoryOfUser enhancedStyle mb-0" type="button">
+                Login to comment
+              </div>
+            </Link>
+          </span>}
 
+        <Link className="links text-dark" to={`/confession/${props?.slug}`} state={{ cameFromSearch: true }}>
           <div className={`iconsCont ${authenticated[0] === false ? 'mainDesignOnWrap' : ''}`}>
             <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
               <img src={viewsCountIcon} alt="" />
@@ -283,8 +283,8 @@ const ConfessionComp = (props) => {
             )
             }
           </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
 
     </div>
   )

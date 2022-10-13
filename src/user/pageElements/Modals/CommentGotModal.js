@@ -321,7 +321,7 @@ export default function CommentGotModal({ categories, ...rest }) {
         // RUNS THE UPDATECONFESSIONDATA FUNCTION DEFINED IN POST.JS
         state.updateConfessionData(state.index, data);
 
-        // if (path) history(-1);
+        if (path) history("/home");
 
         dispatch(resetCModal())
     }

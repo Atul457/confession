@@ -153,11 +153,11 @@ const CreateFormModal = () => {
           >
 
             <div className='w-100 mb-3'>
-            <input
-              className="form-control"
-              placeholder={`Title [Max-Characters:${noOfCharsTitle}]`}
-              maxLength={noOfCharsTitle}
-              {...register("title")} />
+              <input
+                className="form-control"
+                placeholder={`Title`}
+                maxLength={noOfCharsTitle}
+                {...register("title")} />
               <span className="textAreaLimit">[ Max-Characters:{noOfCharsTitle} ]</span>
             </div>
 
@@ -182,7 +182,7 @@ const CreateFormModal = () => {
                 return <option
                   key={`createPost ${element.id}`}
                   value={element.id}>
-                  {(element.type_name).charAt(0) + (element.type_name).slice(1).toLowerCase()}
+                  {(element.type_name)?.charAt(0)?.toUpperCase() + ((element.type_name)?.slice(1)?.toLowerCase())}
                 </option>
               }) : <option value="">Forums types not found</option>}
               {/* END OF ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}

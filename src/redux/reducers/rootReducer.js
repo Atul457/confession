@@ -21,8 +21,10 @@ import reportPostModalReducer from './reportPostModalReducer';
 import postRBYModalReducer from './postRBYModalReducer';
 import { forumsReducer } from './forumsReducer/forumsReducer';
 import SearchReducer from './searchReducer/searchReducer';
+import modalsReducer from './modals';
 
 const rootReducer = combineReducers({
+    modalsReducer,
     SearchReducer,
     reportPostModalReducer,
     avatarsIntroModalReducer,
