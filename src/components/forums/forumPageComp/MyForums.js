@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // Custom components
 import Forum from '../forum/Forum'
@@ -15,6 +15,7 @@ import { fetchData } from '../../../commonApi'
 import { resHandler } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
 import CreateFormModal from '../../modals/CreateFormModal'
+import DeleteForumModal from '../../modals/DeleteForumModal'
 
 
 const MyForums = () => {
@@ -25,7 +26,7 @@ const MyForums = () => {
     forumTypes,
     modals
   } = useSelector(state => state.forumsReducer)
-  const { requestToJoinModal, reportForumModal, createForumModal } = modals
+  const { requestToJoinModal, reportForumModal, createForumModal, deleteForumModal } = modals
   const dispatch = useDispatch()
   const { handleForums } = forumHandlers
   const { data: forums, status: forumsStatus } = forumsRed
@@ -61,6 +62,7 @@ const MyForums = () => {
     if (forumsArr && forumsArr.length) return (
       forums.map((currForum, cfIndex) => {
         return <Forum
+          isMyForumPage={true}
           dispatch={dispatch}
           forum_index={cfIndex}
           key={`forumNo${cfIndex}`}
@@ -98,6 +100,12 @@ const MyForums = () => {
 
       {/* Create forum modal */}
       {createForumModal.visible && <CreateFormModal />}
+
+      {/* Create forum modal */}
+      {deleteForumModal.visible && <DeleteForumModal
+        deleteForumModal={deleteForumModal}
+        setDeleteForumModal={() => { }}
+      />}
 
     </div>
   )

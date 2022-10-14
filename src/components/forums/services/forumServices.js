@@ -3,7 +3,7 @@ import { fetchData } from "../../../commonApi"
 import { areAtLastPage, resHandler } from "../../../helpers/helpers"
 import { getKeyProfileLoc } from "../../../helpers/profileHelper"
 import { apiStatus } from "../../../helpers/status"
-import { deleteForumCommSubcomAcFn, forumHandlers, handleSingleForumCommAcFn, mutateForumFn, usersToTagAcFn } from "../../../redux/actions/forumsAc/forumsAc"
+import { deleteForumAcFn, deleteForumCommSubcomAcFn, deleteForum_AcFn, forumHandlers, handleSingleForumCommAcFn, mutateForumFn, usersToTagAcFn } from "../../../redux/actions/forumsAc/forumsAc"
 import { searchAcFn } from "../../../redux/actions/searchAc/searchAc"
 import auth from "../../../user/behindScenes/Auth/AuthCheck"
 import SetAuth from "../../../user/behindScenes/SetAuth"
@@ -297,6 +297,7 @@ const getUsersToTagService = async ({
     forum_id,
     dispatch
 }) => {
+
     let obj;
     let data = {
         search: strToSearch
@@ -324,6 +325,47 @@ const getUsersToTagService = async ({
         }))
     }
 }
+
+const deleteForumService = async ({
+    dispatch,
+    forum_id,
+    forum_index
+}) => {
+    let obj
+    obj = {
+        token: getKeyProfileLoc("token", true) ?? "",
+        method: "get",
+        url: `deletforum/${forum_id}`,
+    }
+    try {
+
+        dispatch(deleteForumAcFn({
+            status: apiStatus.LOADING
+        }))
+
+        let res = await fetchData(obj)
+        res = resHandler(res)
+
+        dispatch(deleteForumAcFn({
+            visible: false,
+            status: apiStatus.IDLE,
+            message: "",
+            data: {
+                forum_id: null,
+                forum_index: null
+            }
+        }))
+
+        dispatch(deleteForum_AcFn({ forum_index }))
+
+    } catch (error) {
+        dispatch(deleteForumAcFn({
+            message: error?.message,
+            status: apiStatus.REJECTED
+        }))
+    }
+}
+
 
 
 // Returns users to be tagged
@@ -357,11 +399,6 @@ const getForumsNConfessions = async ({ SearchReducer, selectedCategory }) => {
         }))
         let res = await fetchData(obj)
         res = resHandler(res)
-        console.log({
-            append,
-            reducerdata: SearchReducer?.data,
-            data: append ? [...SearchReducer?.data, ...res.posts] : res.posts
-        })
         dispatch(searchAcFn({
             data: append ? [...SearchReducer?.data, ...res.posts] : res.posts,
             status: apiStatus.FULFILLED,
@@ -383,5 +420,6 @@ export {
     pinForumService,
     getUsersToTagService,
     getForumsNConfessions,
-    deleteForumCommService
+    deleteForumCommService,
+    deleteForumService
 }

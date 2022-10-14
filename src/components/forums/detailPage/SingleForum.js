@@ -7,10 +7,11 @@ import ForumHeader from '../forum/ForumHeader';
 import CommentBox from './CommentBox';
 
 // Redux
-import { postComment } from '../../../redux/actions/forumsAc/forumsAc';
+import { postComment, usersToTagAcFn } from '../../../redux/actions/forumsAc/forumsAc';
 
 // Helpers
 import { doCommentService, getUsersToTagService } from '../services/forumServices';
+import { apiStatus } from '../../../helpers/status';
 
 
 const SingleForum = props => {
@@ -50,6 +51,7 @@ const SingleForum = props => {
         forum_index,
         type: currForum?.type,
         dispatch,
+        currForum,
         actionBox,
         isActionBoxVisible,
         is_for_post: false,
@@ -86,11 +88,29 @@ const SingleForum = props => {
     }
 
     const getUsersToTag = async strToSearch => {
-        getUsersToTagService({
-            strToSearch,
-            forum_id,
-            dispatch
-        })
+        const arr = strToSearch.split(" @")
+        const arr1 = strToSearch.split("@")
+        let toSearch = arr.length > 1 ? arr[arr.length - 1].replace("@", "") : ""
+        toSearch = toSearch.split(" ")
+        toSearch = toSearch.length > 1 ? "" : toSearch[0]
+        if (toSearch === "") {
+            toSearch = arr1.length > 1 ? arr1[arr1.length - 1].replace("@", "") : ""
+            toSearch = toSearch.split(" ")
+            toSearch = toSearch.length > 1 ? "" : toSearch[0]
+        }
+        if (toSearch.length)
+            getUsersToTagService({
+                strToSearch: toSearch,
+                forum_id,
+                dispatch
+            })
+        else if (usersToTag?.data?.length > 0) {
+            dispatch(usersToTagAcFn({
+                data: [],
+                status: apiStatus.IDLE,
+                toSearch
+            }))
+        }
     }
 
     const commentBoxProps = {
@@ -100,8 +120,8 @@ const SingleForum = props => {
         dispatch,
         id: forum_id,
         doComment,
-        usersToTag,
-        getUsersToTag: getUsersToTag?.data
+        usersToTag: usersToTag?.data,
+        getUsersToTag
     }
 
     return (

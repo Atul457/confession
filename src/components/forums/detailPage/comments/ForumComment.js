@@ -332,6 +332,7 @@ const ForumComment = (props) => {
             {/* Update box */}
             {isUpdateComBoxVisible ? <CommentBox
               usedById={commentId}
+              usersToTag={[]}
               isForUpdateCom={true}
               postCommentReducer={postCommentReducer}
               doComment={doComment} /> : null}
@@ -365,6 +366,7 @@ const ForumComment = (props) => {
                 {isCommentBoxVisible ?
                   <>
                     <CommentBox
+                      usersToTag={[]}
                       usedById={commentId}
                       postCommentReducer={postCommentReducer}
                       doComment={doComment}

@@ -18,7 +18,9 @@ const Forum = (props) => {
         forumTypes,
         actionBox,
         dispatch,
-        forum_index } = props
+        isMyForumPage = false,
+        forum_index
+    } = props
     const { forum_id, is_pinned } = currForum
     const { data: types } = forumTypes
     const forum_type = {
@@ -44,7 +46,8 @@ const Forum = (props) => {
         dispatch,
         actionBox,
         isActionBoxVisible,
-        is_calledfrom_detailPage: false
+        is_calledfrom_detailPage: false,
+        isMyForumPage
     }
 
     const forumFooterProps = {
@@ -56,6 +59,7 @@ const Forum = (props) => {
         forum_tags: currForum?.tags,
         forum_id: currForum?.forum_id,
         forum_index,
+        isMyForumPage,
         dispatch,
         currForum
     }

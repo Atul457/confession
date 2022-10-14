@@ -14,14 +14,7 @@ import { apiStatus } from '../../../../helpers/status';
 import { searchAcFn } from '../../../../redux/actions/searchAc/searchAc';
 import { getForumsNConfessions } from '../../../../components/forums/services/forumServices';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
-
-// const messageTypes = {
-//    "top" : 0,
-//    "post": 1,
-//    "forum": 2,
-//    "tags": 3
-// }
+import { ExpandableForumCats } from '../../../../components/forums/forumCategories/ForumCategories';
 
 const messages = ["No results found", "No Posts found", "No Forums found", "No Tags found"]
 
@@ -162,6 +155,8 @@ const Search = () => {
                             Tags
                         </div>
                     </div>
+
+                    <ExpandableForumCats classNames='mb-3 d-block d-md-none' />
 
                     {posts ?
                         <div className='posts_wrapper'>

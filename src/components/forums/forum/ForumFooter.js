@@ -28,6 +28,7 @@ const ForumFooter = (props) => {
         forum_id,
         forum_index,
         dispatch,
+        isMyForumPage,
         isPinned,
         showPin,
         forum_tags } = props,
@@ -92,7 +93,7 @@ const ForumFooter = (props) => {
                 }
             </div>
 
-            {(!is_only_to_show && showPin) ? <span className="pinnForum" onClick={pinForumFn}>
+            {(!is_only_to_show && showPin && !isMyForumPage) ? <span className="pinnForum" onClick={pinForumFn}>
                 <img
                     src={!isPinned ? pinIcon : pinnedIcon}
                     alt="pin_forum_icon" />

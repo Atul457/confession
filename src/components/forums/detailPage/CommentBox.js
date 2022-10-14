@@ -45,8 +45,18 @@ const CommentBox = props => {
                 doComment(textboxref?.current, isForUpdateCom)
             }
         }
+    }
 
-        getUsersToTag(event.target.value)
+    const tagUser = (nameOfUser) => {
+        let value = textboxref?.current.value
+        let currSentence = value
+        value = value.split("@")
+        value = value[value.length - 1]
+        console.log(textboxref?.current.value.length)
+        console.log(value)
+        currSentence = currSentence.replace(value, nameOfUser)
+        // textboxref?.current.value = textboxref?.current.value.replace(`'@'`)
+        console.log(nameOfUser, currSentence)
     }
 
     return (
@@ -61,9 +71,22 @@ const CommentBox = props => {
                                     maxLength={maxChar}
                                     row='1'
                                     ref={textboxref}
+                                    onChange={(e) => getUsersToTag(e.target.value)}
                                     onKeyDown={checkKeyPressed}
                                     className="form-control">
                                 </TextareaAutosize>
+                                {console.log(usersToTag)}
+                                {usersToTag?.length ?
+                                    <div className='users_to_tag_cont'>
+                                        {usersToTag.map(user => {
+                                            return <div
+                                                onClick={() => tagUser(user?.name)}
+                                                className='user_to_tag'>
+                                                {user?.name}
+                                            </div>
+                                        })}
+                                    </div>
+                                    : null}
                             </div>
                             <div className="arrowToAddComment" id="userPostCommentIcon" type="button" onClick={sendComment}>
                                 <img src={forwardIcon} alt="" className="forwardIconContImg" />

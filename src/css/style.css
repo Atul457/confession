@@ -2221,6 +2221,30 @@ span.offlineColor {
     margin-top: 2px;
 }
 
+.forum_cont .inputWithForwardCont {
+    position: relative;
+}
+
+.users_to_tag_cont {
+    background: var(--primaryColor);
+    border-radius: 5px;
+    position: absolute;
+    min-width: 30%;
+    color: #fff;
+    width: fit-content;
+    top: 40px;
+}
+
+.users_to_tag_cont .user_to_tag {
+    padding: 5px;
+    border-bottom: 1px solid;
+    cursor: pointer;
+}
+
+.users_to_tag_cont .user_to_tag:last-child {
+    border-bottom: unset;
+}
+
 .responseCont {
     font-weight: bold;
     margin-top: 10px;
@@ -3430,7 +3454,7 @@ span.facebookMobIcon {
     position: relative;
 }
 
-.cursor_pointer{
+.cursor_pointer {
     cursor: pointer;
 }
 
@@ -4851,6 +4875,10 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
     padding-left: 5px;
 }
 
+.expandableCategory {
+    cursor: pointer;
+}
+
 .noConfessions {
     height: 40vh;
     display: flex;
@@ -5440,6 +5468,7 @@ button.modalFootBtns.btn a:hover {
 .tags_label {
     color: #A8A9A8;
     font-weight: 600;
+    margin-right: 10px;
 }
 
 .category_name {
@@ -5548,6 +5577,8 @@ button.modalFootBtns.btn a:hover {
     color: var(--primaryColor);
     font-weight: 600;
     font-size: 20px;
+    margin-right: 5px;
+    text-transform: capitalize;
 }
 
 .forums_tab.active {
@@ -7567,6 +7598,14 @@ button.modalFootBtns.btn a:hover {
 
     .nsfw_modal .desc {
         max-width: 88%;
+    }
+
+
+    .nsfw_modal button.reqModalFootBtns,
+    .nsfw_modal .reqModalFooter a {
+        width: 100%;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
     }
 
 }

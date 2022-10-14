@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchData } from '../../commonApi'
@@ -19,6 +19,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 
 const CreateFormModal = () => {
 
+  // Hooks and vars
   const [nfsw, setNfsw] = useState(false);
   const createForumSchema = yup.object().shape({
     title: yup.string().required(),
@@ -27,12 +28,13 @@ const CreateFormModal = () => {
     type: yup.string().required()
   });
   const [tagsArr, setTagsArr] = useState([])
+  const [defaultTags, setDefaultTags] = useState([])
   const tagError = false;
   let noOfChar = 250;
   let noOfCharsTitle = 50;
 
   const { handleForums } = forumHandlers
-  const { register, formState: { errors }, formState, handleSubmit, getValues } = useForm({
+  const { register, formState: { errors }, handleSubmit, reset, getValues } = useForm({
     mode: "onChange",
     resolver: yupResolver(createForumSchema)
   })
@@ -46,6 +48,9 @@ const CreateFormModal = () => {
   const isLoading = createForumModal.status === apiStatus.LOADING
   const dispatch = useDispatch();
 
+  // Functions
+
+  // Close modal
   const closeModal = () => {
     dispatch(createForumModalFnAc({
       visible: false,
@@ -59,9 +64,31 @@ const CreateFormModal = () => {
         image: undefined,
         type: undefined,
         tags: []
-      }
+      },
+      forum_details: {}
     }))
   }
+
+  useEffect(() => {
+    if (createForumModal?.isBeingEdited) {
+      const forum_details = createForumModal?.forum_details ?? {}
+      reset({
+        ...getValues(),
+        ...forum_details
+      })
+
+      setNfsw(forum_details?.is_nsw)
+
+      if (forum_details?.tags?.length) {
+        const optionsArr = forum_details?.tags?.map(curr => {
+          return { label: curr?.tag, value: curr?.tag }
+        })
+        setDefaultTags([...optionsArr])
+        const tgg = optionsArr.map(curr => curr.value)
+        setTagsArr(tgg)
+      }
+    }
+  }, [])
 
   // Get Forums
   const getForums = async (append = false) => {
@@ -77,12 +104,11 @@ const CreateFormModal = () => {
     } catch (error) {
       console.log(error)
     }
-
-    if (0) console.log(append)
   }
 
   const onSubmit = async (data) => {
 
+    const isUpdate = createForumModal?.isBeingEdited
     if (!tagsArr?.length) return dispatch(createForumModalFnAc({
       status: apiStatus.REJECTED,
       message: "select at least one tag"
@@ -94,7 +120,10 @@ const CreateFormModal = () => {
       "image": "[]",
       post_as_anonymous: getKeyProfileLoc("post_as_anonymous"),
       tags: JSON.stringify(tagsArr),
-      type: +data?.type
+      type: +data?.type,
+      ...(isUpdate && {
+        forum_id: createForumModal?.forum_details?.forum_id
+      })
     }
 
     let token = getKeyProfileLoc("token", true) ?? "";
@@ -205,6 +234,7 @@ const CreateFormModal = () => {
             <CreatableSelect
               isMulti
               isClearable={true}
+              {...tagsArr.length && { value: tagsArr.map(curr => ({ value: curr, label: curr })) }}
               onChange={TagsHandle}
               options={tags?.data ?? []}
               placeholder="Enter tags"
@@ -216,6 +246,7 @@ const CreateFormModal = () => {
               classNamePrefix="select"
               styles={customStyles}
             />
+            {/* : null} */}
 
             <div className='w-100 mb-3 nfsw_cont'>
               <div className="toggler_nfsw_cont">

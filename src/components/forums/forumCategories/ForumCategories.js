@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // Redux 
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +11,7 @@ import { searchAcFn } from '../../../redux/actions/searchAc/searchAc'
 import { getForumsNConfessions } from '../services/forumServices'
 
 
-const ForumCategories = () => {
+const ForumCategories = ({ isExpandable = false, classNames = "" }) => {
 
     // Hooks and vars
     const { categories: categoriesRed } = useSelector(state => state.forumsReducer),
@@ -37,10 +37,12 @@ const ForumCategories = () => {
     }, [])
 
     return (
-        <div className='row'>
-            <div className="categoryHead col-12">
-                Choose categories
-            </div>
+        <div className={`row ${classNames}`}>
+            {!isExpandable ?
+                <div className="categoryHead col-12">
+                    Choose categories
+                </div> : null}
+
             <div className="categoriesContainer w-100">
                 {categories.map((category, cindex) => {
                     return <Category
@@ -54,11 +56,35 @@ const ForumCategories = () => {
                 })}
             </div>
 
-            <div className={`col-12 pt-0 filterVerbiage`}>
-                * Filter out forums by clicking on the categories above. Unselect the category to remove the filter.
-            </div>
+            {!isExpandable ?
+                <div className={`col-12 pt-0 filterVerbiage`}>
+                    * Filter out forums by clicking on the categories above. Unselect the category to remove the filter.
+                </div> : null}
         </div>
 
+    )
+}
+
+const ExpandableForumCats = ({ classNames = "" }) => {
+
+    const [showCat, setShowCat] = useState(false)
+    return (
+        <div className={`expandableCategory d-block ${classNames}`}>
+            <div className="head" onClick={() => setShowCat(!showCat)}>
+                Choose a Category to filter forums
+                <span>
+                    <i aria-hidden="true" className={`fa fa-chevron-down categoryDownIcon ${showCat ? "rotateUpsideDown" : ""}`}></i>
+                </span>
+            </div>
+            {showCat && <div className="body">
+                {/* CATEGORYCONT */}
+                <aside className="col-12 col-md-4 posSticky mobileViewCategories d-none">
+                    <ForumCategories isExpandable={true} />
+                </aside>
+                {/* CATEGORYCONT */}
+            </div>}
+
+        </div>
     )
 }
 
@@ -116,3 +142,4 @@ const Category = props => {
 }
 
 export default ForumCategories
+export { ExpandableForumCats }

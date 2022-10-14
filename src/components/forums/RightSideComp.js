@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createForumModalFnAc } from '../../redux/actions/forumsAc/forumsAc'
+import { ExpandableForumCats } from './forumCategories/ForumCategories'
 import MyForums from './forumPageComp/MyForums'
 import WhatsNew from './forumPageComp/WhatsNew'
 
@@ -14,6 +15,9 @@ const RightSideComp = () => {
     return (
         <>
             <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+
+            <ExpandableForumCats classNames='mb-3 d-block d-md-none'/>
+
             <div className='forums_tabs_comps_holder'>
                 {ActiveTab}
             </div>

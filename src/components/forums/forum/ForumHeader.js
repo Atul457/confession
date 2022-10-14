@@ -10,7 +10,7 @@ import reportForumIcon from "../../../images/reportForumIcon.svg";
 import cancelFriend from "../../../images/cancelFriendPop.svg";
 
 // Redux
-import { forumHandlers, reportForumAcFn, reqToJoinModalAcFn } from '../../../redux/actions/forumsAc/forumsAc';
+import { createForumModalFnAc, deleteForumAcFn, forumHandlers, reportForumAcFn, reqToJoinModalAcFn } from '../../../redux/actions/forumsAc/forumsAc';
 import { useDispatch } from 'react-redux';
 
 import { forum_types, reportedFormStatus, requestedStatus } from '../detailPage/comments/ForumCommProvider';
@@ -24,6 +24,8 @@ const ForumHeader = props => {
         category_name,
         is_only_to_show = false,
         created_at,
+        currForum,
+        isMyForumPage,
         forum_index,
         actionBox,
         forum_id,
@@ -83,6 +85,24 @@ const ForumHeader = props => {
         }))
     }
 
+    const deleteForum = () => {
+        dispatch(deleteForumAcFn({
+            visible: true,
+            data: {
+                forum_id,
+                forum_index
+            }
+        }))
+    }
+
+    const openCreateSForumModal = () => {
+        dispatch(createForumModalFnAc({
+            visible: true,
+            forum_details: currForum,
+            isBeingEdited: true
+        }))
+    }
+
 
     return (
         <div className='forum_header'>
@@ -115,28 +135,44 @@ const ForumHeader = props => {
                             ?
                             // ActionBox
                             (<div className={`shareReqCont share_req_cont_forums`} onClick={toggleForumAcboxFn}>
-                                {!hideJoinDiv &&
+                                {isMyForumPage ?
                                     <>
-                                        <div className="shareReqRows user" type="button" onClick={openReqToJoinModal}>
-                                            <img src={requested ? cancelFriend : addFriend} />
+                                        <div className="shareReqRows user" type="button" onClick={openCreateSForumModal}>
+                                            <i className="fa fa-pencil" aria-hidden="true"></i>
                                             <span>
-                                                {requested ? "Cancel request" : "Request to Join"}
+                                                Edit
                                             </span>
                                         </div>
                                         <div className='shareReqDivider'></div>
-                                    </>
-                                }
 
-                                <div onClick={openReportModal} className={`shareReqRows user w-100 ${hideJoinDiv ? "add_padding" : ""}`} type="button">
-                                    <img src={reportForumIcon} className="report_forum_icon" />
-                                    <span>Report</span>
-                                </div>
-                            </div>)
-                            // ActionBox
-                            :
-                            null}
+
+                                        <div onClick={deleteForum} className={`shareReqRows user w-100`} type="button">
+                                            <i className="fa fa-trash" aria-hidden="true"></i>
+                                            <span>Delete</span>
+                                        </div>
+                                    </> : null
+                                }
+                                {!isMyForumPage ?
+                                    <>
+                                        {(!hideJoinDiv ?
+                                            <>
+                                                <div className="shareReqRows user" type="button" onClick={openReqToJoinModal}>
+                                                    <img src={requested ? cancelFriend : addFriend} />
+                                                    <span>
+                                                        {requested ? "Cancel request" : "Request to Join"}
+                                                    </span>
+                                                </div>
+                                                <div className='shareReqDivider'></div>
+                                            </> : null)}
+
+                                        <div onClick={openReportModal} className={`shareReqRows user w-100 ${hideJoinDiv ? "add_padding" : ""}`} type="button">
+                                            <img src={reportForumIcon} className="report_forum_icon" />
+                                            <span>Report</span>
+                                        </div>
+                                    </> : null}
+                            </div>) : null}
                     </>
-                </span> : null
+                </span > : null
             }
 
         </div >

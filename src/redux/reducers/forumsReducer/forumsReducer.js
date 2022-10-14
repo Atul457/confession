@@ -89,6 +89,15 @@ const initialstate = {
                 isReported: false
             }
         },
+        deleteForumModal: {
+            visible: false,
+            status: apiStatus.IDLE,
+            message: "",
+            data: {
+                forum_id: null,
+                forum_index: null
+            }
+        },
         createForumModal: {
             visible: false,
             status: apiStatus.IDLE,
@@ -358,6 +367,20 @@ const forumsReducer = (state = initialstate, action) => {
                 ...draft.modals.createForumModal,
                 ...action.payload
             }
+        });
+
+        case forumAcs.DELETE_FORUM_MODAL_F: return produce(state, draft => {
+            draft.modals.deleteForumModal = {
+                ...draft.modals.deleteForumModal,
+                ...action.payload
+            }
+        });
+
+        case forumAcs.DELETE_FORUM: return produce(state, draft => {
+            const { forum_index } = action.payload
+            const myForums = [...current(draft.forums.data)]
+            myForums.splice(forum_index, 1)
+            draft.forums.data = [...myForums]
         });
 
         default: return state;
