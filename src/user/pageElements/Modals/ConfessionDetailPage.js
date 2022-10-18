@@ -539,7 +539,7 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
 
     return (
         <>
-            <div className="container-fluid postWrapperCommentsModal">
+            <div className="container-fluid postWrapperCommentsModal confession_detail_page">
                 {comDetailPage.status === apiStatus.FULFILLED
                     ?
                     <div className="row commentsNlightboxWrapper">

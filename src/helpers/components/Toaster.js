@@ -43,6 +43,7 @@ const toaster = (message, data) => {
 }
 
 const toaster2 = (message) => {
+    console.log("toasted")
     toast(<Toaster2 message={message} />, {
         position: "top-right",
         autoClose: 1000,
@@ -58,6 +59,7 @@ const info = (message, data) => {
 }
 
 const toaster2Info = (message) => {
+    console.log({ message });
     toaster2(message)
 }
 

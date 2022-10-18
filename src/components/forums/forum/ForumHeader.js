@@ -159,7 +159,7 @@ const ForumHeader = props => {
                                                 <div className="shareReqRows user" type="button" onClick={openReqToJoinModal}>
                                                     <img src={requested ? cancelFriend : addFriend} />
                                                     <span>
-                                                        {requested ? "Cancel request" : "Request to Join"}
+                                                        {requested ? "Cancel request" : "Join forum"}
                                                     </span>
                                                 </div>
                                                 <div className='shareReqDivider'></div>

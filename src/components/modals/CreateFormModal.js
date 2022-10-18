@@ -16,28 +16,40 @@ import classnames from 'classnames'
 import { customStyles } from '../forums/detailPage/comments/ForumCommProvider'
 import TextareaAutosize from 'react-textarea-autosize'
 
+const types = {
+  "PASSWORD": 1,
+  "TEXT": 2
+}
+
 
 const CreateFormModal = () => {
 
   // Hooks and vars
+  const [pass, setPass] = useState({
+    type: types.TEXT,
+    visible: false
+  })
   const [nfsw, setNfsw] = useState(false);
   const createForumSchema = yup.object().shape({
     title: yup.string().required(),
     description: yup.string().required(),
     category_id: yup.string().required(),
-    type: yup.string().required()
+    type: yup.string().required(),
+    password: yup.string().when("type", (type, createForumSchema) => {
+      return type === "2" ? createForumSchema.min(6).required() : createForumSchema
+    })
   });
   const [tagsArr, setTagsArr] = useState([])
-  const [defaultTags, setDefaultTags] = useState([])
   const tagError = false;
   let noOfChar = 250;
   let noOfCharsTitle = 50;
 
   const { handleForums } = forumHandlers
-  const { register, formState: { errors }, handleSubmit, reset, getValues } = useForm({
+  const { register, formState: { errors }, handleSubmit, reset, clearErrors, getValues } = useForm({
     mode: "onChange",
     resolver: yupResolver(createForumSchema)
   })
+
   let error = Object.values(errors)
   error = error.length ? error[0] : ""
 
@@ -83,7 +95,7 @@ const CreateFormModal = () => {
         const optionsArr = forum_details?.tags?.map(curr => {
           return { label: curr?.tag, value: curr?.tag }
         })
-        setDefaultTags([...optionsArr])
+        // setDefaultTags([...optionsArr])
         const tgg = optionsArr.map(curr => curr.value)
         setTagsArr(tgg)
       }
@@ -91,7 +103,7 @@ const CreateFormModal = () => {
   }, [])
 
   // Get Forums
-  const getForums = async (append = false) => {
+  const getForums = async () => {
     let obj = {
       token: getKeyProfileLoc("token", true) ?? "",
       method: "get",
@@ -157,9 +169,23 @@ const CreateFormModal = () => {
   }
 
   const TagsHandle = (action) => {
+    dispatch(createForumModalFnAc({
+      status: apiStatus.IDLE,
+      message: ""
+    }))
     const tgg = action.map(curr => curr.value)
     setTagsArr(tgg)
   }
+
+  const togglePassType = () => {
+    setPass({
+      ...pass,
+      type: pass.type === types.PASSWORD ? types.TEXT : types.PASSWORD
+    })
+  }
+
+  console.log(errors)
+
 
 
   return (
@@ -203,7 +229,17 @@ const CreateFormModal = () => {
 
             <select
               className="form-control mb-3"
-              {...register("type")}>
+              {...register("type", {
+                onChange: (e) => {
+                  if (e.target.value === "2") return setPass({
+                    ...pass, visible: true
+                  })
+                  clearErrors("password")
+                  setPass({
+                    ...pass, visible: false
+                  })
+                }
+              })}>
               <option value={""}>Forum Type</option>
 
               {/* ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
@@ -217,6 +253,23 @@ const CreateFormModal = () => {
               {/* END OF ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
 
             </select>
+
+
+            {pass.visible ? <div className='w-100 mb-3 eyeNinputCont'>
+              <input
+                className="form-control"
+                placeholder={`Setup Password`}
+                type={pass.type === types.PASSWORD ? "password" : "text"}
+                maxLength={6}
+                {...register("password")} />
+              <i
+                className={`eyeIcon ${pass.type === types.TEXT ? ' fa fa-eye' : ' fa fa-eye-slash'}`}
+                aria-hidden="true"
+                type="button"
+                onClick={togglePassType}
+              >
+              </i>
+            </div> : null}
 
             <select
               className="form-control mb-3"
@@ -266,7 +319,7 @@ const CreateFormModal = () => {
 
 
             {error?.message && error?.message !== "" ?
-              <ShowResComponent isError={true} message={error?.message} classList="w-100 text-center pb-2 mt-3" />
+              <ShowResComponent isError={true} message={error?.message?.replace("category_id", "category") } classList="w-100 text-center pb-2 mt-3" />
               : null}
 
             {message && message !== "" ?

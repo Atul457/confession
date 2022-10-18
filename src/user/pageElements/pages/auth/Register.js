@@ -419,6 +419,13 @@ export default function Register() {
                                     <div className="errorCont" id="regRPasswordErrorCont"></div>
                                 </div>
 
+                                <div className='form-group'>
+                                    <p className='recaptcha_desc'>This site is protected by reCAPTCHA and the Google
+                                        <a className='googleLink' href="https://policies.google.com/privacy"> Privacy Policy</a> and
+                                        <a className='googleLink' href="https://policies.google.com/terms"> Terms of Service</a> apply.
+                                    </p>
+                                </div>
+
                                 <button type="button" onClick={() => validateForm(false)} className="btn submitButton">{isLoading ? <div className="spinnerSizePost spinner-border text-white" role="status">
                                     <span className="sr-only">Loading...</span>
                                 </div> : "Register"}</button>

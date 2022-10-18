@@ -11,6 +11,7 @@ import ForumCategories from '../forumCategories/ForumCategories';
 const ForumLayoutWrapper = ({ children }) => {
 
     return (
+        // <div className="container-fluid forums_page feed_page">
         <div className="container-fluid forums_page">
             <div className="row outerContWrapper">
                 <Header links={true}></Header>

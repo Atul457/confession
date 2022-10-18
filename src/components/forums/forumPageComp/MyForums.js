@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 // Custom components
 import Forum from '../forum/Forum'
@@ -29,33 +30,40 @@ const MyForums = () => {
   const { requestToJoinModal, reportForumModal, createForumModal, deleteForumModal } = modals
   const dispatch = useDispatch()
   const { handleForums } = forumHandlers
-  const { data: forums, status: forumsStatus } = forumsRed
+  const { data: forums, status: forumsStatus, page, count = 0 } = forumsRed
 
   // Gets the data from the api and dispatchs it
   useEffect(() => {
-    getForums(true)
+    getForums(1, false)
   }, [])
 
 
   // Functions
 
   // Get Forums
-  const getForums = async (append = false) => {
+  const getForums = async (page = 1, append = false) => {
     let obj = {
       token: getKeyProfileLoc("token", true) ?? "",
       method: "get",
-      url: `getmyforums/1`
+      url: `getmyforums/${page}`
     }
     try {
       let res = await fetchData(obj)
       res = resHandler(res)
-      dispatch(handleForums({ data: res?.forums ?? [], status: apiStatus.FULFILLED }))
+      const forums_from_api = res?.forums ?? []
+      dispatch(handleForums({ data: append ? [...forums, ...forums_from_api] : forums_from_api, status: apiStatus.FULFILLED, count: res?.count }))
     } catch (error) {
       console.log(error)
     }
 
     if (0) console.log(append)
   }
+
+  const fetchMoreData = () => {
+    dispatch(handleForums({ page: page + 1 }))
+    getForums(page + 1, true)
+  }
+
 
   // Render forums
   const renderForums = forumsArr => {
@@ -88,7 +96,29 @@ const MyForums = () => {
 
   return (
     <div>
-      {renderForums(forums)}
+      {forums.length > 0 ?
+        <InfiniteScroll
+          scrollThreshold="80%"
+          endMessage={<div className=" text-center endListMessage mt-4 pb-3">End of Forums</div>}
+          dataLength={forums.length}
+          next={fetchMoreData}
+          hasMore={forums.length < count}
+          loader={
+            <div className="text-center mb-5">
+              <div className="spinner-border pColor text-center" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+        >
+          {renderForums(forums)}
+        </InfiniteScroll>
+        :
+        <h5 className='endListMessage noConfessions'>
+          No forums found
+        </h5>
+      }
+
 
       {/* Modals */}
 
@@ -102,12 +132,14 @@ const MyForums = () => {
       {createForumModal.visible && <CreateFormModal />}
 
       {/* Create forum modal */}
-      {deleteForumModal.visible && <DeleteForumModal
-        deleteForumModal={deleteForumModal}
-        setDeleteForumModal={() => { }}
-      />}
+      {
+        deleteForumModal.visible && <DeleteForumModal
+          deleteForumModal={deleteForumModal}
+          setDeleteForumModal={() => { }}
+        />
+      }
 
-    </div>
+    </div >
   )
 }
 

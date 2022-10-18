@@ -28,7 +28,9 @@ const initialstate = {
         status: apiStatus.LOADING,
         data: [],
         message: "",
-        actionBox: {}
+        actionBox: {},
+        page: 1,
+        count: 0
     },
     detailPage: {
         postComment: {

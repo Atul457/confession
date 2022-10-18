@@ -25,7 +25,7 @@ const CommentBox = props => {
         usersToTag = [],
         getUsersToTag = () => { }
     } = props,
-        maxChar = 2000,
+        maxChar = 2000, 
         textboxref = useRef(null),
         isError = status === apiStatus.REJECTED
 
@@ -52,11 +52,11 @@ const CommentBox = props => {
         let currSentence = value
         value = value.split("@")
         value = value[value.length - 1]
-        console.log(textboxref?.current.value.length)
-        console.log(value)
+        // console.log(textboxref?.current.value.length)
+        // console.log(value)
         currSentence = currSentence.replace(value, nameOfUser)
         // textboxref?.current.value = textboxref?.current.value.replace(`'@'`)
-        console.log(nameOfUser, currSentence)
+        // console.log(nameOfUser, currSentence)
     }
 
     return (
@@ -75,7 +75,6 @@ const CommentBox = props => {
                                     onKeyDown={checkKeyPressed}
                                     className="form-control">
                                 </TextareaAutosize>
-                                {console.log(usersToTag)}
                                 {usersToTag?.length ?
                                     <div className='users_to_tag_cont'>
                                         {usersToTag.map(user => {

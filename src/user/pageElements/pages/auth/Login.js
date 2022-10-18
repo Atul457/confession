@@ -439,6 +439,14 @@ export default function Login() {
                                         </div>
                                     </div>
 
+
+                                    <div className='form-group'>
+                                        <p className='recaptcha_desc'>This site is protected by reCAPTCHA and the Google
+                                            <a className='googleLink' href="https://policies.google.com/privacy"> Privacy Policy</a> and
+                                            <a className='googleLink' href="https://policies.google.com/terms"> Terms of Service</a> apply.
+                                        </p>
+                                    </div>
+
                                     <button
                                         type="button"
                                         className="btn submitButton"
@@ -513,7 +521,6 @@ export default function Login() {
                     </div>)
                     : <SiteLoader />
             }
-
         </div>
     );
 }

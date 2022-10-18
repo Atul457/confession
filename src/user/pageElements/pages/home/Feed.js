@@ -6,7 +6,8 @@ import Category from '../../components/Category';
 import manWithHorn from '../../../../images/manWithHorn.png';
 import instaSocial from '../../../../images/instaSocial.svg'
 import removeImgIcon from '../../../../images/removeImgIcon.png';
-import uploadImages from '../../../../images/uploadImages.svg';
+// import uploadImages from '../../../../images/uploadImages.svg';
+import uploadImages from '../../../../images/uploadImages.png';
 
 import ExtValidator from '../../../../extensionValidator/ExtValidator';
 import TwitterSocial from '../../../../images/TwitterSocial.svg'
@@ -692,14 +693,15 @@ export default function Feed(props) {
                                         <div className="postCont hideBoxShadow">
                                             <div className="doCommentContHeader container-fluid">
                                                 <div className="doCommentTitle">
-                                                    Spread Love. Make Friends. Confess and Share your true feelings. You are anonymous
+                                                    Share your true feelings. Or your Confessions.
+                                                    Safely connect with like minds. Get answers to questions.
+                                                    You are Anonymous
                                                 </div>
                                                 <div className="confessImgContInCaptha">
                                                     <img src={confessionBanner} alt="" />
                                                 </div>
                                             </div>
                                             <div className="postBody">
-                                                {/* <span className="d-block errorCont text-danger my-2" id="feedDescErrorCont"></span> */}
                                                 <div className="container-fluid inputWithForwardCont">
                                                     <div className="col-12 inputToAddComment toDoinputToAddComment">
                                                         <TextareaAutosize

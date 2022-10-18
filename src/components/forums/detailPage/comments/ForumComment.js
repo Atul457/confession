@@ -94,6 +94,7 @@ const ForumComment = (props) => {
 
   // Toggles reply btn and comment/edit comment field
   const toggleReplyBtn = () => {
+    if (isUpdateComBoxVisible) openUpdateComBox()
     dispatch(handleCommentsAcFn({
       commentBox: {
         ...(!isCommentBoxVisible && { commentId })
@@ -208,6 +209,7 @@ const ForumComment = (props) => {
 
   // Open update comment box
   const openUpdateComBox = () => {
+    if (isCommentBoxVisible) toggleReplyBtn()
     dispatch(handleCommentsAcFn({
       updateBox: {
         ...(!isUpdateComBoxVisible && { commentId })

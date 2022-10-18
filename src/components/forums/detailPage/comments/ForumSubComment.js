@@ -45,7 +45,8 @@ const ForumSubComment = (props) => {
         comment_id: commentId,
         subCommentIndex,
         isReported,
-        is_liked = 0
+        is_liked = 0,
+        like = 0
     } = currSubComment
 
     const { handleCommentsAcFn } = forumHandlers,
@@ -87,6 +88,7 @@ const ForumSubComment = (props) => {
         likeDislikeService({
             isLiked,
             dispatch,
+            like,
             forum_id,
             parent_comment_index: rootDetails?.commentIndex,
             is_for_sub_comment: true,
@@ -96,39 +98,16 @@ const ForumSubComment = (props) => {
     }
     // Open update comment box
     const openUpdateComBox = () => {
+        if (isCommentBoxVisible) toggleReplyBtn()
         dispatch(handleCommentsAcFn({
             updateBox: {
-                ...(!isCommentBoxVisible && { commentId })
+                ...(!isUpdateComBoxVisible && { commentId })
             }
         }))
     }
 
     // Do comment
     const doComment = (commentBoxRef, updateComment = false) => {
-
-        // const doComment = (commentBoxRef, updateComment = false) => {
-        //     doCommentService({
-        //         commentBoxRef,
-        //         postComment,
-        //         ...(updateComment === true && {
-        //             updateComment,
-        //             commentId
-        //         }),
-        //         dispatch,
-        //         navigate,
-        //         forum_id,
-        //         isSubComment: true,
-        //         usedById: commentId,
-        //         parent_root_info: {
-        //             parent_id: commentId,
-        //             root_id: commentId,
-        //             parentIndex: subCommentIndex
-        //         },
-        //         commentsCount,
-        //         page
-        //     })
-        // }
-
         doCommentService({
             commentBoxRef,
             postComment,
@@ -170,6 +149,7 @@ const ForumSubComment = (props) => {
 
     // Toggles reply btn and comment/edit comment field
     const toggleReplyBtn = () => {
+        if (isUpdateComBoxVisible) openUpdateComBox()
         dispatch(handleCommentsAcFn({
             commentBox: {
                 ...(!isCommentBoxVisible && { commentId })
@@ -252,7 +232,7 @@ const ForumSubComment = (props) => {
                                             {is_liked === 1 ?
                                                 <img src={upvoted} alt="" onClick={() => upvoteOrDownvote(false)} /> :
                                                 <img src={upvote} alt="" onClick={() => upvoteOrDownvote(true)} />}
-                                            <span className='count'>{props.like}</span>
+                                            <span className='count'>{like}</span>
                                         </div>
                                     </div>
                                 }

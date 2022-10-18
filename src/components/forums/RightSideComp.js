@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { createForumModalFnAc } from '../../redux/actions/forumsAc/forumsAc'
+import { apiStatus } from '../../helpers/status'
+import { createForumModalFnAc, forumHandlers } from '../../redux/actions/forumsAc/forumsAc'
 import { ExpandableForumCats } from './forumCategories/ForumCategories'
 import MyForums from './forumPageComp/MyForums'
 import WhatsNew from './forumPageComp/WhatsNew'
@@ -9,14 +10,28 @@ import WhatsNew from './forumPageComp/WhatsNew'
 const RightSideComp = () => {
 
     const [activeTab, setActiveTab] = useState(0)
-    const TabComps = [<WhatsNew />, <MyForums />]
+    const [adSlots, setAdSlots] = useState([]);
+    const TabComps = [<WhatsNew slotsDetails={{ adSlots, setAdSlots }} />, <MyForums />]
+    const { handleForums } = forumHandlers
     const ActiveTab = TabComps[activeTab]
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(handleForums({
+            status: apiStatus.LOADING,
+            data: [],
+            message: "",
+            actionBox: {},
+            page: 1,
+            count: 0
+        }))
+    }, [activeTab])
 
     return (
         <>
             <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-            <ExpandableForumCats classNames='mb-3 d-block d-md-none'/>
+            <ExpandableForumCats classNames='mb-3 d-block d-md-none' />
 
             <div className='forums_tabs_comps_holder'>
                 {ActiveTab}

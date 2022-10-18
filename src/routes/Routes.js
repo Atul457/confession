@@ -8,8 +8,6 @@ import {
     Navigate
 } from "react-router-dom";
 
-// React bootstrap imports
-import { ToastContainer } from 'react-bootstrap';
 
 // Helpers
 import auth from '../user/behindScenes/Auth/AuthCheck';
@@ -228,7 +226,6 @@ const Routes = ({ categories }) => {
 
                 </Switch>
             </Router>
-            <ToastContainer />
         </>
     )
 }

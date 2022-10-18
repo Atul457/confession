@@ -1,7 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
 import TagManager from 'react-gtm-module'
 
-
 // Styles
 import './App.css';
 import './css/style.css';
@@ -231,15 +230,17 @@ function App() {
   }, [tags])
 
   return (
-    <AuthContext.Provider value={setAuth}>
-      {categories && tags ? <Routes categories={categories} /> :
-        (
-          categoriesResults ? <SiteLoader /> : (
-            <div className="alert alert-danger" role="alert">
-              Server Error... Please try again
-            </div>)
-        )}
-    </AuthContext.Provider>
+    <>
+      <AuthContext.Provider value={setAuth}>
+        {categories && tags ? <Routes categories={categories} /> :
+          (
+            categoriesResults ? <SiteLoader /> : (
+              <div className="alert alert-danger" role="alert">
+                Server Error... Please try again
+              </div>)
+          )}
+      </AuthContext.Provider>
+    </>
   );
 }
 
