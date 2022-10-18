@@ -342,9 +342,8 @@ export default function Profile() {
         setRunOrNot(true);
         setProfileImg({
             ...profileImg,
-            data: link,
             isLoading: false,
-            imagepath: "",
+            imagepath: link,
             is_avatar: 1
         })
         setProfile({ ...profile, image: link, is_avatar: 1 });

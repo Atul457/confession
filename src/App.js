@@ -47,7 +47,6 @@ function App() {
     event: 'pageview'
   });
 
-
   const [categories, setCategories] = useState(false);
   const [tags, setTags] = useState(false);
   const dispatch = useDispatch()

@@ -20,7 +20,7 @@ import { getKeyProfileLoc } from '../../../helpers/profileHelper'
 import RightSideAdComp from '../../sidebarAds/RightSideAdComp'
 
 
-const WhatsNew = ({ slotsDetails }) => {
+const WhatsNew = () => {
 
     // Hooks and vars
     const {

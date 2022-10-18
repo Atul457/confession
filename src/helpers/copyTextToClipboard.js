@@ -9,10 +9,8 @@ const copyTextToClipboard = (text) => {
         var successful = document.execCommand('copy');
         // var msg = successful ? 'successful' : 'unsuccessful';
         // console.log('Copying text command was ' + msg);
-        console.log(successful ? "Copied successfully" : "Unable to copy")
         toastMethods.toaster2Info(successful ? "Copied successfully" : "Unable to copy");
     } catch (err) {
-        console.log('Oops, unable to copy');
         toastMethods.toaster2Info("Unable to copy");
     }
     document.body.removeChild(input);

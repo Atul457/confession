@@ -3,8 +3,6 @@ import React, { useEffect } from 'react';
 
 export default function AdMob({ mainContId }) {
 
-  console.log({ mainContId })
-
   window.googletag = window.googletag || { cmd: [] };
 
   const moreContent = () => {

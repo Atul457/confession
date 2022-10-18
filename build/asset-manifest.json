@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/confessionNew/static/css/main.0c75d4ef.css",
-    "main.js": "/confessionNew/static/js/main.bcbc46fd.js",
+    "main.css": "/confessionNew/static/css/main.608e7a65.css",
+    "main.js": "/confessionNew/static/js/main.bbf88b3a.js",
     "static/js/787.7b2783aa.chunk.js": "/confessionNew/static/js/787.7b2783aa.chunk.js",
     "static/media/loginLogo.svg": "/confessionNew/static/media/loginLogo.2727c5bf82b4d2c7dd6632a328467d72.svg",
     "static/media/avatarGroup.png": "/confessionNew/static/media/avatarGroup.ccd9bdedebafb3c1ee2e.png",
@@ -60,8 +60,8 @@
     "static/media/homeIconM.svg": "/confessionNew/static/media/homeIconM.213cd07a3013daa0f2f31dc98f5f3ad9.svg",
     "static/media/bell.svg": "/confessionNew/static/media/bell.40d3cf3dfc626189856c29604b227a62.svg",
     "static/media/tickIcon.svg": "/confessionNew/static/media/tickIcon.c36494c18facf012cbbfc38625fc2dc1.svg",
+    "static/media/forwardIcon.svg": "/confessionNew/static/media/forwardIcon.6ac0a894820881b798123975e74ff75f.svg",
     "static/media/fbSocial.svg": "/confessionNew/static/media/fbSocial.c5eb01a76b96bf421853387d3c766337.svg",
-    "static/media/forwardIcon.svg": "/confessionNew/static/media/forwardIcon.f5511cf5f1a271c8e030ba93d1809ad9.svg",
     "static/media/TwitterSocial.svg": "/confessionNew/static/media/TwitterSocial.d09be4d4b00ee0bfef84437fc19941b0.svg",
     "static/media/googleIcon.svg": "/confessionNew/static/media/googleIcon.9a7800d06783d80a1c12249a8ca58e9d.svg",
     "static/media/userAcc.svg": "/confessionNew/static/media/userAcc.ad626c265645d970ca7c7b2c1a65fb9e.svg",
@@ -71,12 +71,12 @@
     "static/media/confessIconActive.svg": "/confessionNew/static/media/confessIconActive.891ead1e20e742dd8c3775c5b15d1394.svg",
     "static/media/actionIcon.svg": "/confessionNew/static/media/actionIcon.d7eb451f87851b6a53f09840bbb75f7b.svg",
     "static/media/actionIconImg.svg": "/confessionNew/static/media/actionIconImg.817b8fb076c3ae8c2b63db380aa3d31e.svg",
-    "main.0c75d4ef.css.map": "/confessionNew/static/css/main.0c75d4ef.css.map",
-    "main.bcbc46fd.js.map": "/confessionNew/static/js/main.bcbc46fd.js.map",
+    "main.608e7a65.css.map": "/confessionNew/static/css/main.608e7a65.css.map",
+    "main.bbf88b3a.js.map": "/confessionNew/static/js/main.bbf88b3a.js.map",
     "787.7b2783aa.chunk.js.map": "/confessionNew/static/js/787.7b2783aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0c75d4ef.css",
-    "static/js/main.bcbc46fd.js"
+    "static/css/main.608e7a65.css",
+    "static/js/main.bbf88b3a.js"
   ]
 }

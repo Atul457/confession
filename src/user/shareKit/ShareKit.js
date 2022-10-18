@@ -23,7 +23,6 @@ const ShareKit = (props) => {
     };
 
     const copylink = () => {
-        console.log("copied");
         copyTextToClipboard(`${origin}/confession/${data.confession_id}`)
     }
 

@@ -184,10 +184,6 @@ const CreateFormModal = () => {
     })
   }
 
-  console.log(errors)
-
-
-
   return (
     <>
       <Modal

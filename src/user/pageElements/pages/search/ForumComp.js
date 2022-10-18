@@ -7,6 +7,10 @@ import { Link } from 'react-router-dom';
 import ForumFooter from '../../../../components/forums/forum/ForumFooter';
 import ForumHeader from '../../../../components/forums/forum/ForumHeader';
 
+// Helpers
+import { myForum } from '../../../../components/forums/detailPage/comments/ForumCommProvider';
+import { toggleNfswModal } from '../../../../redux/actions/modals/ModalsAc';
+
 const ForumComp = (props) => {
   // Hooks and vars
   const {
@@ -21,6 +25,8 @@ const ForumComp = (props) => {
     type_name: types[currForum?.type - 1]?.type_name,
     color_code: types[currForum?.type - 1]?.color_code
   }
+  const nfswContentType = 1
+  const showAlertOrNot = (currForum?.is_nsw === nfswContentType) && !(currForum?.isReported === myForum)
   const isPinned = is_pinned === 1
   const slug = currForum?.slug
   const showPin = true
@@ -52,22 +58,31 @@ const ForumComp = (props) => {
     forum_id: currForum?.forum_id,
     forum_index,
     dispatch,
+    showAlertOrNot,
     currForum,
     is_only_to_show: true
   }
 
-
   // Functions
+
+  const openNsfwModal = () => {
+    dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${slug}` }))
+  }
+
 
   return (
     <div className='postCont forum_cont'>
       <ForumHeader {...forumHeaderProps} />
       <div className="postedPost">
-        <Link className="links text-dark" to={`/forums/${slug}`} state={{ cameFromSearch: true }}>
-          <pre className="preToNormal post forum_desc">
+        {showAlertOrNot ?
+          <pre className="preToNormal post forum_desc cursor_pointer" onClick={openNsfwModal}>
             {currForum?.description}
-          </pre>
-        </Link>
+          </pre> :
+          <Link className="links text-dark" to={`/forums/${slug}`} state={{ cameFromSearch: true }}>
+            <pre className="preToNormal post forum_desc">
+              {currForum?.description}
+            </pre>
+          </Link>}
       </div>
       <ForumFooter {...forumFooterProps} />
     </div>

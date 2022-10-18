@@ -514,14 +514,14 @@ export default function Feed(props) {
             secondPostElem = secondPostElem?.getBoundingClientRect()?.top + 500
             if (secondPostElem < 0) heartCompRef?.current.classList.remove("hideHeartComp")
             else heartCompRef?.current.classList.add("hideHeartComp")
-            if (scroll > 3000) {
-                goDownArrowRef?.current.classList.remove("hideHeartComp")
-                heartCompRef?.current.classList.remove("move_right")
-            }
-            else {
-                goDownArrowRef?.current.classList.add("hideHeartComp")
-                heartCompRef?.current.classList.add("move_right")
-            }
+            // if (scroll > 3000) {
+            //     // goDownArrowRef?.current.classList.remove("hideHeartComp")
+            //     heartCompRef?.current.classList.remove("move_right")
+            // }
+            // else {
+            //     // goDownArrowRef?.current.classList.add("hideHeartComp")
+            //     heartCompRef?.current.classList.add("move_right")
+            // }
         }
 
         document.addEventListener("scroll", scroll);
@@ -625,7 +625,7 @@ export default function Feed(props) {
                 handleCommentsModal={handleCommentsModal} />}
             <div className="row outerContWrapper">
 
-                <Header links={true}></Header>
+                <Header links={true} refreshFeed={refreshFeed}></Header>
 
                 <div className="leftColumn leftColumnFeed">
                     <div className="leftColumnWrapper">
@@ -867,7 +867,7 @@ export default function Feed(props) {
                                                         }
                                                     >
                                                         {confessions.map((post, index) => {
-                                                            return (<>
+                                                            return (<div key={`fConf${index}`}>
                                                                 <Post
                                                                     index={index}
                                                                     cover_image={post.cover_image ?? ''}
@@ -878,7 +878,6 @@ export default function Feed(props) {
                                                                     viewcount={post.viewcount}
                                                                     handleCommentsModal={handleCommentsModal}
                                                                     updateConfessionData={updateConfessionData}
-                                                                    key={`fConf${index}`}
                                                                     slug={post.slug}
                                                                     createdAt={post.created_at}
                                                                     post_as_anonymous={post.post_as_anonymous}
@@ -901,7 +900,7 @@ export default function Feed(props) {
                                                                         <AdMob mainContId={`adIndex${index}`} setAddSlots={setAdSlots} slots={adSlots} />
                                                                     </div>
                                                                 }
-                                                            </>)
+                                                            </div>)
                                                         })}
                                                     </InfiniteScroll>
 
@@ -954,14 +953,14 @@ export default function Feed(props) {
                 />
 
 
-                <Footer />
+                <Footer refreshFeed={refreshFeed}/>
                 {/* <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i> */}
-                <i
+                {/* <i
                     ref={goDownArrowRef}
                     className={`fa fa-refresh goUpArrow refreshIcon`}
                     aria-hidden="true"
                     type="button"
-                    onClick={refreshFeed}></i>
+                    onClick={refreshFeed}></i> */}
 
                 {/* REFRESH BUTTON */}
                 {commentsModal.visibility === false && changes && <RefreshButton />}

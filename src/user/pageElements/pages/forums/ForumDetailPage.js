@@ -39,14 +39,16 @@ const ForumDetailPage = () => {
   } = useSelector(state => state.forumsReducer)
   const actionBox = forumsRed.actionBox
   const { requestToJoinModal, reportForumModal, reportForumCommentModal } = modals
-  const { comments, page } = detailPage
   const forumSlug = useParams()?.slug ?? false
   const dispatch = useDispatch()
   const { handleForum } = forumHandlers
   const {
     status: forumStatus,
     data: currForum,
-    postComment: postCommentReducer
+    postComment: postCommentReducer,
+    message,
+    comments,
+    page
   } = detailPage
   const isAllToComment = isAllowedToComment(currForum)
   const singleCommentProps = {
@@ -95,7 +97,7 @@ const ForumDetailPage = () => {
         forum = { ...forum, isAllowedToComment: isAllowedToComment(forum) }
         dispatch(handleForum({ data: forum ?? {}, status: apiStatus.FULFILLED }))
       } catch (error) {
-        console.log(error)
+        dispatch(handleForum({ status: apiStatus.REJECTED, message: error?.message }))
       }
     }
     if (forumSlug) getForum()
@@ -113,14 +115,27 @@ const ForumDetailPage = () => {
 
   if (!forumSlug)
     return (
-      <div className="alert alert-danger" role="alert">
-        Forum slug not provided.
-      </div>
+      <ForumLayoutWrapper>
+        <div className="alert alert-danger w-100" role="alert">
+          Forum slug not provided.
+        </div>
+      </ForumLayoutWrapper>
     )
 
   if (forumStatus === apiStatus.LOADING)
     return (
-      <SiteLoader />
+      <ForumLayoutWrapper>
+        <SiteLoader />
+      </ForumLayoutWrapper>
+    )
+
+  if (forumStatus === apiStatus.REJECTED)
+    return (
+      <ForumLayoutWrapper>
+        <div className="alert alert-danger w-100" role="alert">
+          {message}
+        </div>
+      </ForumLayoutWrapper>
     )
 
   return (

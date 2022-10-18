@@ -11,6 +11,7 @@ import {
 
 // Helpers
 import auth from '../user/behindScenes/Auth/AuthCheck';
+import { ToastContainer } from 'react-toastify';
 
 // Component imports
 import Feed from "../../src/user/pageElements/pages/home/Feed";
@@ -225,6 +226,8 @@ const Routes = ({ categories }) => {
                     {/* USER ROUTES */}
 
                 </Switch>
+
+                <ToastContainer />
             </Router>
         </>
     )

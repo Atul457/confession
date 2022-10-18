@@ -12,7 +12,7 @@ import confessIconActive from '../../../images/confessIconActive.svg'
 import confessIcon from '../../../images/confessIconM.svg'
 
 
-export default function Footer() {
+export default function Footer(props) {
 
     let currentUrl = window.location.href;
     currentUrl = currentUrl.split("/");
@@ -23,7 +23,7 @@ export default function Footer() {
     return (
         <footer className="col-12 d-block d-md-none footer">
             <div className="linksCont container-fluid">
-                <div className="linkBtns">
+                <div className="linkBtns" onClick={props?.refreshFeed}>
                     <Link to="/home" className="linkBtnsAnchor">
                         <span className="headIconCont">
                             <img src={currentUrl === 'home' ? homeIconActive : homeIcon} alt="" />

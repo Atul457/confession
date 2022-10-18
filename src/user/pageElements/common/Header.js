@@ -41,7 +41,6 @@ import { EVerifyModal } from '../../../redux/actions/everify';
 import { getForumsNConfessions } from '../../../components/forums/services/forumServices';
 import { useNavigate } from 'react-router-dom';
 import { searchAcFn } from '../../../redux/actions/searchAc/searchAc';
-import { apiStatus } from '../../../helpers/status';
 import { scrollToTop } from '../../../helpers/helpers';
 
 export default function Header(props) {
@@ -291,14 +290,18 @@ export default function Header(props) {
 
 
     const getNotiHtml = () => {
-        let data, arr, html, count = 0;
+        let data, arr, html, count = 0, arrForums;
+        console.log(notificationReducer.data)
         data = notificationReducer.data;
         arr = [{ iconClass: "fa fa-comments", label: "You have got a new comment on your post" },
         { iconClass: "fa fa-envelope", label: "You have got a new reply on your comment" },
         { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
         { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
-        { iconClass: "fa fa-comment-o", label: "You have got a new comment on your forum" },
-        { iconClass: "fa fa-comment-o", label: "You have got a new request on your forum" },
+        { iconClass: "fa fa-ban", label: "No new notifications" }]
+        arrForums = [{ iconClass: "fa fa-comments", label: "You have got a new comment on your forum" },
+        { iconClass: "fa fa-envelope", label: "You have got a new reply on your comment" },
+        { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
+        { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
         { iconClass: "fa fa-ban", label: "No new notifications" }]
 
 
@@ -312,14 +315,16 @@ export default function Header(props) {
 
         // console.log(first)
 
-        let link = "",
-            typeOfForum = 4
+        let link = "";
+        let typeOfForum = 2;
+
 
         html = data.map((curr, index) => {
+            let isForum = +curr?.ptype === typeOfForum
             if (curr.is_unread === 1)
                 count++;
 
-            link = `/${(+curr.type === typeOfForum ? "forums" : "confession")}/${curr.slug
+            link = `/${(isForum ? "forums" : "confession")}/${curr.slug
                 }`;
 
             return <Link
@@ -330,9 +335,11 @@ export default function Header(props) {
                 <>
                     {index > 0 && <hr className="m-0" />}
                     <div type="button" className={`takeActionOptions takeActionOptionsOnHov textDecNone py-2 ${curr.is_unread === 1 ? 'unread' : ''}`}>
-                        <i className={arr[curr.type - 1].iconClass} aria-hidden="true"></i>
+                        {isForum ?
+                            <i className={arr[curr.type - 1].iconClass} aria-hidden="true"></i> :
+                            <i className={arrForums[curr.type - 1].iconClass} aria-hidden="true"></i>}
                         <span className='notificationLabel'>
-                            {arr[curr.type - 1].label}
+                            {isForum ? arrForums[curr.type - 1].label : arr[curr.type - 1].label}
                         </span>
                     </div>
                 </>
@@ -438,7 +445,7 @@ export default function Header(props) {
 
                                 <div className={` d-none d-md-block pr-0`}>
                                     <div className={`linksCont container-fluid`}>
-                                        <div className="linkBtns">
+                                        <div className="linkBtns" onClick={props?.refreshFeed}>
                                             <NavLink to="/home" className="headerNavLinks">
                                                 <span className="headIconCont">
                                                     <img

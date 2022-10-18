@@ -33,7 +33,7 @@ const ForumHeader = props => {
         is_requested,
         is_calledfrom_detailPage = false,
         isReported,
-        is_for_post = true
+        is_for_post = true,
     } = props
     const sharekit = false
     const deletable = false
@@ -63,6 +63,7 @@ const ForumHeader = props => {
             message: "",
             data: {
                 forum_id,
+                slug: currForum?.slug,
                 requested: requested,
                 is_calledfrom_detailPage,
                 forum_index
@@ -126,8 +127,7 @@ const ForumHeader = props => {
                 </div>
             </div>
             {!is_only_to_show ?
-                <span span
-                    className='forum_action_icon'
+                <span className='forum_action_icon'
                 >
                     <img src={actionIcon} className="shareKitImgIcon" />
                     <>
@@ -157,10 +157,8 @@ const ForumHeader = props => {
                                         {(!hideJoinDiv ?
                                             <>
                                                 <div className="shareReqRows user" type="button" onClick={openReqToJoinModal}>
-                                                    <img src={requested ? cancelFriend : addFriend} />
-                                                    <span>
-                                                        {requested ? "Cancel request" : "Join forum"}
-                                                    </span>
+                                                    <img src={addFriend} />
+                                                    <span>Join Forum</span>
                                                 </div>
                                                 <div className='shareReqDivider'></div>
                                             </> : null)}

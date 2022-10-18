@@ -15,6 +15,7 @@ import { searchAcFn } from '../../../../redux/actions/searchAc/searchAc';
 import { getForumsNConfessions } from '../../../../components/forums/services/forumServices';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ExpandableForumCats } from '../../../../components/forums/forumCategories/ForumCategories';
+import NfswAlertModal from '../../../../components/modals/NfswAlertModal';
 
 const messages = ["No results found", "No Posts found", "No Forums found", "No Tags found"]
 
@@ -24,6 +25,7 @@ const Search = () => {
     // Hooks and vars
     const dispatch = useDispatch()
     const SearchReducer = useSelector(state => state.SearchReducer)
+    const { modalsReducer: { nfsw_modal } } = useSelector(state => state)
     const {
         data: posts,
         status: postStatus,
@@ -198,6 +200,9 @@ const Search = () => {
                 </div>
             </ForumLayoutWrapper>
             <Footer />
+
+            {/* Nfsw alert modal */}
+            {nfsw_modal.isVisible && <NfswAlertModal nfsw_modal={nfsw_modal} />}
         </>
     )
 }

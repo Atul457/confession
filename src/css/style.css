@@ -1994,6 +1994,8 @@ span.offlineColor {
     width: 34px;
     position: relative;
     height: 34px;
+    border: 1px solid var(--primaryColor);
+    border-radius: 50%;
 }
 
 .mtProfile {
@@ -2823,7 +2825,7 @@ span.facebookMobIcon {
     display: flex;
     align-items: center;
     bottom: 34px;
-    right: 80px;
+    right: 20px;
     z-index: 99;
 }
 

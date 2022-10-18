@@ -14,6 +14,7 @@ import pinnedIcon from '../../../images/pinnedIcon.svg';
 // Redux
 import { pinForumService } from '../services/forumServices';
 import { Link } from 'react-router-dom';
+import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
 
 
 const ForumFooter = (props) => {
@@ -30,6 +31,7 @@ const ForumFooter = (props) => {
         dispatch,
         isMyForumPage,
         isPinned,
+        showAlertOrNot = false,
         showPin,
         forum_tags } = props,
         forumTypeStyle = {
@@ -48,22 +50,39 @@ const ForumFooter = (props) => {
         })
     }
 
+    const openNsfwModal = () => {
+        dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${currForum?.slug}` }))
+    }
+
     return (
         <div className="postFoot forum_footer">
             <div className="forum_details_cont">
                 <div className="type_view_and_com_count">
-                    <Link className="links text-dark" to={`/forums/${currForum?.slug}`}>
-                        <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
-                            <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
-                                <img src={viewsCountIcon} alt="" />
-                                <span className="count">{viewcount ?? 0}</span>
+                    {showAlertOrNot ?
+                        <pre className="preToNormal post forum_desc cursor_pointer" onClick={openNsfwModal}>
+                            <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
+                                <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
+                                    <img src={viewsCountIcon} alt="" />
+                                    <span className="count">{viewcount ?? 0}</span>
+                                </div>
+                                <div className="upvote_downvote_icons_cont" type="button">
+                                    <img src={commentCountIcon} alt="" />
+                                    <span className="count">{no_of_comments}</span>
+                                </div>
                             </div>
-                            <div className="upvote_downvote_icons_cont" type="button">
-                                <img src={commentCountIcon} alt="" />
-                                <span className="count">{no_of_comments}</span>
+                        </pre> :
+                        <Link className="links text-dark" to={`/forums/${currForum?.slug}`}>
+                            <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
+                                <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
+                                    <img src={viewsCountIcon} alt="" />
+                                    <span className="count">{viewcount ?? 0}</span>
+                                </div>
+                                <div className="upvote_downvote_icons_cont" type="button">
+                                    <img src={commentCountIcon} alt="" />
+                                    <span className="count">{no_of_comments}</span>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
+                        </Link>}
 
                     <span
                         className="category_name forum_type"

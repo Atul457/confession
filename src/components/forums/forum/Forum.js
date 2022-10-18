@@ -56,6 +56,7 @@ const Forum = (props) => {
         forum_type,
         isPinned,
         showPin,
+        showAlertOrNot,
         forum_tags: currForum?.tags,
         forum_id: currForum?.forum_id,
         forum_index,
