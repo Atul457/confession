@@ -413,6 +413,32 @@ const getForumsNConfessions = async ({ SearchReducer, selectedCategory }) => {
 }
 
 
+// Get tags
+const getTagsService = async ({
+    dispatch
+}) => {
+    let obj = {
+        data: {},
+        token: getKeyProfileLoc("token", true),
+        method: "get",
+        url: "gettags"
+    }
+    try {
+        dispatch(forumHandlers.handleForumsTagsAcFn({ status: apiStatus.LOADING }))
+        let res = await fetchData(obj)
+        res = resHandler(res)
+        const tags = res.tags?.map(curr => ({ value: curr, label: curr }))
+        dispatch(forumHandlers.handleForumsTagsAcFn({ data: tags, status: apiStatus.FULFILLED }))
+    } catch (error) {
+        dispatch(searchAcFn({
+            message: error?.message ?? "Something went wrong",
+            status: apiStatus.REJECTED
+        }))
+    }
+}
+
+
+
 
 export {
     doCommentService,
@@ -421,5 +447,6 @@ export {
     getUsersToTagService,
     getForumsNConfessions,
     deleteForumCommService,
-    deleteForumService
+    deleteForumService,
+    getTagsService
 }

@@ -2,8 +2,10 @@ import React from 'react'
 
 // React router imports
 import { Link } from 'react-router-dom';
+import { apiStatus } from '../../../helpers/status';
+import { reqToJoinModalAcFn } from '../../../redux/actions/forumsAc/forumsAc';
 import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
-import { myForum } from '../detailPage/comments/ForumCommProvider';
+import { forum_types, myForum, requestedStatus } from '../detailPage/comments/ForumCommProvider';
 
 // Custom components
 import ForumFooter from './ForumFooter';
@@ -29,7 +31,10 @@ const Forum = (props) => {
     }
     const isPinned = is_pinned === 1
     const nfswContentType = 1
-    const showAlertOrNot = (currForum?.is_nsw === nfswContentType) && !(currForum?.isReported === myForum)
+    const joined = currForum.is_requested === requestedStatus.approved
+    const isPrivateForum = currForum?.type === forum_types.private
+    const isMyForum = currForum?.isReported === myForum
+    const showAlertOrNot = (currForum?.is_nsw === nfswContentType) && !(isMyForum)
     const slug = currForum?.slug
     const showPin = true
     const isActionBoxVisible = actionBox?.forum_id === forum_id
@@ -43,6 +48,9 @@ const Forum = (props) => {
         forum_index,
         type: currForum?.type,
         currForum,
+        joined,
+        isMyForum,
+        showAlertOrNot,
         dispatch,
         actionBox,
         isActionBoxVisible,
@@ -50,12 +58,17 @@ const Forum = (props) => {
         isMyForumPage
     }
 
+    const requested = currForum?.is_requested === requestedStatus
     const forumFooterProps = {
         no_of_comments: currForum?.no_of_comments,
         viewcount: currForum?.viewcount ?? 0,
         forum_type,
         isPinned,
         showPin,
+        isPrivateForum,
+        is_requested: currForum?.is_requested,
+        joined,
+        isMyForum,
         showAlertOrNot,
         forum_tags: currForum?.tags,
         forum_id: currForum?.forum_id,
@@ -64,27 +77,59 @@ const Forum = (props) => {
         dispatch,
         currForum
     }
-
-
     // Functions
+
+    // Opens req to join modal
+    const openReqToJoinModal = () => {
+        dispatch(reqToJoinModalAcFn({
+            visible: true,
+            status: apiStatus.IDLE,
+            message: "",
+            data: {
+                forum_id,
+                slug: currForum?.slug,
+                requested: requested,
+                is_calledfrom_detailPage: false,
+                forum_index,
+            }
+        }))
+    }
 
     const openNsfwModal = () => {
         dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${slug}` }))
+    }
+
+    const getBody = () => {
+
+        if (!isMyForum) {
+            if (!joined)
+                return (
+                    <pre className="preToNormal post forum_desc cursor_pointer" onClick={openReqToJoinModal}>
+                        {currForum?.description}
+                    </pre>)
+
+            if (showAlertOrNot)
+                return (
+                    <pre className="preToNormal post forum_desc cursor_pointer" onClick={openNsfwModal}>
+                        {currForum?.description}
+                    </pre>)
+        }
+
+        return (
+            <Link className="links text-dark" to={`/forums/${slug}`}>
+                <pre className="preToNormal post forum_desc">
+                    {currForum?.description}
+                </pre>
+            </Link>
+        )
+
     }
 
     return (
         <div className='postCont forum_cont'>
             <ForumHeader {...forumHeaderProps} />
             <div className="postedPost">
-                {showAlertOrNot ?
-                    <pre className="preToNormal post forum_desc cursor_pointer" onClick={openNsfwModal}>
-                        {currForum?.description}
-                    </pre> :
-                    <Link className="links text-dark" to={`/forums/${slug}`}>
-                        <pre className="preToNormal post forum_desc">
-                            {currForum?.description}
-                        </pre>
-                    </Link>}
+                {getBody()}
             </div>
             <ForumFooter {...forumFooterProps} />
         </div>

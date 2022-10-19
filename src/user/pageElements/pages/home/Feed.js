@@ -3,11 +3,9 @@ import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import Post from '../../components/Post';
 import Category from '../../components/Category';
-import manWithHorn from '../../../../images/manWithHorn.png';
 import instaSocial from '../../../../images/instaSocial.svg'
 import removeImgIcon from '../../../../images/removeImgIcon.png';
-// import uploadImages from '../../../../images/uploadImages.svg';
-import uploadImages from '../../../../images/uploadImages.png';
+import uploadImages from '../../../../images/uploadImages.svg';
 
 import ExtValidator from '../../../../extensionValidator/ExtValidator';
 import TwitterSocial from '../../../../images/TwitterSocial.svg'

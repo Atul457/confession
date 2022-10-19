@@ -6,6 +6,7 @@ import viewsCountIcon from '../../../images/viewsCountIcon.svg';
 
 // Helpers
 import auth from '../../../user/behindScenes/Auth/AuthCheck'
+import { apiStatus } from '../../../helpers/status';
 
 // Image imports
 import pinIcon from '../../../images/pinIcon.svg';
@@ -15,6 +16,8 @@ import pinnedIcon from '../../../images/pinnedIcon.svg';
 import { pinForumService } from '../services/forumServices';
 import { Link } from 'react-router-dom';
 import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
+import { reqToJoinModalAcFn } from '../../../redux/actions/forumsAc/forumsAc';
+import { forum_types, requestedStatus } from '../detailPage/comments/ForumCommProvider';
 
 
 const ForumFooter = (props) => {
@@ -26,7 +29,11 @@ const ForumFooter = (props) => {
         no_of_comments,
         forum_type,
         currForum,
+        is_calledfrom_detailPage = false,
+        is_requested,
+        isMyForum = false,
         forum_id,
+        isCalledFromSearchPage = false,
         forum_index,
         dispatch,
         isMyForumPage,
@@ -39,6 +46,10 @@ const ForumFooter = (props) => {
             border: `1px solid ${forum_type?.color_code}`
         },
         showTagsSection = forum_tags.length
+    const requested = is_requested === requestedStatus.is_requested
+    const joined = currForum?.is_requested === requestedStatus.approved
+    const isPrivateForum = currForum?.type === forum_types.private
+    const isNfswTypeContent = currForum?.is_nsw === 1
 
     // // Pins/Unpins the forum
     const pinForumFn = async () => {
@@ -50,40 +61,71 @@ const ForumFooter = (props) => {
         })
     }
 
+    // Opens req to join modal
+    const openReqToJoinModal = () => {
+        dispatch(reqToJoinModalAcFn({
+            visible: true,
+            status: apiStatus.IDLE,
+            message: "",
+            data: {
+                forum_id,
+                slug: currForum?.slug,
+                requested: requested,
+                is_calledfrom_detailPage,
+                forum_index
+            }
+        }))
+    }
+
     const openNsfwModal = () => {
         dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${currForum?.slug}` }))
+    }
+
+    const getBody = () => {
+        const forum_slug = isCalledFromSearchPage && (isPrivateForum && !joined) ? "#" : `/forums/${currForum?.slug}`
+        if (isMyForum === false && ((isPrivateForum && !joined) || isNfswTypeContent))
+            return (
+                <pre className="preToNormal post cursor_pointer" onClick={() => {
+                    if ((isPrivateForum && !joined) && !isCalledFromSearchPage) return openReqToJoinModal()
+                    if ((isPrivateForum && !joined) && isCalledFromSearchPage) return
+                    if (isNfswTypeContent) openNsfwModal()
+                }}>
+                    <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
+                        <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
+                            <img src={viewsCountIcon} alt="" />
+                            <span className="count">{viewcount ?? 0}</span>
+                        </div>
+                        <div className="upvote_downvote_icons_cont" type="button">
+                            <img src={commentCountIcon} alt="" />
+                            <span className="count">{no_of_comments}</span>
+                        </div>
+                    </div>
+                </pre>)
+
+
+        return (
+            <Link className="links text-dark" to={forum_slug}>
+                <pre className="preToNormal post cursor_pointer">
+                    <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
+                        <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
+                            <img src={viewsCountIcon} alt="" />
+                            <span className="count">{viewcount ?? 0}</span>
+                        </div>
+                        <div className="upvote_downvote_icons_cont" type="button">
+                            <img src={commentCountIcon} alt="" />
+                            <span className="count">{no_of_comments}</span>
+                        </div>
+                    </div>
+                </pre>
+            </Link>
+        )
     }
 
     return (
         <div className="postFoot forum_footer">
             <div className="forum_details_cont">
                 <div className="type_view_and_com_count">
-                    {showAlertOrNot ?
-                        <pre className="preToNormal post forum_desc cursor_pointer" onClick={openNsfwModal}>
-                            <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
-                                <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
-                                    <img src={viewsCountIcon} alt="" />
-                                    <span className="count">{viewcount ?? 0}</span>
-                                </div>
-                                <div className="upvote_downvote_icons_cont" type="button">
-                                    <img src={commentCountIcon} alt="" />
-                                    <span className="count">{no_of_comments}</span>
-                                </div>
-                            </div>
-                        </pre> :
-                        <Link className="links text-dark" to={`/forums/${currForum?.slug}`}>
-                            <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
-                                <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
-                                    <img src={viewsCountIcon} alt="" />
-                                    <span className="count">{viewcount ?? 0}</span>
-                                </div>
-                                <div className="upvote_downvote_icons_cont" type="button">
-                                    <img src={commentCountIcon} alt="" />
-                                    <span className="count">{no_of_comments}</span>
-                                </div>
-                            </div>
-                        </Link>}
-
+                    {getBody()}
                     <span
                         className="category_name forum_type"
                         style={forumTypeStyle}

@@ -224,11 +224,7 @@ export default function CommentsGot(props) {
         };
         updatedConfessionArray = updatedConfessionNode;
         updatePost(updatedConfessionNode)
-        // setConfessionData({ ...updatedConfessionArray });
     }
-    useEffect(() => {
-        console.log((comDetailPage))
-    }, [comDetailPage])
 
 
     return (

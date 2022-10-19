@@ -13,8 +13,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import forum_types_arr from '../forums/forumTypes.json';
 import CreatableSelect from 'react-select/creatable';
 import classnames from 'classnames'
-import { customStyles } from '../forums/detailPage/comments/ForumCommProvider'
+import { customStyles, forum_types } from '../forums/detailPage/comments/ForumCommProvider'
 import TextareaAutosize from 'react-textarea-autosize'
+import { getTagsService } from '../forums/services/forumServices'
 
 const types = {
   "PASSWORD": 1,
@@ -29,6 +30,9 @@ const CreateFormModal = () => {
     type: types.TEXT,
     visible: false
   })
+  const { modals, categories, tags } = useSelector(state => state.forumsReducer)
+  const { createForumModal } = modals
+  const [placeholder, setPlaceholder] = useState("Enter tags")
   const [nfsw, setNfsw] = useState(false);
   const createForumSchema = yup.object().shape({
     title: yup.string().required(),
@@ -36,9 +40,11 @@ const CreateFormModal = () => {
     category_id: yup.string().required(),
     type: yup.string().required(),
     password: yup.string().when("type", (type, createForumSchema) => {
+      if (createForumModal?.isBeingEdited) return createForumSchema
       return type === "2" ? createForumSchema.min(6).required() : createForumSchema
     })
   });
+
   const [tagsArr, setTagsArr] = useState([])
   const tagError = false;
   let noOfChar = 250;
@@ -52,9 +58,6 @@ const CreateFormModal = () => {
 
   let error = Object.values(errors)
   error = error.length ? error[0] : ""
-
-  const { modals, categories, tags } = useSelector(state => state.forumsReducer)
-  const { createForumModal } = modals
   const isError = createForumModal.status === apiStatus.REJECTED
   const message = createForumModal?.message
   const isLoading = createForumModal.status === apiStatus.LOADING
@@ -90,6 +93,13 @@ const CreateFormModal = () => {
       })
 
       setNfsw(forum_details?.is_nsw)
+      const isPrivate = forum_details?.type === forum_types.private
+      if (isPrivate) {
+        setPass({
+          ...pass,
+          visible: true
+        })
+      }
 
       if (forum_details?.tags?.length) {
         const optionsArr = forum_details?.tags?.map(curr => {
@@ -159,6 +169,7 @@ const CreateFormModal = () => {
         message: "Forum created sucessfully"
       }))
       getForums()
+      getTagsService({ dispatch })
       closeModal()
     } catch (err) {
       dispatch(createForumModalFnAc({
@@ -254,7 +265,7 @@ const CreateFormModal = () => {
             {pass.visible ? <div className='w-100 mb-3 eyeNinputCont'>
               <input
                 className="form-control"
-                placeholder={`Setup Password`}
+                placeholder={`Enter Password`}
                 type={pass.type === types.PASSWORD ? "password" : "text"}
                 maxLength={6}
                 {...register("password")} />
@@ -286,7 +297,9 @@ const CreateFormModal = () => {
               {...tagsArr.length && { value: tagsArr.map(curr => ({ value: curr, label: curr })) }}
               onChange={TagsHandle}
               options={tags?.data ?? []}
-              placeholder="Enter tags"
+              placeholder={placeholder}
+              onFocus={() => setPlaceholder("")}
+              onBlur={() => setPlaceholder("Enter tags")}
               components={{
                 NoOptionsMessage: () => <div className='text-center'>No tags to show</div>
               }}
@@ -315,7 +328,7 @@ const CreateFormModal = () => {
 
 
             {error?.message && error?.message !== "" ?
-              <ShowResComponent isError={true} message={error?.message?.replace("category_id", "category") } classList="w-100 text-center pb-2 mt-3" />
+              <ShowResComponent isError={true} message={error?.message?.replace("category_id", "category")} classList="w-100 text-center pb-2 mt-3" />
               : null}
 
             {message && message !== "" ?

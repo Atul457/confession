@@ -8,7 +8,7 @@ import ForumFooter from '../../../../components/forums/forum/ForumFooter';
 import ForumHeader from '../../../../components/forums/forum/ForumHeader';
 
 // Helpers
-import { myForum } from '../../../../components/forums/detailPage/comments/ForumCommProvider';
+import { forum_types, myForum, requestedStatus } from '../../../../components/forums/detailPage/comments/ForumCommProvider';
 import { toggleNfswModal } from '../../../../redux/actions/modals/ModalsAc';
 
 const ForumComp = (props) => {
@@ -26,11 +26,16 @@ const ForumComp = (props) => {
     color_code: types[currForum?.type - 1]?.color_code
   }
   const nfswContentType = 1
-  const showAlertOrNot = (currForum?.is_nsw === nfswContentType) && !(currForum?.isReported === myForum)
+  const isNfswContent = currForum?.is_nsw === nfswContentType
+  const isMyForum = currForum?.isReported === myForum
+  const showAlertOrNot = (isNfswContent) && !(isMyForum)
   const isPinned = is_pinned === 1
   const slug = currForum?.slug
   const showPin = true
   const isActionBoxVisible = actionBox?.forum_id === forum_id
+  const joined = currForum.is_requested === requestedStatus.approved
+  const isPrivateForum = currForum?.type === forum_types?.private
+  const isNfswTypeContent = currForum?.is_nsw === 1
   const forumHeaderProps = {
     is_only_to_show: true,
     category_name: currForum?.category_name,
@@ -40,9 +45,12 @@ const ForumComp = (props) => {
     is_requested: currForum?.is_requested,
     isReported: currForum?.isReported,
     forum_index,
+    isPrivateForum,
+    showAlertOrNot,
     type: currForum?.type,
     currForum,
     dispatch,
+    isCalledFromSearchPage: true,
     actionBox,
     isActionBoxVisible,
     is_calledfrom_detailPage: false
@@ -52,7 +60,9 @@ const ForumComp = (props) => {
     no_of_comments: currForum?.no_of_comments,
     viewcount: currForum?.viewcount ?? 0,
     forum_type,
+    isCalledFromSearchPage: true,
     isPinned,
+    isPrivateForum,
     showPin,
     forum_tags: currForum?.tags,
     forum_id: currForum?.forum_id,
@@ -65,24 +75,34 @@ const ForumComp = (props) => {
 
   // Functions
 
+  // Opens nfsw modal
   const openNsfwModal = () => {
     dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${slug}` }))
   }
 
+  const getBody = () => {
+    if ((isPrivateForum && !joined) || isNfswTypeContent)
+      return (
+        <pre className="preToNormal post" onClick={() => {
+          if ((isPrivateForum && !joined)) return
+          if (isNfswTypeContent) openNsfwModal()
+        }}>
+          {currForum?.description}
+        </pre>)
+
+    return (
+      <Link className="links text-dark" to={`/forums/${slug}`} state={{ cameFromSearch: true }}>
+        <pre className="preToNormal post">
+          {currForum?.description}
+        </pre>
+      </Link>)
+  }
 
   return (
     <div className='postCont forum_cont'>
       <ForumHeader {...forumHeaderProps} />
       <div className="postedPost">
-        {showAlertOrNot ?
-          <pre className="preToNormal post forum_desc cursor_pointer" onClick={openNsfwModal}>
-            {currForum?.description}
-          </pre> :
-          <Link className="links text-dark" to={`/forums/${slug}`} state={{ cameFromSearch: true }}>
-            <pre className="preToNormal post forum_desc">
-              {currForum?.description}
-            </pre>
-          </Link>}
+        {getBody()}
       </div>
       <ForumFooter {...forumFooterProps} />
     </div>

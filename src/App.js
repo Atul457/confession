@@ -22,10 +22,12 @@ import { runFbOrNot, setFCMToken, setTokenSentFlag } from './configs/firebaseTok
 
 // Redux
 import { forumHandlers } from './redux/actions/forumsAc/forumsAc';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ReactPixel from 'react-facebook-pixel';
 import forumTypes from "./components/forums/forumTypes.json"
+import { getTagsService } from './components/forums/services/forumServices';
+import { apiStatus } from './helpers/status';
 
 //GOOGLE TAG MANAGER
 const tagManagerArgs = { gtmId: 'GTM-WP65TWC' }  //DEV
@@ -48,7 +50,8 @@ function App() {
   });
 
   const [categories, setCategories] = useState(false);
-  const [tags, setTags] = useState(false);
+  const tagsReducer = useSelector(store => store?.forumsReducer?.tags)
+  // const [tags, setTags] = useState(false);
   const dispatch = useDispatch()
   const [toggle, setToggle] = useState(false)
   const [categoriesResults, setCategoriesResults] = useState(true);
@@ -142,27 +145,7 @@ function App() {
         console.log(err);
       }
     }
-    async function getTags() {
-      let obj = {
-        data: {},
-        token: token,
-        method: "get",
-        url: "gettags"
-      }
-      try {
-        const res = await fetchData(obj)
-        if (res.data.status === true) {
-          const tagsArr = res.data.tags?.map(curr => ({ value: curr, label: curr }))
-          setTags(tagsArr);
-        } else {
-          setTags(false);   //HANDLES APP IN CASE OF NO API RESPONSE
-        }
-      } catch (err) {
-        setTags(false);
-        console.log(err);
-      }
-    }
-    getTags();
+    getTagsService({ dispatch });
     getData();
 
     const getProfileData = async () => {
@@ -210,10 +193,7 @@ function App() {
       // console.log("V3 loaded!");
     })
     //END OF LOAD RECAPTCHA V3
-
-    let { handleForumsTypesAcFn, handleForumsTagsAcFn } = forumHandlers
-
-
+    let { handleForumsTypesAcFn } = forumHandlers
     dispatch(handleForumsTypesAcFn({ data: forumTypes }))
 
   }, [])
@@ -222,18 +202,12 @@ function App() {
     if (categories?.length) dispatch(forumHandlers.handleForumCatsAcFn({ data: categories }))
   }, [categories])
 
-  useEffect(() => {
-    if (tags?.length) {
-      dispatch(forumHandlers.handleForumsTagsAcFn({ data: tags }))
-    }
-  }, [tags])
-
   return (
     <>
       <AuthContext.Provider value={setAuth}>
-        {categories && tags ? <Routes categories={categories} /> :
+        {categories && tagsReducer?.status === apiStatus.FULFILLED ? <Routes categories={categories} /> :
           (
-            categoriesResults ? <SiteLoader /> : (
+            (categoriesResults || tagsReducer?.status === apiStatus.LOADING) ? <SiteLoader /> : (
               <div className="alert alert-danger" role="alert">
                 Server Error... Please try again
               </div>)

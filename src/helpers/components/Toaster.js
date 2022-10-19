@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom'
 const Toaster = ({ message, confDetails }) => {
 
     const navigate = useNavigate()
-    const confession_link = `/confession/${confDetails.slug}`
     const type = parseInt(confDetails.type)
+    const isForum = type === 4
+    const confession_link = `/${isForum ? "forums" : "confession"}/${confDetails.slug}`
 
     const navigateToConfession = () => {
-        if (type === 1) return navigate(confession_link)
+        if (type === 1 || isForum) return navigate(confession_link)
         navigate("/chat")
     }
     return (
@@ -34,7 +35,7 @@ const Toaster2 = ({ message }) => {
 const toaster = (message, data) => {
     toast(<Toaster message={message} confDetails={data} />, {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: false,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -45,7 +46,7 @@ const toaster = (message, data) => {
 const toaster2 = (message) => {
     toast(<Toaster2 message={message} />, {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

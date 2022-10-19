@@ -12,7 +12,7 @@ import { requestedStatus } from '../forums/detailPage/comments/ForumCommProvider
 import { ShowResComponent } from '../HelperComponents'
 import { getKeyProfileLoc } from "../../helpers/profileHelper"
 import { useNavigate } from 'react-router-dom';
-
+import toastMethods from '../../helpers/components/Toaster';
 
 const types = {
   "PASSWORD": 1,
@@ -28,7 +28,7 @@ const SendRequestModal = () => {
   })
   const navigate = useNavigate()
   const createForumSchema = yup.object().shape({
-    password: yup.string().min(6).required()
+    password: yup.string().required()
   });
   const { handleForum } = forumHandlers
   const { register, formState: { errors }, handleSubmit } = useForm({
@@ -74,7 +74,7 @@ const SendRequestModal = () => {
       forum_index,
       data_to_mutate: { is_requested: requestedStatus.approved }
     }))
-    navigate(`/forums/${slug}`)
+    toastMethods.toaster2Info("Forum joined successfully")
     closeModal()
   }
 
@@ -126,7 +126,7 @@ const SendRequestModal = () => {
               <div className='w-100 eyeNinputCont mt-3'>
                 <input
                   className="form-control"
-                  placeholder={`Setup Password`}
+                  placeholder={`Enter Password`}
                   type={pass.type === types.PASSWORD ? "password" : "text"}
                   maxLength={6}
                   {...register("password")} />

@@ -69,11 +69,6 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
         name: "post"
     } : {}
 
-    useEffect(() => {
-        console.log({ commentsArr })
-    }, [commentsArr])
-
-
     const _doComment = async (comment_id = false, editedComment = "") => {
 
         var arr, _comment, userData;
