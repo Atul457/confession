@@ -267,7 +267,7 @@ const CreateFormModal = () => {
                 className="form-control"
                 placeholder={`Enter Password`}
                 type={pass.type === types.PASSWORD ? "password" : "text"}
-                maxLength={6}
+                maxLength={20}
                 {...register("password")} />
               <i
                 className={`eyeIcon ${pass.type === types.TEXT ? ' fa fa-eye' : ' fa fa-eye-slash'}`}
@@ -285,6 +285,7 @@ const CreateFormModal = () => {
 
               {/* ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
               {categories?.data ? categories?.data?.map((element) => {
+                if (element.is_forum === 0) return
                 return <option key={`createPost ${element.id}`} value={element.id}>{(element.category_name).charAt(0) + (element.category_name).slice(1).toLowerCase()}</option>
               }) : <option value="">Categories not found</option>}
               {/* END OF ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
@@ -312,7 +313,7 @@ const CreateFormModal = () => {
 
             <div className='w-100 mb-3 nfsw_cont'>
               <div className="toggler_nfsw_cont">
-                <label htmlFor="">NFSW</label>
+                <label htmlFor="">NSFW</label>
                 <input
                   type="checkbox"
                   className="switch12"

@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { apiStatus } from '../../helpers/status'
 import { createForumModalFnAc, forumHandlers } from '../../redux/actions/forumsAc/forumsAc'
 import { ExpandableForumCats } from './forumCategories/ForumCategories'
 import MyForums from './forumPageComp/MyForums'
 import WhatsNew from './forumPageComp/WhatsNew'
+import CreateFormModal from "../modals/CreateFormModal"
 
 
 const RightSideComp = () => {
 
     const [activeTab, setActiveTab] = useState(0)
-    const [adSlots, setAdSlots] = useState([]);
-    const TabComps = [<WhatsNew slotsDetails={{ adSlots, setAdSlots }} />, <MyForums />]
+    const TabComps = [<WhatsNew />, <MyForums />]
+    const { modals } = useSelector(state => state.forumsReducer)
+    const { createForumModal } = modals
     const { handleForums } = forumHandlers
     const ActiveTab = TabComps[activeTab]
     const dispatch = useDispatch()
 
-    useEffect(() => {
+
+    const changeActiveTab = (activeTabIndex) => {
+        setActiveTab(activeTabIndex)
         dispatch(handleForums({
             status: apiStatus.LOADING,
             data: [],
@@ -25,17 +29,20 @@ const RightSideComp = () => {
             page: 1,
             count: 0
         }))
-    }, [activeTab])
+    }
 
     return (
         <>
-            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+            <Tabs activeTab={activeTab} setActiveTab={changeActiveTab} />
 
-            <ExpandableForumCats classNames='mb-3 d-block d-md-none' />
+            <ExpandableForumCats classNames='mb-3 d-block d-md-none' onlyForForums={true}/>
 
             <div className='forums_tabs_comps_holder'>
                 {ActiveTab}
             </div>
+
+            {/* Create forum modal */}
+            {createForumModal.visible && <CreateFormModal />}
 
         </>
     )
@@ -74,14 +81,12 @@ const Tabs = ({ activeTab, setActiveTab }) => {
                 })}
             </div>
 
-            {activeTab == 1 ?
-                <div
-                    onClick={openCreateSForumModal}
-                    className="doPostBtn create_forum_btn"
-                    type="button">
-                    <i className="fa fa-plus text-white pr-1" aria-hidden="true"></i> Add New Forums
-                </div>
-                : null}
+            <div
+                onClick={openCreateSForumModal}
+                className="doPostBtn create_forum_btn"
+                type="button">
+                <i className="fa fa-plus text-white pr-1" aria-hidden="true"></i> Add New Forums
+            </div>
 
         </div >
     )

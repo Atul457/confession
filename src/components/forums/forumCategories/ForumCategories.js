@@ -9,9 +9,15 @@ import { forumHandlers } from '../../../redux/actions/forumsAc/forumsAc'
 import { apiStatus } from '../../../helpers/status'
 import { searchAcFn } from '../../../redux/actions/searchAc/searchAc'
 import { getForumsNConfessions } from '../services/forumServices'
+import { searchTypes } from '../detailPage/comments/ForumCommProvider'
 
 
-const ForumCategories = ({ isExpandable = false, classNames = "" }) => {
+const ForumCategories = ({
+    isExpandable = false,
+    classNames = "",
+    onlyForForums = false,
+    isSearchPage = false
+}) => {
 
     // Hooks and vars
     const { categories: categoriesRed } = useSelector(state => state.forumsReducer),
@@ -23,17 +29,29 @@ const ForumCategories = ({ isExpandable = false, classNames = "" }) => {
 
 
     useEffect(() => {
-        dispatch(forumHandlers.handleCommentsAcFn({
+        const dataToSend = {
+            postComment: {
+                status: apiStatus.IDLE,
+                message: "",
+            },
             status: apiStatus.LOADING,
-            data: [{
-                subComments: {
-                    status: apiStatus.IDLE,
-                    data: [],
-                    message: "",
-                }
-            }],
-            message: ""
-        }))
+            data: [],
+            message: "",
+            actionBox: {},
+            page: 1,
+            comments: {
+                status: apiStatus.LOADING,
+                data: [{
+                    subComments: {
+                        status: apiStatus.IDLE,
+                        data: [],
+                        message: "",
+                    }
+                }],
+                message: ""
+            }
+        }
+        dispatch(forumHandlers.handleForum(dataToSend))
     }, [])
 
     return (
@@ -45,6 +63,9 @@ const ForumCategories = ({ isExpandable = false, classNames = "" }) => {
 
             <div className="categoriesContainer w-100">
                 {categories.map((category, cindex) => {
+                    if (onlyForForums === true && category?.is_forum === 0) return
+                    if (isSearchPage === true && SearchReducer.type === searchTypes.FORUM && category.is_confession === 1 && category.is_forum === 0) return
+                    if (isSearchPage === true && SearchReducer.type === searchTypes.POST && category.is_confession === 0 && category.is_forum === 1) return
                     return <Category
                         SearchReducer={SearchReducer}
                         location={location}
@@ -65,7 +86,7 @@ const ForumCategories = ({ isExpandable = false, classNames = "" }) => {
     )
 }
 
-const ExpandableForumCats = ({ classNames = "" }) => {
+const ExpandableForumCats = ({ classNames = "", onlyForForums = false, isSearchPage = false }) => {
 
     const [showCat, setShowCat] = useState(false)
     return (
@@ -79,7 +100,11 @@ const ExpandableForumCats = ({ classNames = "" }) => {
             {showCat && <div className="body">
                 {/* CATEGORYCONT */}
                 <aside className="col-12 col-md-4 posSticky mobileViewCategories d-none">
-                    <ForumCategories isExpandable={true} />
+                    <ForumCategories
+                        isSearchPage={isSearchPage}
+                        isExpandable={true}
+                        onlyForForums={onlyForForums}
+                    />
                 </aside>
                 {/* CATEGORYCONT */}
             </div>}

@@ -632,7 +632,12 @@ export default function Feed(props) {
                         <div className="middleContLoginReg feedMiddleCont">
                             {/* CATEGORYCONT */}
                             <aside className="posSticky">
-                                <Category categories={props.categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
+                                <Category
+                                    showConfessionCats={true}
+                                    categories={props.categories}
+                                    activeCatIndex={AC2S}
+                                    updateActiveCategory={updateActiveCategory}
+                                />
                             </aside>
                             {/* CATEGORYCONT */}
                         </div>
@@ -951,7 +956,7 @@ export default function Feed(props) {
                 />
 
 
-                <Footer refreshFeed={refreshFeed}/>
+                <Footer refreshFeed={refreshFeed} />
                 {/* <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i> */}
                 {/* <i
                     ref={goDownArrowRef}

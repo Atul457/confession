@@ -42,18 +42,19 @@ export default function Category(props) {
                         </div>
                         <div className="categoriesContainer w-100">
                             {categories && categories.map((element, index) => {
-                                return (
-                                    <div key={`categoriesContainerInside${index}`}
-                                        id={element.id}
-                                        className={`${(props.activeCatIndex).toString() === (element.id).toString() ? 'category activeCategory' : 'category InActive'}`}
-                                        type="button"
-                                        onClick={(e) => { getCategory(e.target) }}
-                                    >{(element.category_name).charAt(0) + ((element.category_name).slice(1).toLowerCase())}</div>
-                                );
+                                if (element?.is_confession === 1)
+                                    return (
+                                        <div key={`categoriesContainerInside${index}`}
+                                            id={element.id}
+                                            className={`${(props.activeCatIndex).toString() === (element.id).toString() ? 'category activeCategory' : 'category InActive'}`}
+                                            type="button"
+                                            onClick={(e) => { getCategory(e.target) }}
+                                        >{(element.category_name).charAt(0) + ((element.category_name).slice(1).toLowerCase())}</div>
+                                    );
                             })
                             }
                         </div>
-                        
+
                         <div className={`col-12 pt-0 filterVerbiage  ${props.hideHead && " d-none"}`}>
                             * Filter out posts by clicking on the categories above. Unselect the category to remove the filter.
                         </div>

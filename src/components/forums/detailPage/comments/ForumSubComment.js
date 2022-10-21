@@ -135,7 +135,6 @@ const ForumSubComment = (props) => {
 
     // DELETES THE COMMENT
     const deleteCommentFunc = async () => {
-        // console.log({ sent: commentId })
         deleteForumCommService({
             postComment,
             dispatch,
@@ -161,7 +160,7 @@ const ForumSubComment = (props) => {
 
 
     return (
-        <div className={`postCont overWritePostWithComment subcommentCont upperView ${currSubComment?.id_path ?? ""}`}>
+        <div className={`postCont overWritePostWithComment subcommentCont upperView ${currSubComment?.id_path ?? ""}`} index={subCommentIndex}>
 
             {/* Edit/Delete comment */}
             {(auth && currSubComment?.is_editable === 1) ?

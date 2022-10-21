@@ -12,6 +12,7 @@ import { ShowResComponent } from '../../HelperComponents';
 // Helpers
 import { apiStatus } from '../../../helpers/status';
 import auth from '../../../user/behindScenes/Auth/AuthCheck';
+import { usersToTagAcFn } from '../../../redux/actions/forumsAc/forumsAc';
 
 
 const CommentBox = props => {
@@ -21,11 +22,13 @@ const CommentBox = props => {
         doComment,
         postCommentReducer: { message = "", status, usedById: messageId },
         usedById,
+        toSearch,
         isForUpdateCom = false,
+        dispatch,
         usersToTag = [],
         getUsersToTag = () => { }
     } = props,
-        maxChar = 2000, 
+        maxChar = 2000,
         textboxref = useRef(null),
         isError = status === apiStatus.REJECTED
 
@@ -52,11 +55,18 @@ const CommentBox = props => {
         let currSentence = value
         value = value.split("@")
         value = value[value.length - 1]
-        // console.log(textboxref?.current.value.length)
-        // console.log(value)
-        currSentence = currSentence.replace(value, nameOfUser)
-        // textboxref?.current.value = textboxref?.current.value.replace(`'@'`)
-        // console.log(nameOfUser, currSentence)
+        console.log(textboxref?.current.value.length)
+        console.log(value)
+        // currSentence = currSentence.replace(value, nameOfUser)
+        currSentence.replaceAll("(^|\\W)(" + toSearch + ")($|\\W)", "$1" + nameOfUser + "$3")
+        textboxref.current.value = currSentence
+        console.log({ nameOfUser, currSentence })
+        dispatch(usersToTagAcFn({
+            data: [],
+            status: apiStatus.IDLE,
+            toSearch
+        }))
+        textboxref.current?.focus();
     }
 
     return (

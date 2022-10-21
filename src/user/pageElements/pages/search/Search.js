@@ -158,7 +158,7 @@ const Search = () => {
                         </div>
                     </div>
 
-                    <ExpandableForumCats classNames='mb-3 d-block d-md-none' />
+                    <ExpandableForumCats classNames='mb-3 d-block d-md-none' isSearchPage={true} />
 
                     {posts ?
                         <div className='posts_wrapper'>

@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { useLocation } from 'react-router-dom'
 
 // Custom components
 import Forum from '../forum/Forum'
 import SendRequestModal from '../../modals/SendJoinRequestModal'
 import ReportForumModal from '../../../user/pageElements/Modals/ReportForumModal'
 import NfswAlertModal from '../../modals/NfswAlertModal'
-import AdMob from '../../../user/pageElements/components/AdMob'
+import { WhatsNewAds } from '../../../user/pageElements/components/AdMob'
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,19 +18,20 @@ import { apiStatus } from '../../../helpers/status'
 import { fetchData } from '../../../commonApi'
 import { resHandler, scrollToTop } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
-import RightSideAdComp from '../../sidebarAds/RightSideAdComp'
 
 
 const WhatsNew = () => {
 
     // Hooks and vars
+    const location = useLocation()
     const {
         forums: forumsRed,
         categories,
         forumTypes,
         modals
     } = useSelector(state => state.forumsReducer)
-    // const { adSlots, setAdSlots } = slotsDetails;
+    // const cameBackfromSearch = location?.state?.cameFromDetailPage
+    // const scrollDetails = location?.state?.scrollDetails
     const { modalsReducer: { nfsw_modal } } = useSelector(state => state)
     const { requestToJoinModal, reportForumModal } = modals
     const dispatch = useDispatch()
@@ -41,12 +43,19 @@ const WhatsNew = () => {
 
     // Gets the data from the api and dispatchs it
     useEffect(() => {
-        getForums(1, false)
+        // const forumsArrEmpty = forums.length === 0
+        // if (!cameBackfromSearch || forumsArrEmpty)
+            getForums(1, false)
     }, [activeCategory])
 
-    useEffect(() => {
-        scrollToTop()
-    }, [])
+    // useEffect(() => {
+    //     if (scrollDetails){
+    //         console.log(scrollDetails?.scrollPos)
+    //         window.scrollTo({
+    //             top: scrollDetails?.scrollPos
+    //         })
+    //     }
+    // }, [])
 
     // Functions
 
@@ -80,14 +89,15 @@ const WhatsNew = () => {
                         forum_index={cfIndex}
                         actionBox={forumsRed.actionBox ?? {}}
                         forumTypes={forumTypes}
+                        rememberScrollPos={true}
                         currForum={currForum} />
 
-                    {/* {
+                    {
                         ((cfIndex + 1) % afterHowManyShowAdd === 0) &&
                         <div className="mb-4">
-                            <AdMob mainContId={`adIndexx${cfIndex}`} setAddSlots={setAdSlots} slots={adSlots} />
+                            <WhatsNewAds mainContId={`whatsNewPage${cfIndex}`} />
                         </div>
-                    } */}
+                    }
                 </div>)
             })
         )
@@ -113,7 +123,6 @@ const WhatsNew = () => {
 
     return (
         <div>
-
             {forums.length > 0 ?
                 <InfiniteScroll
                     scrollThreshold="80%"

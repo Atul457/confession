@@ -40,6 +40,7 @@ const ForumHeader = props => {
         is_calledfrom_detailPage = false,
         isReported,
         is_for_post = true,
+        scrollDetails
     } = props
     const sharekit = false
     const deletable = false
@@ -141,7 +142,7 @@ const ForumHeader = props => {
                 </div>)
 
         return (
-            <Link className="links forum_header_left_sec text-dark" to={forum_slug}>
+            <Link className="links forum_header_left_sec text-dark" to={forum_slug} state={scrollDetails}>
                 <div className="forum_header_left_sec">
                     <div className="forum_name">
                         {name}

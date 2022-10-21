@@ -38,8 +38,8 @@ const ForumFooter = (props) => {
         dispatch,
         isMyForumPage,
         isPinned,
-        showAlertOrNot = false,
         showPin,
+        scrollDetails,
         forum_tags } = props,
         forumTypeStyle = {
             background: forum_type.color_code,

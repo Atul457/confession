@@ -28,6 +28,7 @@ export default function Comments(props) {
     const editCommentField = useRef(null);
     const dispatch = useDispatch();
     const [subComments, setSubComments] = useState({ data: [], loading: false })
+    console.log({ subComments });
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const [showSubComments, setShowSubComments] = useState(() => {
         return getShowSubComments()
@@ -115,7 +116,7 @@ export default function Comments(props) {
     const updatSubComments = (comment_id, editedComment, index) => {
         console.log({
             comment_id, editedComment, index
-        })  
+        })
         // props.updatePost
         sendSubComment(comment_id, editedComment, index)
     }
@@ -309,9 +310,11 @@ export default function Comments(props) {
     // DELETES THE COMMENT
     const deleteCommentFunc = async () => {
 
+
         let confessionId = props.postId;
         let commentId = props.commentId;
 
+        return props.updateComments(commentId, 1);
         let obj = {
             data: {},
             token: userDetails.token,

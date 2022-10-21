@@ -220,56 +220,31 @@ const forumsReducer = (state = initialstate, action) => {
 
         case forumAcs.DELETE_FORUM_COM_OR_SUB_COM: return produce(state, draft => {
             const { comment_index } = action.payload
+            let commentsCount = 0
+
             // For subcomment
-            if (action.payload?.is_for_sub_comment) {
+            if (action.payload?.isSubComment) {
                 const {
                     parent_comment_index,
-                    comment_index: sub_comment_index,
                     arrayOfNodesIndexes
                 } = action.payload
 
-
-                // let originalArray = [], delCommentCount, data;
-                // originalArray.push(...subComments.data);
-                // arrayOfNodesIndexes.forEach(curr => { originalArray.splice(curr, 1) });
-                // delCommentCount = arrayOfNodesIndexes.length;
-                // setSubComments({ ...subComments, data: [...originalArray] });
-
                 var subComments = current(draft.detailPage.comments.data[parent_comment_index].subComments)
-                console.log({ subComments })
-                // var arrCopy = [...comments.data ?? []]
-                // arrCopy.splice(comment_index, 1)
-                // draft.detailPage.comments = {
-                //     ...comments,
-                //     count: comments.count - 1,
-                //     data: [...arrCopy]
-                // }
-
-
-
-                // let originalArray = [], delCommentCount, data;
-                // originalArray.push(...subComments.data);
-                // arrayOfNodesIndexes.forEach(curr => { originalArray.splice(curr, 1) });
-                // delCommentCount = arrayOfNodesIndexes.length;
-                // setSubComments({ ...subComments, data: [...originalArray] });
-
-                // let arr = [...current(draft.detailPage.comments.data[parent_comment_index].subComments.data) ?? []]
-                // arr.splice(sub_comment_index, 1)
-                // draft.detailPage.comments.data[parent_comment_index].subComments.data = arr ?? []
-
-
-                // draft.detailPage.comments.data[parent_comment_index].subComments.data[sub_comment_index] = {
-                //     ...draft.detailPage.comments?.data[parent_comment_index]?.subComments?.data[sub_comment_index],
-                //     ...action.payload.data
-                // }
-
-                // draft.detailPage.comments.data[parent_comment_index].subComments.data[sub_comment_index] = {
-                //     ...draft.detailPage.comments?.data[parent_comment_index]?.subComments?.data[sub_comment_index],
-                //     ...action.payload.data
-                // }
-            } else {
-                // console.log("first")
+                let originalArray = [], delCommentCount;
+                originalArray.push(...subComments.data);
+                arrayOfNodesIndexes.forEach(curr => { originalArray.splice(curr, 1) });
+                delCommentCount = arrayOfNodesIndexes.length;
+                draft.detailPage.comments.data[parent_comment_index].subComments = {
+                    subComments,
+                    data: [...originalArray]
+                }
+                commentsCount = delCommentCount
+            }
+            // Works in case of parent comment
+            else {
                 var comments = current(draft.detailPage.comments)
+                commentsCount = action.payload?.commentsCount ?? 0
+
                 var arrCopy = [...comments.data ?? []]
                 arrCopy.splice(comment_index, 1)
                 draft.detailPage.comments = {
@@ -277,6 +252,12 @@ const forumsReducer = (state = initialstate, action) => {
                     count: comments.count - 1,
                     data: [...arrCopy]
                 }
+            }
+
+            const detailPageData = current(draft.detailPage.data)
+            draft.detailPage.data = {
+                ...detailPageData,
+                no_of_comments: detailPageData.no_of_comments - commentsCount
             }
         });
 

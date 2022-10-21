@@ -219,22 +219,14 @@ const ForumComment = (props) => {
 
   // DELETES THE COMMENT  
   const deleteCommentFunc = async () => {
-    // console.log({ subComments: subComments.data ?? [], length: subComments?.data?.length ?? 0 })
-    // console.log({
-    //   postComment,
-    //   dispatch,
-    //   forum_id,
-    //   isSubComment: false,
-    //   usedById: commentId,
-    //   commentsCount: subComments?.data?.length ?? 0
-    // })
     deleteForumCommService({
       postComment,
       dispatch,
       forum_id,
       isSubComment: false,
       usedById: commentId,
-      commentIndex,
+      commentId,
+      comment_index: commentIndex,
       commentsCount: subComments?.data?.length ?? 0
     })
     // dispatch(deleteForumCommSubcomAcFn({ commentIndex }))

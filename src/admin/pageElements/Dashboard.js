@@ -47,6 +47,10 @@ export default function Dashboard() {
   const [categoryShow, setCategoryShow] = useState(false);
   const createCategorySelect = useRef(null);
   const [goDownArrow, setGoDownArrow] = useState(false);
+  const [types, setTypes] = useState({
+    confession: false,
+    forum: false
+  })
   const [pageNo, setPageNo] = useState(1);
   const [confCount, setConfCount] = useState(0);
   const [forceRender, setForceRender] = useState(false);
@@ -86,6 +90,7 @@ export default function Dashboard() {
       logout();
     }
   });
+
   //CUSTOM HOOK
   const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentsGotModal] = useCommentsModal();
 
@@ -127,6 +132,14 @@ export default function Dashboard() {
 
     getData();
   }, [])
+
+
+  const handleTypes = (e) => {
+    setTypes({
+      ...types,
+      [e.target.name]: !types[e.target?.name]
+    })
+  }
 
 
   async function getConfessions(append, act, page) {
@@ -252,12 +265,16 @@ export default function Dashboard() {
 
     if (createdCategory.category_name.trim() === "") {
       addNewCategoryErrCont.innerText = "Category Name is required";
-    }
+    } else if (types.confession === false && types.forum === false)
+      return addNewCategoryErrCont.innerHTML = "Please select either forum or confession"
     else {
       setAddNewCategory({ ...addNewCategory, isLoading: true });
+      addNewCategoryErrCont.innerHTML = ""
       let data = {
         "category_name": createdCategory.category_name,
-        "status": createdCategory.status
+        "status": createdCategory.status,
+        "is_confession": types.confession ? 1 : 0,
+        "is_forum": types.forum ? 1 : 0,
       }
 
       let obj = {
@@ -297,6 +314,10 @@ export default function Dashboard() {
   }
 
   const closeAddCategoryModalFunc = () => {
+    setTypes({
+      confession: false,
+      forum: false
+    })
     setAddNewCategory({ isLoading: false, visible: false });
   }
 
@@ -309,20 +330,27 @@ export default function Dashboard() {
       status: categoryObject.status,
       id: categoryObject.id
     })
+    setTypes({
+      confession: categoryObject.is_confession,
+      forum: categoryObject.is_forum
+    })
   }
-
 
   // UPDATES THE CATEGORY
   const updateCategoryModalFunc = async () => {
     let updateModalError = document.querySelector('.updateModalError');
+    if (types.confession === false && types.forum === false)
+      return updateModalError.innerHTML = "Please select either forum or confession"
+    updateModalError.innerHTML = ""
 
     setUpdateCategory(true);
     let data = {
       category_name: editedCategoryDetails.category_name,
       status: editedCategoryDetails.status,
-      category_id: editedCategoryDetails.id
+      category_id: editedCategoryDetails.id,
+      is_confession: types.confession ? 1 : 0,
+      is_forum: types.forum ? 1 : 0,
     }
-
 
     let obj = {
       data: data,
@@ -347,6 +375,10 @@ export default function Dashboard() {
           data: newArr
         });
         setEditCategoryModal(false);
+        setTypes({
+          confession: false,
+          forum: false
+        })
         setUpdateCategory(false);
       } else {
         setUpdateCategory(false);
@@ -361,6 +393,10 @@ export default function Dashboard() {
 
   const closeEditCategoryModalFunc = () => {
     setEditCategoryModal(false);
+    setTypes({
+      confession: false,
+      forum: false
+    })
     setEditedCategoryDetails({
       category_name: "",
       status: "",
@@ -615,6 +651,27 @@ export default function Dashboard() {
                     </select>
                   </div>
 
+                  <div className="w-100 mt-2 d-flex justify-content-start flex-wrap type_checkboxes">
+                    <div className="d-flex flex-wrap align-items-center mr-3">
+                      <label className='mb-0 mr-1' htmlFor='confessionCCheckbox'>Confession</label>
+                      <input
+                        type="checkbox"
+                        id="confessionCCheckbox"
+                        name="confession"
+                        checked={types.confession}
+                        onChange={handleTypes} />
+                    </div>
+                    <div className="d-flex flex-wrap align-items-center">
+                      <label className='mb-0 mr-1' htmlFor='forumCCheckbox'>Forum</label>
+                      <input
+                        type="checkbox"
+                        id="forumCCheckbox"
+                        name="forum"
+                        checked={types.forum}
+                        onChange={handleTypes} />
+                    </div>
+                  </div>
+
                   <div className="errorCont editModalError text-danger mt-1">
                   </div>
 
@@ -648,15 +705,48 @@ export default function Dashboard() {
 
                   <div className="addNewCategoryInput">
                     <div className="errorCont text-danger mb-1"></div>
-                    <input type="text" name="category_name" value={editedCategoryDetails.category_name} onChange={(e) => handleEditCategoryDetails(e.target)} className="form-control" placeholder="Enter a Category" />
 
-                    <select ref={editCategorySelect} className="form-control mt-2" name="status" value={(editedCategoryDetails.status).toString()} onChange={(e) => handleEditCategoryDetails(e.target)}>
+                    <input
+                      type="text"
+                      name="category_name"
+                      value={editedCategoryDetails.category_name}
+                      onChange={(e) => handleEditCategoryDetails(e.target)}
+                      className="form-control" placeholder="Enter a Category" />
+
+                    <select
+                      ref={editCategorySelect}
+                      className="form-control mt-2"
+                      name="status"
+                      value={(editedCategoryDetails.status).toString()}
+                      onChange={(e) => handleEditCategoryDetails(e.target)}>
                       <option value="1">Active</option>
                       <option value="2">Inactive</option>
                     </select>
+
+                    <div className="w-100 mt-2 d-flex justify-content-start flex-wrap type_checkboxes">
+                      <div className="d-flex flex-wrap align-items-center mr-3">
+                        <label className='mb-0 mr-1' htmlFor='confessionUCheckbox'>Confession</label>
+                        <input
+                          type="checkbox"
+                          id="confessionUCheckbox"
+                          name="confession"
+                          checked={types.confession}
+                          onChange={handleTypes} />
+                      </div>
+                      <div className="d-flex flex-wrap align-items-center">
+                        <label className='mb-0 mr-1' htmlFor='forumUCheckbox'>Forum</label>
+                        <input
+                          type="checkbox"
+                          id="forumUCheckbox"
+                          name="forum"
+                          checked={types.forum}
+                          onChange={handleTypes} />
+                      </div>
+                    </div>
+
                   </div>
 
-                  <div className="errorCont updateModalError text-danger mt-1">
+                  <div className="errorCont updateModalError text-danger mt-2">
                   </div>
 
                 </Modal.Body>

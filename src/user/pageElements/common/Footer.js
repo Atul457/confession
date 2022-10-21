@@ -5,7 +5,7 @@ import inboxIcon from '../../../images/inboxIconM.png'
 import inboxIconActive from '../../../images/inboxIconActive.svg'
 import contactUsActiveIcon from '../../../images/contactUsIconActive.svg';
 import contactUsIcon from '../../../images/contactUsMobIcon.svg';
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import { useSelector } from 'react-redux';
 import confessIconActive from '../../../images/confessIconActive.svg'
@@ -15,6 +15,7 @@ import confessIcon from '../../../images/confessIconM.svg'
 export default function Footer(props) {
 
     let currentUrl = window.location.href;
+    const location = useLocation().pathname
     currentUrl = currentUrl.split("/");
     currentUrl = currentUrl[(currentUrl.length) - 1];
     const notificationReducer = useSelector(store => store.notificationReducer);
@@ -41,7 +42,7 @@ export default function Footer(props) {
                                     <img src={confessIconActive} alt="confessIconActive" className='active' />
                                     <img src={confessIcon} alt="confessIcon" className='inactive' />
                                 </span>
-                                <span className={`footLinkName ${currentUrl === "forums" ? "activeLinkOfHeader" :
+                                <span className={`footLinkName ${location.startsWith("/forum") ? "activeLinkOfHeader" :
                                     ""}`}>Forums</span>
                             </NavLink>
                         </div>

@@ -17,6 +17,7 @@ import { apiStatus } from '../../../helpers/status';
 const SingleForum = props => {
 
     // Hooks and vars
+    // const { handleCommentsAcFn } = forumHandlers
     const {
         currForum,
         forumTypes,
@@ -120,6 +121,7 @@ const SingleForum = props => {
         dispatch,
         id: forum_id,
         doComment,
+        toSearch: usersToTag?.strToSearch ?? "",
         usersToTag: usersToTag?.data,
         getUsersToTag
     }
@@ -127,7 +129,10 @@ const SingleForum = props => {
     return (
         <>
             <div className='w-100 mb-3'>
-                <Link to={`/${location?.state?.cameFromSearch ? "search" : "forums"}`} className='backtoHome'>
+                <Link
+                    to={`/${location?.state?.cameFromSearch ? "search" : "forums"}`}
+                    state={{ cameFromDetailPage: true, scrollDetails: location?.state?.scrollDetails }}
+                    className='backtoHome'>
                     <span className='mr-2'>
                         <i className="fa fa-chevron-left" aria-hidden="true"></i>
                         <i className="fa fa-chevron-left" aria-hidden="true"></i>

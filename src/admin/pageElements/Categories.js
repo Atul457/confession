@@ -83,7 +83,9 @@ export default function Category(props) {
                                       openEditCategoriesModalFunc({
                                         id: element.id,
                                         status: element.status,
-                                        category_name: element.category_name
+                                        category_name: element.category_name,
+                                        is_confession: element.is_confession,
+                                        is_forum: element.is_forum,
                                       })
                                     }}
                                     aria-hidden="true"

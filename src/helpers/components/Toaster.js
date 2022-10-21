@@ -35,7 +35,7 @@ const Toaster2 = ({ message }) => {
 const toaster = (message, data) => {
     toast(<Toaster message={message} confDetails={data} />, {
         position: "top-right",
-        autoClose: false,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

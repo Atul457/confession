@@ -6,13 +6,20 @@ import AppLogo from '../../../user/pageElements/components/AppLogo';
 import SocialIconsComp from '../../SocialIconsComp/SocialIconsComp';
 import ForumMiddleCompWrapper from '../ForumPageWrapper';
 import ForumCategories from '../forumCategories/ForumCategories';
+import RightSideAdComp from '../../sidebarAds/RightSideAdComp';
+
+import { useLocation } from 'react-router-dom';
 
 
 const ForumLayoutWrapper = ({ children }) => {
 
+    const location = useLocation()?.pathname.replace("/", "")
+    const isForumPage = location.startsWith("forum")
+    const isSearchPage = location.startsWith("search")
+
     return (
-        // <div className="container-fluid forums_page feed_page">
-        <div className="container-fluid forums_page">
+        <div className="container-fluid forums_page feed_page">
+            {/* <div className="container-fluid forums_page"> */}
             <div className="row outerContWrapper">
                 <Header links={true}></Header>
 
@@ -23,7 +30,9 @@ const ForumLayoutWrapper = ({ children }) => {
                         <div className="middleContLoginReg feedMiddleCont w-100">
                             {/* Categorycont */}
                             <aside className="posSticky">
-                                <ForumCategories />
+                                <ForumCategories
+                                    onlyForForums={isForumPage}
+                                    isSearchPage={isSearchPage} />
                             </aside>
                         </div>
 
@@ -39,6 +48,10 @@ const ForumLayoutWrapper = ({ children }) => {
                     {children}
                 </ForumMiddleCompWrapper>
                 {/* Rightsides comp */}
+
+                <div className="rightsideBarAdd">
+                    <RightSideAdComp />
+                </div>
             </div>
         </div>
     )

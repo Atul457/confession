@@ -1,5 +1,6 @@
 // Helpers
 import { fetchData } from "../../../commonApi"
+import toastMethods from "../../../helpers/components/Toaster"
 import { areAtLastPage, resHandler } from "../../../helpers/helpers"
 import { getKeyProfileLoc } from "../../../helpers/profileHelper"
 import { apiStatus } from "../../../helpers/status"
@@ -234,59 +235,45 @@ const deleteForumCommService = async ({
     isSubComment = false,
     comment_index = null
 }) => {
-    console.log({ got: commentId })
+
+    commentsCount = commentsCount ? commentsCount + 1 : 0
     let obj;
 
     if (isSubComment) {
-        let indexArr = [], forum_id;
-        console.log(commentId)
+        let indexArr = [];
         const ids = document.querySelectorAll(`.abc${commentId}`);
         ids.forEach(curr => indexArr.push(curr.getAttribute("index")))
         indexArr = [...new Set(indexArr)]
         indexArr = indexArr.reverse();
         const arrayOfNodesIndexes = [...indexArr, comment_index]
-        console.log({ arrayOfNodesIndexes, is_for_sub_comment: isSubComment })
+
         dispatch(deleteForumCommSubcomAcFn({
             comment_index,
             parent_comment_index,
             arrayOfNodesIndexes,
             isSubComment
         }))
-
-        // UPDATES THE COMMENTSGOTMODAL COMMENT COUNT
-        // data = { no_of_comments: parseInt(commentsModalReducer.state.no_of_comments) - delCommentCount };
-        // dispatch(updateCModalState(data));
-
-        return
+    } else {
+        dispatch(deleteForumCommSubcomAcFn({
+            comment_index,
+            isSubComment: false,
+            commentsCount
+        }))
     }
-
-    return
-
-    // dispatch(mutateForumFn({
-    //     forum_index,
-    //     data_to_mutate: { is_pinned: isPinned ? 0 : 1 }
-    // }))
 
     obj = {
         token: getKeyProfileLoc("token", true),
         method: "get",
         url: `deletforumecomment/${forum_id}/${commentId}`
     }
-    console.log(obj)
-
-    if (isSubComment) return console.log("subcomment")
-    else {
-        dispatch(deleteForumCommSubcomAcFn({ comment_index }))
-        const { handleForum } = forumHandlers
-    }
-
-    return
 
     try {
         let res = await fetchData(obj)
         res = resHandler(res)
+        // toastMethods.toaster2Info(res?.message ?? "Comment deleted successfully")
     } catch (error) {
         console.log(error)
+        // toastMethods.toaster2Info(error?.message ?? "Something went wrong")
     }
 
 }

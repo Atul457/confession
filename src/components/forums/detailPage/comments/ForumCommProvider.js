@@ -61,6 +61,13 @@ const forum_types = {
     closed: 3
 }
 
+const searchTypes = {
+    TOP: 0,
+    POST: 1,
+    FORUM: 2,
+    TAGS: 3
+}
+
 const reportedFormStatus = {
     reported: 1
 }
@@ -139,5 +146,6 @@ export {
     reportedFormStatus,
     isAllowedToComment,
     customStyles,
-    myForum
+    myForum,
+    searchTypes
 }

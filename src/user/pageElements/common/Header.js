@@ -387,26 +387,30 @@ export default function Header(props) {
                 searchStr: value,
             }))
         }
-        if (event.code === "Enter") {
-            dispatch(searchAcFn({
-                visible: false,
-                searchedWith: value,
-                page: 1
-            }))
 
-            getForumsNConfessions({
-                SearchReducer: {
-                    ...SearchReducer,
-                    searchedWith: value,
-                    dispatch,
-                    append: false
-                }
-            })
-        }
-
-        if (event.code === "Enter" && !isSearchPage) return history("/search")
-
+        // if (event.code === "Enter" && !isSearchPage) return history("/search")
     }
+
+    const navigateToSearch = (e) => {
+        e.preventDefault();
+        dispatch(searchAcFn({
+            visible: false,
+            searchedWith: searchBoxRef.current?.value,
+            page: 1
+        }))
+
+        getForumsNConfessions({
+            SearchReducer: {
+                ...SearchReducer,
+                searchedWith: searchBoxRef.current?.value,
+                dispatch,
+                append: false
+            }
+        })
+
+        history("/search")
+    }
+
 
     useEffect(() => {
         const listener = (e) => {
@@ -519,14 +523,16 @@ export default function Header(props) {
                                             </div>
                                             {SearchReducer.visible ?
                                                 (
-                                                    <input
-                                                        type="text"
-                                                        value={SearchReducer?.searchStr ?? ""}
-                                                        onChange={(e) => checkKeyPressed(e)}
-                                                        onKeyDown={(e) => checkKeyPressed(e, false)}
-                                                        placeholder='Search'
-                                                        ref={searchBoxRef}
-                                                        className="seach_boxinput" />
+                                                    <form className='search_form' onSubmit={navigateToSearch}>
+                                                        <input
+                                                            type="text"
+                                                            value={SearchReducer?.searchStr ?? ""}
+                                                            onChange={(e) => checkKeyPressed(e)}
+                                                            onKeyDown={(e) => checkKeyPressed(e, false)}
+                                                            placeholder='Search'
+                                                            ref={searchBoxRef}
+                                                            className="seach_boxinput" />
+                                                    </form>
                                                 )
                                                 : null}
                                         </div>

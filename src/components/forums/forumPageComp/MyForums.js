@@ -15,8 +15,8 @@ import { apiStatus } from '../../../helpers/status'
 import { fetchData } from '../../../commonApi'
 import { resHandler } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
-import CreateFormModal from '../../modals/CreateFormModal'
 import DeleteForumModal from '../../modals/DeleteForumModal'
+import { WhatsNewAds } from '../../../user/pageElements/components/AdMob'
 
 
 const MyForums = () => {
@@ -31,6 +31,7 @@ const MyForums = () => {
   const dispatch = useDispatch()
   const { handleForums } = forumHandlers
   const { data: forums, status: forumsStatus, page, count = 0 } = forumsRed
+  const afterHowManyShowAdd = 7;    //AFTER THIS MUCH SHOW ADDS
 
   // Gets the data from the api and dispatchs it
   useEffect(() => {
@@ -69,14 +70,23 @@ const MyForums = () => {
   const renderForums = forumsArr => {
     if (forumsArr && forumsArr.length) return (
       forums.map((currForum, cfIndex) => {
-        return <Forum
-          isMyForumPage={true}
-          dispatch={dispatch}
-          forum_index={cfIndex}
-          key={`forumNo${cfIndex}`}
-          actionBox={forumsRed.actionBox ?? {}}
-          forumTypes={forumTypes}
-          currForum={currForum} />
+        return (<div key={`forumNo${cfIndex}`}>
+          <Forum
+            isMyForumPage={true}
+            dispatch={dispatch}
+            forum_index={cfIndex}
+            key={`forumNo${cfIndex}`}
+            actionBox={forumsRed.actionBox ?? {}}
+            forumTypes={forumTypes}
+            currForum={currForum} />
+
+          {
+            ((cfIndex + 1) % afterHowManyShowAdd === 0) &&
+            <div className="mb-4">
+              <WhatsNewAds mainContId={`whatsNewPage${cfIndex}`} />
+            </div>
+          }
+        </div>)
       })
     )
 
@@ -127,9 +137,6 @@ const MyForums = () => {
 
       {/* Report forum modal */}
       {reportForumModal.visible && <ReportForumModal />}
-
-      {/* Create forum modal */}
-      {createForumModal.visible && <CreateFormModal />}
 
       {/* Create forum modal */}
       {

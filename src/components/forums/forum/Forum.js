@@ -20,9 +20,14 @@ const Forum = (props) => {
         forumTypes,
         actionBox,
         dispatch,
+        rememberScrollPos = false,
         isMyForumPage = false,
         forum_index
     } = props
+    var scrollDetails = {
+        scrollPos: rememberScrollPos ? window.scrollY : undefined,
+        rememberScrollPos
+    };
     const { forum_id, is_pinned } = currForum
     const { data: types } = forumTypes
     const forum_type = {
@@ -40,6 +45,7 @@ const Forum = (props) => {
     const isActionBoxVisible = actionBox?.forum_id === forum_id
     const forumHeaderProps = {
         category_name: currForum?.category_name,
+        scrollDetails,
         created_at: currForum?.created_at,
         name: currForum?.title,
         forum_id: currForum?.forum_id,
@@ -64,6 +70,7 @@ const Forum = (props) => {
         viewcount: currForum?.viewcount ?? 0,
         forum_type,
         isPinned,
+        scrollDetails,
         showPin,
         isPrivateForum,
         is_requested: currForum?.is_requested,
@@ -116,7 +123,7 @@ const Forum = (props) => {
         }
 
         return (
-            <Link className="links text-dark" to={`/forums/${slug}`}>
+            <Link className="links text-dark" to={`/forums/${slug}`} state={{ scrollDetails }}>
                 <pre className="preToNormal post forum_desc">
                     {currForum?.description}
                 </pre>

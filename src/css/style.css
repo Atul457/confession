@@ -333,15 +333,19 @@ input::-webkit-textfield-decoration-container {
     margin-bottom: 20px;
 }
 
-.seach_boxinput {
+.search_form{
     position: absolute;
     z-index: 10;
     bottom: -60px;
+    width: 230px;
+}
+
+.seach_boxinput {
+    width: 230px;
     border: none;
     background: #badbeb;
     padding: 10px;
     border-radius: 34px;
-    width: 230px;
 }
 
 .seach_boxinput:focus,
@@ -551,7 +555,10 @@ input:focus-visible {
 }
 
 .category {
+    height: fit-content;
     text-transform: capitalize;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
     white-space: nowrap;
     background: var(--whiteColor);
     border-radius: 30px;
@@ -630,6 +637,16 @@ input:focus-visible {
     width: 13px;
 }
 
+.type_checkboxes {
+    font-size: 15px;
+    color: #495057;
+}
+
+.type_checkboxes input[type="checkbox"] {
+    transform: scale(1.5);
+    margin-left: 10px;
+}
+
 .categoriesCont {
     display: flex;
     padding-top: 20px;
@@ -637,9 +654,11 @@ input:focus-visible {
 }
 
 .categoriesContainer {
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
     display: flex;
     flex-wrap: wrap;
-    height: 170px;
+    max-height: 170px;
     overflow-y: auto;
     margin-bottom: 20px;
     padding: 0px 0px 0px 15px;
@@ -2639,7 +2658,7 @@ span.offlineColor {
 
 .upvote_downvote_icons_cont .count {
     margin-left: 10px;
-    width: 20px;
+    width: 24px;
 }
 
 span.facebookMobIcon {
@@ -5389,10 +5408,6 @@ button.modalFootBtns.btn a:hover {
     box-shadow: 0px 0px 45px -4px rgba(39, 76, 119, 0.14);
 }
 
-/* .forum_cont>*:not(.sharekitdots) {
-    pointer-events: none;
-} */
-
 .forums_tabs_comps_holder {
     width: 100%;
 }
@@ -5400,22 +5415,21 @@ button.modalFootBtns.btn a:hover {
 .forum_header,
 .forum_header_left_sec {
     justify-content: flex-start;
-    width: 95%;
+    width: 99%;
     display: flex;
     align-items: center;
-    /* justify-content: space-between; */
     flex-wrap: wrap;
 }
 
 .forum_header {
     cursor: pointer;
     margin-bottom: 10px;
-    padding-right: 20px;
 }
 
 .forum_action_icon {
     width: 20px;
     right: 9px;
+    top: 17px;
     position: absolute;
 }
 
@@ -5484,10 +5498,6 @@ button.modalFootBtns.btn a:hover {
     flex-wrap: wrap;
 }
 
-.share_req_cont_forums {
-    border-radius: 12px;
-    width: 200px;
-}
 
 .tags_label {
     color: #A8A9A8;
@@ -5599,7 +5609,6 @@ button.modalFootBtns.btn a:hover {
 
 .forum_name {
     color: var(--primaryColor);
-    max-width: calc(100% - 200px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -5642,7 +5651,7 @@ button.modalFootBtns.btn a:hover {
 /* MEDIAS */
 @media(min-width:1600px) {
     .categoriesContainer {
-        height: 360px;
+        max-height: 360px;
         overflow-y: auto;
     }
 }
@@ -6512,9 +6521,11 @@ button.modalFootBtns.btn a:hover {
     }
 
     .categoriesContainer {
+        max-height: unset;
         padding: 20px 0px 0px;
         justify-content: start;
         height: unset;
+        margin-bottom: 0px;
         overflow: initial;
     }
 
@@ -7597,14 +7608,19 @@ button.modalFootBtns.btn a:hover {
 
     .forum_name {
         font-size: 13px;
-        max-width: calc(100% - 150px);
-        word-break: break-all;
-        width: max-content;
+        line-height: 22px;
+    }
+
+    .forum_header_left_sec .category_name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 95px;
     }
 
     .category_name {
-        font-size: 11px;
-        padding: 2px 10px 4px;
+        font-size: 9px;
+        padding: 2px 10px 1px;
         margin: 5px 5px 5px 0px;
         line-height: 16px;
     }
@@ -7631,6 +7647,14 @@ button.modalFootBtns.btn a:hover {
         width: 100%;
         margin-left: 0px !important;
         margin-right: 0px !important;
+    }
+
+    .forum_footer {
+        padding-right: 15px;
+    }
+
+    .tags_label {
+        font-size: 12px;
     }
 
 

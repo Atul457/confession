@@ -137,7 +137,6 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                 else if (comment_id === false)  //JUST INCREMENTS THE COMMENT COUNT
                 {
                     dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) + 1 }))
-                    console.log("first")
                     updatePost({ no_of_comments: parseInt(state.no_of_comments) + 1 });
                 }
                 else    //UPDATES
@@ -292,7 +291,13 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
             }
         })
 
-        setCommentsArr(newCommentsArr);
+        console.log({
+            newCommentsArr,
+            commentsArr,
+            commentId
+        })
+        // return
+        setCommentsArr([...newCommentsArr]);
         updatePost({ no_of_comments: parseInt(state.no_of_comments) - count })
         dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) - count }))
     }
@@ -642,8 +647,8 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                                                     (
                                                         <div className="form-group imgPreviewCont">
                                                             <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
-                                                                {(confessionData.image).map((src) => {
-                                                                    return (<span className='uploadeImgWrapper fetched'>
+                                                                {(confessionData.image).map((src, index) => {
+                                                                    return (<span key={`${src}${index}`} className='uploadeImgWrapper fetched'>
                                                                         <img src={src} alt="" className="previewImg" />
                                                                     </span>)
 
