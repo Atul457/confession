@@ -859,6 +859,7 @@ input:focus-visible {
 }
 
 .inputWithForwardCont {
+    position: relative;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -2257,15 +2258,20 @@ span.offlineColor {
     margin-top: 2px;
 }
 
-.forum_cont .inputWithForwardCont {
+.forum_cont .inputWithForwardCont,
+.replyCont .inputWithForwardCont {
     position: relative;
 }
+
 
 .users_to_tag_cont {
     background: var(--primaryColor);
     border-radius: 5px;
     position: absolute;
     min-width: 30%;
+    max-height: 200px;
+    overflow: auto;
+    z-index: 2;
     color: #fff;
     width: fit-content;
     top: 40px;
@@ -2656,6 +2662,11 @@ span.offlineColor {
     margin-right: 30px;
 }
 
+.usersBox {
+    height: fit-content;
+    overflow: auto;
+}
+
 .upvote_downvote_icons_cont .count {
     margin-left: 10px;
     width: 24px;
@@ -2760,14 +2771,27 @@ span.facebookMobIcon {
     display: none;
 }
 
-.textAreaToComment textarea {
-    border-color: var(--skyColor);
-    font-size: 13px;
+.textAreaToComment textarea,
+.textAreaToComment .usersBox {
+    border-color: var(--skyColor) !important;
+    font-size: 16px;
     padding: 8px 10px;
     color: var(--placeholderColor);
     overflow: hidden;
     height: 38px;
     word-break: break-word;
+}
+
+.tagged_user {
+    color: var(--orangeColor);
+    font-weight: 600;
+}
+
+
+.textAreaToComment .usersBox {
+    height: fit-content !important;
+    box-shadow: none;
+    color: #000 !important;
 }
 
 .textAreaToComment textarea:focus {
@@ -5461,6 +5485,12 @@ button.modalFootBtns.btn a:hover {
 }
 
 .forum_com_p_link {
+    word-break: break-all;
+    width: max-content;
+    max-width: 55px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-decoration: none !important;
 }
 
@@ -5591,6 +5621,7 @@ button.modalFootBtns.btn a:hover {
 }
 
 .comments_cont .postCont {
+    border: 1px solid #E4EBF6;
     box-shadow: 0px 0px 45px -4px rgba(39, 76, 119, 0.14);
 }
 
@@ -7660,6 +7691,11 @@ button.modalFootBtns.btn a:hover {
 
     .tags_label {
         font-size: 12px;
+    }
+
+    .textAreaToComment textarea,
+    .textAreaToComment .usersBox{
+        font-size: 14px;
     }
 
 

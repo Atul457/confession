@@ -147,6 +147,7 @@ const ForumDetailPage = () => {
 
         <div className='comments_cont'>
           <ForumComments
+            usersToTag={usersToTag}
             isAllowedToComment={isAllToComment}
             forum_id={currForum?.forum_id ?? false} />
         </div>

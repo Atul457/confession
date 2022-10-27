@@ -1,7 +1,7 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 // Third party
-import TextareaAutosize from 'react-textarea-autosize';
+// import TextareaAutosize from 'react-textarea-autosize';
 
 // Image imports
 import forwardIcon from '../../../images/forwardIcon.svg'
@@ -22,17 +22,21 @@ const CommentBox = props => {
         doComment,
         postCommentReducer: { message = "", status, usedById: messageId },
         usedById,
+        isCalledByParent = false,
         toSearch,
         isForUpdateCom = false,
         dispatch,
-        usersToTag = [],
+        usersToTag = {},
         getUsersToTag = () => { }
     } = props,
-        maxChar = 2000,
+        // maxChar = 2000,
         textboxref = useRef(null),
         isError = status === apiStatus.REJECTED
 
     const showMessage = usedById === messageId
+    // If both will be undefined and isCalledByParent is same then it means its called by parent
+    // else by child
+    const showDropDown = (props?.commentBoxId === messageId && isCalledByParent === usersToTag?.isCalledByParent) || (isCalledByParent === usersToTag?.isCalledByParent && props?.commentBoxId === undefined)
 
     // Functions
     const sendComment = () => {
@@ -50,24 +54,38 @@ const CommentBox = props => {
         }
     }
 
-    const tagUser = (nameOfUser) => {
-        let value = textboxref?.current.value
-        let currSentence = value
-        value = value.split("@")
-        value = value[value.length - 1]
-        console.log(textboxref?.current.value.length)
-        console.log(value)
-        // currSentence = currSentence.replace(value, nameOfUser)
-        currSentence.replaceAll("(^|\\W)(" + toSearch + ")($|\\W)", "$1" + nameOfUser + "$3")
-        textboxref.current.value = currSentence
-        console.log({ nameOfUser, currSentence })
+    const tagUser = (user) => {
+        let actualStr = textboxref?.current.innerHTML;
+        let newStr = "";
+        let regex = new RegExp("@(" + toSearch + "|" + `${toSearch}</div>` + ")$", "i");
+        newStr = actualStr.replace(
+            regex,
+            `<span class="tagged_user dr99${user?.user_id?.trim()}" contenteditable="false">@${user?.name?.trim()}</span>&nbsp;`
+        );
+        textboxref.current.innerHTML = newStr;
         dispatch(usersToTagAcFn({
             data: [],
             status: apiStatus.IDLE,
-            toSearch
+            toSearch: ""
         }))
-        textboxref.current?.focus();
     }
+
+    useEffect(() => {
+        const listener = (e) => {
+            checkKeyPressed(e)
+        }
+        const changeListener = (e) => {
+            getUsersToTag(e.target.innerText)
+        }
+        textboxref?.current?.addEventListener("keydown", listener)
+        textboxref?.current?.addEventListener("keyup", changeListener)
+
+        return () => {
+            textboxref?.current?.removeEventListener("keydown", listener)
+            textboxref?.current?.removeEventListener("keyup", changeListener)
+        }
+    }, [])
+
 
     return (
         <>
@@ -76,26 +94,24 @@ const CommentBox = props => {
                     <>
                         <div className="container-fluid inputWithForwardCont">
                             <div className="textAreaToComment w-100">
-                                <TextareaAutosize
-                                    type="text"
-                                    maxLength={maxChar}
-                                    row='1'
+                                <div
+                                    contentEditable="true"
+                                    suppressContentEditableWarning={true}
                                     ref={textboxref}
-                                    onChange={(e) => getUsersToTag(e.target.value)}
-                                    onKeyDown={checkKeyPressed}
-                                    className="form-control">
-                                </TextareaAutosize>
-                                {usersToTag?.length ?
-                                    <div className='users_to_tag_cont'>
-                                        {usersToTag.map(user => {
+                                    className="form-control usersBox"
+                                    placeholder="Write the sentence you want to.."
+                                ></div>
+                                {showDropDown && usersToTag?.data?.length ?
+                                    <div className='users_to_tag_cont cursor_pointer'>
+                                        {usersToTag?.data.map((user, index) => {
                                             return <div
-                                                onClick={() => tagUser(user?.name)}
+                                                key={user?.user_id + `${index}`}
+                                                onClick={() => tagUser(user)}
                                                 className='user_to_tag'>
                                                 {user?.name}
                                             </div>
                                         })}
-                                    </div>
-                                    : null}
+                                    </div> : null}
                             </div>
                             <div className="arrowToAddComment" id="userPostCommentIcon" type="button" onClick={sendComment}>
                                 <img src={forwardIcon} alt="" className="forwardIconContImg" />

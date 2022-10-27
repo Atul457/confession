@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import parse from 'html-react-parser';
 
 // Helpers
 import DateConverter from '../../../../helpers/DateConverter'
-import { deleteForumCommService, doCommentService, likeDislikeService } from '../../services/forumServices'
+import { deleteForumCommService, doCommentService, getUsersToTagService, likeDislikeService } from '../../services/forumServices'
 
 // Image imports
 import userIcon from "../../../../images/userAcc.svg"
@@ -13,7 +14,7 @@ import upvote from "../../../../images/upvote.svg"
 import editCommentIcon from "../../../../images/editCommentIcon.svg"
 
 // Redux
-import { forumHandlers, postComment, reportForumCommAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
+import { forumHandlers, postComment, reportForumCommAcFn, usersToTagAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
 
 // Component imports
 import CommentBox from '../CommentBox'
@@ -27,9 +28,11 @@ const ForumSubComment = (props) => {
     // Hooks and vars
     const {
         comment: currSubComment,
+        usersToTag,
         auth,
         loggedInUserId,
         dispatch,
+        toSearch,
         commentBox: { commentId: activeComBoxId },
         updateBox: { commentId: activeUpdateComBoxId },
         doCommentVars,
@@ -98,11 +101,17 @@ const ForumSubComment = (props) => {
     }
     // Open update comment box
     const openUpdateComBox = () => {
-        if (isCommentBoxVisible) toggleReplyBtn()
         dispatch(handleCommentsAcFn({
             updateBox: {
                 ...(!isUpdateComBoxVisible && { commentId })
-            }
+            },
+            commentBox: {}
+        }))
+        dispatch(usersToTagAcFn({
+            data: [],
+            status: apiStatus.IDLE,
+            strToSearch: "",
+            isCalledByParent: false
         }))
     }
 
@@ -132,6 +141,30 @@ const ForumSubComment = (props) => {
         })
     }
 
+    const getUsersToTag = async string => {
+        let strToSearch = null;
+        const regex = /(^@|(\s@))((\w+)?)$/;
+        var result = regex.exec(string);
+
+        if (result) strToSearch = result[0]?.trim().replace("@", "");
+        else strToSearch = null;
+
+        if (strToSearch || strToSearch === "") {
+            getUsersToTagService({
+                strToSearch: strToSearch,
+                forum_id,
+                dispatch
+            })
+        } else {
+            if (usersToTag?.data.length)
+                dispatch(usersToTagAcFn({
+                    data: [],
+                    status: apiStatus.IDLE,
+                    toSearch: ""
+                }))
+        }
+    }
+
 
     // DELETES THE COMMENT
     const deleteCommentFunc = async () => {
@@ -148,28 +181,31 @@ const ForumSubComment = (props) => {
 
     // Toggles reply btn and comment/edit comment field
     const toggleReplyBtn = () => {
-        if (isUpdateComBoxVisible) openUpdateComBox()
         dispatch(handleCommentsAcFn({
             commentBox: {
                 ...(!isCommentBoxVisible && { commentId })
-            }
+            },
+            updateBox: {}
+        }))
+        dispatch(usersToTagAcFn({
+            data: [],
+            status: apiStatus.IDLE,
+            strToSearch: "",
+            isCalledByParent: false
         }))
     }
 
     profile_image = profile_image === "" ? userIcon : profile_image
 
-
     return (
         <div className={`postCont overWritePostWithComment subcommentCont upperView ${currSubComment?.id_path ?? ""}`} index={subCommentIndex}>
 
-            {/* Edit/Delete comment */}
             {(auth && currSubComment?.is_editable === 1) ?
                 <div className='edit_delete_com_forum'>
                     <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
                     {!isUpdateComBoxVisible ? <img src={editCommentIcon} className='editCommentIcon' onClick={openUpdateComBox} /> : null}
                 </div>
                 : null}
-            {/* Edit/Delete comment */}
 
             {/* Report comment */}
             {(auth() && isReported !== 2) && <span className="reportPost" onClick={openReportCommentModal}>
@@ -203,11 +239,15 @@ const ForumSubComment = (props) => {
             <div className="postBody">
                 <div className="postedPost mb-0">
                     <pre className="preToNormal">
-                        {currSubComment?.comment}
+                        {parse(currSubComment?.comment)}
                     </pre>
 
                     {/* Update box */}
                     {isUpdateComBoxVisible ? <CommentBox
+                        dispatch={dispatch}
+                        toSearch={toSearch}
+                        usersToTag={usersToTag}
+                        getUsersToTag={getUsersToTag}
                         usedById={commentId}
                         isForUpdateCom={true}
                         postCommentReducer={postCommentReducer}
@@ -241,6 +281,10 @@ const ForumSubComment = (props) => {
 
                             {isCommentBoxVisible ?
                                 <CommentBox
+                                    getUsersToTag={getUsersToTag}
+                                    usersToTag={usersToTag}
+                                    dispatch={dispatch}
+                                    toSearch={toSearch}
                                     auth={auth}
                                     usedById={commentId}
                                     postCommentReducer={postCommentReducer}

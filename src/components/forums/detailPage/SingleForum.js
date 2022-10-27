@@ -88,42 +88,49 @@ const SingleForum = props => {
         })
     }
 
-    const getUsersToTag = async strToSearch => {
-        const arr = strToSearch.split(" @")
-        const arr1 = strToSearch.split("@")
-        let toSearch = arr.length > 1 ? arr[arr.length - 1].replace("@", "") : ""
-        toSearch = toSearch.split(" ")
-        toSearch = toSearch.length > 1 ? "" : toSearch[0]
-        if (toSearch === "") {
-            toSearch = arr1.length > 1 ? arr1[arr1.length - 1].replace("@", "") : ""
-            toSearch = toSearch.split(" ")
-            toSearch = toSearch.length > 1 ? "" : toSearch[0]
-        }
-        if (toSearch.length)
+    const getUsersToTag = async string => {
+        let strToSearch = null;
+        const regex = /(^@|(\s@))((\w+)?)$/;
+        var result = regex.exec(string);
+
+        if (result) strToSearch = result[0]?.trim().replace("@", "");
+        else strToSearch = null;
+
+        if (strToSearch || strToSearch === "") {
             getUsersToTagService({
-                strToSearch: toSearch,
+                strToSearch: strToSearch,
                 forum_id,
-                dispatch
+                dispatch,
+                isCalledByParent: true
             })
-        else if (usersToTag?.data?.length > 0) {
+        } else {
             dispatch(usersToTagAcFn({
                 data: [],
                 status: apiStatus.IDLE,
-                toSearch
+                toSearch: ""
             }))
         }
     }
 
     const commentBoxProps = {
-        commentBoxId: forum_id,
+        isCalledByParent: true,
         postCommentReducer,
         usedById: forum_id,
+        isPreOpened: true,
         dispatch,
         id: forum_id,
         doComment,
+        usersToTag,
         toSearch: usersToTag?.strToSearch ?? "",
-        usersToTag: usersToTag?.data,
         getUsersToTag
+    }
+
+    const resetTagList = () => {
+        dispatch(usersToTagAcFn({
+            data: [],
+            status: apiStatus.IDLE,
+            toSearch: ""
+        }))
     }
 
     return (
@@ -131,6 +138,7 @@ const SingleForum = props => {
             <div className='w-100 mb-3'>
                 <Link
                     to={`/${location?.state?.cameFromSearch ? "search" : "forums"}`}
+                    onClick={resetTagList}
                     state={{ cameFromDetailPage: true, scrollDetails: location?.state?.scrollDetails }}
                     className='backtoHome'>
                     <span className='mr-2'>

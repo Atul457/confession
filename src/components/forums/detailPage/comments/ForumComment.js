@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import parse from 'html-react-parser';
 
 // Helpers
 import DateConverter from '../../../../helpers/DateConverter'
@@ -18,12 +19,12 @@ import ForumSubComments from './ForumSubComments'
 import { getKeyProfileLoc } from '../../../../helpers/profileHelper'
 import { fetchData } from '../../../../commonApi'
 import { apiStatus } from '../../../../helpers/status'
-import { deleteForumCommService, doCommentService, likeDislikeService } from '../../services/forumServices'
+import { deleteForumCommService, doCommentService, getUsersToTagService, likeDislikeService } from '../../services/forumServices'
 import CommentBox from '../CommentBox'
 import { reportedFormStatus } from './ForumCommProvider'
 
 // Redux
-import { deleteForumCommSubcomAcFn, forumHandlers, postComment, reportForumCommAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
+import { forumHandlers, postComment, reportForumCommAcFn, usersToTagAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
 
 
 const ForumComment = (props) => {
@@ -33,6 +34,8 @@ const ForumComment = (props) => {
     comment: currComment,
     auth,
     loggedInUserId,
+    toSearch,
+    usersToTag,
     postComment: postCommentReducer,
     dispatch,
     navigate,
@@ -94,11 +97,19 @@ const ForumComment = (props) => {
 
   // Toggles reply btn and comment/edit comment field
   const toggleReplyBtn = () => {
-    if (isUpdateComBoxVisible) openUpdateComBox()
+    // if (isUpdateComBoxVisible) openUpdateComBox()
     dispatch(handleCommentsAcFn({
       commentBox: {
         ...(!isCommentBoxVisible && { commentId })
-      }
+      },
+      updateBox: {}
+    }))
+
+    dispatch(usersToTagAcFn({
+      data: [],
+      status: apiStatus.IDLE,
+      strToSearch: "",
+      isCalledByParent: false
     }))
   }
 
@@ -209,11 +220,19 @@ const ForumComment = (props) => {
 
   // Open update comment box
   const openUpdateComBox = () => {
-    if (isCommentBoxVisible) toggleReplyBtn()
+    // if (isCommentBoxVisible) toggleReplyBtn()
     dispatch(handleCommentsAcFn({
       updateBox: {
         ...(!isUpdateComBoxVisible && { commentId })
-      }
+      },
+      commentBox: {}
+    }))
+
+    dispatch(usersToTagAcFn({
+      data: [],
+      status: apiStatus.IDLE,
+      strToSearch: "",
+      isCalledByParent: false
     }))
   }
 
@@ -229,32 +248,32 @@ const ForumComment = (props) => {
       comment_index: commentIndex,
       commentsCount: subComments?.data?.length ?? 0
     })
-    // dispatch(deleteForumCommSubcomAcFn({ commentIndex }))
-    // deleteForumCommSubcomAcFn
-
-    // let confessionId = props.postId;
-    // let commentId = props.commentId;
-
-    // let obj = {
-    //   data: {},
-    //   token: getKeyProfileLoc("token", true) ?? "",
-    //   method: "get",
-    //   url: `deletecomment/${confessionId}/${commentId}`,
-    // }
-
-    // try {
-    //   const res = await fetchData(obj)
-    //   if (res.data.status === true) {
-    //     let delCommentCount = 1;
-    //     // DECRESES WITH THE COUNT OF ITS CHILD AND 1, WHICH IS IT ITSELF
-    //     if (props.countChild > 0)
-    //       delCommentCount = props.countChild + 1;
-    //     props.updateComments(commentId, delCommentCount);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
   }
+
+  const getUsersToTag = async string => {
+    let strToSearch = null;
+    const regex = /(^@|(\s@))((\w+)?)$/;
+    var result = regex.exec(string);
+
+    if (result) strToSearch = result[0]?.trim().replace("@", "");
+    else strToSearch = null;
+
+    if (strToSearch || strToSearch === "") {
+      getUsersToTagService({
+        strToSearch: strToSearch,
+        forum_id,
+        dispatch
+      })
+    } else {
+      if (usersToTag?.data.length)
+        dispatch(usersToTagAcFn({
+          data: [],
+          status: apiStatus.IDLE,
+          toSearch: ""
+        }))
+    }
+  }
+
 
   profile_image = profile_image === "" ? userIcon : profile_image
 
@@ -271,7 +290,6 @@ const ForumComment = (props) => {
     return <div className="alert alert-danger" role="alert">
       {subComments?.message}
     </div>
-
 
   return (
     <>
@@ -320,13 +338,16 @@ const ForumComment = (props) => {
         <div className="postBody">
           <div className="postedPost mb-0">
             <pre className="preToNormal">
-              {currComment?.comment}
+              {parse(currComment?.comment)}
             </pre>
 
             {/* Update box */}
             {isUpdateComBoxVisible ? <CommentBox
+              toSearch={toSearch}
+              dispatch={dispatch}
               usedById={commentId}
-              usersToTag={[]}
+              getUsersToTag={getUsersToTag}
+              usersToTag={usersToTag}
               isForUpdateCom={true}
               postCommentReducer={postCommentReducer}
               doComment={doComment} /> : null}
@@ -360,7 +381,10 @@ const ForumComment = (props) => {
                 {isCommentBoxVisible ?
                   <>
                     <CommentBox
-                      usersToTag={[]}
+                      toSearch={toSearch}
+                      dispatch={dispatch}
+                      usersToTag={usersToTag}
+                      getUsersToTag={getUsersToTag}
                       usedById={commentId}
                       postCommentReducer={postCommentReducer}
                       doComment={doComment}
@@ -375,9 +399,11 @@ const ForumComment = (props) => {
       </div >
 
       <ForumSubComments
+        usersToTag={usersToTag}
         isAllowedToComment={isAllowedToComment}
         commentIndex={commentIndex}
         forum_id={forum_id}
+        toSearch={toSearch}
         updateBox={updateBox}
         doCommentVars={doCommentVars}
         commentBox={commentBox}

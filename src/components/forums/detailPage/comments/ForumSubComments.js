@@ -19,7 +19,9 @@ const ForumSubComments = props => {
     // Hooks and vars
     const {
         subComments,
+        toSearch,
         forum_id,
+        usersToTag,
         dispatch,
         loggedInUserId,
         commentIndex,
@@ -92,6 +94,8 @@ const ForumSubComments = props => {
                 {
                     subCommentsArr.map((comment, index) => {
                         return <ForumSubComment
+                            toSearch={toSearch}
+                            usersToTag={usersToTag}
                             updateBox={updateBox}
                             key={`${comment.id}${index}`}
                             isAllowedToComment={isAllowedToComment}

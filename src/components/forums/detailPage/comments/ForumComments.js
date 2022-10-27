@@ -22,13 +22,14 @@ import {
   subComIniVal,
   showSubCommentsFn
 } from './ForumCommProvider'
+import { WhatsNewAds } from '../../../../user/pageElements/components/AdMob'
 
 
 
 const ForumComments = props => {
 
   // Hooks and vars
-  const { forum_id, isAllowedToComment } = props,
+  const { forum_id, isAllowedToComment, usersToTag } = props,
     [goDownArrow, setGoDownArrow] = useState(false),
     dispatch = useDispatch(),
     navigate = useNavigate(),
@@ -45,7 +46,10 @@ const ForumComments = props => {
     } = commentsRed,
     loggedInUserId = getKeyProfileLoc("user_id"),
     SLOMT = 3  // Show subcomments if count is less than
+  // console.log(postComment)
   const forumCommentProps = {
+    usersToTag,
+    toSearch: usersToTag?.strToSearch ?? "",
     isAllowedToComment,
     postComment,
     auth,
@@ -143,9 +147,15 @@ const ForumComments = props => {
         className='commentsModalIscroll infScroll_forumDet_page'
         onScroll={() => handleScrollTo(setGoDownArrow)}
         endMessage={
-          <div className="endListMessage w-100 mt-2 pb-0 text-center">
-            End of Comments
-          </div>}
+          <>
+            <div className="endListMessage w-100 mt-2 pb-0 text-center">
+              End of Comments
+            </div>
+            <div className='w-100 mt-5 pt-5'>
+              <WhatsNewAds mainContId={"dr99"}/>
+          </div>
+          </>
+        }
         dataLength={comments.length}
         next={fetchMoreComments}
         hasMore={comments.length < count}

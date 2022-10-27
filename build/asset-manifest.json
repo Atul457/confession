@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/confessionNew/static/css/main.c3d343c3.css",
-    "main.js": "/confessionNew/static/js/main.73b10312.js",
+    "main.css": "/confessionNew/static/css/main.5ce31f9f.css",
+    "main.js": "/confessionNew/static/js/main.82fe235a.js",
     "static/js/787.7b2783aa.chunk.js": "/confessionNew/static/js/787.7b2783aa.chunk.js",
     "static/media/loginLogo.svg": "/confessionNew/static/media/loginLogo.2727c5bf82b4d2c7dd6632a328467d72.svg",
     "static/media/avatarGroup.png": "/confessionNew/static/media/avatarGroup.ccd9bdedebafb3c1ee2e.png",
@@ -71,12 +71,12 @@
     "static/media/confessIconActive.svg": "/confessionNew/static/media/confessIconActive.891ead1e20e742dd8c3775c5b15d1394.svg",
     "static/media/actionIcon.svg": "/confessionNew/static/media/actionIcon.d7eb451f87851b6a53f09840bbb75f7b.svg",
     "static/media/actionIconImg.svg": "/confessionNew/static/media/actionIconImg.817b8fb076c3ae8c2b63db380aa3d31e.svg",
-    "main.c3d343c3.css.map": "/confessionNew/static/css/main.c3d343c3.css.map",
-    "main.73b10312.js.map": "/confessionNew/static/js/main.73b10312.js.map",
+    "main.5ce31f9f.css.map": "/confessionNew/static/css/main.5ce31f9f.css.map",
+    "main.82fe235a.js.map": "/confessionNew/static/js/main.82fe235a.js.map",
     "787.7b2783aa.chunk.js.map": "/confessionNew/static/js/787.7b2783aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c3d343c3.css",
-    "static/js/main.73b10312.js"
+    "static/css/main.5ce31f9f.css",
+    "static/js/main.82fe235a.js"
   ]
 }

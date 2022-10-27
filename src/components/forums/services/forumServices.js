@@ -1,4 +1,5 @@
 // Helpers
+import { result } from "lodash"
 import { fetchData } from "../../../commonApi"
 import toastMethods from "../../../helpers/components/Toaster"
 import { areAtLastPage, resHandler } from "../../../helpers/helpers"
@@ -32,7 +33,17 @@ const doCommentService = async ({
     subCommentIndex = null
 }) => {
 
-    const { value: postedCommet } = commentBoxRef
+    const regex = /(\scontenteditable="false"|<div><br><\/div>)/ig
+    const postedCommet = commentBoxRef?.innerHTML?.replaceAll(regex, "")
+    const userIdRegex = /dr99([\w]+)/gi
+    let result
+    let userstoTag = []
+    while (result = userIdRegex?.exec(postedCommet)) {
+        userstoTag = [...userstoTag, result[0].replaceAll("dr99", "")]
+    }
+    userstoTag = new Set(userstoTag)
+    userstoTag = Array.from(userstoTag)
+
     const { handleCommentsAcFn } = forumHandlers
     let obj, data
 
@@ -43,7 +54,7 @@ const doCommentService = async ({
             usedById
         }))
     if (error !== "") dispatch(postComment({ message: "", status: apiStatus.IDLE, usedById }))
-    commentBoxRef.value = ""
+    commentBoxRef.innerHTML = ""
 
     if (!auth()) {
         SetAuth(0);
@@ -52,6 +63,7 @@ const doCommentService = async ({
 
     data = {
         forum_id,
+        tag_user_id: [...userstoTag],
         comment: postedCommet,
         post_as_anonymous: getKeyProfileLoc("post_as_anonymous"),
         ...parent_root_info,
@@ -282,7 +294,8 @@ const deleteForumCommService = async ({
 const getUsersToTagService = async ({
     strToSearch,
     forum_id,
-    dispatch
+    dispatch,
+    isCalledByParent = false
 }) => {
 
     let obj;
@@ -303,12 +316,14 @@ const getUsersToTagService = async ({
         dispatch(usersToTagAcFn({
             data: res.users,
             status: apiStatus.FULFILLED,
-            strToSearch
+            strToSearch,
+            isCalledByParent
         }))
     } catch (error) {
         dispatch(usersToTagAcFn({
             message: error?.message,
-            status: apiStatus.REJECTED
+            status: apiStatus.REJECTED,
+            isCalledByParent
         }))
     }
 }
