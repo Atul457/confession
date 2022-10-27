@@ -333,7 +333,7 @@ input::-webkit-textfield-decoration-container {
     margin-bottom: 20px;
 }
 
-.search_form{
+.search_form {
     position: absolute;
     z-index: 10;
     bottom: -60px;
@@ -2659,6 +2659,11 @@ span.offlineColor {
 .upvote_downvote_icons_cont .count {
     margin-left: 10px;
     width: 24px;
+}
+
+.forum_tags_cont>span {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 span.facebookMobIcon {

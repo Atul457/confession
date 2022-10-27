@@ -183,6 +183,37 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
         setIsWaitingRes(false);
     }, [state.postId])
 
+    const getSubComIniVal = (countChild) => {
+        if (countChild && countChild > 3)
+            return {
+                present: true,
+                show: false,
+                isShown: false,
+                isBeingExpanded: false
+            }
+        if (countChild && countChild <= 3)
+            return {
+                present: true,
+                show: true,
+                isShown: false,
+                isBeingExpanded: false
+            }
+        if (countChild === 0)
+            return {
+                present: false,
+                show: false,
+                isShown: false,
+                isBeingExpanded: false
+            }
+
+        return {
+            present: false,
+            show: false,
+            isShown: false,
+            isBeingExpanded: false
+        }
+    }
+
 
     const commentsOnCconfession = async (page = 1, append = false) => {
         let pageNo = page;
@@ -214,10 +245,17 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                     let newConf = [...commentsArr, ...res.data.body.comments];
                     setCommentsData({ page: pageNo });
                     setCommentsArr(newConf);
-                    console.log({ newConf })
                 } else {
                     setCommentsCount(res.data.body.count);
-                    setCommentsArr(res.data.body.comments);
+                    setCommentsArr((res.data.body.comments.map(comment => {
+                        return {
+                            ...comment,
+                            showSubComments: {
+                                ...getSubComIniVal(comment?.countChild),
+                            },
+                            subComments: { data: [], loading: false }
+                        }
+                    })));
                 }
             }
         } catch {
@@ -225,10 +263,32 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
         }
     }
 
+    const updateSubComments = (commentIndex, data) => {
+        let updatedCommentNode = {
+            ...commentsArr[commentIndex],
+            showSubComments: {
+                ...commentsArr[commentIndex]?.subComments,
+                ...data
+            },
+        }
+        console.log({ commentIndex, data, updatedCommentNode })
+
+        let originalArray = [...commentsArr];
+        originalArray.splice(commentIndex, 1, updatedCommentNode)
+
+        setCommentsArr([...originalArray])
+        // console.log(commentIndex, data)
+    }
+
 
     useEffect(() => {
         commentsOnCconfession();
     }, [state.postId])
+
+
+    useEffect(() => {
+        console.log(commentsArr)
+    }, [commentsArr])
 
 
     // SUBMITS THE DATA ON ENTER AND CREATES A NEW PARA ON SHIFT+ENTER KEY
@@ -289,12 +349,6 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
             if (commentId !== current.comment_id) {
                 return current;
             }
-        })
-
-        console.log({
-            newCommentsArr,
-            commentsArr,
-            commentId
         })
         // return
         setCommentsArr([...newCommentsArr]);
@@ -536,6 +590,16 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
         }))
     }
 
+    const updateCommentsArrFn = (commentIndex, count) => {
+        // let originalArray = [...commentsArr]
+        // originalArray.splice(commentIndex, 1)
+        // setCommentsCount((prevState) => prevState - 1);
+
+        // setCommentsArr([...originalArray]);
+        // updatePost({ no_of_comments: parseInt(state.no_of_comments) - count })
+        // dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) - count }))
+    }
+
 
     return (
         <>
@@ -744,13 +808,15 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                                                     >
                                                         {commentsArr.map((post, index) => {
                                                             return <Comments
+                                                                updateSubComments={updateSubComments}
                                                                 isReported={post.isReported}
                                                                 isLastIndex={commentsArr.length === index + 1}
                                                                 updateSingleCommentData
                                                                 ={updateSingleCommentData}
                                                                 updatePost={updatePost}
                                                                 index={index}
-                                                                updateComments={updateComments}
+                                                                comment={post}
+                                                                updateComments={updateCommentsArrFn}
                                                                 postId={postId}
                                                                 updateComment={updateComment}
                                                                 created_at={post.created_at}
@@ -758,7 +824,7 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                                                                 countChild={post.countChild}
                                                                 is_editable={post.is_editable}
                                                                 curid={(post.user_id === '' || post.user_id === 0) ? false : post.user_id}
-                                                                key={"Arr" + index + postId + "dp"}
+                                                                key={"ForumArr" + index + postId + "dp"}
                                                                 imgUrl={post.profile_image}
                                                                 userName={post.comment_by}
                                                                 postedComment={post.comment} />

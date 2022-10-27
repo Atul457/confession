@@ -22,17 +22,20 @@ import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileH
 export default function Comments(props) {
 
     let SLOMT = 3; // SHOW LATEST ON COMMENTS MORE THAN
+    const { updateSubComments = () => { } } = props
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
     const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
     const editCommentField = useRef(null);
     const dispatch = useDispatch();
     const [subComments, setSubComments] = useState({ data: [], loading: false })
-    console.log({ subComments });
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
-    const [showSubComments, setShowSubComments] = useState(() => {
+    let [showSubComments, setShowSubComments] = useState(() => {
         return getShowSubComments()
     })
+    showSubComments = props?.comment?.showSubComments
+    //     console.log({ showSubComments
+    // })
 
     useEffect(() => {
         if (commentsModalReducer.updateField.comment_id === props.commentId) {
@@ -114,9 +117,9 @@ export default function Comments(props) {
 
     // CALLS HANDLESUBCOMMENT TO POST AND ADD A NEW COMMENT
     const updatSubComments = (comment_id, editedComment, index) => {
-        console.log({
-            comment_id, editedComment, index
-        })
+        // console.log({
+        //     comment_id, editedComment, index
+        // })
         // props.updatePost
         sendSubComment(comment_id, editedComment, index)
     }
@@ -181,7 +184,7 @@ export default function Comments(props) {
                     dispatch(setCommentField({ id: "" }));
 
                     if (showSubComments.isBeingExpanded === true || showSubComments?.keepOpened === true || subComments.data.length < SLOMT) {
-                        setShowSubComments({ ...showSubComments, keepOpened: true });
+                        props.updateComments(props.index, { ...showSubComments, keepOpened: true });
                         return setSubComments({ ...subComments, data: [...subComments.data, response.data.comment] })
                     }
 
@@ -251,7 +254,7 @@ export default function Comments(props) {
         let token;
 
         if (fetchOnLoad === true)
-            setShowSubComments({ ...showSubComments, isShown: true })
+            props.updateComments(props.index, { ...showSubComments, isShown: true })
 
         setSubComments({ ...subComments, loading: true });
 
@@ -314,7 +317,7 @@ export default function Comments(props) {
         let confessionId = props.postId;
         let commentId = props.commentId;
 
-        return props.updateComments(commentId, 1);
+        return props.updateComments(props.index, 1);
         let obj = {
             data: {},
             token: userDetails.token,
@@ -354,7 +357,7 @@ export default function Comments(props) {
     }
 
     const openSubComments = () => {
-        setShowSubComments({ ...showSubComments, isBeingExpanded: true, isShown: true })
+        props.updateComments(props.index, { ...showSubComments, isBeingExpanded: true, isShown: true })
     }
 
 
