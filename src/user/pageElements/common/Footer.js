@@ -34,20 +34,17 @@ export default function Footer(props) {
                     </Link>
                 </div>
 
-                {
-                    auth() ?
-                        <div className="linkBtns">
-                            <NavLink to="/forums" className="linkBtnsAnchor">
-                                <span className="headIconCont">
-                                    <img src={confessIconActive} alt="confessIconActive" className='active' />
-                                    <img src={confessIcon} alt="confessIcon" className='inactive' />
-                                </span>
-                                <span className={`footLinkName ${location.startsWith("/forum") ? "activeLinkOfHeader" :
-                                    ""}`}>Forums</span>
-                            </NavLink>
-                        </div>
-                        : null
-                }
+                <div className="linkBtns">
+                    {/* <NavLink to={auth() ? "/forums" : "/login"} className="linkBtnsAnchor"> */}
+                    <NavLink to="/forums" className="linkBtnsAnchor">
+                        <span className="headIconCont">
+                            <img src={confessIconActive} alt="confessIconActive" className='active' />
+                            <img src={confessIcon} alt="confessIcon" className='inactive' />
+                        </span>
+                        <span className={`footLinkName ${location.startsWith("/forum") ? "activeLinkOfHeader" :
+                            ""}`}>Forums</span>
+                    </NavLink>
+                </div>
 
                 {auth()
                     ?

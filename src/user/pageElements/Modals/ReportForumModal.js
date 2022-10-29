@@ -1,5 +1,5 @@
 import Button from '@restart/ui/esm/Button';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { apiStatus } from '../../../helpers/status';
@@ -7,11 +7,14 @@ import { fetchData } from "../../../commonApi"
 import { forumHandlers, mutateForumFn, reportForumAcFn } from '../../../redux/actions/forumsAc/forumsAc';
 import { getKeyProfileLoc } from '../../../helpers/profileHelper';
 import { reportedFormStatus } from '../../../components/forums/detailPage/comments/ForumCommProvider';
+import auth from '../../behindScenes/Auth/AuthCheck';
+import { useNavigate } from 'react-router-dom';
 
 
 const ReportForumModal = () => {
 
     // Hooks and vars
+    const navigate = useNavigate()
     const { modals, detailPage } = useSelector(state => state.forumsReducer)
     const { handleForum } = forumHandlers
     const { reportForumModal } = modals
@@ -21,6 +24,13 @@ const ReportForumModal = () => {
     const isLoading = reportForumModal.status === apiStatus.LOADING
     const dispatch = useDispatch();
     const { reportPostModalReducer } = useSelector(state => state)
+
+    useEffect(() => {
+        if (visible && !auth()) {
+            dispatch(reportForumAcFn({ reset: true }))
+            navigate("/login")
+        }
+    }, [])
 
     // Functions
 

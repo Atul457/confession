@@ -164,9 +164,7 @@ const Routes = ({ categories }) => {
 
                     {/* Forums PAGE */}
                     <Route path="forums"
-                        element={<ProtectedRouteLogin isLoggedIn={!auth()}>
-                            <Forums />
-                        </ProtectedRouteLogin>} />
+                        element={<Forums />} />
                     {/* Forums PAGE */}
 
 
@@ -237,7 +235,7 @@ const Routes = ({ categories }) => {
 // ProtectedRoute
 const ProtectedRouteLogin = ({ children, isLoggedIn }) => {
     if (isLoggedIn)
-        return <Navigate to="/home" />
+        return <Navigate to="/login" />
 
     return children
 }

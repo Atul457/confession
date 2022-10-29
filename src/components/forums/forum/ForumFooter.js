@@ -82,8 +82,8 @@ const ForumFooter = (props) => {
     }
 
     const getBody = () => {
-        const forum_slug = isCalledFromSearchPage && (isPrivateForum && !joined) ? "#" : `/forums/${currForum?.slug}`
-        if (isMyForum === false && ((isPrivateForum && !joined) || isNfswTypeContent))
+        const forum_slug = isCalledFromSearchPage && (isPrivateForum && !joined) ? "#" : (auth() ? `/forums/${currForum?.slug}` : "/login")
+        if (auth() && isMyForum === false && ((isPrivateForum && !joined) || isNfswTypeContent))
             return (
                 <pre className="preToNormal post cursor_pointer" onClick={() => {
                     if ((isPrivateForum && !joined) && !isCalledFromSearchPage) return openReqToJoinModal()
@@ -154,7 +154,7 @@ const ForumFooter = (props) => {
                 }
             </div>
 
-            {(!is_only_to_show && showPin && !isMyForumPage) ? <span className="pinnForum" onClick={pinForumFn}>
+            {(!is_only_to_show && auth() && showPin && !isMyForumPage) ? <span className="pinnForum" onClick={pinForumFn}>
                 <img
                     src={!isPinned ? pinIcon : pinnedIcon}
                     alt="pin_forum_icon" />

@@ -77,6 +77,7 @@ const MyForums = () => {
             forum_index={cfIndex}
             key={`forumNo${cfIndex}`}
             actionBox={forumsRed.actionBox ?? {}}
+            shareBox={forumsRed.shareBox ?? {}}
             forumTypes={forumTypes}
             currForum={currForum} />
 

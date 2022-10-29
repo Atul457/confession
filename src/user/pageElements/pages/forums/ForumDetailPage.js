@@ -38,6 +38,7 @@ const ForumDetailPage = () => {
     usersToTag
   } = useSelector(state => state.forumsReducer)
   const actionBox = forumsRed.actionBox
+  const shareBox = forumsRed.shareBox
   const { requestToJoinModal, reportForumModal, reportForumCommentModal } = modals
   const forumSlug = useParams()?.slug ?? false
   const dispatch = useDispatch()
@@ -58,10 +59,10 @@ const ForumDetailPage = () => {
     currForum,
     comments,
     auth: auth(),
+    shareBox: shareBox ?? {},
     page,
     actionBox: actionBox ?? {},
     forumTypes,
-    currForum,
     postCommentReducer
   }
 
@@ -69,7 +70,7 @@ const ForumDetailPage = () => {
     const clickHandler = e => {
       // if action box is visible hide it else do nothing
       let isActionIconClicked = e.target.classList
-      isActionIconClicked = isActionIconClicked.contains("sharekitdots")
+      isActionIconClicked = isActionIconClicked.contains("preventCloseAcBox")
 
       if (!isActionIconClicked && ("forum_id" in actionBox || "forum_index" in actionBox))
         toggleForumAcboxFn()
@@ -101,7 +102,7 @@ const ForumDetailPage = () => {
       }
     }
     if (forumSlug) getForum()
-  }, [])
+  }, [forumSlug])
 
 
 

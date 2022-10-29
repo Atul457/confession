@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // Custom components
@@ -7,7 +7,7 @@ import ForumHeader from '../forum/ForumHeader';
 import CommentBox from './CommentBox';
 
 // Redux
-import { postComment, usersToTagAcFn } from '../../../redux/actions/forumsAc/forumsAc';
+import { forumHandlers, postComment, usersToTagAcFn } from '../../../redux/actions/forumsAc/forumsAc';
 
 // Helpers
 import { doCommentService, getUsersToTagService } from '../services/forumServices';
@@ -17,11 +17,11 @@ import { apiStatus } from '../../../helpers/status';
 const SingleForum = props => {
 
     // Hooks and vars
-    // const { handleCommentsAcFn } = forumHandlers
     const {
         currForum,
         forumTypes,
         actionBox,
+        shareBox,
         dispatch,
         forum_index,
         usersToTag,
@@ -54,6 +54,7 @@ const SingleForum = props => {
         dispatch,
         currForum,
         actionBox,
+        shareBox,
         isActionBoxVisible,
         is_for_post: false,
         is_calledfrom_detailPage: true
@@ -71,6 +72,10 @@ const SingleForum = props => {
         forum_index,
         dispatch
     }
+
+    useEffect(() => {
+        dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
+    }, [])
 
 
     // Functions
@@ -103,7 +108,7 @@ const SingleForum = props => {
                 dispatch,
                 isCalledByParent: true
             })
-        } else {
+        } else if (usersToTag?.data?.length) {
             dispatch(usersToTagAcFn({
                 data: [],
                 status: apiStatus.IDLE,
@@ -131,6 +136,7 @@ const SingleForum = props => {
             status: apiStatus.IDLE,
             toSearch: ""
         }))
+        dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
     }
 
     return (

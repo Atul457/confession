@@ -223,7 +223,7 @@ const pinForumService = async ({
     }))
 
     obj = {
-        token: getKeyProfileLoc("token", true),
+        token: getKeyProfileLoc("token", true) ?? "",
         method: "get",
         url: `setfavforum/${forum_id}/${isPinned ? 0 : 1}`
     }
@@ -421,7 +421,7 @@ const getTagsService = async ({
 }) => {
     let obj = {
         data: {},
-        token: getKeyProfileLoc("token", true),
+        token: getKeyProfileLoc("token", true) ?? "",
         method: "get",
         url: "gettags"
     }

@@ -13,6 +13,7 @@ import { ShowResComponent } from '../../HelperComponents';
 import { apiStatus } from '../../../helpers/status';
 import auth from '../../../user/behindScenes/Auth/AuthCheck';
 import { usersToTagAcFn } from '../../../redux/actions/forumsAc/forumsAc';
+import { getKeyProfileLoc } from '../../../helpers/profileHelper';
 
 
 const CommentBox = props => {
@@ -55,14 +56,24 @@ const CommentBox = props => {
     }
 
     const tagUser = (user) => {
-        let actualStr = textboxref?.current.innerHTML;
-        let newStr = "";
-        let regex = new RegExp("@(" + toSearch + "|" + `${toSearch}</div>` + ")$", "i");
-        newStr = actualStr.replace(
-            regex,
-            `<span class="tagged_user dr99${user?.user_id?.trim()}" contenteditable="false">@${user?.name?.trim()}</span>&nbsp;`
-        );
+        let actualStr, newStr, regex, isUserIdPresent, is_post_as_anonymous, isMyComment, link, htmlToEmbed;
+
+        actualStr = textboxref?.current.innerHTML
+        newStr = ""
+        regex = new RegExp("@(" + toSearch + "|" + `${toSearch}</div>` + ")$", "i");
+        isUserIdPresent = user?.user_id !== "";
+        is_post_as_anonymous = user?.post_as_anonymous === 1 && isUserIdPresent;
+        isMyComment = isUserIdPresent ? (getKeyProfileLoc("user_id") === user?.user_id) : false
+
+        link = (!is_post_as_anonymous && isUserIdPresent) ?
+            (isMyComment ? `/profile` : `${window.location.origin}/userProfile/${user?.user_id?.trim()}`) :
+            "#";
+        htmlToEmbed = link === "#" ? `<span contenteditable="false" class="tagged_user dr99${user?.user_id?.trim()}" >@${user?.name?.trim()}</span>` : `<a class="text-decoration-none tagged_user dr99${user?.user_id?.trim()}" contenteditable="false" target="_blank" href="${link}">@${user?.name?.trim()}</a>`;
+
+        
+        newStr = actualStr.replace(regex, htmlToEmbed);
         textboxref.current.innerHTML = newStr;
+
         dispatch(usersToTagAcFn({
             data: [],
             status: apiStatus.IDLE,
@@ -84,7 +95,7 @@ const CommentBox = props => {
             textboxref?.current?.removeEventListener("keydown", listener)
             textboxref?.current?.removeEventListener("keyup", changeListener)
         }
-    }, [])
+    }, [usersToTag])
 
 
     return (
@@ -101,7 +112,7 @@ const CommentBox = props => {
                                     className="form-control usersBox"
                                     placeholder="Write the sentence you want to.."
                                 ></div>
-                                {showDropDown && usersToTag?.data?.length ?
+                                {showDropDown && (document.activeElement === textboxref?.current) && usersToTag?.data?.length ?
                                     <div className='users_to_tag_cont cursor_pointer'>
                                         {usersToTag?.data.map((user, index) => {
                                             return <div

@@ -88,6 +88,7 @@ const WhatsNew = () => {
                         dispatch={dispatch}
                         forum_index={cfIndex}
                         actionBox={forumsRed.actionBox ?? {}}
+                        shareBox={forumsRed.shareBox ?? {}}
                         forumTypes={forumTypes}
                         rememberScrollPos={true}
                         currForum={currForum} />

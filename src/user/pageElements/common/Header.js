@@ -291,7 +291,7 @@ export default function Header(props) {
 
     const getNotiHtml = () => {
         let data, arr, html, count = 0, arrForums;
-        console.log(notificationReducer.data)
+        // console.log(notificationReducer.data)
         data = notificationReducer.data;
         arr = [{ iconClass: "fa fa-comments", label: "You have got a new comment on your post" },
         { iconClass: "fa fa-envelope", label: "You have got a new reply on your comment" },
@@ -301,7 +301,7 @@ export default function Header(props) {
         arrForums = [{ iconClass: "fa fa-comments", label: "You have got a new comment on your forum" },
         { iconClass: "fa fa-envelope", label: "You have got a new reply on your comment" },
         { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
-        { iconClass: "fa fa-comment-o", label: "You have got a new reply on your reply" },
+        { iconClass: "fa fa-comment-o", label: "You have been tagged in a forum" },
         { iconClass: "fa fa-ban", label: "No new notifications" }]
 
 
@@ -463,17 +463,17 @@ export default function Header(props) {
                                             </NavLink>
                                         </div>
 
-                                        {auth() &&
-                                            <div className="linkBtns">
-                                                <NavLink to="/forums" className="headerNavLinks">
-                                                    <span className="headIconCont">
-                                                        <img src={confessIconActive} alt="confessIconActive" className='active' />
-                                                        <img src={confessIcon} alt="confessIcon" className='inactive' />
-                                                    </span>
-                                                    <span className={`headLinkName ${currentUrl === "forums" ? "activeLinkOfHeader" :
-                                                        ""}`}>Forums</span>
-                                                </NavLink>
-                                            </div>}
+                                        <div className="linkBtns">
+                                            {/* <NavLink to={auth() ? "/forums" : "/login"} className="headerNavLinks"> */}
+                                            <NavLink to="/forums" className="headerNavLinks">
+                                                <span className="headIconCont">
+                                                    <img src={confessIconActive} alt="confessIconActive" className='active' />
+                                                    <img src={confessIcon} alt="confessIcon" className='inactive' />
+                                                </span>
+                                                <span className={`headLinkName ${currentUrl === "forums" ? "activeLinkOfHeader" :
+                                                    ""}`}>Forums</span>
+                                            </NavLink>
+                                        </div>
 
                                         {/* 3x icons are being used */}
 

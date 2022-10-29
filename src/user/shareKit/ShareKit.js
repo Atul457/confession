@@ -2,15 +2,30 @@ import React from 'react';
 import { FaTwitter, FaFacebookF, FaEnvelope, FaLinkedinIn } from 'react-icons/fa';
 import { ShareButtonRoundSquare, ShareBlockStandard } from 'react-custom-share';
 import { copyTextToClipboard } from '../../helpers/copyTextToClipboard';
+import { forum_types } from '../../components/forums/detailPage/comments/ForumCommProvider';
 
 const ShareKit = (props) => {
 
-    var data = props.postData;
-    var origin = window.location.origin;
+    var data, origin, isForum, url, longtext, htmltoEmbed;
+
+    data = { ...props?.postData, ...(props?.postData?.is_forum === 1 ? {} : { is_forum: 0 }) };
+    origin = window.location.origin;
+    isForum = data?.is_forum === 1
+    url = `${origin}/${isForum ? `shareforum/${data?.slug}` : `shareconfession/${data?.confession_id}`}`
+
+    if (!isForum)
+        longtext = `${data?.description?.substr(0, 500)}${(data?.description)?.length > 500 ? "..." : ""}`
+    else {
+        htmltoEmbed = ""
+        if (data?.type === forum_types.private) {
+            htmltoEmbed = `\npassword: ${data?.password ?? ""}`
+        }
+        longtext = `${data?.title}\n\n${data?.description?.substr(0, 500)}${(data?.description)?.length > 500 ? "..." : ""}${htmltoEmbed}`
+    }
 
     // CREATE OBJECT WITH PROPS FOR SHAREBLOCK
     const shareBlockProps = {
-        url: `${origin}/shareconfession/${data.confession_id}`,
+        url,
         button: ShareButtonRoundSquare,
         buttons: [
             { network: 'Twitter', icon: FaTwitter },
@@ -19,11 +34,12 @@ const ShareKit = (props) => {
             { network: 'Linkedin', icon: FaLinkedinIn },
         ],
         text: `Check out this anonymous post! - www.thetalkplace.com`,
-        longtext: `${data.description.substr(0, 500)}${(data.description).length > 500 ? "..." : ""}`,
+        longtext
     };
 
     const copylink = () => {
-        copyTextToClipboard(`${origin}/confession/${data.confession_id}`)
+        const linkToCopy = `${origin}/${isForum ? `forums/${data?.slug}` : `confession/${data?.confession_id}`}`
+        copyTextToClipboard(linkToCopy)
     }
 
     return (

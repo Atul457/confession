@@ -446,7 +446,7 @@ input::-webkit-textfield-decoration-container {
     font-size: 20px;
     font-weight: bold;
     position: absolute;
-    top: 13px;
+    top: 11px;
     right: 39px;
     height: 37px;
     color: var(--primaryColor);
@@ -454,6 +454,11 @@ input::-webkit-textfield-decoration-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.forum_cont .sharekit {
+    top: 15px;
+    right: 22px;
 }
 
 .sharekitdots.admin {
@@ -2272,9 +2277,9 @@ span.offlineColor {
     max-height: 200px;
     overflow: auto;
     z-index: 2;
+    top: calc(100% + 4px);
     color: #fff;
     width: fit-content;
-    top: 40px;
 }
 
 .users_to_tag_cont .user_to_tag {
@@ -2518,12 +2523,12 @@ span.offlineColor {
 }
 
 .sharePWLlabel {
-    font-size: 14px;
-    color: var(--primaryColor);
+    font-size: 16px;
+    color: var(--whiteColor);
     font-weight: bold;
-    display: none;
+    display: inline-block;
+    cursor: pointer;
     margin-left: 17px;
-    width: 130px;
 }
 
 .modalFootBtns {
@@ -2869,12 +2874,22 @@ span.facebookMobIcon {
 }
 
 .heartCompCont {
+    border-radius: 100px;
     position: fixed;
     display: flex;
     align-items: center;
     bottom: 34px;
     right: 20px;
     z-index: 99;
+    background: var(--orangeColor);
+}
+
+.heartCompCont.pulsatingIcon {
+    animation: unset;
+}
+
+.heartCompCont::before {
+    box-shadow: none !important;
 }
 
 .feedSPbtnsWrapper {
@@ -3328,6 +3343,9 @@ span.facebookMobIcon {
 .leftContofPostCont {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+    width: 84%;
+    flex-wrap: wrap;
 }
 
 .unreadPostCommentCount {
@@ -3867,8 +3885,8 @@ a.headerNavLinks.active::after {
 
 .heartComp {
     cursor: pointer;
-    width: 45px;
-    height: 45px;
+    width: 55px;
+    height: 55px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -3879,8 +3897,8 @@ a.headerNavLinks.active::after {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     transform: translate(-50%, -50%);
     transition: .3s ease;
 }
@@ -3889,8 +3907,8 @@ a.headerNavLinks.active::after {
     opacity: 0;
     bottom: -8px;
     position: absolute;
-    width: unset;
-    height: unset;
+    width: 75px;
+    height: 75px;
 }
 
 .copyLinkBtn {
@@ -3919,10 +3937,6 @@ a.headerNavLinks.active::after {
     opacity: 1;
 }
 
-.heartCompCont:hover .sharePWLlabel {
-    display: inline-block;
-    cursor: pointer;
-}
 
 .avtarsCollection .avatar {
     max-width: 80px;
@@ -4212,6 +4226,7 @@ a.headerNavLinks.active::after {
 
 .shareReqRows.user {
     display: flex;
+    padding: 5px 15px;
     align-items: center;
 }
 
@@ -5301,7 +5316,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     50% {
-        transform: scale(1);
+        transform: scale(0.9);
     }
 
     100% {
@@ -5486,11 +5501,6 @@ button.modalFootBtns.btn a:hover {
 
 .forum_com_p_link {
     word-break: break-all;
-    width: max-content;
-    max-width: 55px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     text-decoration: none !important;
 }
 
@@ -6422,7 +6432,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .postUserName {
-        max-width: 60px;
+        max-width: 99%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -7112,6 +7122,7 @@ button.modalFootBtns.btn a:hover {
 
     .shareKitSpace {
         height: 40px;
+        width: 100%;
     }
 
     .errorFieldsCPost>* {
@@ -7553,10 +7564,9 @@ button.modalFootBtns.btn a:hover {
     }
 
     .heartComp {
-        margin-bottom: 10px;
         width: 45px;
         height: 45px;
-        margin-right: 10px;
+        margin: 0px 5px;
     }
 
     .imgLoader.feed {
@@ -7592,13 +7602,12 @@ button.modalFootBtns.btn a:hover {
 
     .userName {
         font-size: 13px;
-        word-break: break-all;
+        /* word-break: break-all;
         width: max-content;
         max-width: 55px;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
-        color: var(--primaryColor);
+        text-overflow: ellipsis; */
     }
 
     .eVerifyModal .modalFootBtns {
@@ -7694,11 +7703,48 @@ button.modalFootBtns.btn a:hover {
     }
 
     .textAreaToComment textarea,
-    .textAreaToComment .usersBox{
+    .textAreaToComment .usersBox {
         font-size: 14px;
     }
 
+    .forum_com_p_link {
+        width: max-content;
+        color: var(--primaryColor);
+        max-width: 50%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
+    .users_to_tag_cont {
+        min-width: 50%;
+    }
+
+    .heartCompCont {
+        border-radius: 100px;
+    }
+
+    .sharePWLlabel {
+        font-size: 14px;
+    }
+
+    .heartComp img:last-child {
+        width: 55px;
+        height: unset;
+    }
+
+    .heartCompCont.pulsatingIcon {
+        animation: pulsatingIconPulsate 3.2s infinite;
+    }
+
+
+    .reportPost {
+        top: 19px;
+    }
+
+    .heartCompCont {
+        right: 5px;
+    }
 }
 
 @media(max-width:575px) {

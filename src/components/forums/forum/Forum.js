@@ -5,11 +5,14 @@ import { Link } from 'react-router-dom';
 import { apiStatus } from '../../../helpers/status';
 import { reqToJoinModalAcFn } from '../../../redux/actions/forumsAc/forumsAc';
 import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
-import { forum_types, myForum, requestedStatus } from '../detailPage/comments/ForumCommProvider';
 
 // Custom components
 import ForumFooter from './ForumFooter';
 import ForumHeader from './ForumHeader';
+
+// Helpers
+import auth from '../../../user/behindScenes/Auth/AuthCheck';
+import { forum_types, myForum, requestedStatus } from '../detailPage/comments/ForumCommProvider';
 
 
 const Forum = (props) => {
@@ -18,6 +21,7 @@ const Forum = (props) => {
     const {
         currForum,
         forumTypes,
+        shareBox,
         actionBox,
         dispatch,
         rememberScrollPos = false,
@@ -49,6 +53,7 @@ const Forum = (props) => {
         created_at: currForum?.created_at,
         name: currForum?.title,
         forum_id: currForum?.forum_id,
+        shareBox,
         is_requested: currForum?.is_requested,
         isReported: currForum?.isReported,
         forum_index,
@@ -63,6 +68,8 @@ const Forum = (props) => {
         is_calledfrom_detailPage: false,
         isMyForumPage
     }
+
+    // console.log({ shareBox });
 
     const requested = currForum?.is_requested === requestedStatus
     const forumFooterProps = {
@@ -108,7 +115,9 @@ const Forum = (props) => {
 
     const getBody = () => {
 
-        if (!isMyForum) {
+        const forum_slug = auth() ? `/forums/${slug}` : "/login"
+
+        if (auth() && !isMyForum) {
             if (!joined)
                 return (
                     <pre className="preToNormal post forum_desc cursor_pointer" onClick={openReqToJoinModal}>
@@ -123,7 +132,7 @@ const Forum = (props) => {
         }
 
         return (
-            <Link className="links text-dark" to={`/forums/${slug}`} state={{ scrollDetails }}>
+            <Link className="links text-dark" to={forum_slug} state={{ scrollDetails }}>
                 <pre className="preToNormal post forum_desc">
                     {currForum?.description}
                 </pre>

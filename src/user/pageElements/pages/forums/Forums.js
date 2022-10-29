@@ -23,7 +23,7 @@ const Forums = () => {
         const clickHandler = e => {
             // if action box is visible hide it else do nothing
             let isActionIconClicked = e.target.classList
-            isActionIconClicked = isActionIconClicked.contains("sharekitdots")
+            isActionIconClicked = isActionIconClicked.contains("sharekitdots") || isActionIconClicked.contains("shareKitImgIcon")
 
             if (!isActionIconClicked && ("forum_id" in actionBox || "forum_index" in actionBox))
                 toggleForumAcboxFn()

@@ -151,7 +151,7 @@ const ForumComments = props => {
             <div className="endListMessage w-100 mt-2 pb-0 text-center">
               End of Comments
             </div>
-            <div className='w-100 mt-5 pt-5'>
+            <div className='w-100 mt-2 mb-3'>
               <WhatsNewAds mainContId={"dr99"}/>
           </div>
           </>

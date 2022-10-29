@@ -39,6 +39,7 @@ import { AppreciationModal, HeartComponent, ShareWithLoveModal } from '../../com
 import ReportPostModal from '../../Modals/ReportPostModal';
 import { getLocalStorageKey, isAvatarSelectedCurr } from "../../../../helpers/helpers"
 import RightSideAdComp from '../../../../components/sidebarAds/RightSideAdComp';
+import { toggleShareWithLoveModal } from '../../../../redux/actions/shareWithLoveAc/shareWithLoveAc';
 
 
 export default function Feed(props) {
@@ -512,14 +513,6 @@ export default function Feed(props) {
             secondPostElem = secondPostElem?.getBoundingClientRect()?.top + 500
             if (secondPostElem < 0) heartCompRef?.current.classList.remove("hideHeartComp")
             else heartCompRef?.current.classList.add("hideHeartComp")
-            // if (scroll > 3000) {
-            //     // goDownArrowRef?.current.classList.remove("hideHeartComp")
-            //     heartCompRef?.current.classList.remove("move_right")
-            // }
-            // else {
-            //     // goDownArrowRef?.current.classList.add("hideHeartComp")
-            //     heartCompRef?.current.classList.add("move_right")
-            // }
         }
 
         document.addEventListener("scroll", scroll);
@@ -591,6 +584,13 @@ export default function Feed(props) {
         if (window.googletag.destroySlots) {
             window.googletag.destroySlots();
         }
+    }
+
+    // Open share iwth love modal
+    const openSharewithLoveModal = () => {
+        dispatch(toggleShareWithLoveModal({
+            visible: true
+        }))
     }
 
     //DELAY
@@ -725,9 +725,10 @@ export default function Feed(props) {
 
                                                     <div className="selectNpostBtnCont">
                                                         <div className="shareIconAndUpImgCont">
-                                                            {/* dddd */}
                                                             <div
-                                                                className="heartCompCont hideHeartComp"
+                                                                pulsate='28-10-22,pulsatingIcon mobile'
+                                                                className="heartCompCont hideHeartComp cursor_pointer"
+                                                                onClick={openSharewithLoveModal}
                                                                 ref={heartCompRef}>
                                                                 <HeartComponent />
                                                             </div>
@@ -791,6 +792,7 @@ export default function Feed(props) {
 
                                                                     {/* ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
                                                                     {props.categories ? props.categories.map((element) => {
+                                                                        if (element?.is_confession !== 1) return
                                                                         return <option key={`createPost ${element.id}`} value={element.id}>{(element.category_name).charAt(0) + (element.category_name).slice(1).toLowerCase()}</option>
                                                                     }) : <option value="">Categories not found</option>}
                                                                     {/* END OF ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}

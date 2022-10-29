@@ -48,6 +48,7 @@ const ForumComment = (props) => {
     updateBox,
     commentBox
   } = props
+  // console.log(currComment)
   let {
     comment_by,
     created_at,
@@ -319,7 +320,7 @@ const ForumComment = (props) => {
 
           {user_id !== false ?
             <Link className={`forum_com_p_link`}
-              to={(auth ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `/userProfile/${user_id}`)}>
+              to={((auth && user_id !== "") ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `#`)}>
               <span className="userName">
                 {comment_by}
               </span>

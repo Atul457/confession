@@ -28,7 +28,6 @@ export default function Comments(props) {
     const editCommentField = useRef(null);
     const dispatch = useDispatch();
     const [subComments, setSubComments] = useState({ data: [], loading: false })
-    console.log({ subComments });
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const [showSubComments, setShowSubComments] = useState(() => {
         return getShowSubComments()
