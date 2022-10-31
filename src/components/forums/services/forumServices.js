@@ -1,7 +1,6 @@
 // Helpers
-import { result } from "lodash"
 import { fetchData } from "../../../commonApi"
-import toastMethods from "../../../helpers/components/Toaster"
+// import toastMethods from "../../../helpers/components/Toaster"
 import { areAtLastPage, resHandler } from "../../../helpers/helpers"
 import { getKeyProfileLoc } from "../../../helpers/profileHelper"
 import { apiStatus } from "../../../helpers/status"
@@ -248,7 +247,7 @@ const deleteForumCommService = async ({
     comment_index = null
 }) => {
 
-    commentsCount = commentsCount ? commentsCount + 1 : 0
+    commentsCount = commentsCount ? commentsCount + 1 : 1
     let obj;
 
     if (isSubComment) {

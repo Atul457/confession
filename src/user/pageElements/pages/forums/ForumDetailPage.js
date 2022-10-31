@@ -30,13 +30,14 @@ import { forumHandlers } from '../../../../redux/actions/forumsAc/forumsAc'
 const ForumDetailPage = () => {
 
   // Hooks and vars
+  const { modalsReducer: { nfsw_modal }, forumsReducer } = useSelector(state => state)
   const {
     forumTypes,
     forums: forumsRed,
     detailPage,
     modals,
     usersToTag
-  } = useSelector(state => state.forumsReducer)
+  } = forumsReducer
   const actionBox = forumsRed.actionBox
   const shareBox = forumsRed.shareBox
   const { requestToJoinModal, reportForumModal, reportForumCommentModal } = modals
@@ -53,6 +54,7 @@ const ForumDetailPage = () => {
   } = detailPage
   const isAllToComment = isAllowedToComment(currForum)
   const singleCommentProps = {
+    nfsw_modal,
     usersToTag,
     dispatch,
     forum_index: 0,

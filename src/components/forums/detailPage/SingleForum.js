@@ -12,6 +12,11 @@ import { forumHandlers, postComment, usersToTagAcFn } from '../../../redux/actio
 // Helpers
 import { doCommentService, getUsersToTagService } from '../services/forumServices';
 import { apiStatus } from '../../../helpers/status';
+import { requestedStatus } from './comments/ForumCommProvider';
+
+// Modals
+import NfswAlertModal from '../../modals/NfswAlertModal';
+import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
 
 
 const SingleForum = props => {
@@ -21,6 +26,7 @@ const SingleForum = props => {
         currForum,
         forumTypes,
         actionBox,
+        nfsw_modal,
         shareBox,
         dispatch,
         forum_index,
@@ -32,7 +38,9 @@ const SingleForum = props => {
 
     // cameFromSearch
     const navigate = useNavigate()
-    const { isAllowedToComment = false } = currForum
+    const { isAllowedToComment = false, is_nsw } = currForum
+    const isMyForum = currForum?.is_requested === requestedStatus.approved
+
     const { forum_id } = currForum,
         { data: types } = forumTypes,
         forum_type = {
@@ -75,6 +83,11 @@ const SingleForum = props => {
 
     useEffect(() => {
         dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
+        if (!isMyForum && is_nsw) {
+            dispatch(toggleNfswModal({
+                isVisible: true, forum_link: `/forums/${currForum?.slug}`
+            }))
+        }
     }, [])
 
 
@@ -121,7 +134,6 @@ const SingleForum = props => {
         isCalledByParent: true,
         postCommentReducer,
         usedById: forum_id,
-        isPreOpened: true,
         dispatch,
         id: forum_id,
         doComment,
@@ -164,6 +176,8 @@ const SingleForum = props => {
                 </div>
                 {isAllowedToComment && <CommentBox {...commentBoxProps} />}
                 <ForumFooter {...forumFooterProps} />
+
+                {nfsw_modal?.isVisible && <NfswAlertModal nfsw_modal={nfsw_modal} isForumDetailPage={true} />}
             </div>
         </>
     )

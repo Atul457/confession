@@ -156,6 +156,14 @@ const forumsReducer = (state = initialstate, action) => {
         });
 
         case forumAcs.SET_SINGLE_FORUM: return produce(state, draft => {
+            // If you want to mutate the upper single forum details only
+            if (action.payload?.mutate_data_only) {
+                draft.detailPage.data = {
+                    ...draft.detailPage?.data,
+                    ...action.payload
+                }
+                return
+            }
             draft.detailPage = {
                 ...draft.detailPage,
                 ...action.payload
@@ -220,7 +228,8 @@ const forumsReducer = (state = initialstate, action) => {
 
         case forumAcs.DELETE_FORUM_COM_OR_SUB_COM: return produce(state, draft => {
             const { comment_index } = action.payload
-            let commentsCount = 0
+            let commentsCount = 1
+            const detailPageData = current(draft.detailPage.data)
 
             // For subcomment
             if (action.payload?.isSubComment) {
@@ -254,11 +263,16 @@ const forumsReducer = (state = initialstate, action) => {
                 }
             }
 
-            const detailPageData = current(draft.detailPage.data)
             draft.detailPage.data = {
                 ...detailPageData,
-                no_of_comments: detailPageData.no_of_comments - commentsCount
+                no_of_comments: detailPageData?.no_of_comments - commentsCount
             }
+
+            // draft.detailPage.comments = {
+            //     ...comments,
+            //     count: comments.count - 1,
+            //     data: [...arrCopy]
+            // }
         });
 
         case forumAcs.SET_SINGLE_SUB_COMMENT: return produce(state, draft => {
@@ -273,6 +287,14 @@ const forumsReducer = (state = initialstate, action) => {
             draft.detailPage.postComment = {
                 ...draft.detailPage.postComment,
                 ...action.payload
+            }
+            if (action?.payload?.status === apiStatus.FULFILLED) {
+                const singleForumData = current(draft.detailPage.data)
+
+                draft.detailPage.data = {
+                    ...singleForumData,
+                    no_of_comments: singleForumData?.no_of_comments + 1
+                }
             }
         });
 
