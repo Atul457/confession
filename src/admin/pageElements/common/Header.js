@@ -1,5 +1,7 @@
 import React, { useState, useReducer } from 'react';
 import userIcon from '../../../images/userAcc.svg';
+import confessIcon from '../../../images/confessIcon.svg'
+import confessIconActive from '../../../images/confessIconActive.svg'
 import mobileProfileIcon from '../../../images/mobileProfileIcon.svg';
 import { Link, NavLink } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
@@ -153,6 +155,17 @@ export default function Header(props) {
 
                                 <div className={` d-none d-md-block pr-0`}>
                                     <div className={`linksCont container-fluid`}>
+                                        {/* <div className="linkBtns">
+                                            <NavLink to="/admin/forums" className="headerNavLinks">
+                                                <span className="headIconCont">
+                                                    <img src={confessIconActive} alt="confessIconActive" className='active' />
+                                                    <img src={confessIcon} alt="confessIcon" className='inactive' />
+                                                </span>
+                                                <span
+                                                    className={`headLinkName ${currentUrl === "admin/forums" ? "activeLinkOfHeader" : ""}`}>Forums</span>
+                                            </NavLink>
+                                        </div> */}
+
                                         <div className="linkBtns">
                                             <NavLink to="/admin/users" className="headerNavLinks">
                                                 <i className={`fa fa-user moveABit adminHeaderIcons  ${currentUrl === "admin/users" ? "oColor" : ""}`} aria-hidden="true"></i>

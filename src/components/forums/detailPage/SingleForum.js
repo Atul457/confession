@@ -39,7 +39,6 @@ const SingleForum = props => {
     // cameFromSearch
     const navigate = useNavigate()
     const { isAllowedToComment = false, is_nsw } = currForum
-    const isMyForum = currForum?.is_requested === requestedStatus.approved
 
     const { forum_id } = currForum,
         { data: types } = forumTypes,
@@ -83,7 +82,7 @@ const SingleForum = props => {
 
     useEffect(() => {
         dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
-        if (!isMyForum && is_nsw) {
+        if (is_nsw) {
             dispatch(toggleNfswModal({
                 isVisible: true, forum_link: `/forums/${currForum?.slug}`
             }))

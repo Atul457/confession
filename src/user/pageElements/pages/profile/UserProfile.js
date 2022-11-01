@@ -8,6 +8,7 @@ import SiteLoader from '../../components/SiteLoader';
 import Post from '../../components/Post';
 import alRequest from '../../../../images/addFriendIconP.png';
 import rejectRequest from '../../../../images/friendsAl.png';
+import verifiedIcon from '../../../../images/verifiedIcon.svg';
 import { fetchData } from '../../../../commonApi';
 import InfiniteScroll from "react-infinite-scroll-component";
 import useCommentsModal from '../../../utilities/useCommentsModal';
@@ -16,6 +17,7 @@ import AppLogo from '../../components/AppLogo';
 import { useSelector } from 'react-redux';
 import ReportCommentModal from '../../Modals/ReportCommentModal';
 import ReportPostModal from '../../Modals/ReportPostModal';
+import Badge from '../../../../common/components/badges/Badge';
 
 
 export default function UserProfile() {
@@ -288,6 +290,9 @@ export default function UserProfile() {
                                                                     profile.profileDetails.image}
                                                             alt=""
                                                             className="loggedInUserPic" />
+
+                                                        {profile?.email_verified === 1 ?
+                                                            <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                                                     </span>
 
 
@@ -295,7 +300,12 @@ export default function UserProfile() {
                                             </span>
                                         </span>
 
-                                        <span className="loggedInUserName mt-2">{profile.profileDetails.name}</span>
+                                        <span className="loggedInUserName mt-2">
+                                            <span>
+                                                {profile.profileDetails.name}
+                                            </span>
+                                            <Badge points={profile.profileDetails?.points} classlist="ml-2" />
+                                        </span>
 
                                         {auth() && <>
                                             {

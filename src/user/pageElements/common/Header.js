@@ -6,6 +6,7 @@ import searchIconActive from '../../../images/searchIconActive.svg'
 import follow_usIcon from '../../../images/follow_usIcon.svg'
 import friendRequests from '../../../images/friendRequests.svg'
 import profileResetPass from '../../../images/profileResetPass.svg'
+import verifiedIcon from '../../../images/verifiedIcon.svg'
 import profileIcon from '../../../images/profileIcon.svg'
 import mobileProfileIcon from '../../../images/mobileProfileIcon.svg'
 import homeIconActive from '../../../images/homeIcon.svg'
@@ -42,6 +43,7 @@ import { getForumsNConfessions } from '../../../components/forums/services/forum
 import { useNavigate } from 'react-router-dom';
 import { searchAcFn } from '../../../redux/actions/searchAc/searchAc';
 import { scrollToTop } from '../../../helpers/helpers';
+import { getKeyProfileLoc } from '../../../helpers/profileHelper';
 
 export default function Header(props) {
 
@@ -571,6 +573,9 @@ export default function Header(props) {
                                                 {requestsIndicator > 0 && (
                                                     <span className="requestIndicator"></span>
                                                 )}
+
+                                                {getKeyProfileLoc("email_verified") === 1 ?
+                                                    <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                                             </span>
 
                                             {showProfileOption && <div className="takeAction p-1 pb-0 d-block">
@@ -578,6 +583,10 @@ export default function Header(props) {
                                                     <div type="button" className="profileImgWithEmail takeActionOptions d-flex align-items-center mt-2 textDecNone">
                                                         <span className="profileHeaderImage">
                                                             <img src={profile.image === '' ? mobileProfileIcon : profile.image} alt="" />
+
+                                                            {getKeyProfileLoc("email_verified") === 1 ?
+                                                                <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
+
                                                         </span>
                                                         <div className="nameEmailWrapperHeader">
                                                             <span className="userDropDown userProfileHeading">{profile.name}</span>

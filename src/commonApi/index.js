@@ -15,7 +15,7 @@ export const fetchData = async (props) => {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
             token: props.token,
-            ip_address : localStorage.getItem("ip"),
+            ip_address: localStorage.getItem("ip"),
         },
         data: props.data,
     }
@@ -26,6 +26,7 @@ export const fetchData = async (props) => {
             return response;
         } else {
             if (response.data.logout === true) {
+                console.log("do logout")
                 localStorage.removeItem("authenticated");
                 localStorage.removeItem("userDetails");
                 window.location.href = "/login?message=1";

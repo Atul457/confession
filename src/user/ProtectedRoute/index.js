@@ -11,12 +11,14 @@ const ProtectedRoute = () => {
         return <Navigate to="/login" />
     }
 
-    if(auth() === true && path === 'login'){
+    if (auth() === true && path === 'login') {
         return <Navigate to="/home" />
     }
 
     return <Outlet />
 
 }
+
+// const protectedRoute
 
 export default ProtectedRoute

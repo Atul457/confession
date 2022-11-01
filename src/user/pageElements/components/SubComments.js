@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import userIcon from '../../../images/userAcc.png';
+import verifiedIcon from '../../../images/verifiedIcon.svg';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import forwardIcon from '../../../images/forwardIcon.svg';
@@ -14,12 +15,14 @@ import { getToken } from '../../../helpers/getToken';
 import _ from 'lodash';
 import { toggleReportComModal } from '../../../redux/actions/reportcommentModal';
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
+import Badge from '../../../common/components/badges/Badge';
 
 
 const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
-    root_id, addNewSubComment, deleteSubComment, postId, isLastIndex }) => {
+    root_id, addNewSubComment, deleteSubComment, postId, isLastIndex, ...rest }) => {
 
     let props = data;
+    const subcomment = rest?.subcomment
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
     const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
@@ -193,30 +196,36 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
                     <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
                 </div>
             }
-            <div className="postContHeader commentsContHeader">
-                <span className="commentsGotProfileImg">
-                    <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />
-                </span>
+            <div className="commentsContHeader">
+                <div className="postContHeader">
+                    <span className="commentsGotProfileImg">
+                        <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />
+                        {subcomment?.email_verified === 1 ?
+                            <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
+                    </span>
 
-                {props.curid !== false ?
+                    {props.curid !== false ?
 
-                    (<Link className={`textDecNone commentsUserName`}
-                        to={props.curid ?
-                            (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
-                            : ''}>
-                        <span className="userName">
-                            {props.comment_by}
-                        </span>
-                    </Link>)
-                    :
-                    (<span className="userName">
-                        {props.userName}
-                    </span>)}
+                        (<Link className={`textDecNone commentsUserName`}
+                            to={props.curid ?
+                                (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
+                                : ''}>
+                            <span className="userName">
+                                {props.comment_by}
+                            </span>
+                        </Link>)
+                        :
+                        (<span className="userName">
+                            {props.userName}
+                        </span>)}
 
-                <span className="postCreatedTime">
-                    {/* {props.created_at} */}
-                    {DateConverter(props.created_at)}
-                </span>
+                    <Badge classlist='ml-2' points={subcomment?.points} />
+
+                    <span className="postCreatedTime">
+                        {/* {props.created_at} */}
+                        {DateConverter(props.created_at)}
+                    </span>
+                </div>
 
                 <div className='editDelComment'>
                     {props.is_editable === 1 ?

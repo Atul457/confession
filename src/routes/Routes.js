@@ -43,6 +43,8 @@ import ProtectedRoute from '../user/ProtectedRoute';
 import ResetPassword from '../user/pageElements/pages/resetPassword/ResetPassword';
 import ForumDetailPage from '../user/pageElements/pages/forums/ForumDetailPage';
 import Search from '../user/pageElements/pages/search/Search';
+// import ForumDetailPageAdmin from '../admin/pageElements/pages/forums/ForumDetailPage';
+// import ForumsAdmin from '../admin/pageElements/pages/forums/ForumsAdmin';
 
 
 const Routes = ({ categories }) => {
@@ -81,6 +83,16 @@ const Routes = ({ categories }) => {
                     {/* COMPLAINTS */}
                     <Route path="admin/complaints" element={<Complaints />} />
                     {/* COMPLAINTS */}
+
+                    {/* FORUM DETAIL PAGE */}
+                    {/* <Route path="admin/forums/:slug"
+                        element={<ForumDetailPageAdmin />} /> */}
+                    {/* REPORT PAGE */}
+
+                    {/* Forums PAGE */}
+                    {/* <Route path="admin/forums"
+                        element={<ForumsAdmin />} /> */}
+                    {/* Forums PAGE */}
 
                     {/* ADMIN ROUTES */}
 
@@ -156,17 +168,15 @@ const Routes = ({ categories }) => {
                     {/* REPORT PAGE */}
 
                     {/* FORUM DETAIL PAGE */}
-                    <Route path="forums/:slug"
-                        element={<ProtectedRouteLogin isLoggedIn={!auth()}>
-                            <ForumDetailPage />
-                        </ProtectedRouteLogin>} />
+                    <Route path="forums/:slug" element={<ProtectedRoute><ForumDetailPage /></ProtectedRoute>}>
+                        <Route index element={<ForumDetailPage />} />
+                    </Route>
                     {/* REPORT PAGE */}
 
                     {/* Forums PAGE */}
                     <Route path="forums"
                         element={<Forums />} />
                     {/* Forums PAGE */}
-
 
                     {/* LOGIN PAGE */}
                     <Route path="login" element={<ProtectedRouteLogin isLoggedIn={auth()}><Login /></ProtectedRouteLogin>}>
@@ -231,11 +241,10 @@ const Routes = ({ categories }) => {
     )
 }
 
-
 // ProtectedRoute
 const ProtectedRouteLogin = ({ children, isLoggedIn }) => {
     if (isLoggedIn)
-        return <Navigate to="/login" />
+        return <Navigate to="/home" />
 
     return children
 }

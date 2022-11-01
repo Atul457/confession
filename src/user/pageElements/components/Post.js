@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import forwardIcon from '../../../images/forwardIcon.svg';
+import verifiedIcon from '../../../images/verifiedIcon.svg';
 import upvote from '../../../images/upvote.svg';
 import commentCountIcon from '../../../images/commentCountIcon.svg';
 import viewsCountIcon from '../../../images/viewsCountIcon.svg';
@@ -27,11 +28,13 @@ import { openCModal as openCommentsModalFn } from '../../../redux/actions/commen
 import { openCFRModal } from '../../../redux/actions/friendReqModal';
 import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
+import Badge from '../../../common/components/badges/Badge';
 
 
 export default function Post(props) {
 
     let history = useNavigate();
+    let post = props?.post ?? {}
     let maxChar = 2000;
     const dispatch = useDispatch();
     const ShareReducer = useSelector(store => store.ShareReducer);
@@ -338,7 +341,15 @@ export default function Post(props) {
         }
 
 
+
         profileBPlate = getHtml();
+        if (post?.email_verified === 1)
+            profileBPlate = (
+                <>
+                    {profileBPlate}
+                    <img src={verifiedIcon} title="Verified user" className="verified_user_icon" alt="verified_user_icon" />
+                </>)
+
         return profileBPlate;
     }
 
@@ -426,7 +437,7 @@ export default function Post(props) {
 
 
     return (
-        <div className="postCont" index={props.index}>
+        <div className="postCont confession_cont" index={props.index}>
 
             {ShareReducer &&
                 ShareReducer.selectedPost?.id === props.postId &&
@@ -480,6 +491,14 @@ export default function Post(props) {
             {/* IF POST IS DELETABLE THE DELETE ICON WILL BE SHOWN */}
             {props.deletable === true && <i className="fa fa-trash pr-3 deletePostIcon" type="button" aria-hidden="true" onClick={deletePost}></i>}
 
+            {/* SHOWS UNREAD COMMENTS ON POST */}
+            {
+                (props.unread_comments && props.unread_comments !== 0) ?
+                    <span className="unreadPostCommentCount">
+                        {props.unread_comments} {props?.unread_comments === 1 ? "New Reply" : "New Replies"}
+                    </span>
+                    : ''}
+
 
             <div className="postContHeader">
                 {lightBox && (
@@ -504,6 +523,8 @@ export default function Post(props) {
                 */}
                     {visitePrevilage(props.curid, props.post_as_anonymous)}
 
+                    <Badge points={post?.points} />
+
                     {!isCoverTypePost && <span className="catCommentBtnCont">
                         <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>
                     </span>}
@@ -513,14 +534,6 @@ export default function Post(props) {
                     </span>
 
                 </span>
-
-                {/* SHOWS UNREAD COMMENTS ON POST */}
-                {
-                    (props.unread_comments && props.unread_comments !== 0) ?
-                        <span className="unreadPostCommentCount">
-                            {props.unread_comments} {props?.unread_comments === 1 ? "New Reply" : "New Replies"}
-                        </span>
-                        : ''}
             </div>
             <div
                 className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''} ${isAnyUnreadComment ? 'addMargin' : ''}`}

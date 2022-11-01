@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import userIcon from '../../../images/userAcc.png';
 import commentReplyIcon from '../../../images/creplyIcon.svg';
+import verifiedIcon from '../../../images/verifiedIcon.svg';
 import { Link } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
 import forwardIcon from '../../../images/forwardIcon.svg';
@@ -17,6 +18,7 @@ import _ from 'lodash';
 import { toggleReportComModal } from "../../../redux/actions/reportcommentModal"
 import { closeCModal } from "../../../redux/actions/commentsModal"
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
+import Badge from '../../../common/components/badges/Badge';
 
 
 export default function Comments(props) {
@@ -26,6 +28,7 @@ export default function Comments(props) {
     const [editedComment, setEditedComment] = useState("");
     const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
     const editCommentField = useRef(null);
+    const comment = props?.comment ?? {}
     const dispatch = useDispatch();
     const [subComments, setSubComments] = useState({ data: [], loading: false })
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
@@ -113,9 +116,6 @@ export default function Comments(props) {
 
     // CALLS HANDLESUBCOMMENT TO POST AND ADD A NEW COMMENT
     const updatSubComments = (comment_id, editedComment, index) => {
-        console.log({
-            comment_id, editedComment, index
-        })
         // props.updatePost
         sendSubComment(comment_id, editedComment, index)
     }
@@ -324,6 +324,7 @@ export default function Comments(props) {
         try {
             const res = await fetchData(obj)
             if (res.data.status === true) {
+                return window.location.href = window.location.href
                 let delCommentCount = 1;
                 // DECRESES WITH THE COUNT OF ITS CHILD AND 1, WHICH IS IT ITSELF
                 if (props.countChild > 0)
@@ -372,7 +373,7 @@ export default function Comments(props) {
     }
 
     return (
-        <div className={`overWritePostWithCommentWr`}>
+        <div className={`overWritePostWithCommentWr comments`}>
             {!props.isLastIndex
                 ?
                 <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
@@ -383,29 +384,37 @@ export default function Comments(props) {
             }
 
             <div className="postCont overWritePostWithComment outer">
-                <div className="postContHeader commentsContHeader">
-                    <span className="commentsGotProfileImg">
-                        <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
-                    </span>
+                <div className="commentsContHeader">
+                    <div className="postContHeader">
+                        <span className="commentsGotProfileImg">
+                            <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
+                            {comment?.email_verified === 1 ?
+                                <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
+                        </span>
 
-                    {props.curid !== false ?
+                        {props.curid !== false ?
 
-                        (<Link className={`textDecNon comment cutDown`}
-                            to={props.curid ?
-                                (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
-                                : ''}>
-                            <span className="userName">
-                                {props.userName}
-                            </span>
-                        </Link>)
-                        :
-                        (<span className="userName">
-                            {props.userName}
-                        </span>)}
+                            (<Link className={`textDecNon comment cutDown`}
+                                to={props.curid ?
+                                    (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
+                                    : ''}>
+                                <span className="userName">
+                                    {props.userName}
+                                </span>
+                            </Link>)
+                            :
+                            (<>
+                                <span className="userName">
+                                    {props.userName}
+                                </span>
+                            </>)}
 
-                    <span className="postCreatedTime">
-                        {DateConverter(props.created_at)}
-                    </span>
+                        <Badge points={comment?.points} classlist="ml-2" />
+
+                        <span className="postCreatedTime">
+                            {DateConverter(props.created_at)}
+                        </span>
+                    </div>
 
 
                     <div className='editDelComment'>
@@ -499,6 +508,8 @@ export default function Comments(props) {
                     <div className="postContHeader commentsContHeader">
                         <span className="commentsGotProfileImg">
                             <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
+                            {comment?.email_verified === 1 ?
+                                <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                         </span>
                         <span className="userName">
                             Dummy name
@@ -531,6 +542,7 @@ export default function Comments(props) {
                                     postId={props.postId}
                                     root_id={props.commentId}
                                     key={subcomment.comment_id}
+                                    subcomment={subcomment}
                                     data={subcomment}
                                     updatePost={props.updatePost}
                                     updatSubComments={updatSubComments}

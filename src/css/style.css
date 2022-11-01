@@ -787,6 +787,8 @@ input:focus-visible {
 .postCont .sharekitdots {
     z-index: 9;
     padding: 0px 10px;
+    display: inline-flex;
+    align-items: flex-start;
 }
 
 
@@ -823,10 +825,12 @@ input:focus-visible {
 
 .postContHeader {
     display: flex;
-    padding: 0px 0px 12px 0px;
+    /* padding: 0px 0px 12px 0px; */
     align-items: center;
     justify-content: space-between;
     position: relative;
+    max-width: 90%;
+    flex-wrap: wrap;
 }
 
 .postedPost {
@@ -1654,6 +1658,15 @@ span.offlineColor {
     background-color: var(--primaryColor);
 }
 
+.leftContofPostCont>*,
+.confession_detail_page .postContHeader>* {
+    margin-bottom: 7px;
+}
+
+.confession_cont .sharekitdots {
+    top: 22px;
+}
+
 /* cstm scroll */
 
 .imgNopenUserNameWrap {
@@ -1663,6 +1676,18 @@ span.offlineColor {
     justify-content: flex-start;
     position: relative;
     width: 100%;
+}
+
+.opened_chat .imgNopenUserNameWrap {
+    width: calc(100% - 35px);
+}
+
+.chatterUserName .user_name {
+    color: var(--primaryColor);
+}
+
+.opened_chat .chatterUserName {
+    max-width: 50%;
 }
 
 .showChatArrCont {
@@ -1701,10 +1726,40 @@ span.offlineColor {
     position: relative;
 }
 
+.friend_details .badge_for_points {
+    width: 26px;
+    height: 18px;
+}
+
+.opened_chat .badge_for_points {
+    width: 31px;
+}
+
+.requester_name .badge_for_points {
+    width: 15px;
+    height: 17px;
+}
+
+/* .requester_name */
+
+.user_name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.singleChatCont .user_name {
+    max-width: 80%;
+}
+
 .upperCont {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 100%;
+    align-items: center;
+}
+
+.singleChatCont .friend_details {
     align-items: center;
 }
 
@@ -1934,6 +1989,12 @@ span.offlineColor {
     flex-direction: column;
 }
 
+.requester_name {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 .requesterCountOfSharedConfessions {
     font-size: 10px;
     color: rgba(77, 77, 77, 0.75);
@@ -1965,6 +2026,7 @@ span.offlineColor {
     all: unset;
     width: 40px;
     object-fit: cover;
+    position: relative;
     border-radius: 50%;
 }
 
@@ -2518,6 +2580,29 @@ span.offlineColor {
     border-top: none;
 }
 
+.verified_user_icon {
+    position: absolute;
+    width: 15px;
+    right: -2px;
+    bottom: -4px;
+    height: 15px;
+}
+
+.profile .verified_user_icon {
+    width: 30px;
+    right: 14px;
+    bottom: 8px;
+    height: 35px;
+}
+
+.confession_cont .verified_user_icon,
+.requesterDesc .verified_user_icon {
+    width: 15px;
+    right: -2px;
+    bottom: -4px;
+    height: 15px;
+}
+
 .modalActiveCat {
     color: var(--orangeColor);
 }
@@ -2690,6 +2775,10 @@ span.facebookMobIcon {
 
 .googleMobIcon {
     justify-content: flex-end !important;
+}
+
+.upperView .postContHeader {
+    max-width: unset;
 }
 
 .reduceWidthSocialBtn {
@@ -3056,21 +3145,32 @@ span.facebookMobIcon {
 
 .userImageContChatCont {
     min-width: 40px;
+    position: relative;
     max-width: 40px;
     width: 100%;
     height: 40px;
+}
+
+.userImageContChatCont img:first-child {
     border-radius: 50%;
-    overflow: hidden;
 }
 
 .userImageContChatOutest {
     margin-left: 15px;
     width: 50px;
-    border-radius: 50%;
-    overflow: hidden;
+    position: relative;
     margin-right: 15px;
     height: 50px;
+}
+
+.userImageContChatOutest img:first-child {
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border-radius: 50%;
+}
+
+.userImageContChatOutest .verified_user_icon {
+    width: 20px;
+    height: 30px;
 }
 
 .lastMessageNtimeWrapper {
@@ -3098,18 +3198,18 @@ span.facebookMobIcon {
 }
 
 .profileHeaderImage {
+    position: relative;
     width: 30px;
     min-width: 30px;
     height: 30px;
     min-height: 30px;
     float: left;
-    overflow: hidden;
-    border-radius: 50%;
     margin-right: 2px;
 }
 
-.profileHeaderImage img {
+.profileHeaderImage img:first-child {
     object-fit: cover;
+    border-radius: 50%;
     width: 100%;
     height: 100%;
 }
@@ -3155,7 +3255,17 @@ span.facebookMobIcon {
     color: var(--primaryColor);
 }
 
+.badge_for_points {
+    width: 21px;
+    height: 21px;
+    margin-right: 7px;
+}
+
 .commentsGotProfileImg {
+    position: relative;
+}
+
+.commentsGotProfileImg img:first-child {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -3174,12 +3284,6 @@ span.facebookMobIcon {
     font-weight: 500;
     top: -20px;
     right: -29px;
-}
-
-.commentsGotProfileImg img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
 }
 
 .takeActionOptionsOnHov {
@@ -3352,8 +3456,8 @@ span.facebookMobIcon {
     color: var(--primaryColor);
     font-size: 10px;
     position: absolute;
-    right: -8px;
-    top: 40px;
+    right: 13px;
+    top: 43px;
 }
 
 .commentsContHeader {
@@ -4435,7 +4539,7 @@ a.headerNavLinks.active::after {
 
 .reportPost {
     position: absolute;
-    top: 22px;
+    top: 20px;
     right: 50px;
     color: var(--primaryColor);
     cursor: pointer;
@@ -4630,6 +4734,10 @@ a.headerNavLinks.active::after {
     font-weight: 500;
 }
 
+.loggedInUserName .firstName {
+    width: calc(100% - 40px);
+}
+
 .mtProfile input {
     width: 228px;
 }
@@ -4816,6 +4924,7 @@ input.switch12.profile:checked {
     border: 1px solid #ffffff73;
     border-radius: 100%;
     padding: 10px;
+    position: relative;
     display: flex;
     width: 130px;
     height: 130px;
@@ -5059,9 +5168,18 @@ button.modalFootBtns.btn a:hover {
     cursor: pointer;
 }
 
-.subcommentCont.upperView .postContHeader {
+.subcommentCont.upperView .postContHeader,
+.confession_detail_page .postContHeader {
     padding-bottom: 0px;
     flex-wrap: wrap;
+}
+
+.comments .postContHeader {
+    justify-content: flex-start;
+}
+
+.comments .commentsContHeader {
+    position: relative;
 }
 
 .subCommentsCount {
@@ -5473,7 +5591,7 @@ button.modalFootBtns.btn a:hover {
 .forum_action_icon {
     width: 20px;
     right: 9px;
-    top: 17px;
+    top: 21px;
     position: absolute;
 }
 
@@ -5905,9 +6023,9 @@ button.modalFootBtns.btn a:hover {
         margin-left: 0px;
     }
 
-    requesterCountOfSharedConfessions {
+    /* requesterCountOfSharedConfessions {
         font-size: 8px;
-    }
+    } */
 
     .showChatArrCont {
         width: 26px;
@@ -6432,7 +6550,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .postUserName {
-        max-width: 99%;
+        max-width: 87%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -7203,15 +7321,19 @@ button.modalFootBtns.btn a:hover {
     }
 
     .commentsUserName {
-        max-width: 40px;
+        max-width: 40%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         color: var(--primaryColor);
     }
 
-    .postContHeader {
+    /* .postContHeader {
         padding-bottom: 10px;
+    } */
+
+    .confession_cont .postContHeader {
+        padding-bottom: 0px;
     }
 
     .replyCont {
@@ -7594,7 +7716,7 @@ button.modalFootBtns.btn a:hover {
 
     .comment.cutDown {
         width: max-content;
-        max-width: 55px;
+        max-width: 44%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -7745,6 +7867,20 @@ button.modalFootBtns.btn a:hover {
     .heartCompCont {
         right: 5px;
     }
+
+    .confession_cont .postUserName {
+        max-width: 68%;
+    }
+
+    .comments .postContHeader {
+        max-width: 80%;
+    }
+
+    .userImageContChatOutest .verified_user_icon {
+        width: 16px;
+        height: 26px;
+        bottom: -8px;
+    }
 }
 
 @media(max-width:575px) {
@@ -7760,9 +7896,9 @@ button.modalFootBtns.btn a:hover {
         align-items: unset;
     }
 
-    .postUserName {
+    /* .postUserName {
         max-width: 45px;
-    }
+    } */
 }
 
 

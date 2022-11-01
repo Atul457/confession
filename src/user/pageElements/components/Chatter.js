@@ -1,8 +1,12 @@
 import React from 'react'
+import Badge from '../../../common/components/badges/Badge';
+import verifiedIcon from "../../../images/verifiedIcon.svg"
 import DateConverter from '../../../helpers/DateConverter';
 
 
 export default function Chatter(props) {
+
+    const friend = props?.user
 
     const openChat = () => {
         props.openChat({
@@ -11,7 +15,9 @@ export default function Chatter(props) {
             image: props.imgUrl,
             channel_id: props.channel_id,
             is_userreport: props.is_userreport,
-            index: props.chatIndex
+            index: props.chatIndex,
+            points: friend?.points,
+            email_verified: friend?.email_verified,
         });
     }
 
@@ -22,13 +28,16 @@ export default function Chatter(props) {
             <div className="imgNopenUserNameWrap">
                 <span className="userImageContChatCont" onClick={openChat}>
                     <img src={props.imgUrl} alt="" className="userImageContChat" />
+                    {friend?.email_verified === 1 ?
+                        <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                 </span>
                 <div className="singleChatterUserName">
                     <div className='wrapper_upperCont'>
-                        <div className="upperCont" onClick={openChat}>
-                            <span className="text-capitalize">
+                        <div className="upperCont friend_details" onClick={openChat}>
+                            <span className="text-capitalize user_name">
                                 {props.chatterName}
                             </span>
+                            <Badge points={friend?.points} classlist="ml-2" />
                         </div>
                         <i className="fa fa-ellipsis-v showChatArrCont" aria-hidden="true" onClick={unFriend}></i>
                     </div>

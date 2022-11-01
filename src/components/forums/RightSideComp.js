@@ -85,13 +85,14 @@ const Tabs = ({ activeTab, setActiveTab }) => {
                 })}
             </div>
 
-            <div
-                onClick={openCreateSForumModal}
-                className="doPostBtn create_forum_btn"
-                type="button">
-                <i className="fa fa-plus text-white pr-1 d-md-inline-block d-none" aria-hidden="true"></i>
-                Add New <span className='d-md-inline-block d-none pl-1'>Forums</span>
-            </div>
+            {auth() ?
+                <div
+                    onClick={openCreateSForumModal}
+                    className="doPostBtn create_forum_btn"
+                    type="button">
+                    <i className="fa fa-plus text-white pr-1 d-md-inline-block d-none" aria-hidden="true"></i>
+                    Add New <span className='d-md-inline-block d-none pl-1'>Forums</span>
+                </div> : null}
 
         </div >
     )

@@ -6,6 +6,7 @@ import Requests from '../../components/Requests';
 import pen from '../../../../images/whitepen.png';
 import downArrowIcon from '../../../../images/downArrow.png';
 import supportIcon from '../../../../images/contactUsIconActive.svg';
+import verifiedIcon from '../../../../images/verifiedIcon.svg';
 import { Link } from "react-router-dom";
 import SiteLoader from '../../components/SiteLoader';
 import { useNavigate } from "react-router-dom";
@@ -27,6 +28,7 @@ import { toggleAvatarModal } from '../../../../redux/actions/avatarSelModalAC';
 import AvatarSelModal from '../../Modals/AvatarSelModal';
 import defaultIcon from '../../../../images/mobileProfileIcon.svg';
 import { getKeyProfileLoc } from '../../../../helpers/profileHelper';
+import Badge from '../../../../common/components/badges/Badge';
 
 const deletePostModalIniVal = { visible: false, data: { postId: null, index: null } };
 
@@ -579,6 +581,9 @@ export default function Profile() {
                                                                         alt=""
                                                                         onClick={changeProfilePic}
                                                                     />
+
+                                                                    {profile?.email_verified === 1 ?
+                                                                        <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                                                                 </span>)}
 
                                                         <input
@@ -596,6 +601,7 @@ export default function Profile() {
                                                 <span className="firstName">
                                                     {profile.display_name}
                                                 </span>
+                                                <Badge points={profile?.points} classlist="ml-2" />
                                             </div>
                                             <div className="right">
                                                 <img src={editCommentIcon} className="editCommentIcon profile" onClick={toggleEditProfile} />
@@ -778,6 +784,7 @@ export default function Profile() {
                                                                                         (myFriends.data.friends).map((user, index) => {
                                                                                             return <Friends
                                                                                                 updated_at={user.updated_at}
+                                                                                                friend={user}
                                                                                                 key={`${index}${user.imgUrl}${user.name}${user.chatterDesc}`}
                                                                                                 is_userreport={user.is_userreport}
                                                                                                 is_online={user.is_online}
@@ -860,6 +867,7 @@ export default function Profile() {
                                                         {myConfession.map((post, index) => {
                                                             return <Post
                                                                 isReported={2}
+                                                                post={post}
                                                                 cover_image={post.cover_image ?? ''}
                                                                 isNotFriend={post.isNotFriend}
                                                                 key={index}

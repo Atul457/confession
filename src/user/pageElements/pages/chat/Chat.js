@@ -3,6 +3,7 @@ import Header from "../../common/Header";
 import Chatter from "../../components/Chatter";
 import chatterImg from '../../../../images/chatterImg.png';
 import forwardIcon from '../../../../images/chatArrow.png'
+import verifiedIcon from '../../../../images/verifiedIcon.svg'
 import Requests from "../../components/Requests";
 import Footer from "../../common/Footer";
 import { useParams } from "react-router-dom";
@@ -20,6 +21,7 @@ import DateConverter from '../../../../helpers/DateConverter';
 import { getToken } from '../../../../helpers/getToken';
 import UnFriendModal from '../../Modals/UnFriendModal';
 import { unFriendActionCreators } from '../../../../redux/actions/unFriendReqModal';
+import Badge from '../../../../common/components/badges/Badge';
 
 export default function Chat() {
 
@@ -535,7 +537,9 @@ export default function Chat() {
             image: chatterDetGot.image !== "" ? chatterDetGot.image : userIcon,
             channel_id: chatterDetGot.channel_id,
             friend_id: chatterDetGot.friend_id,
-            is_userreport: chatterDetGot.is_userreport
+            is_userreport: chatterDetGot.is_userreport,
+            points: chatterDetGot?.points,
+            email_verified: chatterDetGot?.email_verified
         })
         getChat(chatterDetGot.channel_id, 1, false, true);
 
@@ -801,6 +805,7 @@ export default function Chat() {
                                                         (myFriends.data.friends).map((user, index) => {
                                                             return <Chatter
                                                                 index={index}
+                                                                user={user}
                                                                 openUnFriendModal={openUnFriendModal}
                                                                 updated_at={user.updated_at}
                                                                 key={`${index}${user.imgUrl}${user.name}${user.chatterDesc}`}
@@ -883,17 +888,22 @@ export default function Chat() {
                                 ) :
                                     <>
                                         <div className="middleContMainDivChat">
-                                            <div className="forBottomBorder">
+                                            <div className="forBottomBorder opened_chat">
                                                 {toggleView.messages && <i type="button" className="fa fa-arrow-left moveBackFromChat" aria-hidden="true" onClick={showChat}></i>}
                                                 <div className="imgNopenUserNameWrap">
 
                                                     <span className="userImageContChatOutest">
                                                         <img src={chatterDetails.image === '' ? chatterImg : chatterDetails.image} alt="" className="userImageContChat" />
+                                                        {/* {chatterDetails?.email_verified === 1 ? */}
+                                                        {true ?
+                                                         <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                                                     </span>
                                                     <div className="chatterUserName text-capitalize">
-                                                        {chatterDetails.name === '' ? 'anonymous' : chatterDetails.name}
-                                                        {/* <span className="status">Online</span> */}
+                                                        <span className="user_name">
+                                                            {chatterDetails.name === '' ? 'anonymous' : chatterDetails.name}
+                                                        </span>
                                                     </div>
+                                                    <Badge points={chatterDetails?.points} classlist="ml-2" />
                                                     <button onClick={(e) => {
                                                         setCheck(prevCheck => !prevCheck)
                                                     }}>...</button>

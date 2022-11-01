@@ -105,8 +105,7 @@ const ForumDetailPage = () => {
     }
     if (forumSlug) getForum()
   }, [forumSlug])
-
-
+  
 
   // Functions
 

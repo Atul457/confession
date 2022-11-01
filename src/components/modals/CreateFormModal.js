@@ -249,7 +249,7 @@ const CreateFormModal = () => {
               })}>
               <option value={""}>Forum Type</option>
 
-              {/* ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
+              {/* ADDS TYPES TO THE SELECT BOX AS OPTIONS */}
               {forum_types_arr ? forum_types_arr?.map((element) => {
                 return <option
                   key={`createPost ${element.id}`}
@@ -257,7 +257,7 @@ const CreateFormModal = () => {
                   {(element.type_name)?.charAt(0)?.toUpperCase() + ((element.type_name)?.slice(1)?.toLowerCase())}
                 </option>
               }) : <option value="">Forums types not found</option>}
-              {/* END OF ADDS CATEGORIES TO THE SELECT BOX AS OPTIONS */}
+              {/* END OF ADDS TYPES TO THE SELECT BOX AS OPTIONS */}
 
             </select>
 

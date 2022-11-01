@@ -89,7 +89,7 @@ export default function Feed(props) {
     const [imgPathArr, setImgPathArr] = useState([]);
     const [isImgLoading, setIsImgLoading] = useState(false);
     const heartCompRef = useRef(null)
-    const goDownArrowRef = useRef(null)
+    // const goDownArrowRef = useRef(null)
     // let commentCountReqToPost = 1;
     // let isCondStatified = auth() ? getKeyProfileLoc("comments") > commentCountReqToPost : false
     let fs = 1024; //Sets the max file size that can be sent
@@ -243,10 +243,18 @@ export default function Feed(props) {
     // Remove uploaded image
 
     //IN PROGRESS
-    const toBase64 = (e) => {
+    const toBase64 = (e, isCalledByInputElem) => {
 
-        let responseCont = document.getElementById('responseCont');
-        responseCont.innerText = "";
+        if (!isCalledByInputElem) {
+            const uploadImages = document.querySelector("#uploadImages")
+            uploadImages.value = null
+            return
+        }
+
+        let responseCont = document.querySelectorAll('.responseCont');
+        responseCont.forEach(singleResCont => {
+            singleResCont.innerText = "";
+        })
 
         if (e.target.files[0]) {
 
@@ -256,17 +264,26 @@ export default function Feed(props) {
             //PREVENTS UNSPECIFIED EXTENSION FILESS
             if (!ExtValidator(fileObj)) {
                 setErrorOrSuccess(prevState => !prevState === false && !prevState);
-                responseCont.innerText = "Supported file types are gif, jpg, jpeg, png";
+                responseCont.forEach(singleResCont => {
+                    singleResCont.innerText = "Supported file types are gif, jpg, jpeg, png";
+                })
+                // responseCont.innerText = "Supported file types are gif, jpg, jpeg, png";
                 return false;
             }
 
             setIsImgLoading(true);
             setSubmittable(false);
             let fileSize = parseInt(e.target.files[0].size / 2000);
-            responseCont.innerHTML = '';
+            // responseCont.innerHTML = '';
+            responseCont.forEach(singleResCont => {
+                singleResCont.innerText = "";
+            })
 
             if (fileSize > fs) {
-                responseCont.innerHTML = '[Max FileSize: 2000KB], No file selected';
+                responseCont.forEach(singleResCont => {
+                    singleResCont.innerText = "[Max FileSize: 2000KB], No file selected";
+                })
+                // responseCont.innerHTML = '[Max FileSize: 2000KB], No file selected';
                 setIsImgLoading(false);
                 setSelectedFile('');
                 setErrorOrSuccess(false);
@@ -308,6 +325,7 @@ export default function Feed(props) {
                         setImgPathArr(arr);
                         setIsImgLoading(false);
                         setSubmittable(true);
+                        toBase64(null, false);
                     }
                 } catch {
                     console.log("some error occured");
@@ -341,9 +359,9 @@ export default function Feed(props) {
                 token = '',
                 loggedInUserData,
                 post_as_anonymous = 1,
-                feedDescErrorCont = document.getElementById("responseCont"),
-                feedPostConfResponseCont = feedDescErrorCont,
-                description = document.getElementById("description");
+                responseCont = document.querySelectorAll(".responseCont"),
+                feedPostConfResponseCont = responseCont,
+                description = document.querySelector("#description");
 
             let recapToken = ""
 
@@ -357,7 +375,13 @@ export default function Feed(props) {
             const executePostConfession = async () => {
 
                 if (description.value.trim() !== '') {
-                    feedDescErrorCont.innerText = "";
+                    // responseCont.forEach(singleResCont => {
+                    //     feedDescErrorCont.innerText = "";
+                    // })
+                    // feedDescErrorCont.innerText = "";
+                    responseCont.forEach(singleResCont => {
+                        singleResCont.innerText = "";
+                    })
                     if (auth()) {
                         loggedInUserData = localStorage.getItem("userDetails");
                         loggedInUserData = JSON.parse(loggedInUserData);
@@ -367,7 +391,10 @@ export default function Feed(props) {
                     }
                     else if (recapToken === '') {
                         updatePostBtn(false);
-                        feedDescErrorCont.innerText = "Recaptcha is required";
+                        responseCont.forEach(singleResCont => {
+                            singleResCont.innerText = "Recaptcha is required";
+                        })
+                        // feedDescErrorCont.innerText = "Recaptcha is required";
                         return false;
                     }
 
@@ -375,7 +402,10 @@ export default function Feed(props) {
                         updatePostBtn(false);
                         setIsLoading(false);
                         setErrorOrSuccess(false);
-                        feedDescErrorCont.innerText = "Please select a category";
+                        responseCont.forEach(singleResCont => {
+                            singleResCont.innerText = "Please select a category";
+                        })
+                        // feedDescErrorCont.innerText = "Please select a category";
                         return false;
                     }
 
@@ -418,7 +448,10 @@ export default function Feed(props) {
                     try {
                         const response = await fetchData(obj);
                         if (response.data.status === true) {
-                            feedDescErrorCont.innerText = "";
+                            responseCont.forEach(singleResCont => {
+                                singleResCont.innerText = "";
+                            })
+                            // feedDescErrorCont.innerText = "";
                             setErrorOrSuccess(true);
                             description.value = '';
                             setSelectedCat("");
@@ -462,7 +495,10 @@ export default function Feed(props) {
 
                 }
                 else {
-                    feedDescErrorCont.innerText = "Comment field is required";
+                    responseCont.forEach(singleResCont => {
+                        singleResCont.innerText = "Comment field is required";
+                    })
+                    // feedDescErrorCont.innerText = "Comment field is required";
                     setErrorOrSuccess(false);
                     updatePostBtn(false);
                     setIsLoading(false);
@@ -472,7 +508,7 @@ export default function Feed(props) {
     }
 
     const updatePostBtn = bool => {
-        let ref = document.getElementById('postConfessionBtn');
+        let ref = document.querySelector('#postConfessionBtn');
         if (bool) return ref.classList.add('disabled');
         ref.classList.remove('disabled');
     }
@@ -746,7 +782,7 @@ export default function Feed(props) {
                                                                             id="uploadImages"
                                                                             accept=".jpg, jpeg, .gif, .png"
                                                                             name="images"
-                                                                            onChange={(e) => { toBase64(e) }}
+                                                                            onChange={(e) => { toBase64(e, true) }}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -777,6 +813,14 @@ export default function Feed(props) {
                                                                 {/* End of upload images preview container for web */}
                                                             </div>
                                                         </div>
+
+                                                        {/* error view in mobile */}
+                                                        <div className="w-100 errorFieldsCPost p-0 text-center d-block d-md-none">
+                                                            <div className={`responseCont mt-0 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="responseCont"></div>
+                                                            {/* <span className="d-block errorCont text-danger" id="descErrorCont"></span>
+                                                            <span className="errorCont text-danger" id="catErrorCont"></span> */}
+                                                        </div>
+                                                        {/* error view in mobile */}
 
                                                         {/* Select cat.. and post btns cont */}
                                                         <div className="feedSPbtnsWrapper">
@@ -821,11 +865,14 @@ export default function Feed(props) {
 
                                                 </div>
 
-                                                <div className="w-100 errorFieldsCPost p-0">
+
+                                                {/* Error view in Web */}
+                                                <div className="d-none d-md-block w-100 errorFieldsCPost p-0">
                                                     <div className={`responseCont mt-0 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="responseCont"></div>
-                                                    <span className="d-block errorCont text-danger" id="descErrorCont"></span>
-                                                    <span className="errorCont text-danger" id="catErrorCont"></span>
+                                                    {/* <span className="d-block errorCont text-danger" id="descErrorCont"></span>
+                                                    <span className="errorCont text-danger" id="catErrorCont"></span> */}
                                                 </div>
+                                                {/* Error view in Web */}
                                             </div>
                                         </div>
                                         {/* POST MAIN CONT START */}
@@ -874,6 +921,7 @@ export default function Feed(props) {
                                                         {confessions.map((post, index) => {
                                                             return (<div key={`fConf${index}`}>
                                                                 <Post
+                                                                    post={post}
                                                                     index={index}
                                                                     cover_image={post.cover_image ?? ''}
                                                                     is_viewed={post.is_viewed}
