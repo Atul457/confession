@@ -34,7 +34,7 @@ import Badge from '../../../common/components/badges/Badge';
 export default function Post(props) {
 
     let history = useNavigate();
-    let post = props?.post ?? {}
+    const post = props?.post ?? {}
     let maxChar = 2000;
     const dispatch = useDispatch();
     const ShareReducer = useSelector(store => store.ShareReducer);
@@ -339,8 +339,6 @@ export default function Post(props) {
 
             return <img src={profileImage} className="userAccIcon" alt="" />
         }
-
-
 
         profileBPlate = getHtml();
         if (post?.email_verified === 1)

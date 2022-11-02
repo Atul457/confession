@@ -11,11 +11,11 @@ import { useNavigate } from "react-router-dom";
 import useShareKit from '../utilities/useShareKit';
 import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../helpers/DateConverter';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import viewsCountIcon from '../../images/viewsCountIcon.svg';
 import commentCountIcon from '../../images/commentCountIcon.svg';
 import upvote from '../../images/upvote.svg';
-import upvoted from '../../images/upvoted.svg';
+// import upvoted from '../../images/upvoted.svg';
 import { openCModal as openCommentsModalFn } from '../../redux/actions/commentsModal';
 
 
@@ -23,6 +23,7 @@ export default function Post(props) {
 
     let maxChar = 2000;
     let history = useNavigate();
+    const post = props?.post ?? {}
     const dispatch = useDispatch();
     const noOfWords = useState(200);    //IN POST AFTER THESE MUCH CHARACTERS SHOWS VIEWMORE BUTTON
     const [requiredError, setRequiredError] = useState('');
@@ -76,14 +77,14 @@ export default function Post(props) {
     }
 
     //HANDLES THE COMMENTS MODAL 
-    const handleCommentsModal = () => {
-        props.handleCommentsModal({
-            "postId": props.postId,
-            "viewcount": props.viewcount,
-            "visibility": true,
-            "index": props.index
-        });
-    }
+    // const handleCommentsModal = () => {
+    //     props.handleCommentsModal({
+    //         "postId": props.postId,
+    //         "viewcount": props.viewcount,
+    //         "visibility": true,
+    //         "index": props.index
+    //     });
+    // }
 
     // DELETE CONFESSION
     const deleteConfessionFunc = async () => {
@@ -249,7 +250,7 @@ export default function Post(props) {
             <div className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
                 {...(isCoverTypePost && { onClick: openCommentsModal })}
                 style={postBg}>
-                <div className="postedPost mb-2">
+                <div className="postedPost">
                     <Link className="links text-dark" to="#">
                         <pre
                             {...(!isCoverTypePost && { onClick: openCommentsModal })}
@@ -293,7 +294,7 @@ export default function Post(props) {
                         value={comment}
                         onKeyDown={(e) => { checkKeyPressed(e) }}
                         onChange={(e) => { setComment(e.target.value) }}
-                        className="form-control my-3">
+                        className="form-control mb-3 mt-2">
                     </TextareaAutosize>
                 </div>
                 <div className="arrowToAddComment" id="postDoComment" type="button" onClick={() => { doComment(props.postId) }}>

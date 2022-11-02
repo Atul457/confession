@@ -584,6 +584,8 @@ export default function Header(props) {
                                                         <span className="profileHeaderImage">
                                                             <img src={profile.image === '' ? mobileProfileIcon : profile.image} alt="" />
 
+                                                            {console.log({ email_verified: getKeyProfileLoc("email_verified") })}
+
                                                             {getKeyProfileLoc("email_verified") === 1 ?
                                                                 <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
 

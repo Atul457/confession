@@ -329,7 +329,7 @@ export default function Comments(props) {
                                             type="text"
                                             maxLength="2000"
                                             id={"textarea" + props.commentId}
-                                            placeholder='Sub comment'
+                                            placeholder='Write your reply'
                                             onKeyDown={(e) => checkKeyPressed(e, 1)}
                                             className="form-control mt-0">
                                         </TextareaAutosize>

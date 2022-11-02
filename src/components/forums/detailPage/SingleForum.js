@@ -12,11 +12,12 @@ import { forumHandlers, postComment, usersToTagAcFn } from '../../../redux/actio
 // Helpers
 import { doCommentService, getUsersToTagService } from '../services/forumServices';
 import { apiStatus } from '../../../helpers/status';
-import { requestedStatus } from './comments/ForumCommProvider';
+// import { requestedStatus } from './comments/ForumCommProvider';
 
 // Modals
 import NfswAlertModal from '../../modals/NfswAlertModal';
 import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
+import { isAllowedToComment } from './comments/ForumCommProvider';
 
 
 const SingleForum = props => {
@@ -38,7 +39,8 @@ const SingleForum = props => {
 
     // cameFromSearch
     const navigate = useNavigate()
-    const { isAllowedToComment = false, is_nsw } = currForum
+    const { is_nsw } = currForum
+    const isAllowedToCommentvar = isAllowedToComment(currForum)
 
     const { forum_id } = currForum,
         { data: types } = forumTypes,
@@ -84,6 +86,8 @@ const SingleForum = props => {
         dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
         if (is_nsw) {
             dispatch(toggleNfswModal({
+                forum_index,
+                forum_id: currForum?.forum_id,
                 isVisible: true, forum_link: `/forums/${currForum?.slug}`
             }))
         }
@@ -173,7 +177,7 @@ const SingleForum = props => {
                         {currForum?.description}
                     </pre>
                 </div>
-                {isAllowedToComment && <CommentBox {...commentBoxProps} />}
+                {isAllowedToCommentvar && <CommentBox {...commentBoxProps} />}
                 <ForumFooter {...forumFooterProps} />
 
                 {nfsw_modal?.isVisible && <NfswAlertModal nfsw_modal={nfsw_modal} isForumDetailPage={true} />}

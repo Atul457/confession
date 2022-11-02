@@ -78,7 +78,12 @@ const ForumFooterAdmin = (props) => {
     }
 
     const openNsfwModal = () => {
-        dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${currForum?.slug}` }))
+        dispatch(toggleNfswModal({
+            isVisible: true,
+            forum_link: `/forums/${currForum?.slug}`,
+            forum_id,
+            forum_index
+        }))
     }
 
     const getBody = () => {

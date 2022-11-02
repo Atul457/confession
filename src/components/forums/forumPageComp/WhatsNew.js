@@ -49,12 +49,12 @@ const WhatsNew = () => {
     }, [activeCategory])
 
     // useEffect(() => {
-    //     if (scrollDetails){
-    //         console.log(scrollDetails?.scrollPos)
-    //         window.scrollTo({
-    //             top: scrollDetails?.scrollPos
-    //         })
-    //     }
+        // if (scrollDetails){
+        //     console.log(scrollDetails?.scrollPos)
+        //     window.scrollTo({
+        //         top: scrollDetails?.scrollPos
+        //     })
+        // }
     // }, [])
 
     // Functions

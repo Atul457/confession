@@ -289,7 +289,7 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
                                         onKeyDown={(e) => checkKeyPressed(e, 1)}
                                         maxLength="2000"
                                         id={`sendSubComment${props.comment_id}`}
-                                        placeholder='Reply'
+                                        placeholder='Write your reply'
                                         className="form-control">
                                     </TextareaAutosize>
 

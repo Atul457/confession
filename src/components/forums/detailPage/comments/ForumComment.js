@@ -10,10 +10,12 @@ import userIcon from "../../../../images/userAcc.svg"
 import editCommentIcon from "../../../../images/editCommentIcon.svg"
 import commentReplyIcon from "../../../../images/creplyIcon.svg"
 import upvoted from '../../../../images/upvoted.svg';
+import verifiedIcon from '../../../../images/verifiedIcon.svg';
 import upvote from '../../../../images/upvote.svg';
 
 // Component imports
 import ForumSubComments from './ForumSubComments'
+import Badge from '../../../../common/components/badges/Badge';
 
 // HelperComp function
 import { getKeyProfileLoc } from '../../../../helpers/profileHelper'
@@ -316,6 +318,8 @@ const ForumComment = (props) => {
         <div className="postContHeader commentsContHeader">
           <span className="commentsGotProfileImg">
             <img src={profile_image} alt="user_profile_image" />
+            {currComment?.email_verified === 1 ?
+              <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
           </span>
 
           {user_id !== false ?
@@ -330,6 +334,8 @@ const ForumComment = (props) => {
               {comment_by}
             </span>)
           }
+
+          <Badge points={currComment?.points} classlist="ml-2" />
 
           <span className="postCreatedTime">
             {created_at ? DateConverter(created_at) : null}

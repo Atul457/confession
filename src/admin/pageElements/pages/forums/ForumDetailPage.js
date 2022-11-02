@@ -58,6 +58,7 @@ const ForumDetailPageAdmin = () => {
     dispatch,
     forum_index: 0,
     currForum,
+    isAllowedToComment: isAllowedToComment(currForum),
     comments,
     auth: auth(),
     shareBox: shareBox ?? {},

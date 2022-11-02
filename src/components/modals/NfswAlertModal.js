@@ -1,10 +1,15 @@
 import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchData } from '../../commonApi'
+import { resHandler } from '../../helpers/helpers'
+import { getKeyProfileLoc } from '../../helpers/profileHelper'
+import { apiStatus } from '../../helpers/status'
 import nfswBanner from "../../images/nfswBanner.svg"
-import { forumHandlers } from '../../redux/actions/forumsAc/forumsAc'
+import { forumHandlers, mutateForumFn } from '../../redux/actions/forumsAc/forumsAc'
 import { toggleNfswModal } from '../../redux/actions/modals/ModalsAc'
+
 
 const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
 
@@ -12,31 +17,85 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
     const dispatch = useDispatch()
     const forum_link = nfsw_modal?.forum_link ?? "#"
     const navigate = useNavigate()
+    const { status } = useSelector(state => state?.modalsReducer?.nfsw_modal)
+    const isLoading = status === apiStatus?.LOADING
 
     // Functions
 
     // Close modal
-    const closeModal = (isCancelBtnClick) => {
-        dispatch(toggleNfswModal({
-            isVisible: false
-        }))
+    const closeModal = (isCancelBtnClick = false) => {
 
-        // Works only if user visits using share link ( coz if he will visit from forums page , then he will have to accept the nsfw, the only case remaining to come on detail page is by using shared link, on detail page there is a condition for opening the modal, that checks whether is_nfw is accepted or not, except coming via share link, the nsfw will have to be accepted)
-        if (rest?.isForumDetailPage) {
-            // If the user cancels/closes the nsfw modal then we redirect him/her back to forums
-            if (isCancelBtnClick === true) return navigate("/forums")
-            dispatch(forumHandlers.handleForum({
-                mutate_data_only: true,
-                is_nsw: 0
+        if (isCancelBtnClick) {
+            if (rest?.isForumDetailPage) {
+                dispatch(toggleNfswModal({
+                    isVisible: false
+                }))
+                return (navigate("/forums"))
+            }
+            return dispatch(toggleNfswModal({
+                isVisible: false
             }))
         }
 
+        confirmNfsw()
+
     }
+
+    // Confirm nsfw content
+    const confirmNfsw = async () => {
+
+        let token = getKeyProfileLoc("token", true) ?? "", data;
+
+        dispatch(toggleNfswModal({
+            isVisible: false,
+            status: apiStatus.LOADING,
+            message: ""
+        }))
+
+        let obj = {
+            data,
+            token,
+            method: "get",
+            url: `confirmnsw/${nfsw_modal?.forum_id}`
+        }
+
+        try {
+            const res = await fetchData(obj)
+            resHandler(res)
+
+            if (rest?.isForumDetailPage) {
+                dispatch(forumHandlers.handleForum({
+                    mutate_data_only: true,
+                    is_nsw: 0
+                }))
+            } else {
+                dispatch(mutateForumFn({
+                    forum_index: nfsw_modal?.forum_index,
+                    data_to_mutate: { is_nsw: 0 }
+                }))
+            }
+
+            dispatch(toggleNfswModal({
+                isVisible: false,
+                status: apiStatus.FULFILLED
+            }))
+
+            if (!rest?.isForumDetailPage) navigate(forum_link)
+
+        } catch (err) {
+            dispatch(toggleNfswModal({
+                status: apiStatus.REJECTED,
+                message: err.message
+            }))
+        }
+    }
+
+
 
     return (
         <Modal
             show={true}
-            onHide={closeModal}
+            onHide={() => closeModal(true)}
             size="lg"
             className='nsfw_modal'>
             <Modal.Header>
@@ -67,24 +126,16 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
                 >
                     Cancel
                 </Button>
-                {rest?.isForumDetailPage ?
-                    <Button
-                        className="reqModalFootBtns"
-                        variant="primary"
-                        onClick={closeModal}
-                    >
-                        Continue
-                    </Button>
-                    :
-                    <Link to={forum_link}>
-                        <Button
-                            className="reqModalFootBtns"
-                            variant="primary"
-                            onClick={() => closeModal(false)}
-                        >
-                            Continue
-                        </Button>
-                    </Link>}
+                <Button
+                    className="reqModalFootBtns"
+                    variant="primary"
+                    onClick={() => closeModal(false)}
+                >
+                    {isLoading ? <div className="spinner-border wColor spinnerSizeFeed" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div> : "Continue"}
+
+                </Button>
             </Modal.Footer>
         </Modal>
     )

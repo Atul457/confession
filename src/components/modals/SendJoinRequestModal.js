@@ -39,7 +39,7 @@ const SendRequestModal = () => {
   const { requestToJoinModal } = modals
   const isError = requestToJoinModal.status === apiStatus.REJECTED
   const message = requestToJoinModal?.message
-  const { forum_index, is_calledfrom_detailPage = false, slug } = requestToJoinModal.data
+  const { forum_index, is_calledfrom_detailPage = false } = requestToJoinModal.data
   const isLoading = requestToJoinModal.status === apiStatus.LOADING
   const dispatch = useDispatch();
 
@@ -128,7 +128,6 @@ const SendRequestModal = () => {
                   className="form-control"
                   placeholder={`Enter Password`}
                   type={pass.type === types.PASSWORD ? "password" : "text"}
-                  maxLength={6}
                   {...register("password")} />
                 <i
                   className={`eyeIcon ${pass.type === types.TEXT ? ' fa fa-eye' : ' fa fa-eye-slash'}`}

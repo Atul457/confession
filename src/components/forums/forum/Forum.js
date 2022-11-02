@@ -110,7 +110,12 @@ const Forum = (props) => {
     }
 
     const openNsfwModal = () => {
-        dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${slug}` }))
+        dispatch(toggleNfswModal({
+            isVisible: true,
+            forum_link: `/forums/${slug}`,
+            forum_id,
+            forum_index
+        }))
     }
 
     const getBody = () => {

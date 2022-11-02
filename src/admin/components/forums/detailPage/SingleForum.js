@@ -84,6 +84,8 @@ const SingleForum = props => {
         dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
         if (is_nsw) {
             dispatch(toggleNfswModal({
+                forum_index,
+                forum_id: currForum?.forum_id,
                 isVisible: true, forum_link: `/forums/${currForum?.slug}`
             }))
         }

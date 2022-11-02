@@ -73,7 +73,12 @@ const ForumHeaderAdmin = props => {
 
     // Opens nfsw alert
     const openNsfwModal = () => {
-        dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${currForum?.slug}` }))
+        dispatch(toggleNfswModal({
+            isVisible: true,
+            forum_link: `/forums/${currForum?.slug}`,
+            forum_id,
+            forum_index
+        }))
     }
 
     // Opens req to join modal

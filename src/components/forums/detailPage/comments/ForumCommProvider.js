@@ -78,7 +78,7 @@ const isAllowedToComment = currForum => {
     const isClosed = currForum?.type === forum_types.closed
     const isApproved = currForum?.is_requested === requestedStatus.approved
     const isAllowedType = currForum?.type === forum_types.public
-    const allowToComment = (!isClosed && (isAllowedType || isApproved) || currForum?.isReported === myForum)
+    const allowToComment = (!isClosed && (isAllowedType || isApproved) || currForum?.isReported === myForum || currForum?.isAllowedToComment === true)
     return allowToComment
 }
 
