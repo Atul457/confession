@@ -1,5 +1,6 @@
 const searchAcs = {
-    "SEARCH_ALL": "SEARCH_FORUMS_AND_CONFESSIONS"
+    "SEARCH_ALL": "SEARCH_FORUMS_AND_CONFESSIONS",
+    "MUTATE_SEARCH_DATA": "MUTATE_SEARCH_DATA"
 }
 
 const searchAcFn = payload => {
@@ -9,7 +10,15 @@ const searchAcFn = payload => {
     }
 }
 
+const mutateSearchData = payload => {
+    return {
+        type: searchAcs?.MUTATE_SEARCH_DATA,
+        payload
+    }
+}
+
 export {
     searchAcFn,
-    searchAcs
+    searchAcs,
+    mutateSearchData
 }

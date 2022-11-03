@@ -168,8 +168,8 @@ const Routes = ({ categories }) => {
                     {/* REPORT PAGE */}
 
                     {/* FORUM DETAIL PAGE */}
-                    <Route path="forums/:slug" element={<ProtectedRoute><ForumDetailPage /></ProtectedRoute>}>
-                        <Route index element={<ForumDetailPage />} />
+                    <Route path="forums/:slug" element={<ForumDetailPage />}>
+                        {/* <Route index element={<ForumDetailPage />} /> */}
                     </Route>
                     {/* REPORT PAGE */}
 

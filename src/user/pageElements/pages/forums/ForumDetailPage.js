@@ -91,7 +91,7 @@ const ForumDetailPage = () => {
         token: "",
         method: "get",
         url: `getforum/${forumSlug}`,
-        token: getKeyProfileLoc("token", true)
+        token: getKeyProfileLoc("token", true) ?? ""
       }
       try {
         let res = await fetchData(obj)

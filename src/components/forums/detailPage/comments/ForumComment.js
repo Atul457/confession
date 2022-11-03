@@ -298,9 +298,8 @@ const ForumComment = (props) => {
     <>
       <div className='postCont forum_comment'>
 
-
         {/* Edit/Delete comment */}
-        {(auth && currComment?.is_editable === 1) ?
+        {(auth() && currComment?.is_editable === 1) ?
           <div className='edit_delete_com_forum'>
             <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
             {!isUpdateComBoxVisible ? <img src={editCommentIcon} className='editCommentIcon' onClick={openUpdateComBox} /> : null}
@@ -309,7 +308,7 @@ const ForumComment = (props) => {
         {/* Edit/Delete comment */}
 
         {/* Report comment */}
-        {(auth && isReported !== 2) ? <span className="reportPost" onClick={openReportCommentModal}>
+        {(auth() && isReported !== 2) ? <span className="reportPost" onClick={openReportCommentModal}>
           <i className="fa fa-exclamation-circle reportComIcon" aria-hidden="true"></i>
         </span> : null}
         {/* } */}
@@ -324,7 +323,7 @@ const ForumComment = (props) => {
 
           {user_id !== false ?
             <Link className={`forum_com_p_link`}
-              to={((auth && user_id !== "") ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `#`)}>
+              to={((auth() && user_id !== "") ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `#`)}>
               <span className="userName">
                 {comment_by}
               </span>

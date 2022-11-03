@@ -1,8 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
 
 // Helpers
 import DateConverter from '../../../helpers/DateConverter'
+import WithLinkComp from '../../../common/components/helpers/WithLinkComp';
 
 // Image imports
 import actionIcon from '../../../images/actionIcon.svg';
@@ -44,7 +44,7 @@ const ForumHeader = props => {
     } = props
 
     const isActionBoxVisible = actionBox?.forum_id === forum_id
-    const isShareBoxVisible = shareBox?.forum_id === forum_id && is_requested === requestedStatus.approved
+    const isShareBoxVisible = !isCalledFromSearchPage && shareBox?.forum_id === forum_id && is_requested === requestedStatus.approved
     const dispatch = useDispatch()
     const hideJoinDiv = type === forum_types.closed || type === forum_types.public || is_requested === requestedStatus.approved
     const isNfswTypeContent = currForum?.is_nsw === 1
@@ -52,6 +52,7 @@ const ForumHeader = props => {
     const joined = currForum?.is_requested === requestedStatus.approved
     const isPrivateForum = currForum?.type === forum_types.private
     const postData = { is_forum: 1, forum_id, ...currForum }
+    const isPublicForum = type === forum_types.public
     const showShareBlock = type !== forum_types.closed && (isPrivateForum ? joined : true)
 
     // Functions
@@ -130,42 +131,35 @@ const ForumHeader = props => {
         }))
     }
 
+
     const getBody = () => {
-        const forum_slug = isCalledFromSearchPage && (isPrivateForum && !joined) ? "#" : (auth() ? `/forums/${currForum?.slug}` : "/login")
 
-        if (auth() && isMyForum === false && ((isPrivateForum && !joined) || isNfswTypeContent))
-            return (
-                <div className="forum_header_left_sec" onClick={() => {
-                    if ((isPrivateForum && !joined) && !isCalledFromSearchPage) return openReqToJoinModal()
-                    if ((isPrivateForum && !joined) && isCalledFromSearchPage) return
-                    if (isNfswTypeContent) openNsfwModal()
-                }}>
-                    <div className="forum_name">
-                        {name}
-                    </div>
-                    <div className="category_name">
-                        {(category_name).charAt(0) + ((category_name).slice(1).toLowerCase())}
-                    </div>
-                    <div className="forum_timestamp postCreatedTime">
-                        {created_at ? DateConverter(created_at) : null}
-                    </div>
-                </div>)
+        const private_and_joined = isPrivateForum && joined
+        const returnLink = isMyForum || (!auth() && !isNfswTypeContent) || (!isPrivateForum && !isNfswTypeContent)
+            || (private_and_joined && !isNfswTypeContent) || (isCalledFromSearchPage && isPublicForum && !isNfswTypeContent)
+        const forum_slug = returnLink ? `/forums/${currForum?.slug}` : "#"
+        let Html = ""
 
-        return (
-            <Link className="links forum_header_left_sec text-dark" to={forum_slug} state={scrollDetails}>
-                <div className="forum_header_left_sec">
-                    <div className="forum_name">
-                        {name}
-                    </div>
-                    <div className="category_name">
-                        {(category_name).charAt(0) + ((category_name).slice(1).toLowerCase())}
-                    </div>
-                    <div className="forum_timestamp postCreatedTime">
-                        {created_at ? DateConverter(created_at) : null}
-                    </div>
+        Html = (
+            <div className="forum_header_left_sec" onClick={() => {
+                if ((!auth() && isNfswTypeContent) || (isPrivateForum && joined && isNfswTypeContent)) return openNsfwModal()
+                if (auth() && (isPrivateForum && !joined) && !isCalledFromSearchPage) return openReqToJoinModal()
+                if (auth() && (isPrivateForum && !joined) && isCalledFromSearchPage) return
+                if (!isPrivateForum && isNfswTypeContent) return openNsfwModal()
+            }}>
+                <div className="forum_name">
+                    {name}
                 </div>
-            </Link>
-        )
+                <div className="category_name">
+                    {(category_name).charAt(0) + ((category_name).slice(1).toLowerCase())}
+                </div>
+                <div className="forum_timestamp postCreatedTime">
+                    {created_at ? DateConverter(created_at) : null}
+                </div>
+            </div>)
+
+
+        return returnLink ? <WithLinkComp className='w-100' link={forum_slug} children={Html} /> : Html
 
     }
 

@@ -72,4 +72,68 @@ const scrollToTop = () => {
     })
 }
 
-export { getLocalStorageKey, isAvatarSelectedCurr, setLocalStoragekey, resHandler, areAtLastPage, scrollToTop }
+// ** Converts table to CSV
+function convertArrayOfObjectsToCSV(array) {
+    let result
+    const columnDelimiter = ','
+    const lineDelimiter = '\n'
+    const cols = Object.keys(array[0]).map(curr => curr?.toUpperCase())
+    const keys = Object.keys(array[0])
+
+
+    result = ''
+    result += cols.join(columnDelimiter)
+    result += lineDelimiter
+
+    array.forEach(item => {
+        let ctr = 0
+        keys.forEach(key => {
+            if (ctr > 0) result += columnDelimiter
+            result += item[key]
+            ctr++
+        })
+        result += lineDelimiter
+    })
+
+    return result
+}
+
+const exportToCsv = ({ array = [] }) => {
+    const link = document.createElement('a')
+    const NewOne = array.map(item => {
+        delete item.id
+        delete item.status
+        delete item.source
+
+        delete item.image
+        return {
+            ...item,
+            status: item?.status ? "Active" : "InActive",
+            post_as_anonymous: item?.post_as_anonymous === 1 ? "Yes" : "No",
+            logintype: item.source === 2 ? "Gmail id" : item.source === 3 ? "Facebook id" : "Manual"
+        }
+    })
+
+    let csv = convertArrayOfObjectsToCSV(NewOne)
+    if (csv === null) return
+
+    const filename = 'export.csv'
+
+    if (!csv.match(/^data:text\/csv/i)) {
+        csv = `data:text/csv;charset=utf-8,${csv}`
+    }
+
+    link.setAttribute('href', encodeURI(csv))
+    link.setAttribute('download', filename)
+    link.click()
+}
+
+export {
+    getLocalStorageKey,
+    isAvatarSelectedCurr,
+    setLocalStoragekey,
+    resHandler,
+    areAtLastPage,
+    scrollToTop,
+    exportToCsv
+}

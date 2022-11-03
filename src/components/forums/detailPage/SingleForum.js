@@ -18,6 +18,7 @@ import { apiStatus } from '../../../helpers/status';
 import NfswAlertModal from '../../modals/NfswAlertModal';
 import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
 import { isAllowedToComment } from './comments/ForumCommProvider';
+import auth from '../../../user/behindScenes/Auth/AuthCheck';
 
 
 const SingleForum = props => {
@@ -74,6 +75,7 @@ const SingleForum = props => {
         no_of_comments: currForum?.no_of_comments,
         viewcount: currForum?.viewcount ?? 0,
         forum_type,
+        is_calledfrom_detailPage: true,
         isPinned,
         showPin,
         forum_tags: currForum?.tags,
@@ -84,7 +86,7 @@ const SingleForum = props => {
 
     useEffect(() => {
         dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
-        if (is_nsw) {
+        if (is_nsw && auth()) {
             dispatch(toggleNfswModal({
                 forum_index,
                 forum_id: currForum?.forum_id,
@@ -160,7 +162,8 @@ const SingleForum = props => {
                 <Link
                     to={`/${location?.state?.cameFromSearch ? "search" : "forums"}`}
                     onClick={resetTagList}
-                    state={{ cameFromDetailPage: true, scrollDetails: location?.state?.scrollDetails }}
+                    state={{ scrollPos: location?.state?.scrollPos }}
+                    // replace={true}
                     className='backtoHome'>
                     <span className='mr-2'>
                         <i className="fa fa-chevron-left" aria-hidden="true"></i>

@@ -273,7 +273,7 @@ const deleteForumCommService = async ({
     }
 
     obj = {
-        token: getKeyProfileLoc("token", true),
+        token: getKeyProfileLoc("token", true) ?? "",
         method: "get",
         url: `deletforumecomment/${forum_id}/${commentId}`
     }

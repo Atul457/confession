@@ -85,7 +85,7 @@ const ForumComments = props => {
   // Get comments on forum
   const getComments = async (page = 1, append = false) => {
     let obj = {
-      token: getKeyProfileLoc("token", true),
+      token: getKeyProfileLoc("token", true) ?? "",
       data: {
         forum_id,
         root_id: "",

@@ -31,7 +31,7 @@ const WhatsNew = () => {
         modals
     } = useSelector(state => state.forumsReducer)
     // const cameBackfromSearch = location?.state?.cameFromDetailPage
-    // const scrollDetails = location?.state?.scrollDetails
+    // const scrollPos = location?.state?.scrollPos
     const { modalsReducer: { nfsw_modal } } = useSelector(state => state)
     const { requestToJoinModal, reportForumModal } = modals
     const dispatch = useDispatch()
@@ -45,17 +45,17 @@ const WhatsNew = () => {
     useEffect(() => {
         // const forumsArrEmpty = forums.length === 0
         // if (!cameBackfromSearch || forumsArrEmpty)
-            getForums(1, false)
+        getForums(1, false)
     }, [activeCategory])
 
-    // useEffect(() => {
-        // if (scrollDetails){
-        //     console.log(scrollDetails?.scrollPos)
+    useEffect(() => {
+        // if (scrollPos) {
+        //     console.log(scrollPos)
         //     window.scrollTo({
-        //         top: scrollDetails?.scrollPos
+        //         top: scrollPos
         //     })
         // }
-    // }, [])
+    }, [])
 
     // Functions
 

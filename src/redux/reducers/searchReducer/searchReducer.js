@@ -22,6 +22,14 @@ const SearchReducer = (state = initialState, action) => {
             ...action.payload
         };
 
+        case searchAcs.MUTATE_SEARCH_DATA: return {
+            ...state,
+            data: state?.data?.splice(action?.payload?.forum_index, 1, {
+                ...state?.data[action?.payload?.forum_index],
+                ...action?.payload
+            }),
+        };
+
         default:
             return state
     }

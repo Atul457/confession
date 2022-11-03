@@ -7,6 +7,7 @@ import viewsCountIcon from '../../../images/viewsCountIcon.svg';
 // Helpers
 import auth from '../../../user/behindScenes/Auth/AuthCheck'
 import { apiStatus } from '../../../helpers/status';
+import WithLinkComp from '../../../common/components/helpers/WithLinkComp';
 
 // Image imports
 import pinIcon from '../../../images/pinIcon.svg';
@@ -47,6 +48,7 @@ const ForumFooter = (props) => {
         },
         showTagsSection = forum_tags.length
     const requested = is_requested === requestedStatus.is_requested
+    const isPublicForum = currForum?.type === forum_types.public
     const joined = currForum?.is_requested === requestedStatus.approved
     const isPrivateForum = currForum?.type === forum_types.private
     const isNfswTypeContent = currForum?.is_nsw === 1
@@ -87,13 +89,27 @@ const ForumFooter = (props) => {
     }
 
     const getBody = () => {
-        const forum_slug = isCalledFromSearchPage && (isPrivateForum && !joined) ? "#" : (auth() ? `/forums/${currForum?.slug}` : "/login")
-        if (auth() && isMyForum === false && ((isPrivateForum && !joined) || isNfswTypeContent))
-            return (
+
+        const private_and_joined = isPrivateForum && joined
+        const returnLink = isMyForum || (!auth() && !isNfswTypeContent) || (!isPrivateForum && !isNfswTypeContent)
+            || (private_and_joined && !isNfswTypeContent) || (isCalledFromSearchPage && isPublicForum && !isNfswTypeContent)
+        const forum_slug = returnLink ? `/forums/${currForum?.slug}` : "#"
+        let Html = ""
+
+        Html = (
+            <>
+                {!auth() && is_calledfrom_detailPage ?
+                    <span className="feedPageLoginBtnCont postLoginBtnCont">
+                        <Link to="/login">
+                            <div className="categoryOfUser enhancedStyle mb-0" type="button">Login to comment</div>
+                        </Link>
+                    </span>
+                    : ""}
                 <pre className="preToNormal post cursor_pointer" onClick={() => {
-                    if ((isPrivateForum && !joined) && !isCalledFromSearchPage) return openReqToJoinModal()
-                    if ((isPrivateForum && !joined) && isCalledFromSearchPage) return
-                    if (isNfswTypeContent) openNsfwModal()
+                    if ((!auth() && isNfswTypeContent) || (isPrivateForum && joined && isNfswTypeContent)) return openNsfwModal()
+                    if (auth() && (isPrivateForum && !joined) && !isCalledFromSearchPage) return openReqToJoinModal()
+                    if (auth() && (isPrivateForum && !joined) && isCalledFromSearchPage) return
+                    if (!isPrivateForum && isNfswTypeContent) return openNsfwModal()
                 }}>
                     <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
                         <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
@@ -105,25 +121,13 @@ const ForumFooter = (props) => {
                             <span className="count">{no_of_comments}</span>
                         </div>
                     </div>
-                </pre>)
-
-
-        return (
-            <Link className="links text-dark" to={forum_slug}>
-                <pre className="preToNormal post cursor_pointer">
-                    <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
-                        <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
-                            <img src={viewsCountIcon} alt="" />
-                            <span className="count">{viewcount ?? 0}</span>
-                        </div>
-                        <div className="upvote_downvote_icons_cont" type="button">
-                            <img src={commentCountIcon} alt="" />
-                            <span className="count">{no_of_comments}</span>
-                        </div>
-                    </div>
                 </pre>
-            </Link>
+            </>
         )
+
+
+        return returnLink ? <WithLinkComp className='links text-dark' link={forum_slug} children={Html} /> : Html
+
     }
 
     return (

@@ -3,7 +3,6 @@ import Header from './common/Header';
 import Footer from './common/Footer';
 import { GetUsersData } from '../datatable/GetUsersData';
 import auth from '../behindScenes/Auth/AuthCheck';
-import { Link } from 'react-router-dom';
 
 
 export const Users = () => {
@@ -20,16 +19,7 @@ export const Users = () => {
           <div className="preventHeader">preventHead</div>
           <div className="container py-md-4 px-md-5 p-3 preventFooter">
             <div className="row forPosSticky">
-              <Link to="/dashboard" className='backtoHome'>
-                <i className="fa fa-arrow-left mr-2" aria-hidden="true"></i>
-                Back to home
-              </Link>
-              <section className="col-lg-12 col-12 mt-3 mt-lg-0 boxShadow">
-                <div className="adminUsersPageHead">
-                  <h6 className="mb-0">Users</h6>
-                </div>
-                <GetUsersData />
-              </section>
+              <GetUsersData />
             </div>
           </div>
           <Footer />

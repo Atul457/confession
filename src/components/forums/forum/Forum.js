@@ -9,6 +9,7 @@ import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
 // Custom components
 import ForumFooter from './ForumFooter';
 import ForumHeader from './ForumHeader';
+import WithLinkComp from '../../../common/components/helpers/WithLinkComp';
 
 // Helpers
 import auth from '../../../user/behindScenes/Auth/AuthCheck';
@@ -28,10 +29,11 @@ const Forum = (props) => {
         isMyForumPage = false,
         forum_index
     } = props
-    var scrollDetails = {
-        scrollPos: rememberScrollPos ? window.scrollY : undefined,
-        rememberScrollPos
-    };
+    // var scrollDetails = {
+    //     scrollPos: rememberScrollPos ? window.scrollY : undefined,
+    //     rememberScrollPos
+    // };
+    // console.log(scrollDetails)
     const { forum_id, is_pinned } = currForum
     const { data: types } = forumTypes
     const forum_type = {
@@ -43,13 +45,14 @@ const Forum = (props) => {
     const joined = currForum.is_requested === requestedStatus.approved
     const isPrivateForum = currForum?.type === forum_types.private
     const isMyForum = currForum?.isReported === myForum
+    const isNfswTypeContent = currForum?.is_nsw === nfswContentType
     const showAlertOrNot = (currForum?.is_nsw === nfswContentType) && !(isMyForum)
     const slug = currForum?.slug
     const showPin = true
     const isActionBoxVisible = actionBox?.forum_id === forum_id
     const forumHeaderProps = {
         category_name: currForum?.category_name,
-        scrollDetails,
+        rememberScrollPos,
         created_at: currForum?.created_at,
         name: currForum?.title,
         forum_id: currForum?.forum_id,
@@ -77,7 +80,7 @@ const Forum = (props) => {
         viewcount: currForum?.viewcount ?? 0,
         forum_type,
         isPinned,
-        scrollDetails,
+        rememberScrollPos,
         showPin,
         isPrivateForum,
         is_requested: currForum?.is_requested,
@@ -118,31 +121,31 @@ const Forum = (props) => {
         }))
     }
 
+
+
     const getBody = () => {
 
-        const forum_slug = auth() ? `/forums/${slug}` : "/login"
+        const private_and_joined = isPrivateForum && joined
+        const returnLink = isMyForum || (!auth() && !isNfswTypeContent) || (!isPrivateForum && !isNfswTypeContent)
+            || (private_and_joined && !isNfswTypeContent)
+        const forum_slug = !returnLink ? "#" : (`/forums/${currForum?.slug}`)
+        let Html = ""
 
-        if (auth() && !isMyForum) {
-            if (!joined)
-                return (
-                    <pre className="preToNormal post forum_desc cursor_pointer" onClick={openReqToJoinModal}>
-                        {currForum?.description}
-                    </pre>)
+        Html = (
+            <pre className="preToNormal post forum_desc cursor_pointer" onClick={() => {
+                if ((!auth() && isNfswTypeContent) || (isPrivateForum && joined && isNfswTypeContent)) return openNsfwModal()
+                if (auth() && (isPrivateForum && !joined)) return openReqToJoinModal()
+                if (!isPrivateForum && isNfswTypeContent) return openNsfwModal()
+            }}>
+                {currForum?.description}
+            </pre>)
 
-            if (showAlertOrNot)
-                return (
-                    <pre className="preToNormal post forum_desc cursor_pointer" onClick={openNsfwModal}>
-                        {currForum?.description}
-                    </pre>)
-        }
-
-        return (
-            <Link className="links text-dark" to={forum_slug} state={{ scrollDetails }}>
-                <pre className="preToNormal post forum_desc">
-                    {currForum?.description}
-                </pre>
-            </Link>
-        )
+        return returnLink ? <WithLinkComp
+            className='w-100'
+            rememberScrollPos={rememberScrollPos}
+            link={forum_slug}
+            children={Html}
+        /> : Html
 
     }
 

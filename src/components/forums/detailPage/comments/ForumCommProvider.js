@@ -1,4 +1,5 @@
 import { apiStatus } from "../../../../helpers/status"
+import auth from "../../../../user/behindScenes/Auth/AuthCheck"
 
 const showSubCommentsFn = (countChild, SLOMT = 3) => {
     if (countChild && countChild > SLOMT)
@@ -79,7 +80,7 @@ const isAllowedToComment = currForum => {
     const isApproved = currForum?.is_requested === requestedStatus.approved
     const isAllowedType = currForum?.type === forum_types.public
     const allowToComment = (!isClosed && (isAllowedType || isApproved) || currForum?.isReported === myForum || currForum?.isAllowedToComment === true)
-    return allowToComment
+    return auth() && allowToComment
 }
 
 const customStyles = {

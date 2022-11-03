@@ -2616,6 +2616,8 @@ span.offlineColor {
     margin-left: 17px;
 }
 
+
+
 .modalFootBtns {
     color: #fff;
     min-width: 95px;
@@ -2660,6 +2662,11 @@ span.offlineColor {
 
 .links {
     text-decoration: none !important;
+}
+
+.single_forum .links{
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .links:focus,
@@ -5122,6 +5129,13 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
 
 .postCont.admin .postContHeader {
     margin-bottom: 10px;
+}
+
+.postCont.admin .sharekitdots,
+.postCont.admin i:first-child{
+    display: inline-flex;
+    align-items: center;
+    padding-top: 0px;
 }
 
 .carousel_item_feature .imgWrapper {

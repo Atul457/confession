@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import WithLinkComp from '../../common/components/helpers/WithLinkComp'
 import { fetchData } from '../../commonApi'
 import { resHandler } from '../../helpers/helpers'
 import { getKeyProfileLoc } from '../../helpers/profileHelper'
@@ -9,6 +10,8 @@ import { apiStatus } from '../../helpers/status'
 import nfswBanner from "../../images/nfswBanner.svg"
 import { forumHandlers, mutateForumFn } from '../../redux/actions/forumsAc/forumsAc'
 import { toggleNfswModal } from '../../redux/actions/modals/ModalsAc'
+import { mutateSearchData, searchAcFn } from '../../redux/actions/searchAc/searchAc'
+import auth from '../../user/behindScenes/Auth/AuthCheck'
 
 
 const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
@@ -16,6 +19,9 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
     // Hooks and vars
     const dispatch = useDispatch()
     const forum_link = nfsw_modal?.forum_link ?? "#"
+    console.log({
+        nfsw_modal
+    })
     const navigate = useNavigate()
     const { status } = useSelector(state => state?.modalsReducer?.nfsw_modal)
     const isLoading = status === apiStatus?.LOADING
@@ -68,6 +74,11 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
                     mutate_data_only: true,
                     is_nsw: 0
                 }))
+            } else if (nfsw_modal?.is_calledfrom_searchPage) {
+                // dispatch(mutateSearchData({
+                //     forum_index: nfsw_modal?.forum_index,
+                //     is_nsw: 0
+                // }))
             } else {
                 dispatch(mutateForumFn({
                     forum_index: nfsw_modal?.forum_index,
@@ -80,9 +91,10 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
                 status: apiStatus.FULFILLED
             }))
 
-            if (!rest?.isForumDetailPage) navigate(forum_link)
+            if (!rest?.isForumDetailPage) navigate(forum_link, { state: { cameFromSearch: true } })
 
         } catch (err) {
+            console.log({ err })
             dispatch(toggleNfswModal({
                 status: apiStatus.REJECTED,
                 message: err.message
@@ -90,6 +102,24 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
         }
     }
 
+    const getCloseBtn = () => {
+        const closeBtnHtml = (
+            <Button
+                className="reqModalFootBtns"
+                variant="primary"
+                onClick={() => closeModal(false)}
+            >
+                {isLoading ? <div className="spinner-border wColor spinnerSizeFeed" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div> : "Continue"}
+
+            </Button>
+        )
+
+        return !auth() ? (
+            <WithLinkComp link={forum_link}>{closeBtnHtml}</WithLinkComp>
+        ) : closeBtnHtml
+    }
 
 
     return (
@@ -126,16 +156,7 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
                 >
                     Cancel
                 </Button>
-                <Button
-                    className="reqModalFootBtns"
-                    variant="primary"
-                    onClick={() => closeModal(false)}
-                >
-                    {isLoading ? <div className="spinner-border wColor spinnerSizeFeed" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div> : "Continue"}
-
-                </Button>
+                {getCloseBtn()}
             </Modal.Footer>
         </Modal>
     )

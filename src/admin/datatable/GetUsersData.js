@@ -3,6 +3,9 @@ import { fetchData } from "../../commonApi";
 import DataTable from "react-data-table-component";
 import ReactPaginate from 'react-paginate'
 import { ChevronDown } from 'react-feather'
+import { exportToCsv } from "../../helpers/helpers";
+import { Link } from "react-router-dom";
+
 
 export const GetUsersData = () => {
 
@@ -41,7 +44,7 @@ export const GetUsersData = () => {
     const handlePagination = page => {
         setPage(page.selected)
     }
-    
+
     // RESETS THE CURRENT SEARCH VALUE
     const resetSearchValue = () => {
         setSearchValue("");
@@ -113,8 +116,7 @@ export const GetUsersData = () => {
         }
     ]
 
-
-    const handleAction = async (id, status, target) => {
+    const handleAction = async (id, status, target, getAllData = false) => {
         target.setAttribute("disabled", true);
 
         let data = {
@@ -151,22 +153,29 @@ export const GetUsersData = () => {
 
     }
 
-    const getUserList = async () => {
+    const getUserList = async (getAllData = false) => {
         let obj = {
-            data: { page: (page + 1), perpage: noOfRowsPerPage, searchvalue: searchValue },
+            data: { page: getAllData ? "all" : (page + 1), perpage: noOfRowsPerPage, searchvalue: searchValue },
             token: adminDetails.token,
             method: "post",
             url: "admin/getusers"
         }
         try {
-            setIsLoading((prevState) => !prevState);
-            const res = await fetchData(obj)
+            if (!getAllData) setIsLoading((prevState) => !prevState);
+
+            fetchData(obj)
                 .then((res) => {
-                    if (res.data.status === true) {
-                        setUsersCount(res.data.filtercount);
-                        setUsers(res.data.users);
+                    if (getAllData) {
+                        exportToCsv({
+                            array: res.data.users
+                        })
+                    } else {
+                        if (res.data.status === true) {
+                            setUsersCount(res.data.filtercount);
+                            setUsers(res.data.users);
+                        }
                     }
-                    setIsLoading((prevState) => !prevState);
+                    if (!getAllData) setIsLoading((prevState) => !prevState);
                 })
         }
         catch (err) {
@@ -192,59 +201,79 @@ export const GetUsersData = () => {
         },
     };
 
+    const exportToCsvfn = () => {
+        getUserList(true)
+    }
+
 
     return (
-        <div>
-            <div className="dataTableSelectNsearchCont">
-                <div className="selectNlabelContDatatable">
-                    <span className="showLabel">Show</span>
-                    <select value={noOfRowsPerPage} onChange={(e) => handleShowRowsPerPage(e.target.value)} className="datatableSelect customFormControl">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                    </select>
-                </div>
+        <div className="w-100">
+            <div className="d-flex  align-items-center mb-2 justify-content-between w-100">
+                <Link to="/dashboard" className='backtoHome mb-0'>
+                    <i className="fa fa-arrow-left mr-2" aria-hidden="true"></i>
+                    Back to home
+                </Link>
 
-                <div className="datatableSearch">
-                    <label className="showLabel">
-                        Search:
-                    </label>
-                    <div className="crossIconNinputCont">
-                        <input type="text" className="customFormControl dataTableSearchInput" value={searchValue} onChange={(e) => {
-                            setSearchValue(e.target.value)
-                        }} />
-                        {/* GETS VISIBLE ON SEARCH LENGTH MORE THAN 0 */}
-                        {resetSearch === true && <i className="crossIcon fa fa-times" aria-hidden="true" type="button" onClick={() => { setPage(0); resetSearchValue() }}></i>}
-                    </div>
-                </div>
-
-
+                <button className='btn btn-sm text-white' onClick={exportToCsvfn} style={{
+                    background: "#2E4C6D"
+                }}><i class="fa fa-upload text-white pr-2" aria-hidden="true"></i> Export csv</button>
             </div>
-            {isLoading === true ?
-                <>
-                    {users.length === 0 ? <h6 className="endListMessage mt-3 pb-0">No Records to show</h6> :
-                        <DataTable
-                            columns={columns}
-                            data={users}
-                            highlightOnHover
-                            pagination
-                            paginationPerPage={noOfRowsPerPage}
-                            onChangeRowsPerPage={(currentRowsPerPage) => {
-                                setNoOfRowsPerPage(currentRowsPerPage);
-                            }}
-                            sortIcon={<ChevronDown size={10} />}
-                            customStyles={customStyles}
-                            paginationDefaultPage={page + 1}
-                            paginationComponent={CustomPagination}
-                        />}
-                </>
-                : <div className="my-3 text-center">
-                    <div className="spinner-border pColor" role="status">
-                        <span className="sr-only">Loading...</span>
+
+            <div className="col-lg-12 col-12 mt-3 mt-lg-0 boxShadow">
+                <div className="adminUsersPageHead">
+                    <h6 className="mb-0">Users</h6>
+                </div>
+                <div className="dataTableSelectNsearchCont">
+                    <div className="selectNlabelContDatatable">
+                        <span className="showLabel">Show</span>
+                        <select value={noOfRowsPerPage} onChange={(e) => handleShowRowsPerPage(e.target.value)} className="datatableSelect customFormControl">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
                     </div>
-                </div>}
+
+                    <div className="datatableSearch">
+                        <label className="showLabel">
+                            Search:
+                        </label>
+                        <div className="crossIconNinputCont">
+                            <input type="text" className="customFormControl dataTableSearchInput" value={searchValue} onChange={(e) => {
+                                setSearchValue(e.target.value)
+                            }} />
+                            {/* GETS VISIBLE ON SEARCH LENGTH MORE THAN 0 */}
+                            {resetSearch === true && <i className="crossIcon fa fa-times" aria-hidden="true" type="button" onClick={() => { setPage(0); resetSearchValue() }}></i>}
+                        </div>
+                    </div>
+
+
+                </div>
+                {isLoading === true ?
+                    <>
+                        {users.length === 0 ? <h6 className="endListMessage mt-3 pb-0">No Records to show</h6> :
+                            <DataTable
+                                columns={columns}
+                                data={users}
+                                highlightOnHover
+                                pagination
+                                paginationPerPage={noOfRowsPerPage}
+                                onChangeRowsPerPage={(currentRowsPerPage) => {
+                                    setNoOfRowsPerPage(currentRowsPerPage);
+                                }}
+                                sortIcon={<ChevronDown size={10} />}
+                                customStyles={customStyles}
+                                paginationDefaultPage={page + 1}
+                                paginationComponent={CustomPagination}
+                            />}
+                    </>
+                    : <div className="my-3 text-center">
+                        <div className="spinner-border pColor" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div>}
+            </div>
         </div>
     )
 
