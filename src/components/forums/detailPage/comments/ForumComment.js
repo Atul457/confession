@@ -343,6 +343,11 @@ const ForumComment = (props) => {
 
         <div className="postBody">
           <div className="postedPost mb-0">
+
+            {currComment?.is_edited === 1 ?
+              <i className="fa fa-pencil pr-2" aria-hidden="true"></i>
+              : null}
+
             <pre className="preToNormal">
               {parse(currComment?.comment)}
             </pre>

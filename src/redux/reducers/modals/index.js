@@ -12,7 +12,9 @@ const initialState = {
 
 const modalsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case modalActions.NFSW_MODAL: return { ...state, nfsw_modal: { ...state?.nfsw_modal, ...action.payload } }
+        case modalActions.NFSW_MODAL: {
+            return ({ ...state, nfsw_modal: { ...state?.nfsw_modal, ...action.payload } })
+        }
         default: return state;
     }
 }

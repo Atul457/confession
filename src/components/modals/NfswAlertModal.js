@@ -1,16 +1,15 @@
 import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import WithLinkComp from '../../common/components/helpers/WithLinkComp'
 import { fetchData } from '../../commonApi'
-import { resHandler } from '../../helpers/helpers'
+import { resHandler, scrollDetails } from '../../helpers/helpers'
 import { getKeyProfileLoc } from '../../helpers/profileHelper'
 import { apiStatus } from '../../helpers/status'
 import nfswBanner from "../../images/nfswBanner.svg"
 import { forumHandlers, mutateForumFn } from '../../redux/actions/forumsAc/forumsAc'
 import { toggleNfswModal } from '../../redux/actions/modals/ModalsAc'
-import { mutateSearchData, searchAcFn } from '../../redux/actions/searchAc/searchAc'
 import auth from '../../user/behindScenes/Auth/AuthCheck'
 
 
@@ -19,9 +18,6 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
     // Hooks and vars
     const dispatch = useDispatch()
     const forum_link = nfsw_modal?.forum_link ?? "#"
-    console.log({
-        nfsw_modal
-    })
     const navigate = useNavigate()
     const { status } = useSelector(state => state?.modalsReducer?.nfsw_modal)
     const isLoading = status === apiStatus?.LOADING
@@ -49,6 +45,11 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
 
     // Confirm nsfw content
     const confirmNfsw = async () => {
+
+        if (!auth()) return dispatch(toggleNfswModal({
+            isVisible: false,
+            status: apiStatus.IDLE
+        }))
 
         let token = getKeyProfileLoc("token", true) ?? "", data;
 
@@ -91,7 +92,15 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
                 status: apiStatus.FULFILLED
             }))
 
-            if (!rest?.isForumDetailPage) navigate(forum_link, { state: { cameFromSearch: true } })
+            if (!rest?.isForumDetailPage) {
+                // Works when modal is opened on search page
+                navigate(forum_link, {
+                    state: { ...(nfsw_modal?.is_calledfrom_searchPage ? { cameFromSearch: true } : {}) }
+                })
+                if (nfsw_modal?.rememberScrollPos) {
+                    scrollDetails.setScrollDetails({ pageName: nfsw_modal?.pageName, scrollPosition: nfsw_modal?.scrollPosition })
+                }
+            }
 
         } catch (err) {
             console.log({ err })
@@ -117,7 +126,13 @@ const NfswAlertModal = ({ nfsw_modal, ...rest }) => {
         )
 
         return !auth() ? (
-            <WithLinkComp link={forum_link}>{closeBtnHtml}</WithLinkComp>
+            <WithLinkComp
+                nfsw={true}
+                rememberScrollPos={true}
+                link={forum_link}
+                pageName={nfsw_modal?.pageName}
+                scrollPosition={nfsw_modal?.scrollPosition}
+            >{closeBtnHtml}</WithLinkComp>
         ) : closeBtnHtml
     }
 

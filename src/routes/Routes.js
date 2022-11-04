@@ -43,8 +43,8 @@ import ProtectedRoute from '../user/ProtectedRoute';
 import ResetPassword from '../user/pageElements/pages/resetPassword/ResetPassword';
 import ForumDetailPage from '../user/pageElements/pages/forums/ForumDetailPage';
 import Search from '../user/pageElements/pages/search/Search';
-// import ForumDetailPageAdmin from '../admin/pageElements/pages/forums/ForumDetailPage';
-// import ForumsAdmin from '../admin/pageElements/pages/forums/ForumsAdmin';
+import ForumDetailPageAdmin from '../admin/pageElements/pages/forums/ForumDetailPageAdmin';
+import ForumsAdmin from '../admin/pageElements/pages/forums/ForumsAdmin';
 
 
 const Routes = ({ categories }) => {

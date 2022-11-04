@@ -30,6 +30,8 @@ const ForumFooter = (props) => {
         no_of_comments,
         forum_type,
         currForum,
+        pageName = "",
+        rememberScrollPos,
         is_calledfrom_detailPage = false,
         is_requested,
         isMyForum = false,
@@ -40,7 +42,6 @@ const ForumFooter = (props) => {
         isMyForumPage,
         isPinned,
         showPin,
-        scrollDetails,
         forum_tags } = props,
         forumTypeStyle = {
             background: forum_type.color_code,
@@ -84,7 +85,9 @@ const ForumFooter = (props) => {
             isVisible: true,
             forum_link: `/forums/${currForum?.slug}`,
             forum_id,
-            forum_index
+            forum_index,
+            pageName,
+            rememberScrollPos
         }))
     }
 
@@ -126,7 +129,12 @@ const ForumFooter = (props) => {
         )
 
 
-        return returnLink ? <WithLinkComp className='links text-dark' link={forum_slug} children={Html} /> : Html
+        return returnLink ? <WithLinkComp
+            className='links text-dark'
+            pageName={pageName}
+            rememberScrollPos={rememberScrollPos}
+            link={forum_slug}
+            children={Html} /> : Html
 
     }
 

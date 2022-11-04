@@ -8,7 +8,7 @@ import viewsCountIcon from '../../../../images/viewsCountIcon.svg';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import { apiStatus } from '../../../../helpers/status';
 import { forum_types, requestedStatus } from '../detailPage/comments/ForumCommProvider';
-import { pinForumService } from '../services/forumServices';
+import { pinForumService } from '../services/adminforumServices';
 
 // Image imports
 import pinIcon from '../../../../images/pinIcon.svg';
@@ -46,84 +46,36 @@ const ForumFooterAdmin = (props) => {
             border: `1px solid ${forum_type?.color_code}`
         },
         showTagsSection = forum_tags.length
-    const requested = is_requested === requestedStatus.is_requested
-    const joined = currForum?.is_requested === requestedStatus.approved
-    const isPrivateForum = currForum?.type === forum_types.private
-    const isNfswTypeContent = currForum?.is_nsw === 1
 
     // // Pins/Unpins the forum
-    const pinForumFn = async () => {
-        pinForumService({
-            isPinned,
-            forum_index,
-            forum_id,
-            dispatch
-        })
-    }
-
-    // Opens req to join modal
-    const openReqToJoinModal = () => {
-        dispatch(reqToJoinModalAcFn({
-            visible: true,
-            status: apiStatus.IDLE,
-            message: "",
-            data: {
-                forum_id,
-                slug: currForum?.slug,
-                requested: requested,
-                is_calledfrom_detailPage,
-                forum_index
-            }
-        }))
-    }
-
-    const openNsfwModal = () => {
-        dispatch(toggleNfswModal({
-            isVisible: true,
-            forum_link: `/forums/${currForum?.slug}`,
-            forum_id,
-            forum_index
-        }))
-    }
+    // const pinForumFn = async () => {
+    //     pinForumService({
+    //         isPinned,
+    //         forum_index,
+    //         forum_id,
+    //         dispatch
+    //     })
+    // }
 
     const getBody = () => {
-        const forum_slug = isCalledFromSearchPage && (isPrivateForum && !joined) ? "#" : (auth() ? `/forums/${currForum?.slug}` : "/login")
-        if (auth() && isMyForum === false && ((isPrivateForum && !joined) || isNfswTypeContent))
-            return (
-                <pre className="preToNormal post cursor_pointer" onClick={() => {
-                    if ((isPrivateForum && !joined) && !isCalledFromSearchPage) return openReqToJoinModal()
-                    if ((isPrivateForum && !joined) && isCalledFromSearchPage) return
-                    if (isNfswTypeContent) openNsfwModal()
-                }}>
-                    <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
-                        <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
-                            <img src={viewsCountIcon} alt="" />
-                            <span className="count">{viewcount ?? 0}</span>
-                        </div>
-                        <div className="upvote_downvote_icons_cont" type="button">
-                            <img src={commentCountIcon} alt="" />
-                            <span className="count">{no_of_comments}</span>
-                        </div>
-                    </div>
-                </pre>)
 
+        const forum_link = is_calledfrom_detailPage ? "#" : `/admin/forums/${currForum?.slug}`
+        const forum_slug = auth() ? forum_link : "/login";
 
-        return (
-            <Link className="links text-dark" to={forum_slug}>
-                <pre className="preToNormal post cursor_pointer">
-                    <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
-                        <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
-                            <img src={viewsCountIcon} alt="" />
-                            <span className="count">{viewcount ?? 0}</span>
-                        </div>
-                        <div className="upvote_downvote_icons_cont" type="button">
-                            <img src={commentCountIcon} alt="" />
-                            <span className="count">{no_of_comments}</span>
-                        </div>
+        return <Link className="links text-dark" to={forum_slug}>
+            <pre className="preToNormal post cursor_pointer">
+                <div className={`iconsCont ${!auth() ? 'mainDesignOnWrap' : ''}`}>
+                    <div className="upvote_downvote_icons_cont underlineShareCount ml-0" type="button">
+                        <img src={viewsCountIcon} alt="" />
+                        <span className="count">{viewcount ?? 0}</span>
                     </div>
-                </pre>
-            </Link>
-        )
+                    <div className="upvote_downvote_icons_cont" type="button">
+                        <img src={commentCountIcon} alt="" />
+                        <span className="count">{no_of_comments}</span>
+                    </div>
+                </div>
+            </pre>
+        </Link>
     }
 
     return (
@@ -159,11 +111,11 @@ const ForumFooterAdmin = (props) => {
                 }
             </div>
 
-            {(!is_only_to_show && auth() && showPin && !isMyForumPage) ? <span className="pinnForum" onClick={pinForumFn}>
+            {/* {(!is_only_to_show && auth() && showPin && !isMyForumPage) ? <span className="pinnForum" onClick={pinForumFn}>
                 <img
                     src={!isPinned ? pinIcon : pinnedIcon}
                     alt="pin_forum_icon" />
-            </span> : null}
+            </span> : null} */}
 
         </div>
     )

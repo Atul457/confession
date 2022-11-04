@@ -549,8 +549,6 @@ export default function Dashboard() {
                               * Filter out posts by clicking on the categories above. Unselect the category to remove the filter.
                             </div>
 
-
-
                             {/* CATEGORYCONT */}
                             {/* <aside className="col-12 col-md-4 posSticky">
                               <Category editVisible={true} openEditCategoriesModalFunc={openEditCategoriesModalFunc} openAddCategoriesModalFunc={openAddCategoriesModalFunc} categories={categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
@@ -576,7 +574,7 @@ export default function Dashboard() {
                                   }
                                 >
                                   {confessions.map((post, index) => {
-                                    return (<>
+                                    return (
                                       <Post
                                         confession_id={post.confession_id}
                                         post={post}
@@ -603,8 +601,7 @@ export default function Dashboard() {
                                         category={post.category_name}
                                         postedComment={post.description}
                                         updateData={post.description}
-                                        sharedBy={post.no_of_comments} />
-                                    </>)
+                                        sharedBy={post.no_of_comments} />)
                                   })}
                                 </InfiniteScroll>
 

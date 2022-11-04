@@ -2,9 +2,6 @@ import React from 'react'
 
 // React router imports
 import { Link } from 'react-router-dom';
-// import { apiStatus } from '../../../../helpers/status';
-// import { toggleNfswModal } from '../../../../redux/actions/modals/ModalsAc';
-// import { reqToJoinModalAcFn } from '../../../../redux/actions/forumsAc/forumsAc';
 
 // Custom components
 import ForumFooter from './ForumFooterAdmin';
@@ -13,6 +10,7 @@ import ForumHeader from './ForumHeaderAdmin';
 // Helpers
 import { forum_types, myForum, requestedStatus } from '../detailPage/comments/ForumCommProvider';
 import auth from '../../../behindScenes/Auth/AuthCheck';
+import { scrollDetails } from '../../../../helpers/helpers';
 
 
 const ForumAdmin = (props) => {
@@ -24,14 +22,11 @@ const ForumAdmin = (props) => {
         shareBox,
         actionBox,
         dispatch,
+        pageName = "",
         rememberScrollPos = false,
         isMyForumPage = false,
         forum_index
     } = props
-    var scrollDetails = {
-        scrollPos: rememberScrollPos ? window.scrollY : undefined,
-        rememberScrollPos
-    };
     const { forum_id, is_pinned } = currForum
     const { data: types } = forumTypes
     const forum_type = {
@@ -48,8 +43,9 @@ const ForumAdmin = (props) => {
     const showPin = true
     const isActionBoxVisible = actionBox?.forum_id === forum_id
     const forumHeaderProps = {
+        rememberScrollPos,
+        pageName,
         category_name: currForum?.category_name,
-        scrollDetails,
         created_at: currForum?.created_at,
         name: currForum?.title,
         forum_id: currForum?.forum_id,
@@ -69,15 +65,13 @@ const ForumAdmin = (props) => {
         isMyForumPage
     }
 
-    // console.log({ shareBox });
-
-    const requested = currForum?.is_requested === requestedStatus
     const forumFooterProps = {
         no_of_comments: currForum?.no_of_comments,
         viewcount: currForum?.viewcount ?? 0,
+        rememberScrollPos,
+        pageName,
         forum_type,
         isPinned,
-        scrollDetails,
         showPin,
         isPrivateForum,
         is_requested: currForum?.is_requested,
@@ -91,48 +85,23 @@ const ForumAdmin = (props) => {
         dispatch,
         currForum
     }
-    // Functions
-
-    // Opens req to join modal
-    // const openReqToJoinModal = () => {
-    //     dispatch(reqToJoinModalAcFn({
-    //         visible: true,
-    //         status: apiStatus.IDLE,
-    //         message: "",
-    //         data: {
-    //             forum_id,
-    //             slug: currForum?.slug,
-    //             requested: requested,
-    //             is_calledfrom_detailPage: false,
-    //             forum_index,
-    //         }
-    //     }))
-    // }
-
-    // const openNsfwModal = () => {
-    //     dispatch(toggleNfswModal({ isVisible: true, forum_link: `/forums/${slug}` }))
-    // }
 
     const getBody = () => {
 
         const forum_slug = auth() ? `/admin/forums/${slug}` : "/login"
-
-        // if (auth() && !isMyForum) {
-        //     if (!joined)
-        //         return (
-        //             <pre className="preToNormal post forum_desc cursor_pointer" onClick={openReqToJoinModal}>
-        //                 {currForum?.description}
-        //             </pre>)
-
-        //     if (showAlertOrNot)
-        //         return (
-        //             <pre className="preToNormal post forum_desc cursor_pointer" onClick={openNsfwModal}>
-        //                 {currForum?.description}
-        //             </pre>)
-        // }
+        const props = {
+            ...(rememberScrollPos === true && {
+                onClick: () => {
+                    scrollDetails.setScrollDetails({ pageName, scrollPosition: window.scrollY })
+                }
+            })
+        }
 
         return (
-            <Link className="links text-dark" to={forum_slug} state={{ scrollDetails }}>
+            <Link
+                {...props}
+                className="links text-dark"
+                to={forum_slug}>
                 <pre className="preToNormal post forum_desc">
                     {currForum?.description}
                 </pre>

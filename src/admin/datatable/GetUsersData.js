@@ -208,7 +208,7 @@ export const GetUsersData = () => {
 
     return (
         <div className="w-100">
-            <div className="d-flex  align-items-center mb-2 justify-content-between w-100">
+            <div className="d-flex align-items-center mb-2 justify-content-between w-100 mt-3 mt-md-0">
                 <Link to="/dashboard" className='backtoHome mb-0'>
                     <i className="fa fa-arrow-left mr-2" aria-hidden="true"></i>
                     Back to home
@@ -216,7 +216,7 @@ export const GetUsersData = () => {
 
                 <button className='btn btn-sm text-white' onClick={exportToCsvfn} style={{
                     background: "#2E4C6D"
-                }}><i class="fa fa-upload text-white pr-2" aria-hidden="true"></i> Export csv</button>
+                }}><i className="fa fa-upload text-white pr-2" aria-hidden="true"></i> Export csv</button>
             </div>
 
             <div className="col-lg-12 col-12 mt-3 mt-lg-0 boxShadow">

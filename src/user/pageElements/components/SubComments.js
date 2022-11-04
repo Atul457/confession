@@ -188,6 +188,7 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
 
     return (
         <div className={`postCont overWritePostWithComment subcommentCont ${props.id_path} ${!auth() ? 'notAuth' : ''}`} index={index}>
+
             {!isLastIndex
                 ?
                 <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
@@ -247,6 +248,20 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
             </div>
             <div className="postBody">
                 <div className="postedPost mb-0">
+
+
+                    {/* {isLastIndex ? <div className="mb-3 pb-2 replied_to_cont">
+                        <div className="d-flex align-items-center">
+                            <i className="fa fa-quote-left pr-1 pb-2" aria-hidden="true"></i>
+                            <span className="mb-1 font-italic replied_to_message">pp</span>
+                            <i className="fa fa-quote-right pl-1 pb-2" aria-hidden="true"></i>
+                        </div>
+                        <small>Poisonflower</small>
+                    </div> : null} */}
+
+                    {subcomment?.is_edited === 1 ?
+                        <i className="fa fa-pencil pr-2" aria-hidden="true"></i> :
+                        null}
                     <pre className="preToNormal">
                         {commentsModalReducer.updateField.comment_id !== props.comment_id && props.comment}
                         {commentsModalReducer.updateField.comment_id === props.comment_id &&

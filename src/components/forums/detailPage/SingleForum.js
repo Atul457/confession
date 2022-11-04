@@ -12,13 +12,13 @@ import { forumHandlers, postComment, usersToTagAcFn } from '../../../redux/actio
 // Helpers
 import { doCommentService, getUsersToTagService } from '../services/forumServices';
 import { apiStatus } from '../../../helpers/status';
-// import { requestedStatus } from './comments/ForumCommProvider';
+import { scrollToTop } from '../../../helpers/helpers';
+import auth from '../../../user/behindScenes/Auth/AuthCheck';
 
 // Modals
 import NfswAlertModal from '../../modals/NfswAlertModal';
 import { toggleNfswModal } from '../../../redux/actions/modals/ModalsAc';
 import { isAllowedToComment } from './comments/ForumCommProvider';
-import auth from '../../../user/behindScenes/Auth/AuthCheck';
 
 
 const SingleForum = props => {
@@ -93,6 +93,7 @@ const SingleForum = props => {
                 isVisible: true, forum_link: `/forums/${currForum?.slug}`
             }))
         }
+        scrollToTop()
     }, [])
 
 
@@ -162,8 +163,6 @@ const SingleForum = props => {
                 <Link
                     to={`/${location?.state?.cameFromSearch ? "search" : "forums"}`}
                     onClick={resetTagList}
-                    state={{ scrollPos: location?.state?.scrollPos }}
-                    // replace={true}
                     className='backtoHome'>
                     <span className='mr-2'>
                         <i className="fa fa-chevron-left" aria-hidden="true"></i>

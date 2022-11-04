@@ -1956,6 +1956,20 @@ span.offlineColor {
     margin-bottom: 10px;
 }
 
+.replied_to_cont .replied_to_message {
+    font-size: 18px;
+}
+
+.replied_to_cont small {
+    font-weight: 500;
+}
+
+.replied_to_cont {
+    border-bottom: 1px solid var(--primaryColor);
+    color: var(--primaryColor);
+    font-weight: 500;
+}
+
 .requesterDesc img {
     width: 40px;
     height: 40px;
@@ -2664,7 +2678,7 @@ span.offlineColor {
     text-decoration: none !important;
 }
 
-.single_forum .links{
+.single_forum .links {
     display: flex;
     flex-wrap: wrap;
 }
@@ -2898,6 +2912,20 @@ span.facebookMobIcon {
 .textAreaToComment textarea:focus {
     border-color: var(--skyColor) !important;
     box-shadow: initial !important;
+}
+
+.postedPost .fa-pencil {
+    color: var(--primaryColor);
+}
+
+.confession_detail_page .postedPost {
+    padding-top: 8px;
+}
+
+
+.replied_to_cont .fa-quote-left,
+.replied_to_cont .fa-quote-right {
+    font-size: 12px;
 }
 
 
@@ -5119,9 +5147,15 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
     margin-bottom: 20px;
 }
 
+.upperView .postContHeader {
+    width: 100% !important;
+    max-width: unset;
+}
+
 .carousel_item_feature>div:last-child {
     margin-top: 15px;
 }
+
 
 .forum_comment .postContHeader>* {
     margin-bottom: 10px;
@@ -5132,7 +5166,7 @@ i.viewPrevPostIn:hover+.ljkdjfkl {
 }
 
 .postCont.admin .sharekitdots,
-.postCont.admin i:first-child{
+.postCont.admin i:first-child {
     display: inline-flex;
     align-items: center;
     padding-top: 0px;
@@ -5644,8 +5678,11 @@ button.modalFootBtns.btn a:hover {
     text-decoration: none !important;
 }
 
-.forum_footer {
+.single_forum .forum_footer {
     margin-top: 10px;
+}
+
+.forum_footer {
     justify-content: space-between;
     align-items: center;
     padding-right: 30px;
@@ -5777,6 +5814,10 @@ button.modalFootBtns.btn a:hover {
 
 .forum_type {
     color: #000;
+}
+
+.type_view_and_com_count .forum_type {
+    margin-right: 10px;
 }
 
 .forum_tag {
@@ -7903,6 +7944,18 @@ button.modalFootBtns.btn a:hover {
         height: 26px;
         bottom: -8px;
     }
+
+    .forum_desc {
+        margin-bottom: 0px;
+    }
+
+    .single_forum .forum_desc {
+        margin-bottom: 10px;
+    }
+
+    .upperView .subCommentsCount {
+        position: unset;
+    }
 }
 
 @media(max-width:575px) {
@@ -7917,10 +7970,6 @@ button.modalFootBtns.btn a:hover {
     .recaptchaFeed {
         align-items: unset;
     }
-
-    /* .postUserName {
-        max-width: 45px;
-    } */
 }
 
 

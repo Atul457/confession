@@ -14,7 +14,7 @@ import { apiStatus } from '../../../../helpers/status'
 
 // helpers
 import { fetchData } from '../../../../commonApi'
-import { resHandler } from '../../../../helpers/helpers'
+import { resHandler, scrollDetails, scrollToTop } from '../../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../../helpers/profileHelper'
 
 
@@ -30,30 +30,33 @@ const WhatsNewAdmin = () => {
     } = useSelector(state => state.forumsReducer)
     // const cameBackfromSearch = location?.state?.cameFromDetailPage
     // const scrollDetails = location?.state?.scrollDetails
+    const cameback = scrollDetails.getScrollDetails()?.pageName === "forums"
     const { modalsReducer: { nfsw_modal } } = useSelector(state => state)
     const { requestToJoinModal, reportForumModal } = modals
     const dispatch = useDispatch()
     const { activeCategory } = categories
     const { handleForums } = forumHandlers
     const { data: forums, status: forumsStatus, page, count = 0 } = forumsRed
-    const afterHowManyShowAdd = 7;    //AFTER THIS MUCH SHOW ADDS
 
+
+    useEffect(() => {
+        const scrollDetail = scrollDetails.getScrollDetails()
+        if (scrollDetail?.pageName === "forums") {
+            window.scrollTo({
+                top: scrollDetail?.scrollPosition ?? 0,
+                behavior: "smooth"
+            })
+            scrollDetails.setScrollDetails({})
+        }
+    }, [])
 
     // Gets the data from the api and dispatchs it
     useEffect(() => {
-        // const forumsArrEmpty = forums.length === 0
-        // if (!cameBackfromSearch || forumsArrEmpty)
-        getForums(1, false)
+        if (cameback === false || forums.length === 0) {
+            getForums(1, false)
+            scrollToTop()
+        }
     }, [activeCategory])
-
-    // useEffect(() => {
-    //     if (scrollDetails){
-    //         console.log(scrollDetails?.scrollPos)
-    //         window.scrollTo({
-    //             top: scrollDetails?.scrollPos
-    //         })
-    //     }
-    // }, [])
 
     // Functions
 
@@ -89,6 +92,7 @@ const WhatsNewAdmin = () => {
                         shareBox={forumsRed.shareBox ?? {}}
                         forumTypes={forumTypes}
                         rememberScrollPos={true}
+                        pageName="forums"
                         currForum={currForum} />
                 </div>)
             })

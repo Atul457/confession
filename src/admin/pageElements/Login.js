@@ -101,6 +101,7 @@ export default function Login() {
                             middleTextBody="Login with your account to Manage confessions, manage categories,
                             manage reported post..."
                             bottomLogo={loginLogo}
+                            removeLink={true}
                         />
 
                         <div className="rightColumn">

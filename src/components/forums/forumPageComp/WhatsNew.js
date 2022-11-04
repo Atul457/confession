@@ -16,7 +16,7 @@ import { apiStatus } from '../../../helpers/status'
 
 // helpers
 import { fetchData } from '../../../commonApi'
-import { resHandler, scrollToTop } from '../../../helpers/helpers'
+import { resHandler, scrollDetails, scrollToTop } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
 
 
@@ -30,32 +30,34 @@ const WhatsNew = () => {
         forumTypes,
         modals
     } = useSelector(state => state.forumsReducer)
-    // const cameBackfromSearch = location?.state?.cameFromDetailPage
-    // const scrollPos = location?.state?.scrollPos
+    const cameback = scrollDetails.getScrollDetails()?.pageName === "forums"
     const { modalsReducer: { nfsw_modal } } = useSelector(state => state)
     const { requestToJoinModal, reportForumModal } = modals
     const dispatch = useDispatch()
     const { activeCategory } = categories
     const { handleForums } = forumHandlers
-    const { data: forums, status: forumsStatus, page, count = 0 } = forumsRed
+    const { data: forums, status: forumsStatus, page, count = 0, hasMore } = forumsRed
     const afterHowManyShowAdd = 7;    //AFTER THIS MUCH SHOW ADDS
 
+    useEffect(() => {
+        const scrollDetail = scrollDetails.getScrollDetails()
+        if (scrollDetail?.pageName === "forums") {
+            window.scrollTo({
+                top: scrollDetail?.scrollPosition ?? 0,
+                behavior: "smooth"
+            })
+            scrollDetails.setScrollDetails({})
+        }
+    }, [])
 
     // Gets the data from the api and dispatchs it
     useEffect(() => {
-        // const forumsArrEmpty = forums.length === 0
-        // if (!cameBackfromSearch || forumsArrEmpty)
-        getForums(1, false)
+        if (cameback === false || forums.length === 0) {
+            getForums(1, false)
+            scrollToTop()
+        }
     }, [activeCategory])
 
-    useEffect(() => {
-        // if (scrollPos) {
-        //     console.log(scrollPos)
-        //     window.scrollTo({
-        //         top: scrollPos
-        //     })
-        // }
-    }, [])
 
     // Functions
 
@@ -71,7 +73,13 @@ const WhatsNew = () => {
             let res = await fetchData(obj)
             res = resHandler(res)
             const forums_from_api = res?.forums ?? []
-            dispatch(handleForums({ data: append ? [...forums, ...forums_from_api] : forums_from_api, status: apiStatus.FULFILLED, count: res?.count }))
+            dispatch(handleForums({
+                data: append ? [...forums, ...forums_from_api] : forums_from_api,
+                status: apiStatus.FULFILLED,
+                count: res?.count,
+                hasMore: forums_from_api.length ? true : false,
+                page
+            }))
         } catch (error) {
             console.log(error)
         }
@@ -91,6 +99,7 @@ const WhatsNew = () => {
                         shareBox={forumsRed.shareBox ?? {}}
                         forumTypes={forumTypes}
                         rememberScrollPos={true}
+                        pageName="forums"
                         currForum={currForum} />
 
                     {
@@ -109,8 +118,10 @@ const WhatsNew = () => {
     }
 
     const fetchMoreData = () => {
-        dispatch(handleForums({ page: page + 1 }))
-        getForums(page + 1, true)
+        if (cameback === false && hasMore) {
+            // dispatch(handleForums({ page: page + 1 }))
+            getForums(page + 1, true)
+        }
     }
 
     if (forumsStatus === apiStatus.LOADING)
@@ -130,7 +141,8 @@ const WhatsNew = () => {
                     endMessage={<div className=" text-center endListMessage mt-4 pb-3">End of Forums</div>}
                     dataLength={forums.length}
                     next={fetchMoreData}
-                    hasMore={forums.length < count}
+                    // hasMore={forums.length < count}
+                    hasMore={hasMore}
                     loader={
                         <div className="text-center mb-5">
                             <div className="spinner-border pColor text-center" role="status">

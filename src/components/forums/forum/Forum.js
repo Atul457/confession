@@ -25,15 +25,12 @@ const Forum = (props) => {
         shareBox,
         actionBox,
         dispatch,
+        pageName = "",
         rememberScrollPos = false,
         isMyForumPage = false,
         forum_index
     } = props
-    // var scrollDetails = {
-    //     scrollPos: rememberScrollPos ? window.scrollY : undefined,
-    //     rememberScrollPos
-    // };
-    // console.log(scrollDetails)
+
     const { forum_id, is_pinned } = currForum
     const { data: types } = forumTypes
     const forum_type = {
@@ -53,6 +50,7 @@ const Forum = (props) => {
     const forumHeaderProps = {
         category_name: currForum?.category_name,
         rememberScrollPos,
+        pageName,
         created_at: currForum?.created_at,
         name: currForum?.title,
         forum_id: currForum?.forum_id,
@@ -72,13 +70,12 @@ const Forum = (props) => {
         isMyForumPage
     }
 
-    // console.log({ shareBox });
-
     const requested = currForum?.is_requested === requestedStatus
     const forumFooterProps = {
         no_of_comments: currForum?.no_of_comments,
         viewcount: currForum?.viewcount ?? 0,
         forum_type,
+        pageName,
         isPinned,
         rememberScrollPos,
         showPin,
@@ -117,7 +114,10 @@ const Forum = (props) => {
             isVisible: true,
             forum_link: `/forums/${slug}`,
             forum_id,
-            forum_index
+            forum_index,
+            rememberScrollPos,
+            pageName,
+            scrollPosition: window.scrollY
         }))
     }
 
@@ -127,12 +127,13 @@ const Forum = (props) => {
 
         const private_and_joined = isPrivateForum && joined
         const returnLink = isMyForum || (!auth() && !isNfswTypeContent) || (!isPrivateForum && !isNfswTypeContent)
-            || (private_and_joined && !isNfswTypeContent)
+            || (private_and_joined && !isNfswTypeContent) || pageName === "myforums"
         const forum_slug = !returnLink ? "#" : (`/forums/${currForum?.slug}`)
         let Html = ""
 
         Html = (
             <pre className="preToNormal post forum_desc cursor_pointer" onClick={() => {
+                if (pageName === "myforums") return
                 if ((!auth() && isNfswTypeContent) || (isPrivateForum && joined && isNfswTypeContent)) return openNsfwModal()
                 if (auth() && (isPrivateForum && !joined)) return openReqToJoinModal()
                 if (!isPrivateForum && isNfswTypeContent) return openNsfwModal()
@@ -141,8 +142,9 @@ const Forum = (props) => {
             </pre>)
 
         return returnLink ? <WithLinkComp
-            className='w-100'
+            pageName={pageName}
             rememberScrollPos={rememberScrollPos}
+            className='w-100'
             link={forum_slug}
             children={Html}
         /> : Html

@@ -1,3 +1,4 @@
+import { default as adminAuth } from "../admin/behindScenes/Auth/AuthCheck"
 import auth from "../user/behindScenes/Auth/AuthCheck"
 
 const updateKeyProfileLoc = (key, value, isToken = false) => {
@@ -9,11 +10,11 @@ const updateKeyProfileLoc = (key, value, isToken = false) => {
     localStorage.setItem("userDetails", JSON.stringify(userDetails))
 }
 
-const getKeyProfileLoc = (key, isToken = false) => {
+const getKeyProfileLoc = (key, isAdmin = false, isToken = false) => {
     let userData = '';
-    userData = localStorage.getItem("userDetails");
+    userData = localStorage.getItem(isAdmin ? "adminDetails" : "userDetails");
     userData = JSON.parse(userData);
-    if (auth()) userData = isToken ? (userData?.token ?? "not found") : userData.profile[key]
+    if (isAdmin ? adminAuth() : auth()) userData = isToken ? (userData?.token ?? "not found") : userData.profile[key]
     return userData;
 }
 

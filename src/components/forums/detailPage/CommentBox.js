@@ -70,7 +70,7 @@ const CommentBox = props => {
             "#";
         htmlToEmbed = link === "#" ? `<span contenteditable="false" class="tagged_user dr99${user?.user_id?.trim()}" >@${user?.name?.trim()}</span>` : `<a class="text-decoration-none tagged_user dr99${user?.user_id?.trim()}" contenteditable="false" target="_blank" href="${link}">@${user?.name?.trim()}</a>`;
 
-        
+
         newStr = actualStr.replace(regex, htmlToEmbed);
         textboxref.current.innerHTML = newStr;
 
@@ -97,6 +97,9 @@ const CommentBox = props => {
         }
     }, [usersToTag])
 
+    useEffect(() => {
+        if (!isCalledByParent) textboxref?.current?.focus()
+    }, [])
 
     return (
         <>

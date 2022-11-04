@@ -12,32 +12,33 @@ import { useNavigate } from 'react-router-dom'
 
 const RightSideComp = () => {
 
-    const [activeTab, setActiveTab] = useState(0)
     const TabComps = [<WhatsNew />, <MyForums />]
-    const { modals } = useSelector(state => state.forumsReducer)
+    const { modals, forums: { activeTab } } = useSelector(state => state.forumsReducer)
     const { createForumModal } = modals
     const { handleForums } = forumHandlers
     const ActiveTab = TabComps[activeTab]
+    const myForumsIndex = 1
     const dispatch = useDispatch()
 
-
     const changeActiveTab = (activeTabIndex) => {
-        setActiveTab(activeTabIndex)
-        dispatch(handleForums({
-            status: apiStatus.LOADING,
-            data: [],
-            message: "",
-            actionBox: {},
-            page: 1,
-            count: 0
-        }))
+        if (activeTab !== activeTabIndex)
+            dispatch(handleForums({
+                status: apiStatus.LOADING,
+                data: [],
+                message: "",
+                actionBox: {},
+                page: 1,
+                count: 0,
+                activeTab: activeTabIndex
+            }))
     }
 
     return (
         <>
             <Tabs activeTab={activeTab} setActiveTab={changeActiveTab} />
 
-            <ExpandableForumCats classNames='mb-3 d-block d-md-none' onlyForForums={true} />
+            {activeTab !== myForumsIndex ?
+                <ExpandableForumCats classNames='mb-3 d-block d-md-none' onlyForForums={true} /> : null}
 
             <div className='forums_tabs_comps_holder'>
                 {ActiveTab}

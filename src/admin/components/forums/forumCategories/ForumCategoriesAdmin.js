@@ -8,7 +8,7 @@ import { forumHandlers } from '../../../../redux/actions/forumsAc/forumsAc'
 // Helpers
 import { apiStatus } from '../../../../helpers/status'
 // import { searchAcFn } from '../../../redux/actions/searchAc/searchAc'
-import { getForumsNConfessions } from '../services/forumServices'
+import { getForumsNConfessions } from '../services/adminforumServices'
 import { searchTypes } from '../detailPage/comments/ForumCommProvider'
 
 

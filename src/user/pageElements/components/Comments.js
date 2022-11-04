@@ -437,6 +437,7 @@ export default function Comments(props) {
                 </div>
                 <div className="postBody">
                     <div className="postedPost mb-0">
+                        {comment?.is_edited === 1 ? <i className="fa fa-pencil pr-2" aria-hidden="true"></i> : null}
                         <pre className="preToNormal">
                             {commentsModalReducer.updateField.comment_id !== props.commentId && props.postedComment}
                             {commentsModalReducer.updateField.comment_id === props.commentId &&

@@ -128,6 +128,17 @@ const exportToCsv = ({ array = [] }) => {
     link.click()
 }
 
+const scrollDetails = {
+    setScrollDetails({ scrollPosition, pageName }) {
+        localStorage.setItem("scrollDetails", JSON.stringify({ scrollPosition: scrollPosition ?? 0, pageName: pageName ?? "" }))
+    },
+    getScrollDetails() {
+        const scrollDetails = localStorage.getItem("scrollDetails") ?? "{}";
+        return JSON.parse(scrollDetails)
+    }
+}
+
+
 export {
     getLocalStorageKey,
     isAvatarSelectedCurr,
@@ -135,5 +146,6 @@ export {
     resHandler,
     areAtLastPage,
     scrollToTop,
-    exportToCsv
+    exportToCsv,
+    scrollDetails
 }

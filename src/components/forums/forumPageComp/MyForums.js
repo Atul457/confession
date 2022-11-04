@@ -13,7 +13,7 @@ import { apiStatus } from '../../../helpers/status'
 
 // helpers
 import { fetchData } from '../../../commonApi'
-import { resHandler } from '../../../helpers/helpers'
+import { resHandler, scrollDetails, scrollToTop } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
 import DeleteForumModal from '../../modals/DeleteForumModal'
 import { WhatsNewAds } from '../../../user/pageElements/components/AdMob'
@@ -27,17 +27,31 @@ const MyForums = () => {
     forumTypes,
     modals
   } = useSelector(state => state.forumsReducer)
-  const { requestToJoinModal, reportForumModal, createForumModal, deleteForumModal } = modals
+  const { requestToJoinModal, reportForumModal, deleteForumModal } = modals
+  const cameback = scrollDetails.getScrollDetails()?.pageName === "myforums"
   const dispatch = useDispatch()
   const { handleForums } = forumHandlers
-  const { data: forums, status: forumsStatus, page, count = 0 } = forumsRed
+  const { data: forums, status: forumsStatus, page, count = 0, hasMore } = forumsRed
   const afterHowManyShowAdd = 7;    //AFTER THIS MUCH SHOW ADDS
+
+  useEffect(() => {
+    const scrollDetail = scrollDetails.getScrollDetails()
+    if (scrollDetail?.pageName === "myforums") {
+      window.scrollTo({
+        top: scrollDetail?.scrollPosition ?? 0,
+        behavior: "smooth"
+      })
+      scrollDetails.setScrollDetails({})
+    }
+  }, [])
 
   // Gets the data from the api and dispatchs it
   useEffect(() => {
-    getForums(1, false)
+    if (cameback === false || forums.length === 0) {
+      getForums(1, false)
+      scrollToTop()
+    }
   }, [])
-
 
   // Functions
 
@@ -52,7 +66,15 @@ const MyForums = () => {
       let res = await fetchData(obj)
       res = resHandler(res)
       const forums_from_api = res?.forums ?? []
-      dispatch(handleForums({ data: append ? [...forums, ...forums_from_api] : forums_from_api, status: apiStatus.FULFILLED, count: res?.count }))
+
+      dispatch(handleForums({
+        data: append ? [...forums, ...forums_from_api] : forums_from_api,
+        status: apiStatus.FULFILLED,
+        count: res?.count,
+        hasMore: forums_from_api.length ? true : false,
+        page
+      }))
+
     } catch (error) {
       console.log(error)
     }
@@ -61,8 +83,9 @@ const MyForums = () => {
   }
 
   const fetchMoreData = () => {
-    dispatch(handleForums({ page: page + 1 }))
-    getForums(page + 1, true)
+    if (cameback === false && hasMore) {
+      getForums(page + 1, true)
+    }
   }
 
 
@@ -79,6 +102,8 @@ const MyForums = () => {
             actionBox={forumsRed.actionBox ?? {}}
             shareBox={forumsRed.shareBox ?? {}}
             forumTypes={forumTypes}
+            rememberScrollPos={true}
+            pageName="myforums"
             currForum={currForum} />
 
           {

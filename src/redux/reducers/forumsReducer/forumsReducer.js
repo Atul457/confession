@@ -30,6 +30,8 @@ const initialstate = {
         message: "",
         actionBox: {},
         page: 1,
+        hasMore: true,
+        activeTab: 0,
         count: 0
     },
     detailPage: {

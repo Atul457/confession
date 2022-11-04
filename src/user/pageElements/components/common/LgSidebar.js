@@ -13,7 +13,7 @@ export default function LgSidebar(props) {
                     <AppLogo />
                 </div>
 
-                <Link to="/home" className='textDecNone'>
+                <Link to={`${props?.removeLink === true ? "#" : "/home"}`} className='textDecNone'>
                     <div className="middleContLoginReg">
                         <div className="confesstText">
                             {props.middleTitle}
@@ -25,7 +25,7 @@ export default function LgSidebar(props) {
                 </Link>
 
                 <div className={`bottomContLoginReg ${props.hidden === true && "hiddenImg"}`}>
-                    <Link to="/createPost" className='textDecNone'>
+                    <Link to={`${props?.removeLink ? "#" : "/createPost"}`} className='textDecNone'>
                         <img src={props.bottomLogo} alt="" />
                     </Link>
                 </div>

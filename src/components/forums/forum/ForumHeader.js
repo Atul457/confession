@@ -30,6 +30,8 @@ const ForumHeader = props => {
         currForum,
         isMyForumPage,
         shareBox,
+        pageName = "",
+        rememberScrollPos,
         isCalledFromSearchPage = false,
         isMyForum = false,
         forum_index,
@@ -40,7 +42,6 @@ const ForumHeader = props => {
         is_calledfrom_detailPage = false,
         isReported,
         is_for_post = true,
-        scrollDetails
     } = props
 
     const isActionBoxVisible = actionBox?.forum_id === forum_id
@@ -78,6 +79,8 @@ const ForumHeader = props => {
             isVisible: true,
             forum_link: `/forums/${currForum?.slug}`,
             forum_id,
+            rememberScrollPos,
+            pageName,
             forum_index
         }))
     }
@@ -142,6 +145,7 @@ const ForumHeader = props => {
 
         Html = (
             <div className="forum_header_left_sec" onClick={() => {
+                if (pageName === "myforums") return
                 if ((!auth() && isNfswTypeContent) || (isPrivateForum && joined && isNfswTypeContent)) return openNsfwModal()
                 if (auth() && (isPrivateForum && !joined) && !isCalledFromSearchPage) return openReqToJoinModal()
                 if (auth() && (isPrivateForum && !joined) && isCalledFromSearchPage) return
@@ -159,7 +163,12 @@ const ForumHeader = props => {
             </div>)
 
 
-        return returnLink ? <WithLinkComp className='w-100' link={forum_slug} children={Html} /> : Html
+        return returnLink ? <WithLinkComp
+            className='w-100'
+            pageName={pageName}
+            rememberScrollPos={rememberScrollPos}
+            link={forum_slug}
+            children={Html} /> : Html
 
     }
 

@@ -1,19 +1,17 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { scrollDetails } from '../../../helpers/helpers'
 
 
 const WithLinkComp = ({ children, link, className = "", ...rest }) => {
+
     const classList = className === "" ? "" : ` ${className} `
     const props = {
-        // ...(rest?.rememberScrollPos === true && {
-        //     state: {
-        //         scrollPos: window.scrollY
-        //     },
-        //     replace: true,
-        //     onClick: () => {
-        //         console.log("scrollPos" + window.scrollY)
-        //     }
-        // })
+        ...(rest?.rememberScrollPos === true && {
+            onClick: () => {
+                scrollDetails.setScrollDetails({ pageName: rest?.pageName, scrollPosition: window.scrollY })
+            }
+        })
     }
     return (
         <Link
