@@ -1,5 +1,6 @@
 // Helpers
 import { fetchData } from "../../../../commonApi"
+import toastMethods from "../../../../helpers/components/Toaster"
 import { areAtLastPage, resHandler } from "../../../../helpers/helpers"
 import { getKeyProfileLoc } from "../../../../helpers/profileHelper"
 import { apiStatus } from "../../../../helpers/status"
@@ -69,7 +70,7 @@ const doCommentService = async ({
 
     obj = {
         data,
-        token: getKeyProfileLoc("token", true) ?? "",
+        token: getKeyProfileLoc("token", true, true) ?? "",
         method: "post",
         url: "postforumcomment"
     }
@@ -169,7 +170,7 @@ const likeDislikeService = async ({
     if (check_ip === 4) {
         let obj = {
             data: { is_liked, ip_address },
-            token: getKeyProfileLoc("token", true) ?? "",
+            token: getKeyProfileLoc("token", true, true) ?? "",
             method: "post",
             url: `likedislikeforumcommet/${forum_id}/${commentId}`
         }
@@ -271,18 +272,16 @@ const deleteForumCommService = async ({
     }
 
     obj = {
-        token: getKeyProfileLoc("token", true),
+        token: getKeyProfileLoc("token", true, true),
         method: "get",
-        url: `deletforumecomment/${forum_id}/${commentId}`
+        url: `admin/deleteforumcomment/${forum_id}/${commentId}`
     }
 
     try {
         let res = await fetchData(obj)
         res = resHandler(res)
-        // toastMethods.toaster2Info(res?.message ?? "Comment deleted successfully")
     } catch (error) {
         console.log(error)
-        // toastMethods.toaster2Info(error?.message ?? "Something went wrong")
     }
 
 }
@@ -301,7 +300,7 @@ const getUsersToTagService = async ({
     }
 
     obj = {
-        token: getKeyProfileLoc("token", true) ?? "",
+        token: getKeyProfileLoc("token", true, true) ?? "",
         method: "post",
         url: `gettaguser/${forum_id}`,
         data
@@ -332,36 +331,17 @@ const deleteForumService = async ({
 }) => {
     let obj
     obj = {
-        token: getKeyProfileLoc("token", true) ?? "",
+        token: getKeyProfileLoc("token", true, true) ?? "",
         method: "get",
-        url: `deletforum/${forum_id}`,
+        url: `admin/deleteforum/${forum_id}`,
     }
     try {
-
-        dispatch(deleteForumAcFn({
-            status: apiStatus.LOADING
-        }))
-
+        dispatch(deleteForum_AcFn({ forum_index }))
         let res = await fetchData(obj)
         res = resHandler(res)
-
-        dispatch(deleteForumAcFn({
-            visible: false,
-            status: apiStatus.IDLE,
-            message: "",
-            data: {
-                forum_id: null,
-                forum_index: null
-            }
-        }))
-
-        dispatch(deleteForum_AcFn({ forum_index }))
-
+        toastMethods.toaster2Info("Forum deleted successfully")
     } catch (error) {
-        dispatch(deleteForumAcFn({
-            message: error?.message,
-            status: apiStatus.REJECTED
-        }))
+        toastMethods.toaster2Info(error?.message)
     }
 }
 
@@ -387,7 +367,7 @@ const getForumsNConfessions = async ({ SearchReducer, selectedCategory }) => {
         }
 
     obj = {
-        token: getKeyProfileLoc("token", true) ?? "",
+        token: getKeyProfileLoc("token", true, true) ?? "",
         method: "post",
         url: `search`,
         data
@@ -418,7 +398,7 @@ const getTagsService = async ({
 }) => {
     let obj = {
         data: {},
-        token: getKeyProfileLoc("token", true) ?? "",
+        token: getKeyProfileLoc("token", true, true) ?? "",
         method: "get",
         url: "gettags"
     }

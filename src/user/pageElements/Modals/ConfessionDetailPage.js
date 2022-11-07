@@ -11,7 +11,7 @@ import Comments from '../../pageElements/components/Comments';
 import useShareKit from '../../utilities/useShareKit';
 import _ from 'lodash';
 import TextareaAutosize from 'react-textarea-autosize';
-import shareKitIcon from "../../../images/shareKitIcon.png";
+import shareKitIcon from "../../../images/actionIconImg.svg";
 import DateConverter from '../../../helpers/DateConverter';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeCModal, updateCModalState } from '../../../redux/actions/commentsModal';
@@ -27,25 +27,14 @@ import { openCFRModal } from '../../../redux/actions/friendReqModal';
 import { getToken } from '../../../helpers/getToken';
 import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
-// import { searchAcFn } from '../../../redux/actions/searchAc/searchAc';
 import { apiStatus } from '../../../helpers/status';
 import Badge from '../../../common/components/badges/Badge';
 
 
-// const checkIsViewPage = (hook) => {
-//     let path = hook.pathname;
-//     path = path.split('/');
-//     return path.length === 3 && path[1] === 'confession';
-// }
-
-
 export default function ConfessionDetailPage({ categories, updatePost, ...rest }) {
 
-    // return
     let maxChar = 2000;
     const dispatch = useDispatch();
-    // const path = checkIsViewPage(useLocation())
-    // const history = useNavigate();
     const { comDetailPage: { props: state }, comDetailPage } = rest;
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [confessionData, setConfessionData] = useState(false);
@@ -296,45 +285,6 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
         updatePost({ no_of_comments: parseInt(state.no_of_comments) - count })
         dispatch(updateCModalState({ no_of_comments: parseInt(state.no_of_comments) - count }))
     }
-
-
-    // const closeModal = () => {
-    //     let upvoteDownvoteData = {}, viewData, likeDislikeCheck, isViewedCheck, data;
-    //     // CHECKS CHANGES IN UPVOTE AND DOWNVOTE
-    //     likeDislikeCheck = state.is_liked_prev === 0 && state.is_liked_prev !== state.is_liked;
-    //     // CHECKS WHETHER THE POST WAS UNVIEWED OR VIEWED
-    //     isViewedCheck = state.is_viewed === 0;
-    //     if (likeDislikeCheck === true) {
-    //         upvoteDownvoteData = {
-    //             like: state.like,
-    //             dislike: state.dislike,
-    //             is_liked: state.is_liked,
-    //         }
-    //     }
-
-    //     viewData = {
-    //         viewcount: state.viewcount + 1,
-    //         is_viewed: 1,
-    //     }
-
-    //     data = {
-    //         ...(isViewedCheck && viewData),
-    //         ...(likeDislikeCheck && upvoteDownvoteData),
-    //         no_of_comments: state.no_of_comments,
-    //         isReported: state.isReported
-    //     }
-
-    //     // RUNS THE UPDATECONFESSIONDATA FUNCTION DEFINED IN POST.JS
-    //     state.updateConfessionData(state.index, data);
-    //     // state.updateConfessionData(state.index, data);
-    //     // console.log("updatePost")
-    //     // updatePost(data);
-
-    //     if (path) history("/home");
-
-    //     dispatch(resetCModal())
-    // }
-
 
     const ProfileIcon = (profileImg, isNotFriend) => {
 

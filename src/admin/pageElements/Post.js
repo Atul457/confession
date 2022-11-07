@@ -247,11 +247,11 @@ export default function Post(props) {
             </div>
 
 
-            <div className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
-                {...(isCoverTypePost && { onClick: openCommentsModal })}
+            <div
+                className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
                 style={postBg}>
-                <div className="postedPost">
-                    <Link className="links text-dark" to="#">
+                <Link className="links text-dark" to={`/dashboard/confession/${props?.slug}`}>
+                    <div className="postedPost">
                         <pre
                             {...(!isCoverTypePost && { onClick: openCommentsModal })}
                             className="preToNormal post">
@@ -265,8 +265,8 @@ export default function Post(props) {
                                     {((props.postedComment).split("")).length >= noOfWords[0] && (props.postedComment).split("\n").length < 5 && <span className='ellipsesStyle'>... </span>}<span toberedirectedto={props.postId} onClick={openCommentsModal} className="viewMoreBtn pl-1">view more</span>
                                 </> : ''
                         }
-                    </Link>
-                </div>
+                    </div>
+                </Link>
 
                 {/* IF IMG URL WILL BE STRING THEN IMAGES WILL NOT BE SHOWN */}
                 {(props.imgUrl !== null && (props.imgUrl).length > 0 && typeof (props.imgUrl) !== 'string')
@@ -326,6 +326,6 @@ export default function Post(props) {
                 </div>
             </div>
 
-        </div>
+        </div >
     )
 }

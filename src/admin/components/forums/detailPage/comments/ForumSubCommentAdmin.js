@@ -11,7 +11,7 @@ import userIcon from "../../../../../images/userAcc.svg"
 import commentReplyIcon from "../../../../../images/creplyIcon.svg"
 import upvoted from "../../../../../images/upvoted.svg"
 import upvote from "../../../../../images/upvote.svg"
-import editCommentIcon from "../../../../../images/editCommentIcon.svg"
+// import editCommentIcon from "../../../../../images/editCommentIcon.svg"
 
 // Redux
 import { forumHandlers, postComment, reportForumCommAcFn, usersToTagAcFn } from '../../../../../redux/actions/forumsAc/forumsAc';
@@ -21,7 +21,8 @@ import CommentBoxAdmin from '../CommentBoxAdmin';
 
 // Helpers
 import { apiStatus } from '../../../../../helpers/status';
-import { reportedFormStatus } from './ForumCommProvider';
+// import { reportedFormStatus } from './ForumCommProvider';
+import auth from '../../../../behindScenes/Auth/AuthCheck';
 
 
 const ForumSubCommentAdmin = (props) => {
@@ -30,7 +31,7 @@ const ForumSubCommentAdmin = (props) => {
     const {
         comment: currSubComment,
         usersToTag,
-        auth,
+        // auth,
         loggedInUserId,
         dispatch,
         toSearch,
@@ -48,7 +49,7 @@ const ForumSubCommentAdmin = (props) => {
         user_id = false,
         comment_id: commentId,
         subCommentIndex,
-        isReported,
+        // isReported,
         is_liked = 0,
         like = 0
     } = currSubComment
@@ -70,22 +71,22 @@ const ForumSubCommentAdmin = (props) => {
     // Functions
 
     // Opens report forum comment modal
-    const openReportCommentModal = () => {
-        dispatch(reportForumCommAcFn({
-            visible: true,
-            status: apiStatus.IDLE,
-            message: "",
-            data: {
-                forum_id,
-                is_for_subcomment: false,
-                parent_comment_index: rootDetails?.commentIndex,
-                comment_index: subCommentIndex,
-                comment_id: commentId,
-                isReported: isReported === reportedFormStatus.reported,
-                is_for_subcomment: true
-            }
-        }))
-    }
+    // const openReportCommentModal = () => {
+    //     dispatch(reportForumCommAcFn({
+    //         visible: true,
+    //         status: apiStatus.IDLE,
+    //         message: "",
+    //         data: {
+    //             forum_id,
+    //             is_for_subcomment: false,
+    //             parent_comment_index: rootDetails?.commentIndex,
+    //             comment_index: subCommentIndex,
+    //             comment_id: commentId,
+    //             isReported: isReported === reportedFormStatus.reported,
+    //             is_for_subcomment: true
+    //         }
+    //     }))
+    // }
 
     // Like dislike
     const upvoteOrDownvote = async (isLiked) => {
@@ -101,20 +102,20 @@ const ForumSubCommentAdmin = (props) => {
         })
     }
     // Open update comment box
-    const openUpdateComBox = () => {
-        dispatch(handleCommentsAcFn({
-            updateBox: {
-                ...(!isUpdateComBoxVisible && { commentId })
-            },
-            commentBox: {}
-        }))
-        dispatch(usersToTagAcFn({
-            data: [],
-            status: apiStatus.IDLE,
-            strToSearch: "",
-            isCalledByParent: false
-        }))
-    }
+    // const openUpdateComBox = () => {
+    //     dispatch(handleCommentsAcFn({
+    //         updateBox: {
+    //             ...(!isUpdateComBoxVisible && { commentId })
+    //         },
+    //         commentBox: {}
+    //     }))
+    //     dispatch(usersToTagAcFn({
+    //         data: [],
+    //         status: apiStatus.IDLE,
+    //         strToSearch: "",
+    //         isCalledByParent: false
+    //     }))
+    // }
 
     // Do comment
     const doComment = (commentBoxRef, updateComment = false) => {
@@ -169,15 +170,17 @@ const ForumSubCommentAdmin = (props) => {
 
     // DELETES THE COMMENT
     const deleteCommentFunc = async () => {
-        deleteForumCommService({
-            postComment,
-            dispatch,
-            forum_id,
-            isSubComment: true,
-            commentId: commentId,
-            parent_comment_index: rootDetails?.commentIndex,
-            comment_index: subCommentIndex
-        })
+        const result = window.confirm("Are you sure you want to delete this reply?")
+        if (result)
+            deleteForumCommService({
+                postComment,
+                dispatch,
+                forum_id,
+                isSubComment: true,
+                commentId: commentId,
+                parent_comment_index: rootDetails?.commentIndex,
+                comment_index: subCommentIndex
+            })
     }
 
     // Toggles reply btn and comment/edit comment field
@@ -196,18 +199,21 @@ const ForumSubCommentAdmin = (props) => {
         }))
     }
 
+    const goToReferedComment = (e, comment_id) => {
+        e.target.closest(`.abc${comment_id}`).scrollIntoView({
+            block: "end",
+            behavior: "smooth"
+        })
+    }
+
     profile_image = profile_image === "" ? userIcon : profile_image
 
     return (
         <div className={`postCont overWritePostWithComment subcommentCont upperView ${currSubComment?.id_path ?? ""}`} index={subCommentIndex}>
 
-            {(auth && currSubComment?.is_editable === 1) ?
-                <div className='edit_delete_com_forum'>
-                    <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
-                    {!isUpdateComBoxVisible ? <img src={editCommentIcon} className='editCommentIcon' onClick={openUpdateComBox} /> : null}
-                </div>
-                : null}
-
+            {auth() && <div className='edit_delete_com_forum'>
+                <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
+            </div>}
 
             <div className="postContHeader commentsContHeader">
                 <span className="commentsGotProfileImg">
@@ -233,6 +239,17 @@ const ForumSubCommentAdmin = (props) => {
             </div>
 
             <div className="postBody">
+
+                {Object.keys(currSubComment?.parent_comment ?? {})?.length ?
+                    <div className="mb-2 pb-2 replied_to_cont cursor_pointer" onClick={(e) => goToReferedComment(e, currSubComment?.parent_comment?.comment_id)} >
+                        <div className="d-flex align-items-center ">
+                            <i className="fa fa-quote-left pr-1 pb-2" aria-hidden="true"></i>
+                            <span className="mb-1  font-italic">{parse(currSubComment?.parent_comment?.comment)}</span>
+                            <i className="fa fa-quote-right pl-1 pb-2" aria-hidden="true"></i>
+                        </div>
+                        <small >{currSubComment?.parent_comment?.comment_by}</small>
+                    </div> : null}
+
                 <div className="postedPost mb-0">
                     <pre className="preToNormal">
                         {parse(currSubComment?.comment)}

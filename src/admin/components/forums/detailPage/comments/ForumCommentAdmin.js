@@ -7,7 +7,6 @@ import parse from 'html-react-parser';
 
 // Image imports
 import userIcon from "../../../../../images/userAcc.svg"
-import editCommentIcon from "../../../../../images/editCommentIcon.svg"
 import commentReplyIcon from "../../../../../images/creplyIcon.svg"
 import upvoted from '../../../../../images/upvoted.svg';
 import upvote from '../../../../../images/upvote.svg';
@@ -24,10 +23,11 @@ import { deleteForumCommService, doCommentService, getUsersToTagService, likeDis
 import { reportedFormStatus } from './ForumCommProvider';
 
 // Custom components
-import CommentBoxAdmin from '../CommentBoxAdmin';
+// import CommentBoxAdmin from '../CommentBoxAdmin';
 
 // Redux
 import { forumHandlers, postComment, reportForumCommAcFn, usersToTagAcFn } from '../../../../../redux/actions/forumsAc/forumsAc';
+import auth from '../../../../behindScenes/Auth/AuthCheck';
 
 
 const ForumCommentAdmin = (props) => {
@@ -35,7 +35,6 @@ const ForumCommentAdmin = (props) => {
   // Hooks and vars
   const {
     comment: currComment,
-    auth,
     loggedInUserId,
     toSearch,
     usersToTag,
@@ -223,35 +222,37 @@ const ForumCommentAdmin = (props) => {
   }
 
   // Open update comment box
-  const openUpdateComBox = () => {
-    // if (isCommentBoxVisible) toggleReplyBtn()
-    dispatch(handleCommentsAcFn({
-      updateBox: {
-        ...(!isUpdateComBoxVisible && { commentId })
-      },
-      commentBox: {}
-    }))
+  // const openUpdateComBox = () => {
+  //   // if (isCommentBoxVisible) toggleReplyBtn()
+  //   dispatch(handleCommentsAcFn({
+  //     updateBox: {
+  //       ...(!isUpdateComBoxVisible && { commentId })
+  //     },
+  //     commentBox: {}
+  //   }))
 
-    dispatch(usersToTagAcFn({
-      data: [],
-      status: apiStatus.IDLE,
-      strToSearch: "",
-      isCalledByParent: false
-    }))
-  }
+  //   dispatch(usersToTagAcFn({
+  //     data: [],
+  //     status: apiStatus.IDLE,
+  //     strToSearch: "",
+  //     isCalledByParent: false
+  //   }))
+  // }
 
   // DELETES THE COMMENT  
   const deleteCommentFunc = async () => {
-    deleteForumCommService({
-      postComment,
-      dispatch,
-      forum_id,
-      isSubComment: false,
-      usedById: commentId,
-      commentId,
-      comment_index: commentIndex,
-      commentsCount: subComments?.data?.length ?? 0
-    })
+    const result = window.confirm("Are you sure you want to delete this comment?")
+    if (result)
+      deleteForumCommService({
+        postComment,
+        dispatch,
+        forum_id,
+        isSubComment: false,
+        usedById: commentId,
+        commentId,
+        comment_index: commentIndex,
+        commentsCount: subComments?.data?.length ?? 0
+      })
   }
 
   const getUsersToTag = async string => {
@@ -297,16 +298,14 @@ const ForumCommentAdmin = (props) => {
 
   return (
     <>
-      <div className='postCont forum_comment'>
+      <div className={`postCont forum_comment abc${commentId}`}>
 
 
-        {/* Edit/Delete comment */}
-        {(auth && currComment?.is_editable === 1) ?
+        {/* Delete comment */}
+        {auth() ?
           <div className='edit_delete_com_forum'>
             <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
-            {!isUpdateComBoxVisible ? <img src={editCommentIcon} className='editCommentIcon' onClick={openUpdateComBox} /> : null}
-          </div>
-          : null}
+          </div> : null}
         {/* Edit/Delete comment */}
 
         {/* Report comment */}
@@ -323,7 +322,7 @@ const ForumCommentAdmin = (props) => {
 
           {user_id !== false ?
             <Link className={`forum_com_p_link`}
-              to={((auth && user_id !== "") ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `#`)}>
+              to={((auth() && user_id !== "") ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `#`)}>
               <span className="userName">
                 {comment_by}
               </span>

@@ -1,6 +1,5 @@
 // Helpers
 import { fetchData } from "../../../commonApi"
-// import toastMethods from "../../../helpers/components/Toaster"
 import { areAtLastPage, resHandler } from "../../../helpers/helpers"
 import { getKeyProfileLoc } from "../../../helpers/profileHelper"
 import { apiStatus } from "../../../helpers/status"

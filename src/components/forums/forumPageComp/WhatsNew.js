@@ -119,7 +119,6 @@ const WhatsNew = () => {
 
     const fetchMoreData = () => {
         if (cameback === false && hasMore) {
-            // dispatch(handleForums({ page: page + 1 }))
             getForums(page + 1, true)
         }
     }

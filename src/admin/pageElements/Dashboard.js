@@ -531,7 +531,7 @@ export default function Dashboard() {
                           <div className="row mx-0">
                             <div className="expandableCategory d-none">
                               <div className="head" onClick={() => setCategoryShow(!categoryShow)}>
-                                Choose a Category to filter posts
+                                Choose categories
                                 <span>
                                   <i aria-hidden="true" className={`fa fa-chevron-down categoryDownIcon ${categoryShow ? "rotateUpsideDown" : ""}`}></i>
                                 </span>
@@ -578,6 +578,7 @@ export default function Dashboard() {
                                       <Post
                                         confession_id={post.confession_id}
                                         post={post}
+                                        slug={post.slug}
                                         isNotFriend={post.isNotFriend}
                                         cover_image={post.cover_image ?? ''}
                                         like={post.like}

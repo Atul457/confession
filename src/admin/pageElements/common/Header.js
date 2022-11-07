@@ -1,7 +1,7 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import userIcon from '../../../images/userAcc.svg';
-import confessIcon from '../../../images/confessIcon.svg'
-import confessIconActive from '../../../images/confessIconActive.svg'
+// import confessIcon from '../../../images/confessIcon.svg'
+// import confessIconActive from '../../../images/confessIconActive.svg'
 import mobileProfileIcon from '../../../images/mobileProfileIcon.svg';
 import { Link, NavLink } from "react-router-dom";
 import auth from '../../behindScenes/Auth/AuthCheck';
@@ -11,8 +11,8 @@ import Button from '@restart/ui/esm/Button';
 import { Modal } from 'react-bootstrap';
 import { fetchData } from '../../../commonApi';
 import AppLogo from '../../../user/pageElements/components/AppLogo';
-
-// import logo from '../../../images/appLogo.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { togglemenu } from '../../../redux/actions/share';
 
 let initialTypeState = {
     "old": "password",
@@ -40,7 +40,9 @@ const typeReducer = (state = initialTypeState, action) => {
 export default function Header(props) {
 
     const authenticated = useState(auth());
+    const ShareReducer = useSelector(store => store.ShareReducer);
     const [showProfileOption, setShowProfileOption] = useState(false);
+    const dispatch = useDispatch()
     const [type, typeDispatch] = useReducer(typeReducer, initialTypeState);
     let useLocations = useLocation();
     const [reportModal, setReportModal] = useState({
@@ -91,6 +93,28 @@ export default function Header(props) {
         typeDispatch({ type: "reset" });
         setReportModal({ ...reportModal, isVisible: false });
     }
+
+    const catchEvent2 = (e) => {
+        var classes = e.target.classList;
+        if (!classes.contains("shareReqCont") && !classes.contains("shareReqRows") && !classes.contains("shareKitImgIcon") && !classes.contains("sharekitdots") && !classes.contains("dontHide")) {
+            dispatch(togglemenu({
+                id: null, value: false
+            }))
+        }
+    }
+
+    // useEffect(() => {
+
+    // }, [SearchReducer.data])
+
+    useEffect(() => {
+        if (ShareReducer.selectedPost?.value) {
+            document.addEventListener("click", catchEvent2);
+        }
+        return () => {
+            document.removeEventListener("click", catchEvent2);
+        }
+    }, [ShareReducer.selectedPost?.value])
 
     const updateProfile = async () => {
         let responseCont = document.querySelector('.responseCont');
@@ -155,6 +179,7 @@ export default function Header(props) {
 
                                 <div className={` d-none d-md-block pr-0`}>
                                     <div className={`linksCont container-fluid`}>
+
                                         {/* <div className="linkBtns">
                                             <NavLink to="/admin/forums" className="headerNavLinks">
                                                 <span className="headIconCont">
@@ -165,6 +190,31 @@ export default function Header(props) {
                                                     className={`headLinkName ${currentUrl === "admin/forums" ? "activeLinkOfHeader" : ""}`}>Forums</span>
                                             </NavLink>
                                         </div> */}
+
+                                        <div className="linkBtns dropdownLink">
+                                            <div className="headerNavLinks">
+                                                <i className={`fa fa-circle-o-notch moveABit adminHeaderIcons ${(currentUrl === "dashboard" || currentUrl === "admin/forums") ? "oColor" : ""}`} />
+                                                <span
+                                                    className={`headLinkName ${(currentUrl === "dashboard" || currentUrl === "admin/forums") ? "activeLinkOfHeader" : ""}`}>Posts</span>
+                                                <div className="reportItems">
+                                                    <div className="reportItem">
+                                                        <NavLink to="/dashboard" className="headerNavLinks">
+                                                            <i className={`fa fa-circle-o-notch moveABit adminHeaderIcons  ${currentUrl === "dashboard" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                            <span
+                                                                className={`headLinkName ${currentUrl === "dashboard" ? "activeLinkOfHeader" : ""}`}>Confessions</span>
+                                                        </NavLink>
+                                                    </div>
+                                                    <div className="reportItem">
+                                                        <NavLink to="/admin/forums" className="headerNavLinks">
+                                                            <i className={`fa fa-circle-o-notch moveABit adminHeaderIcons  ${currentUrl === "admin/forums" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                            <span className={`headLinkName ${currentUrl === "admin/forums" ? "activeLinkOfHeader" :
+                                                                ""}`}>Forums</span>
+                                                        </NavLink>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
 
                                         <div className="linkBtns">
                                             <NavLink to="/admin/users" className="headerNavLinks">

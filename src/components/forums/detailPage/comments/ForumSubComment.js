@@ -197,6 +197,13 @@ const ForumSubComment = (props) => {
         }))
     }
 
+    const goToReferedComment = (e, comment_id) => {
+        e.target.closest(`.abc${comment_id}`).scrollIntoView({
+            block: "end",
+            behavior: "smooth"
+        })
+    }
+
     profile_image = profile_image === "" ? userIcon : profile_image
 
     return (
@@ -243,6 +250,18 @@ const ForumSubComment = (props) => {
             </div>
 
             <div className="postBody">
+
+                {Object.keys(currSubComment?.parent_comment ?? {})?.length ?
+                    <div className="mb-2 pb-2 replied_to_cont cursor_pointer" onClick={(e) => goToReferedComment(e, currSubComment?.parent_comment?.comment_id)} >
+                        <div className="d-flex align-items-center ">
+                            <i className="fa fa-quote-left pr-1 pb-2" aria-hidden="true"></i>
+                            <span className="mb-1 font-italic">{parse(currSubComment?.parent_comment?.comment)}</span>
+                            <i className="fa fa-quote-right pl-1 pb-2" aria-hidden="true"></i>
+                        </div>
+                        <small >{currSubComment?.parent_comment?.comment_by}</small>
+                    </div> : null}
+
+
                 <div className="postedPost mb-0">
                     {currSubComment?.is_edited === 1 ? <i className="fa fa-pencil pr-2" aria-hidden="true"></i> : null}
                     <pre className="preToNormal">

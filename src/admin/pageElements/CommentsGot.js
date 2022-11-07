@@ -15,6 +15,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import {
     useParams
 } from "react-router-dom";
+import ConfessionDetailPageAdmin from './modals/ConfessionDetailPageAdmin';
+import { apiStatus } from '../../helpers/status';
+import ForumLayoutWrapperAdmin from '../components/forums/common/ForumLayoutWrapperAdmin';
+import { getAdminToken } from '../../helpers/getToken';
+import { openCModal as openCommentsModalFn } from '../../redux/actions/commentsModal';
+import { useDispatch } from 'react-redux';
 
 
 export default function CommentsGot(props) {
@@ -25,6 +31,7 @@ export default function CommentsGot(props) {
     }
 
     let history = useNavigate();
+    const dispatch = useDispatch()
 
     //LOGOUT
     const logout = () => {
@@ -33,6 +40,12 @@ export default function CommentsGot(props) {
         window.location.href = "/talkplacepanel"
     }
     const [goDownArrow, setGoDownArrow] = useState(false);
+    const [comDetailPage, setComDetailPage] = useState({
+        status: apiStatus.LOADING,
+        message: "",
+        data: {},
+        props: {}
+    })
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("adminDetails")) : '');
     const [confessionData, setConfessionData] = useState(false);
     const [isWaitingRes, setIsWaitingRes] = useState(true);
@@ -53,6 +66,18 @@ export default function CommentsGot(props) {
         isError: false,
         data: []
     });
+    const [loaded, setLoaded] = useState(false)
+    const [reqFulfilled, setReqFullfilled] = useState(false);
+
+    const updatePost = (dataToUpdate) => {
+        setComDetailPage({
+            ...comDetailPage,
+            props: {
+                ...comDetailPage.props,
+                ...dataToUpdate
+            }
+        })
+    }
     const [token] = useState(() => {
         if (auth()) {
             let details = localStorage.getItem("adminDetails");
@@ -157,232 +182,244 @@ export default function CommentsGot(props) {
     }, [params.postId])
 
 
-    const commentsOnCconfession = async (page = 1, append = false) => {
-        let pageNo = page;
-        let data = {
-            "confession_id": params.postId,
-            "page": pageNo
-        }
+    const openCommentsModal = () => {
+        dispatch(openCommentsModalFn({
+            "postId": confessionData.confession_id,
+            "viewcount": confessionData.viewcount,
+            "index": 0,
+            "userName": confessionData.userName,
+            "postedComment": confessionData.description,
+            "category_id": confessionData.category_id,
+            "category_name": confessionData.category_name,
+            "confession_id": confessionData.confession_id,
+            "created_at": confessionData.created_at,
+            "created_by": confessionData.created_by,
+            "description": confessionData.description,
+            "no_of_comments": confessionData.no_of_comments,
+            "post_as_anonymous": confessionData.post_as_anonymous,
+            "profile_image": confessionData.profile_image,
+            "user_id": confessionData.user_id === '0' ? false : confessionData.user_id,
+            "image": confessionData.image === '' ? '' : confessionData.image,
+            "isNotFriend": confessionData.isNotFriend,
+            "is_viewed": confessionData.is_viewed,
+            "updatedConfessions": () => { },
+            "like": confessionData.like,
+            "slug": confessionData.slug,
+            "is_liked": confessionData.is_liked,
+            "isReported": confessionData.isReported,
+            "dislike": confessionData.dislike,
+            "is_liked_prev": confessionData.is_liked,
+            "cover_image": confessionData.cover_image,
+            "updateConfessionData": updateConfessionData
+        }))
+    }
+
+
+
+    async function getConfession() {
+
+        let token;
+        token = getAdminToken();
 
         let obj = {
-            data: data,
+            data: {},
             token: "",
-            method: "post",
-            url: "getcomments"
+            method: "get",
+            url: `getconfession/${params.postId}`
         }
-        try {
-            const res = await fetchData(obj)
-            if (res.data.status === true) {
-                if (append === true) {
-                    let newConf = [...commentsArr, ...res.data.body.comments];
-                    setCommentsData({ page: pageNo })
-                    setCommentsArr(newConf);
-                } else {
-                    setCommentsCount(res.data.body.count);
-                    setCommentsArr(res.data.body.comments);
 
+        setComDetailPage({
+            ...comDetailPage,
+            status: apiStatus.LOADING
+        })
+
+        try {
+            const response = await fetchData(obj)
+            if (response.data.status === true) {
+
+                let activeCategory = response.data.confession.category_id;
+                setActiveCat(activeCategory);
+                setConfessionData(response.data.confession);
+
+                const confRes = response.data.confession
+
+                setComDetailPage({
+                    ...comDetailPage,
+                    status: apiStatus.FULFILLED,
+                    data: response.data.confession,
+                    props: {
+                        "postId": confRes?.confession_id,
+                        "viewcount": confRes?.viewcount,
+                        "visibility": true,
+                        "index": 0,
+                        "userName": confRes?.userName,
+                        "postedComment": confRes?.description,
+                        "category_id": confRes?.category_id,
+                        "category_name": confRes?.category_name,
+                        "confession_id": confRes?.confession_id,
+                        "created_at": confRes?.created_at,
+                        "created_by": confRes?.created_by,
+                        "description": confRes?.description,
+                        "no_of_comments": confRes?.no_of_comments,
+                        "post_as_anonymous": confRes?.post_as_anonymous,
+                        "profile_image": confRes?.profile_image,
+                        "user_id": confRes?.user_id === '0' ? false : confRes?.user_id,
+                        "image": confRes?.image === '' ? '' : confRes?.image,
+                        "isNotFriend": confRes?.isNotFriend,
+                        "is_viewed": confRes?.is_viewed,
+                        "updatedConfessions": () => { },
+                        "like": confRes?.like,
+                        "slug": confRes?.slug,
+                        "is_liked": confRes?.is_liked,
+                        "isReported": confRes?.isReported,
+                        "dislike": confRes?.dislike,
+                        "is_liked_prev": confRes?.is_liked,
+                        "cover_image": confRes?.cover_image,
+                        "updateConfessionData": updateConfessionData,
+                        "updatePost": updatePost
+                    }
+                })
+                return setLoaded(true);
+            } else {
+                if ("newslug" in response.data) {
+                    const linkToRedirect = `/confession/${response.data?.newslug}`
+                    return history(linkToRedirect)
                 }
+
+                setComDetailPage({
+                    ...comDetailPage,
+                    status: apiStatus.REJECTED,
+                    message: response?.message ?? "Something went wrong"
+                })
             }
-        } catch {
-            console.log("something went wrong");
+
+            //Handles app in case of no api response
+
+            setConfessionData(true);
+            setLoaded(false);
+
+        } catch (err) {
+            console.log({ err })
+            setConfessionData(true);
+            setLoaded(false);
+            setComDetailPage({
+                ...comDetailPage,
+                status: apiStatus.REJECTED,
+                message: err?.message ?? "Something went wrong"
+            })
         }
     }
 
 
+    // REFETCH COMMENTS ON URL POSTID CHANGE
     useEffect(() => {
-        commentsOnCconfession();
-    }, [])
+        setConfessionData(false)
+        setLoaded(false);
+        getConfession();
+    }, [params.postId])
+
+
+    // OPENS THE COMMENTS MODAL FIRST TIME AFTER COMMENT DATA HAS BEEN LOADED
+    useEffect(() => {
+        if (loaded && Object.keys(confessionData).length > 0) openCommentsModal();
+    }, [loaded])
+
+
+    // REOPENS THE COMMENTS MODAL ON CONFESSION_ID CHANGE
+    useEffect(() => {
+        if (params.postId === confessionData.confession_id && !reqFulfilled) setReqFullfilled(true)
+        if (reqFulfilled) setReqFullfilled(false)
+    }, [params.postId])
+
 
 
     // TAKES YOU TO THE HOME PAGE, AND LOADS THE ACTIVECAT CONFESSION DATA
-    const updateActiveCategory = (activeCat) => {
-        history(`/dashboard`, { state: { active: activeCat } });
-    }
+    // const updateActiveCategory = (activeCat) => {
+    //     history(`/home`, { state: { active: activeCat } });
+    // }
 
+    // UPDATES THE CONFESSION DATA ON THE COMMENTS GOT PAGE
+    function updateConfessionData(data, dataToUpdate) {
 
-    const fetchMoreComments = () => {
-        commentsOnCconfession((commentsData.page + 1), true);
-    }
-
-
-    // UPDATES THE COMMENTS
-    const updateComments = (commentId) => {
-        setCommentsCount((prevState) => prevState - 1);
-        let newCommentsArr = commentsArr.filter((current) => {
-            if (commentId !== current.comment_id) {
-                return current;
-            }
-        })
-
-        setCommentsArr(newCommentsArr);
-        setSharedBy((prevState) => prevState - 1);
+        let updatedConfessionArray;
+        let updatedConfessionNode;
+        updatedConfessionArray = { ...confessionData };
+        updatedConfessionNode = updatedConfessionArray;
+        updatedConfessionNode = {
+            ...updatedConfessionNode,
+            ...data
+        };
+        updatedConfessionArray = updatedConfessionNode;
+        updatePost(updatedConfessionNode)
     }
 
 
     return (
-        <div className="container-fluid">
-            {(auth() && confessionData)
-                ?
-                <div className="row">
-                    <Header links={true} />
-                    <div className="preventHeader">preventHead</div>
-                    {lightBox && (
-                        confessionData.image && ((confessionData.image).length !== 0 && ((confessionData.image).length > 1
+        <ForumLayoutWrapperAdmin>
+            <div className="container-fluid px-0">
+                {(auth() && confessionData)
+                    ?
+                    <div className="row">
+                        <Header links={true} />
+                        {lightBox && (
+                            confessionData.image && ((confessionData.image).length !== 0 && ((confessionData.image).length > 1
+                                ?
+                                (<Lightbox images={confessionData.image} onClose={() => { setLightBox(false) }} />)     //MULTIPLE IMAGES
+                                :
+                                (<Lightbox image={confessionData.image} onClose={() => { setLightBox(false) }} />)))    //SINGLE IMAGE
+                        )}
+
+                        {/* MIDDLECONTAINER */}
+
+                        {comDetailPage.status === apiStatus.LOADING
                             ?
-                            (<Lightbox images={confessionData.image} onClose={() => { setLightBox(false) }} />)     //MULTIPLE IMAGES
+                            <div className="spinner-border pColor spinnerSizeFeed" role="status">
+                                <span className="sr-only">Loading...</span>
+                            </div>
                             :
-                            (<Lightbox image={confessionData.image} onClose={() => { setLightBox(false) }} />)))    //SINGLE IMAGE
-                    )}
-                    <div className="container py-md-4 px-md-5 p-3 preventFooter">
-                        <div className="row forPosSticky">
-
-                            <section className="col-lg-12 col-12 mt-3 mt-lg-0">
-                                <div className="postsMainCont">
-
-                                    <div className="row mx-0">
-                                        {/* CATEGORYCONT */}
-                                        <aside className="col-12 col-md-4 posSticky">
-                                            <Category editVisible={false} activeCatIndex={activeCat} categories={categories} updateActiveCategory={updateActiveCategory} />
-                                        </aside>
-                                        {/* CATEGORYCONT */}
-
-                                        {/* MIDDLECONTAINER */}
-
-                                        {isWaitingRes
-                                            ?
-                                            <section className="col-md-8 col-12 mt-3 mt-lg-0">
-                                                <div className="spinner-border pColor spinnerSizeFeed" role="status">
-                                                    <span className="sr-only">Loading...</span>
-                                                </div>
-                                            </section>
-                                            :
-                                            (isServerErr
-                                                ?
-                                                (<section className="col-md-8 col-12 pt-1 mt-lg-0">
-                                                    <div className="alert alert-danger" role="alert">
-                                                        Server Error.. Please try again
-                                                    </div>
-                                                </section>)
-                                                :
-                                                (
-                                                    <section className="col-md-8 col-12 mt-3 mt-lg-0">
-                                                        {isValidPost ? <div className="postCont">
-                                                            <div className="postContHeader justifyContentInitial">
-                                                                <span className="userImage userImageFeed">
-                                                                    <img ket={confessionData.profile_image + "1"} src={confessionData.profile_image === '' ? userIcon : confessionData.profile_image} className="userAccIcon" alt="" />
-                                                                </span>
-                                                                {confessionData.post_as_anonymous === 1
-                                                                    ? <span className="userName">
-                                                                        {confessionData.created_by}
-                                                                    </span> :
-                                                                    <Link className={`textDecNone `}
-                                                                        to={confessionData.post_as_anonymous === 0 &&
-                                                                            (auth() ? (userDetails.profile.user_id === confessionData.user_id ? `/profile` : `/userProfile/${confessionData.user_id}`) : `/userProfile?user=${confessionData.user_id}`)
-                                                                        }>
-                                                                        <span className="userName">
-                                                                            {confessionData.post_as_anonymous === 1 ? "Anonymous ." : confessionData.created_by}
-                                                                        </span>
-                                                                    </Link>}
-
-
-                                                                <span className="catCommentBtnCont">
-                                                                    <div className="categoryOfUser" type="button">{(confessionData.category_name).charAt(0) + (confessionData.category_name).slice(1).toLowerCase()}</div>
-                                                                </span>
-                                                                <span className="postCreatedTime">
-                                                                    {confessionData.created_at}
-                                                                </span>
-                                                            </div>
-                                                            <div className="postBody">
-                                                                <div className="postedPost">
-                                                                    <pre className="preToNormal">
-                                                                        {confessionData.description}
-                                                                    </pre>
-                                                                </div>
-
-
-                                                                {(confessionData.image !== null && (confessionData.image).length > 0)
-                                                                    &&
-                                                                    (
-                                                                        <div className="form-group imgPreviewCont mt-2 mb-0">
-                                                                            <div className="imgContForPreviewImg fetched" type="button" onClick={() => { setLightBox(true) }} >
-                                                                                {(confessionData.image).map((src, index) => {
-                                                                                    return (
-                                                                                        <span className="uploadeImgWrapper fetched"
-                                                                                            key={`uploadeImgWrapper${index}`}>
-                                                                                            <img
-                                                                                                className='previewImg'
-                                                                                                key={src + "imgContForPreviewImg"} src={src}
-                                                                                                alt="" />
-                                                                                        </span>)
-                                                                                })}
-                                                                            </div>
-                                                                        </div>
-                                                                    )
-                                                                }
-                                                                <span className="d-block errorCont text-danger mb-2 moveUp">{requiredError}</span>
-                                                            </div>
-
-                                                            <div className="postFoot w-100 d-flex">
-                                                                <div className="totalComments">
-                                                                    {sharedBy}  - People shared their thoughts about this post
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                            :
-                                                            <div className="alert alert-danger" role="alert">
-                                                                The post doesn't exists
-                                                            </div>}
-
-                                                        {isValidPost && <div className="postsMainCont">
-                                                            {commentsArr.length > 0
-                                                                &&
-                                                                <InfiniteScroll
-                                                                    endMessage={<div className="text-center endListMessage mt-4 pb-3">End of Comments</div>}
-                                                                    dataLength={commentsArr.length}
-                                                                    next={fetchMoreComments}
-                                                                    hasMore={commentsArr.length < commentsCount}
-                                                                    loader={
-                                                                        <div className="w-100 text-center">
-                                                                            <div className="spinner-border pColor mt-4" role="status">
-                                                                                <span className="sr-only">Loading...</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    }
-                                                                >
-                                                                    {commentsArr.map((post, index) => {
-                                                                        return <Comments
-                                                                            updateComments={updateComments}
-                                                                            comment_id={post.comment_id}
-                                                                            created_at={post.created_at}
-                                                                            curid={(post.user_id === '' || post.user_id === 0) ? false : post.user_id}
-                                                                            key={"Arr" + index + "dp"}
-                                                                            imgUrl={post.profile_image} userName={post.comment_by}
-                                                                            postedComment={post.comment} />
-
-                                                                    })}
-                                                                </InfiniteScroll>
-                                                            }
-
-                                                        </div>}
-
-                                                    </section>
-                                                )
-                                            )}
-
-                                        {/* MIDDLECONTAINER */}
-                                    </div>
-
+                            (comDetailPage.status === apiStatus.REJECTED
+                                ?
+                                <div className="alert alert-danger w-100" role="alert">
+                                    {comDetailPage.message}
                                 </div>
-                            </section>
-                        </div>
+                                :
+                                (
+                                    <section className="col-lg-12 col-12 px-md-4 px-0">
+                                        <div className='w-100 mb-3'>
+
+                                            <Link to={`/dashboard`} className='backtoHome'>
+                                                <span className='mr-2'>
+                                                    <i className="fa fa-chevron-left" aria-hidden="true"></i>
+                                                    <i className="fa fa-chevron-left" aria-hidden="true"></i>
+                                                </span>
+                                                Go back to confessions
+                                            </Link>
+
+                                        </div>
+                                        <ConfessionDetailPageAdmin
+                                            updatePost={updatePost}
+                                            handleChanges={() => { }}
+                                            updateConfessionData={() => { }}
+                                            updatedConfessions={() => { }}
+                                            state={comDetailPage?.data}
+                                            comDetailPage={comDetailPage}
+                                            categories={props.categories}
+                                            handleCommentsModal={() => { }}
+                                        />
+
+                                    </section>
+                                )
+                            )}
+
+                        {/* MIDDLECONTAINER */}
+
+                        <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
+                        <Footer />
                     </div>
+                    :
+                    <SiteLoader />}
 
-                    <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
-                    <Footer />
-                </div>
-                :
-                <SiteLoader />}
-
-        </div>
+            </div>
+        </ForumLayoutWrapperAdmin>
     );
 }

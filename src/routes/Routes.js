@@ -45,6 +45,7 @@ import ForumDetailPage from '../user/pageElements/pages/forums/ForumDetailPage';
 import Search from '../user/pageElements/pages/search/Search';
 import ForumDetailPageAdmin from '../admin/pageElements/pages/forums/ForumDetailPageAdmin';
 import ForumsAdmin from '../admin/pageElements/pages/forums/ForumsAdmin';
+import ConfessionDetailPageAdmin from '../admin/pageElements/modals/ConfessionDetailPageAdmin';
 
 
 const Routes = ({ categories }) => {
@@ -85,13 +86,14 @@ const Routes = ({ categories }) => {
                     {/* COMPLAINTS */}
 
                     {/* FORUM DETAIL PAGE */}
-                    {/* <Route path="admin/forums/:slug"
-                        element={<ForumDetailPageAdmin />} /> */}
-                    {/* REPORT PAGE */}
+                    <Route path="admin/forums/:slug"
+                        element={<ForumDetailPageAdmin />} />
+                    {/* FORUM DETAIL PAGE*/}
+
 
                     {/* Forums PAGE */}
-                    {/* <Route path="admin/forums"
-                        element={<ForumsAdmin />} /> */}
+                    <Route path="admin/forums"
+                        element={<ForumsAdmin />} />
                     {/* Forums PAGE */}
 
                     {/* ADMIN ROUTES */}

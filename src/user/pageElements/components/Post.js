@@ -56,44 +56,6 @@ export default function Post(props) {
     const [shareReqPopUp, toggleShareReqPopUp, ShareRequestPopUp, closeShareReqPopUp] = useShareRequestPopUp();
     const [sharekit, toggleSharekit, ShareKit, hideShareKit] = useShareKit();
 
-    const openCommentsModal = () => {
-        dispatch(openCommentsModalFn({
-            "postId": props.postId,
-            "viewcount": props.viewcount,
-            "visibility": true,
-            "index": props.index,
-            "userName": props.userName,
-            "postedComment": props.postedComment,
-            "category_id": props.category_id,
-            "category_name": props.category,
-            "confession_id": props.confession_id,
-            "created_at": props.createdAt,
-            "created_by": props.userName,
-            "description": props.postedComment,
-            "no_of_comments": props.sharedBy,
-            "post_as_anonymous": props.post_as_anonymous,
-            "profile_image": props.profileImg,
-            "user_id": props.curid,
-            "image": props.imgUrl,
-            "isNotFriend": props.isNotFriend,
-            "is_viewed": props.is_viewed,
-            "updatedConfessions": props.updatedConfessions,
-            "like": props.like,
-            "slug": props.slug,
-            "dislike": props.dislike,
-            "isReported": props.isReported,
-            "cover_image": props.cover_image,
-            "dislike": props.dislike,
-            ...(props.is_liked !== undefined && { "is_liked": props.is_liked }),
-            "is_liked_prev": props.is_liked,
-            "updateConfessionData": updateConfessionData
-        }))
-
-        dispatch(togglemenu({
-            id: null, value: false, isPost: true
-        }))
-    }
-
     const preventDoubleClick = (runOrNot) => {
         var elem = document.querySelector('#userPostCommentIcon');
         runOrNot === true ? elem.classList.add("ptNull") : elem.classList.remove("ptNull");;

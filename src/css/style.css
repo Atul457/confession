@@ -456,6 +456,10 @@ input::-webkit-textfield-decoration-container {
     justify-content: space-between;
 }
 
+.admin .sharekitdots {
+    top: 13px;
+}
+
 .forum_cont .sharekit {
     top: 15px;
     right: 22px;
@@ -559,7 +563,13 @@ input:focus-visible {
     padding-bottom: 15px;
 }
 
+a.create_forum_btn:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
 .category {
+    position: relative;
     height: fit-content;
     text-transform: capitalize;
     -ms-flex-line-pack: start;
@@ -2918,6 +2928,14 @@ span.facebookMobIcon {
     color: var(--primaryColor);
 }
 
+/* .admin .postContHeader {
+    max-width: 100%;
+}
+
+.admin .editDelComment {
+    right: 0px;
+} */
+
 .confession_detail_page .postedPost {
     padding-top: 8px;
 }
@@ -3606,14 +3624,20 @@ span.facebookMobIcon {
     padding-top: 8px;
 }
 
+
 .editDelComment {
     display: flex;
+    z-index: 1;
     align-items: center;
     position: absolute;
     top: 4px;
     right: 25px;
     font-size: 22px !important;
     color: var(--primaryColor);
+}
+
+.admin .editDelComment {
+    right: 4px;
 }
 
 .resetRight {
@@ -7895,7 +7919,7 @@ button.modalFootBtns.btn a:hover {
     .forum_com_p_link {
         width: max-content;
         color: var(--primaryColor);
-        max-width: 50%;
+        max-width: 37%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

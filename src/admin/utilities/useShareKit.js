@@ -8,5 +8,10 @@ export default function useShareKit() {
         sharekit === true ? setShareKit(false) : setShareKit(true);
     }
 
-    return [sharekit, toggleSharekit, ShareKit];
+    const hideShareKit = () => {
+        console.log("hidesharekit")
+        setShareKit(false);
+    }
+
+    return [sharekit, toggleSharekit, ShareKit, hideShareKit];
 }

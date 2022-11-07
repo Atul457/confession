@@ -13,7 +13,7 @@ import { getAdminToken } from '../../helpers/getToken';
 import _ from 'lodash';
 
 
-const SubComments = ({ data, subcommentId, updatSubComments, index,
+const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
     root_id, addNewSubComment, deleteSubComment, postId, isLastIndex }) => {
 
     let props = data;
@@ -90,6 +90,7 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
                 let data;
                 addNewSubComment(response.data.comment);
                 data = { no_of_comments: commentsModalReducer.state.no_of_comments + 1 }
+                updatePost(data)
                 dispatch(updateCModalState(data))
                 dispatch(setCommentField({ id: "" }));
             } else {
@@ -169,6 +170,9 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
 
     return (
         <div className={`postCont overWritePostWithComment subcommentCont ${props.id_path} ${!auth() ? 'notAuth' : ''}`} index={index}>
+
+
+
             {!isLastIndex
                 ?
                 <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
@@ -177,30 +181,32 @@ const SubComments = ({ data, subcommentId, updatSubComments, index,
                     <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
                 </div>
             }
-            <div className="postContHeader commentsContHeader">
-                <span className="commentsGotProfileImg">
-                    <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />
-                </span>
+            <div className="commentsContHeader">
+                <div className="postContHeader">
+                    <span className="commentsGotProfileImg">
+                        <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />
+                    </span>
 
-                {props.curid !== false ?
+                    {props.curid !== false ?
 
-                    (<Link className={`textDecNone commentsUserName`}
-                        to={props.curid ?
-                            (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
-                            : ''}>
-                        <span className="userName">
-                            {props.comment_by}
-                        </span>
-                    </Link>)
-                    :
-                    (<span className="userName">
-                        {props.userName}
-                    </span>)}
+                        (<Link className={`textDecNone commentsUserName`}
+                            to={props.curid ?
+                                (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
+                                : ''}>
+                            <span className="userName">
+                                {props.comment_by}
+                            </span>
+                        </Link>)
+                        :
+                        (<span className="userName">
+                            {props.userName}
+                        </span>)}
 
-                <span className="postCreatedTime">
-                    {/* {props.created_at} */}
-                    {DateConverter(props.created_at)}
-                </span>
+                    <span className="postCreatedTime">
+                        {/* {props.created_at} */}
+                        {DateConverter(props.created_at)}
+                    </span>
+                </div>
 
                 <div className='editDelComment'>
                     <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>

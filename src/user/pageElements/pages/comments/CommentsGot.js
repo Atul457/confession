@@ -53,7 +53,7 @@ export default function CommentsGot(props) {
         })
     }
 
-    const updateConf = (index, dataToUpdate) => {
+    const updateConf = (dataToUpdate) => {
         updatePost(dataToUpdate)
     }
 
@@ -284,13 +284,6 @@ export default function CommentsGot(props) {
                                             (
                                                 <section className="col-lg-12 col-12 px-md-4 px-0">
                                                     <div className='w-100 mb-3'>
-                                                        {/* <Link to={`/home`} className='backtoHome'>
-                                                            <span className='mr-2'>
-                                                                <i className="fa fa-chevron-left" aria-hidden="true"></i>
-                                                                <i className="fa fa-chevron-left" aria-hidden="true"></i>
-                                                            </span>
-                                                            Go back to home
-                                                        </Link> */}
 
                                                         <Link to={`/${location?.state?.cameFromSearch ? "search" : "home"}`} className='backtoHome'>
                                                             <span className='mr-2'>

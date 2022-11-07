@@ -99,6 +99,8 @@ export default function Comments(props) {
         try {
             const res = await fetchData(obj)
             if (res.data.status === true) {
+                return window.location.href = window.location.href
+                return
                 props.changeListener();
                 props.updateComments(commentId);
             }
@@ -178,6 +180,7 @@ export default function Comments(props) {
                 ref.value = ""
                 data = { no_of_comments: commentsModalReducer.state.no_of_comments + 1 };
                 dispatch(updateCModalState(data))
+                props.updatePost(data)
                 dispatch(setCommentField({ id: "" }));
 
                 if (showSubComments.isBeingExpanded === true || showSubComments?.keepOpened === true || subComments.data.length < SLOMT) {
@@ -272,7 +275,9 @@ export default function Comments(props) {
 
 
     return (
-        <div className={`overWritePostWithCommentWr`}>
+        <div className={`overWritePostWithCommentWr admin comments`}>
+
+
             {!props.isLastIndex
                 ?
                 <i className="fa fa-arrow-circle-o-right connector" aria-hidden="true"></i>
@@ -282,27 +287,30 @@ export default function Comments(props) {
                 </div>
             }
             <div className="postCont overWritePostWithComment outer">
-                <div className="postContHeader justifyContentInitial">
-                    <span className="commentsGotProfileImg">
-                        <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
-                    </span>
+                <div className="commentsContHeader">
+                    <div className="postContHeader justifyContentInitial">
+                        <span className="commentsGotProfileImg">
+                            <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
+                        </span>
 
-                    {props.curid !== false ?
+                        {props.curid !== false ?
 
-                        (<Link className={`textDecNone`}
-                            to={props.curid ? location : `/userProfile/${props.curid}`}>
-                            <span className="userName">
+                            (<Link className={`textDecNone`}
+                                to={props.curid ? location : `/userProfile/${props.curid}`}>
+                                <span className="userName">
+                                    {props.userName}
+                                </span>
+                            </Link>)
+                            :
+                            (<span className="userName">
                                 {props.userName}
-                            </span>
-                        </Link>)
-                        :
-                        (<span className="userName">
-                            {props.userName}
-                        </span>)}
+                            </span>)}
 
-                    <span className="postCreatedTime">
-                        {DateConverter(props.created_at)}
-                    </span>
+                        <span className="postCreatedTime">
+                            {DateConverter(props.created_at)}
+                        </span>
+
+                    </div>
 
                     <div className='editDelComment'>
                         <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
@@ -392,6 +400,7 @@ export default function Comments(props) {
                                     index={index}
                                     postId={props.postId}
                                     root_id={props.commentId}
+                                    updatePost={props.updatePost}
                                     key={subcomment.comment_id}
                                     data={subcomment}
                                     updatSubComments={updatSubComments}

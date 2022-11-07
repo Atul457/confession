@@ -296,7 +296,7 @@ const ForumComment = (props) => {
 
   return (
     <>
-      <div className='postCont forum_comment'>
+      <div className={`postCont forum_comment abc${commentId}`}>
 
         {/* Edit/Delete comment */}
         {(auth() && currComment?.is_editable === 1) ?

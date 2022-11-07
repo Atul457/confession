@@ -10,7 +10,7 @@ const updateKeyProfileLoc = (key, value, isToken = false) => {
     localStorage.setItem("userDetails", JSON.stringify(userDetails))
 }
 
-const getKeyProfileLoc = (key, isAdmin = false, isToken = false) => {
+const getKeyProfileLoc = (key, isToken = false, isAdmin = false) => {
     let userData = '';
     userData = localStorage.getItem(isAdmin ? "adminDetails" : "userDetails");
     userData = JSON.parse(userData);

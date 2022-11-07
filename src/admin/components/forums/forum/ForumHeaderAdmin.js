@@ -8,12 +8,11 @@ import DateConverter from '../../../../helpers/DateConverter';
 import actionIcon from '../../../../images/actionIcon.svg';
 
 // Redux
-import { createForumModalFnAc, deleteForumAcFn, forumHandlers, reportForumAcFn, reqToJoinModalAcFn } from '../../../../redux/actions/forumsAc/forumsAc';
+import { forumHandlers } from '../../../../redux/actions/forumsAc/forumsAc';
 import { useDispatch } from 'react-redux';
-import { toggleNfswModal } from '../../../../redux/actions/modals/ModalsAc';
+import { deleteForumService } from '../services/adminforumServices';
 
-import { forum_types, reportedFormStatus, requestedStatus } from '../detailPage/comments/ForumCommProvider';
-import { apiStatus } from '../../../../helpers/status';
+import { requestedStatus } from '../detailPage/comments/ForumCommProvider';
 import auth from '../../../behindScenes/Auth/AuthCheck';
 import ShareKit from '../../../../user/shareKit/ShareKit';
 import { scrollDetails } from '../../../../helpers/helpers';
@@ -48,7 +47,7 @@ const ForumHeaderAdmin = props => {
     // const hideJoinDiv = true
     // const requested = is_requested === requestedStatus.is_requested
     const joined = currForum?.is_requested === requestedStatus.approved
-    const isPrivateForum = currForum?.type === forum_types.private
+    // const isPrivateForum = currForum?.type === forum_types.private
     const postData = { is_forum: 1, forum_id, ...currForum }
     // const showShareBlock = type !== forum_types.closed && (isPrivateForum ? joined : true)
 
@@ -69,23 +68,16 @@ const ForumHeaderAdmin = props => {
         dispatch(forumHandlers.handleForums({ shareBox: dataToSend, actionBox: {} }))
     }
 
+    // Deletes the forum
     const deleteForum = () => {
-        dispatch(deleteForumAcFn({
-            visible: true,
-            data: {
+        const result = window.confirm("Are you sure you want to delete this forum?")
+        if (result)
+            deleteForumService({
+                dispatch,
                 forum_id,
                 forum_index
-            }
-        }))
+            })
     }
-
-    // const openCreateSForumModal = () => {
-    //     dispatch(createForumModalFnAc({
-    //         visible: true,
-    //         forum_details: currForum,
-    //         isBeingEdited: true
-    //     }))
-    // }
 
     const getBody = () => {
 

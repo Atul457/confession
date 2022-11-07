@@ -5,12 +5,12 @@ import React from 'react'
 // AppLogo
 // Header
 // import SocialIconsComp from '../../SocialIconsComp/SocialIconsComp';
-import ForumMiddleCompWrapper from '../ForumPageWrapper';
-import ForumCategories from '../forumCategories/ForumCategoriesAdmin';
+import ForumCategoriesAdmin from "../forumCategories/ForumCategoriesAdmin"
 
 import { useLocation } from 'react-router-dom';
 import AppLogo from '../../../../user/pageElements/components/AppLogo';
 import Header from '../../../pageElements/common/Header';
+import ForumPageWrapperAdmin from '../ForumPageWrapperAdmin';
 
 
 const ForumLayoutWrapperAdmin = ({ children }) => {
@@ -32,23 +32,19 @@ const ForumLayoutWrapperAdmin = ({ children }) => {
                         <div className="middleContLoginReg feedMiddleCont w-100">
                             {/* Categorycont */}
                             <aside className="posSticky">
-                                <ForumCategories
+                                <ForumCategoriesAdmin
                                     onlyForForums={isForumPage}
                                     isSearchPage={isSearchPage} />
                             </aside>
                         </div>
 
-                        {/* Social links */}
-                        {/* <div className="leftSidebarFooter">
-                            <SocialIconsComp />
-                        </div> */}
                     </div>
                 </aside>
 
                 {/* Rightsides comp */}
-                <ForumMiddleCompWrapper>
+                <ForumPageWrapperAdmin>
                     {children}
-                </ForumMiddleCompWrapper>
+                </ForumPageWrapperAdmin>
                 {/* Rightsides comp */}
 
             </div>
