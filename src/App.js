@@ -26,8 +26,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ReactPixel from 'react-facebook-pixel';
 import forumTypes from "./components/forums/forumTypes.json"
-import { getTagsService } from './components/forums/services/forumServices';
+import { getCategoriesService, getTagsService } from './components/forums/services/forumServices';
 import { apiStatus } from './helpers/status';
+import { isAdminLoggedIn } from './helpers/helpers';
+import { getKeyProfileLoc } from './helpers/profileHelper';
 
 //GOOGLE TAG MANAGER
 const tagManagerArgs = { gtmId: 'GTM-WP65TWC' }  //DEV
@@ -120,31 +122,19 @@ function App() {
 
 
   useEffect(() => {
-    auth();
-    var token = "";
-    if (userDetails) {
-      token = userDetails.token;
-    }
     async function getData() {
-      let obj = {
-        data: {},
-        token: token,
-        method: "get",
-        url: "getcategories"
-      }
       try {
-        const res = await fetchData(obj)
-        if (res.data.status === true) {
-          setCategories(res.data.categories);
-        } else {
-          setCategories(false);   //HANDLES APP IN CASE OF NO API RESPONSE
-        }
+        const res = await getCategoriesService({
+          dispatch
+        })
+        setCategories(res.categories);
       } catch (err) {
         setCategories(false);
         setCategoriesResults(false);
         console.log(err);
       }
     }
+
     getTagsService({ dispatch });
     getData();
 

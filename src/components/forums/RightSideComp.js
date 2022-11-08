@@ -78,12 +78,12 @@ const Tabs = ({ activeTab, setActiveTab }) => {
             <div className="links_cont">
                 {tabs.map((currTab, ctIndex) => {
                     if (!auth() && ctIndex === 1) {
-                        return <Link Link to="/login" className='forums_tab'>
+                        return <Link Link to="/login" className='forums_tab' key={`forumsTab${ctIndex}`}>
                             <span
-                                key={`forumsTab${ctIndex}`}
                                 className={`forums_tab ${activeTab === ctIndex ? "active" : ''}`}>
                                 {currTab}
-                            </span></Link>
+                            </span>
+                        </Link>
                     }
                     return (
                         <span

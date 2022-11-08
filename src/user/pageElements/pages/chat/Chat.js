@@ -748,7 +748,7 @@ export default function Chat() {
             {
                 auth() ? <div className="row chatPageOuter">
                     {/* ADDS HEADER COMPONENT */}
-                    <Header links={true} fullWidth={true} />
+                    <Header links={true} fullWidth={true} hideChat={toggleView.messages} />
                     {/* END OF ADDS HEADER COMPONENT */}
 
                     <div className="preventHeader preventHeaderChatSec">preventHead</div>
@@ -894,9 +894,8 @@ export default function Chat() {
 
                                                     <span className="userImageContChatOutest">
                                                         <img src={chatterDetails.image === '' ? chatterImg : chatterDetails.image} alt="" className="userImageContChat" />
-                                                        {/* {chatterDetails?.email_verified === 1 ? */}
-                                                        {true ?
-                                                         <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
+                                                        {chatterDetails?.email_verified === 1 ?
+                                                            <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                                                     </span>
                                                     <div className="chatterUserName text-capitalize">
                                                         <span className="user_name">

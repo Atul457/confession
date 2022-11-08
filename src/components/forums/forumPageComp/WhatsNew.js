@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useLocation } from 'react-router-dom'
 
 // Custom components
 import Forum from '../forum/Forum'
@@ -19,11 +18,9 @@ import { fetchData } from '../../../commonApi'
 import { resHandler, scrollDetails, scrollToTop } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
 
-
 const WhatsNew = () => {
 
     // Hooks and vars
-    const location = useLocation()
     const {
         forums: forumsRed,
         categories,
@@ -36,7 +33,7 @@ const WhatsNew = () => {
     const dispatch = useDispatch()
     const { activeCategory } = categories
     const { handleForums } = forumHandlers
-    const { data: forums, status: forumsStatus, page, count = 0, hasMore } = forumsRed
+    const { data: forums, status: forumsStatus, page, hasMore } = forumsRed
     const afterHowManyShowAdd = 7;    //AFTER THIS MUCH SHOW ADDS
 
     useEffect(() => {
@@ -140,7 +137,6 @@ const WhatsNew = () => {
                     endMessage={<div className=" text-center endListMessage mt-4 pb-3">End of Forums</div>}
                     dataLength={forums.length}
                     next={fetchMoreData}
-                    // hasMore={forums.length < count}
                     hasMore={hasMore}
                     loader={
                         <div className="text-center mb-5">

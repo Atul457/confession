@@ -179,7 +179,9 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
             isReported: props.isReported,
             data: {
                 confessionId,
-                commentId
+                commentId,
+                mutateCommentsFn: rest?.updateSingleCommentData,
+                comment_index: index
             }
         }))
         dispatch(closeCModal())
@@ -232,7 +234,7 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
                     {props.is_editable === 1 ?
                         <>
                             <i className="fa fa-trash deleteCommentIcon" type="button" aria-hidden="true" onClick={deleteCommentFunc}></i>
-                            {commentsModalReducer.updateField.comment_id !== props.comment_id ? <img src={editCommentIcon} className='editCommentIcon' onClick={setComment} /> : ''}
+                            {commentsModalReducer.updateField.comment_id !== props.comment_id ? <img src={editCommentIcon} alt="editCommentIcon" className='editCommentIcon' onClick={setComment} /> : ''}
                             {(auth() && props.isReported !== 2) ? <i
                                 className="fa fa-exclamation-circle reportComIcon"
                                 aria-hidden="true"

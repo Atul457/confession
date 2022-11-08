@@ -13,7 +13,6 @@ import logo from '../../../../images/appLogo.svg'
 import { openCModal as openCommentsModalFn } from '../../../../redux/actions/commentsModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { getToken } from '../../../../helpers/getToken';
-import _ from 'lodash';
 import ReportPostModal from '../../Modals/ReportPostModal';
 import ReportCommentModal from '../../Modals/ReportCommentModal';
 import ConfessionDetailPage from '../../Modals/ConfessionDetailPage';

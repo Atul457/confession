@@ -113,6 +113,22 @@ export default function Comments(props) {
         // dispatch(updateCModalState(data));
     }
 
+    const updateSingleCommentData = (data, index) => {
+        let updatedNode, originalArray;
+        originalArray = [...subComments?.data];
+        console.log({ originalArray, subComments })
+        updatedNode = { ...updatedNode, ...subComments?.data[index], ...data };
+        originalArray.splice(index, 1, updatedNode);
+        console.log({
+            ...subComments,
+            data: [...originalArray]
+        })
+        setSubComments({
+            ...subComments,
+            data: [...originalArray]
+        })
+    }
+
 
     // CALLS HANDLESUBCOMMENT TO POST AND ADD A NEW COMMENT
     const updatSubComments = (comment_id, editedComment, index) => {
@@ -366,7 +382,9 @@ export default function Comments(props) {
             isReported: props.isReported,
             data: {
                 confessionId: props.postId,
-                commentId: props.commentId
+                commentId: props.commentId,
+                mutateCommentsFn: props?.mutateCommentsFn,
+                comment_index: props?.index
             }
         }))
         dispatch(closeCModal())
@@ -545,6 +563,7 @@ export default function Comments(props) {
                                     key={subcomment.comment_id}
                                     subcomment={subcomment}
                                     data={subcomment}
+                                    updateSingleCommentData={updateSingleCommentData}
                                     updatePost={props.updatePost}
                                     updatSubComments={updatSubComments}
                                     subcommentId={subcomment.comment_id} />

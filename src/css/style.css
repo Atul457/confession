@@ -550,6 +550,13 @@ input:focus-visible {
     align-items: center;
 }
 
+.admin .category {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
 .adSpace span {
     transform: rotate(90deg);
     font-size: 24px;
@@ -2640,8 +2647,6 @@ span.offlineColor {
     margin-left: 17px;
 }
 
-
-
 .modalFootBtns {
     color: #fff;
     min-width: 95px;
@@ -2653,6 +2658,11 @@ span.offlineColor {
     font-weight: 600;
     border: 1px solid var(--orangeColor) !important;
     font-size: 15px;
+}
+
+.modalFootBtns:active,
+.modalFootBtns:focus {
+    background-color: var(--orangeColor) !important;
 }
 
 .modalFootBtns:hover {
@@ -3011,6 +3021,10 @@ span.facebookMobIcon {
     line-height: 19px;
 }
 
+.force_visible {
+    display: flex !important;
+}
+
 .randomizeNameTooltip:hover .tooltipText {
     display: inline-block;
 }
@@ -3020,8 +3034,8 @@ span.facebookMobIcon {
     position: fixed;
     display: flex;
     align-items: center;
-    bottom: 34px;
-    right: 20px;
+    top: calc(100vh - 100px);
+    right: 30px;
     z-index: 99;
     background: var(--orangeColor);
 }
@@ -4320,6 +4334,16 @@ a.headerNavLinks.active::after {
 
 .popupModal .modal-dialog {
     height: 100%;
+}
+
+.admin .categoriesContainer {
+    max-height: calc(100vh - 350px);
+    min-height: 270px;
+}
+
+.innerAdminCatName i {
+    color: #A8A9A8;
+    padding-right: 5px;
 }
 
 .popupModal .modal-content {
@@ -7242,8 +7266,8 @@ button.modalFootBtns.btn a:hover {
 
     .thoughtsNrequestsCont.profile {
         height: 400px;
-        overflow: scroll;
         margin-bottom: 70px;
+        overflow: auto;
 
     }
 
@@ -7731,7 +7755,7 @@ button.modalFootBtns.btn a:hover {
     }
 
     .reportItems {
-        left: 30px;
+        left: -40px;
         top: -119px;
     }
 
@@ -7944,6 +7968,7 @@ button.modalFootBtns.btn a:hover {
 
     .heartCompCont.pulsatingIcon {
         animation: pulsatingIconPulsate 3.2s infinite;
+
     }
 
 
@@ -7953,6 +7978,8 @@ button.modalFootBtns.btn a:hover {
 
     .heartCompCont {
         right: 5px;
+        height: fit-content;
+        top: calc(100vh - 140px);
     }
 
     .confession_cont .postUserName {
@@ -7979,6 +8006,10 @@ button.modalFootBtns.btn a:hover {
 
     .upperView .subCommentsCount {
         position: unset;
+    }
+
+    .admin .postCont .postUserName {
+        max-width: 30%;
     }
 }
 

@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/confessionNew/static/css/main.148e5053.css",
-    "main.js": "/confessionNew/static/js/main.e47bb270.js",
+    "main.css": "/confessionNew/static/css/main.bc0f713e.css",
+    "main.js": "/confessionNew/static/js/main.c772775b.js",
     "static/js/787.7b2783aa.chunk.js": "/confessionNew/static/js/787.7b2783aa.chunk.js",
     "static/media/loginLogo.svg": "/confessionNew/static/media/loginLogo.2727c5bf82b4d2c7dd6632a328467d72.svg",
     "static/media/avatarGroup.png": "/confessionNew/static/media/avatarGroup.ccd9bdedebafb3c1ee2e.png",
@@ -28,6 +28,8 @@
     "static/media/alFriends.svg": "/confessionNew/static/media/alFriends.a8c8edf940958c749052b6838fc4d888.svg",
     "static/media/alRequested.svg": "/confessionNew/static/media/alRequested.de53e5b2225436a8b6050a134699bdc8.svg",
     "static/media/reportForumIcon.svg": "/confessionNew/static/media/reportForumIcon.eac209e1ed921cdacaceea72351100d7.svg",
+    "static/media/forumsAdminIcon.svg": "/confessionNew/static/media/forumsAdminIcon.9b4d7640f2dc0425e434c3aa28ce640a.svg",
+    "static/media/forumsAdminIconActive.svg": "/confessionNew/static/media/forumsAdminIconActive.73234f2bb5563a1d1c500cde8306bd58.svg",
     "static/media/tiktokSocial.svg": "/confessionNew/static/media/tiktokSocial.5caff66b184f71ede8914b0fa89eff53.svg",
     "static/media/canBeRequested.svg": "/confessionNew/static/media/canBeRequested.285461be9df628c7733d5e6d4ee27014.svg",
     "index.html": "/confessionNew/index.html",
@@ -76,12 +78,12 @@
     "static/media/confessIconActive.svg": "/confessionNew/static/media/confessIconActive.891ead1e20e742dd8c3775c5b15d1394.svg",
     "static/media/actionIcon.svg": "/confessionNew/static/media/actionIcon.d7eb451f87851b6a53f09840bbb75f7b.svg",
     "static/media/actionIconImg.svg": "/confessionNew/static/media/actionIconImg.817b8fb076c3ae8c2b63db380aa3d31e.svg",
-    "main.148e5053.css.map": "/confessionNew/static/css/main.148e5053.css.map",
-    "main.e47bb270.js.map": "/confessionNew/static/js/main.e47bb270.js.map",
+    "main.bc0f713e.css.map": "/confessionNew/static/css/main.bc0f713e.css.map",
+    "main.c772775b.js.map": "/confessionNew/static/js/main.c772775b.js.map",
     "787.7b2783aa.chunk.js.map": "/confessionNew/static/js/787.7b2783aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.148e5053.css",
-    "static/js/main.e47bb270.js"
+    "static/css/main.bc0f713e.css",
+    "static/js/main.c772775b.js"
   ]
 }

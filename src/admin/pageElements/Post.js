@@ -76,16 +76,6 @@ export default function Post(props) {
         }))
     }
 
-    //HANDLES THE COMMENTS MODAL 
-    // const handleCommentsModal = () => {
-    //     props.handleCommentsModal({
-    //         "postId": props.postId,
-    //         "viewcount": props.viewcount,
-    //         "visibility": true,
-    //         "index": props.index
-    //     });
-    // }
-
     // DELETE CONFESSION
     const deleteConfessionFunc = async () => {
         let confirmation = window.confirm("Do you really want to delete the Confession ?");
@@ -251,7 +241,7 @@ export default function Post(props) {
                 className={`postBody ${isCoverTypePost ? 'coverTypePost' : ''}`}
                 style={postBg}>
                 <Link className="links text-dark" to={`/dashboard/confession/${props?.slug}`}>
-                    <div className="postedPost">
+                    <div className="postedPost pb-1">
                         <pre
                             {...(!isCoverTypePost && { onClick: openCommentsModal })}
                             className="preToNormal post">

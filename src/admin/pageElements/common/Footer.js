@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, NavLink } from "react-router-dom";
 import { useLocation } from 'react-router';
+import forumsAdminIcon from '../../../images/forumsAdminIcon.svg'
+import forumsAdminIconActive from '../../../images/forumsAdminIconActive.svg'
 
 export default function Footer() {
 
@@ -20,6 +22,41 @@ export default function Footer() {
                         </span>
                     </NavLink>
                 </div>
+
+                <div className="linkBtns dropdownLink">
+                    <div className="linkBtnsAnchor headerLinks">
+                        <i className={`fa fa-circle-o-notch footLinkName moveABit adminHeaderIcons ${currentUrl.includes("forums") ? "oColor" : ""}`} />
+                        {/* <span className="headIconCont">
+                            <img src={!currentUrl.includes("forums") ? forumsAdminIcon : forumsAdminIconActive} alt="" />
+                        </span> */}
+                        <span
+                            className={`headLinkName footLinkName ${(currentUrl.includes("forums")) ? "activeLinkOfHeader" : ""}`}>Forums</span>
+                        <div className="reportItems">
+                            <div className="reportItem">
+                                <NavLink to="/admin/forums" className="headerNavLinks">
+                                    <i className={`fa fa-circle-o-notch moveABit adminHeaderIcons  ${currentUrl === "/admin/forums" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                    <span
+                                        className={`headLinkName ${currentUrl === "/admin/forums" ? "activeLinkOfHeader" : ""}`}>All Forums</span>
+                                </NavLink>
+                            </div>
+                            <div className="reportItem">
+                                <NavLink to="/forums/reported_forums" className="headerNavLinks">
+                                    <i className={`fa fa-exclamation-triangle moveABit adminHeaderIcons  ${currentUrl === "/forums/reported_forums" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                    <span
+                                        className={`headLinkName ${currentUrl === "/forums/reported_forums" ? "activeLinkOfHeader" : ""}`}>Reported Forums</span>
+                                </NavLink>
+                            </div>
+                            <div className="reportItem">
+                                <NavLink to="admin/reported_forum_comments" className="headerNavLinks">
+                                    <i className={`fa fa-file moveABit adminHeaderIcons  ${currentUrl === "admin/reported_forum_comments" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                    <span className={`headLinkName ${currentUrl === "admin/reported_forum_comments" ? "activeLinkOfHeader" :
+                                        ""}`}>Reported comments</span>
+                                </NavLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div className="linkBtns dropdownLink">
                     <div className="linkBtnsAnchor headerLinks">
@@ -54,27 +91,6 @@ export default function Footer() {
 
                     </div>
                 </div>
-
-
-                {/* <div className="linkBtns">
-                    <Link to="/admin/reportedposts" className="linkBtnsAnchor headerLinks">
-                        <i className={`fa fa-exclamation-triangle moveABit adminHeaderIcons ${currentUrl === "admin/reportedposts" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
-
-                    </Link>
-                </div>
-
-                <div className="linkBtns">
-                    <Link to="/admin/reported" className="linkBtnsAnchor">
-                        <i className={`fa fa-flag-o moveABit adminHeaderIcons  ${currentUrl === "admin/reported" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
-                    </Link>
-                </div>
-
-
-                <div className="linkBtns">
-                    <Link to="/admin/reportedComments" className="linkBtnsAnchor">
-                        <i className={`fa fa-file adminHeaderIconsLastTwo  ${currentUrl === "admin/complaints" ? "oColor" : "text-white"}`} aria-hidden="true"></i>
-                    </Link>
-                </div> */}
 
                 <div className="linkBtns">
                     <Link to="/admin/complaints" className="linkBtnsAnchor">

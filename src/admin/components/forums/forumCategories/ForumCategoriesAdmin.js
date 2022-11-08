@@ -7,18 +7,18 @@ import { forumHandlers } from '../../../../redux/actions/forumsAc/forumsAc'
 
 // Helpers
 import { apiStatus } from '../../../../helpers/status'
-import { searchTypes } from '../detailPage/comments/ForumCommProvider'
 import { Button, Modal } from 'react-bootstrap'
 import auth from '../../../behindScenes/Auth/AuthCheck'
 import { fetchData } from '../../../../commonApi'
 import { getKeyProfileLoc } from '../../../../helpers/profileHelper'
+import { scrollDetails } from '../../../../helpers/helpers'
 
 
 const ForumCategoriesAdmin = ({
     isExpandable = false,
     classNames = "",
-    onlyForForums = false,
-    isSearchPage = false
+    hideEditsAndStatus = false,
+    isUsedOnConfessionPage = !window.location.pathname.includes("forum")
 }) => {
 
     // Hooks and vars
@@ -58,6 +58,13 @@ const ForumCategoriesAdmin = ({
         })
     }
 
+    const openAddCategoryModal = () => {
+        setAddNewCategory({
+            isLoading: false,
+            isVisible: true
+        })
+    }
+
     // UPDATES THE CATEGORY
     const updateCategoryModalFunc = async () => {
         let updateModalError = document.querySelector('.updateModalError');
@@ -85,17 +92,14 @@ const ForumCategoriesAdmin = ({
         try {
             let res = await fetchData(obj);
             if (res.data.status === true) {
-                let newArr = categories.data.map((current) => {
+                let newArr = categories.map((current) => {
                     if (current.id === editedCategoryDetails.id) {
-                        return editedCategoryDetails;
+                        return res.data.category[0];
                     } else {
                         return current;
                     }
                 })
-                // setCategories({
-                //     ...categories,
-                //     data: newArr
-                // });
+                dispatch(forumHandlers.handleForumCatsAcFn({ data: newArr }))
                 setEditCategoryModal(false);
                 setTypes({
                     confession: false,
@@ -107,7 +111,7 @@ const ForumCategoriesAdmin = ({
                 updateModalError.innerText = res.data.message;
             }
         }
-        catch {
+        catch (err) {
             setUpdateCategory(false);
             console.log("Some error occured");
         }
@@ -144,17 +148,13 @@ const ForumCategoriesAdmin = ({
             try {
                 let res = await fetchData(obj);
                 if (res.data.status === true) {
-                    let newArr = categories.data.filter((current) => {
+                    let newArr = categories.filter((current) => {
                         if (current.id !== editedCategoryDetails.id) {
                             return current;
                         }
                     });
 
-                    // setCategories({
-                    //     ...categories,
-                    //     data: newArr
-                    // });
-
+                    dispatch(forumHandlers.handleForumCatsAcFn({ data: newArr }))
                     setEditCategoryModal(false);
                     setDeleteCategory(false);
                 } else {
@@ -214,7 +214,6 @@ const ForumCategoriesAdmin = ({
     const addNewCategoryModalFunc = async () => {
         let addNewCategoryErrCont = document.querySelector('.editModalError'), adminDetails;
         addNewCategoryErrCont.innerText = '';
-        let token;
 
         if (auth()) {
             adminDetails = localStorage.getItem("adminDetails");
@@ -251,11 +250,7 @@ const ForumCategoriesAdmin = ({
                 const res = await fetchData(obj);
                 if (res.data.status === true) {
                     setAddNewCategory({ isLoading: false, visible: false });
-                    // setCategories((prevState) => ({
-                    //     ...prevState, data: [...prevState.data,
-                    //     ...res.data.category
-                    //     ]
-                    // }));
+                    dispatch(forumHandlers.handleForumCatsAcFn({ data: [...categories, ...res?.data?.category] }))
                     setCreatedCategory({
                         category_name: '',
                         status: '1',
@@ -299,7 +294,7 @@ const ForumCategoriesAdmin = ({
     }, [])
 
     return (
-        <div className={`row ${classNames}`}>
+        <div className={`row ${classNames} admin px-lg-2`}>
             {!isExpandable ?
                 <div className="categoryHead col-12">
                     Choose categories
@@ -307,11 +302,10 @@ const ForumCategoriesAdmin = ({
 
             <div className="categoriesContainer w-100">
                 {categories.map((category, cindex) => {
-                    if (onlyForForums === true && category?.is_forum === 0) return
-                    if (isSearchPage === true && SearchReducer.type === searchTypes.FORUM && category.is_confession === 1 && category.is_forum === 0) return
-                    if (isSearchPage === true && SearchReducer.type === searchTypes.POST && category.is_confession === 0 && category.is_forum === 1) return
                     return <Category
+                        isUsedOnConfessionPage={isUsedOnConfessionPage}
                         SearchReducer={SearchReducer}
+                        hideEditsAndStatus={hideEditsAndStatus}
                         location={location}
                         activeCategory={activeCategory}
                         navigate={navigate}
@@ -321,16 +315,21 @@ const ForumCategoriesAdmin = ({
                         categoryName={category?.category_name}
                         cindex={cindex + 1} />
                 })}
+
+                {/* Add new category */}
+                <div
+                    className={`category cursor_pointer adminCategorySidebar`}
+                    type='button'
+                    onClick={openAddCategoryModal}>
+                    <span className="innerAdminCatName"><i className="fa fa-plus" aria-hidden="true"></i>Add Category</span>
+                </div>
+                {/* Add new category */}
+
+
             </div>
 
-            {!isExpandable ?
-                <div className={`col-12 pt-0 filterVerbiage`}>
-                    * Filter out forums by clicking on the categories above. Unselect the category to remove the filter.
-                </div> : null}
-
-
             {/* ADD CATEGORIES MODAL */}
-            <Modal show={addNewCategory.visible}>
+            <Modal show={addNewCategory.isVisible}>
                 <Modal.Header>
                     <h6>Create a Category</h6>
                 </Modal.Header>
@@ -348,7 +347,7 @@ const ForumCategoriesAdmin = ({
 
                     <div className="w-100 mt-2 d-flex justify-content-start flex-wrap type_checkboxes">
                         <div className="d-flex flex-wrap align-items-center mr-3">
-                            <label className='mb-0 mr-1' htmlFor='confessionCCheckbox'>Confession</label>
+                            <label className='mb-0 mr-1' htmlFor='confessionCCheckbox'>Post</label>
                             <input
                                 type="checkbox"
                                 id="confessionCCheckbox"
@@ -418,7 +417,7 @@ const ForumCategoriesAdmin = ({
 
                         <div className="w-100 mt-2 d-flex justify-content-start flex-wrap type_checkboxes">
                             <div className="d-flex flex-wrap align-items-center mr-3">
-                                <label className='mb-0 mr-1' htmlFor='confessionUCheckbox'>Confession</label>
+                                <label className='mb-0 mr-1' htmlFor='confessionUCheckbox'>Post</label>
                                 <input
                                     type="checkbox"
                                     id="confessionUCheckbox"
@@ -474,13 +473,13 @@ const ForumCategoriesAdmin = ({
     )
 }
 
-const ExpandableForumCatsAdmin = ({ classNames = "", onlyForForums = false, isSearchPage = false }) => {
+const ExpandableForumCatsAdmin = ({ classNames = "", isUsedOnConfessionPage = false }) => {
 
     const [showCat, setShowCat] = useState(false)
     return (
         <div className={`expandableCategory d-block ${classNames}`}>
             <div className="head" onClick={() => setShowCat(!showCat)}>
-                Choose a Category to filter forums
+                Choose a category to filter
                 <span>
                     <i aria-hidden="true" className={`fa fa-chevron-down categoryDownIcon ${showCat ? "rotateUpsideDown" : ""}`}></i>
                 </span>
@@ -489,9 +488,9 @@ const ExpandableForumCatsAdmin = ({ classNames = "", onlyForForums = false, isSe
                 {/* CATEGORYCONT */}
                 <aside className="col-12 col-md-4 posSticky mobileViewCategories d-none">
                     <ForumCategoriesAdmin
-                        isSearchPage={isSearchPage}
+                        isUsedOnConfessionPage={isUsedOnConfessionPage}
+                        hideEditsAndStatus={true}
                         isExpandable={true}
-                        onlyForForums={onlyForForums}
                     />
                 </aside>
                 {/* CATEGORYCONT */}
@@ -509,48 +508,59 @@ const Category = props => {
         activeCategory,
         location,
         navigate,
+        hideEditsAndStatus,
+        isUsedOnConfessionPage,
         category,
         openEditCategoriesModalFunc = () => { }
     } = props;
     const dispatch = useDispatch(),
         isActiveCategory = activeCategory === cindex,
         forumHomePageLink = "/admin/forums",
-        isForumHomePage = location === forumHomePageLink
+        confessionHomeLink = "/dashboard",
+        isForumHomePage = location === forumHomePageLink,
+        isConfessionHomePage = location === confessionHomeLink
 
     const switchCategory = categoryToActivate => {
         let isSameCatClicked = activeCategory === categoryToActivate,
             allCategories = 0;
         categoryToActivate = isSameCatClicked ? allCategories : categoryToActivate
         dispatch(forumHandlers.handleForumCatsAcFn({ activeCategory: categoryToActivate }))
+        scrollDetails.setScrollDetails({})
 
-        if (!isForumHomePage) {
-            navigate(forumHomePageLink)
+        if (!isForumHomePage || !isConfessionHomePage) {
+            navigate(isUsedOnConfessionPage ? confessionHomeLink : forumHomePageLink)
         }
     }
 
     return (
-        <button
-            className={`category ${isActiveCategory ? "activeCategory" : ""}`}
+        <div
+            className={`category cursor_pointer adminCategorySidebar ${isActiveCategory ? "activeCategory" : ""}`}
             type='button'
-            onClick={() => switchCategory(cindex)}
+            onClick={(e) => {
+                if (!e.target.classList.contains("categoryEditIcon"))
+                    switchCategory(cindex)
+            }}
             id={`forumCat${cindex}`}>
-            <i className="fa fa-pencil categoryEditIcon adminCats"
-                onClick={() => {
-                    openEditCategoriesModalFunc({
-                        id: category.id,
-                        status: category.status,
-                        category_name: category.category_name,
-                        is_confession: category.is_confession,
-                        is_forum: category.is_forum,
-                    })
-                }}
-                aria-hidden="true"
-                type="button"></i>
+            {!hideEditsAndStatus ?
+                <>
+                    <i className="fa fa-pencil categoryEditIcon adminCats"
+                        onClick={() => {
+                            openEditCategoriesModalFunc({
+                                id: category.id,
+                                status: category.status,
+                                category_name: category.category_name,
+                                is_confession: category.is_confession,
+                                is_forum: category.is_forum,
+                            })
+                        }}
+                        aria-hidden="true"
+                        type="button"></i>
 
-            <span className={`categoryStatus ${parseInt(category.status) === 1 ? "categoryStatusGreen" : "categoryStatusRed"}`}></span>
+                    <span className={`categoryStatus ${parseInt(category.status) === 1 ? "categoryStatusGreen" : "categoryStatusRed"}`}></span>
+                </> : null}
 
-            <span class="innerAdminCatName">   {categoryName?.toLowerCase()}</span>
-        </button>
+            <span className="innerAdminCatName">{categoryName?.toLowerCase()}</span>
+        </div>
     )
 }
 

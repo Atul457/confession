@@ -103,9 +103,7 @@ const ForumFooter = (props) => {
             <>
                 {!auth() && is_calledfrom_detailPage ?
                     <span className="feedPageLoginBtnCont postLoginBtnCont">
-                        <Link to="/login">
-                            <div className="categoryOfUser enhancedStyle mb-0" type="button">Login to comment</div>
-                        </Link>
+                        <div className="categoryOfUser enhancedStyle mb-0" type="button">Login to comment</div>
                     </span>
                     : ""}
                 <pre className="preToNormal post cursor_pointer" onClick={() => {
@@ -133,7 +131,7 @@ const ForumFooter = (props) => {
             className='links text-dark'
             pageName={pageName}
             rememberScrollPos={rememberScrollPos}
-            link={forum_slug}
+            link={!auth() && is_calledfrom_detailPage ? "/login" : forum_slug}
             children={Html} /> : Html
 
     }

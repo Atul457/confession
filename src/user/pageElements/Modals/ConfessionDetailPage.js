@@ -204,7 +204,6 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                     let newConf = [...commentsArr, ...res.data.body.comments];
                     setCommentsData({ page: pageNo });
                     setCommentsArr(newConf);
-                    console.log({ newConf })
                 } else {
                     setCommentsCount(res.data.body.count);
                     setCommentsArr(res.data.body.comments);
@@ -415,8 +414,6 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
         dispatch(closeCModal())
     }
 
-
-
     const upvoteOrDownvote = async (isLiked) => {
 
         let is_liked, ip_address, check_ip, token = '', data;
@@ -444,16 +441,9 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                 // dispatch(updateCModalState(data))
                 // dispatch(updateCModalState(data))
 
-                console.log("updatePost")
                 updatePost(data);
+                await fetchData(obj)
 
-                const res = await fetchData(obj)
-
-                if (res.data.status === true) {
-
-                } else {
-                    console.log(res);
-                }
             } catch (error) {
                 console.log(error);
                 console.log("Some error occured");
@@ -696,6 +686,7 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                                                         {commentsArr.map((post, index) => {
                                                             const comment = post
                                                             return <Comments
+                                                                mutateCommentsFn={updateSingleCommentData}
                                                                 isReported={post.isReported}
                                                                 isLastIndex={commentsArr.length === index + 1}
                                                                 updateSingleCommentData

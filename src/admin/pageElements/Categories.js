@@ -43,7 +43,7 @@ export default function Category(props) {
         <div className="container px-2 px-0">
           <div className="row px-lg-2 px-0">
             <div className={`col-12 categoryHead ${props.hideHead && "d-none"}`}>
-              Choose a Category to filter posts
+              Choose a category to filter
             </div>
             <div className="categoriesContainer w-100">
               {props.categories.isLoading ? (

@@ -104,6 +104,14 @@ export const GetReportedPostsData = () => {
             }
         },
         {
+            name: "Reported on",
+            cell: row => {
+                return <span onClick={() => openReportedByModal(row.confession_id, row.comment_id)} className="viewReportedComment">
+                    <i className="fa fa-eye" aria-hidden="true"></i>
+                </span>
+            }
+        },
+        {
             name: "Action",
             width: "150px",
             cell: (row) => <button className="btn btn-danger mx-auto pl-1 btn-sm w-100" onClick={() => deletePostFunc(row.confession_id)}>Delete post</button>,
@@ -242,7 +250,7 @@ export const GetReportedPostsData = () => {
                 </div>}
 
             {postRBYModalReducer.visible &&
-            <PostReportedByModal/>}
+                <PostReportedByModal />}
 
         </div>
     )

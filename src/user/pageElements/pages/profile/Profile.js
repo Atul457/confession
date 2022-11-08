@@ -552,7 +552,7 @@ export default function Profile() {
 
 
                     {/* ADDS HEADER COMPONENT */}
-                    <Header links={true} hideRound={true} />
+                    <Header links={true} hideRound={true} getConfessions={getData} />
                     <div className="leftColumn leftColumnFeed mypriflelocc profileSidebar">
                         <div className="leftColumnWrapper">
                             <AppLogo />
@@ -937,7 +937,9 @@ export default function Profile() {
                         fetchMoreFriends={fetchMoreFriends}
                         visible={profileModal.visible} />
 
-                    <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
+                    {/* <i className={`fa d-none fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-md-block" : "d-none"}`} aria-hidden="true" type="button"
+                     onClick={goUp}
+                     ></i> */}
 
                     <Footer />
                 </div>

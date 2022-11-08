@@ -19,11 +19,10 @@ const messageGenerator = (status = false, message = '', data = {}) => {
 
 const resHandler = res => {
     const { data } = res
-    if (data.status === true)
+    if (data?.status === true)
         return data
     throw new Error(res?.data?.message ?? "Something went wrong")
 }
-
 
 // Checks whether or not avatar image is used on profile currently
 const isAvatarSelectedCurr = () => {
@@ -138,6 +137,11 @@ const scrollDetails = {
     }
 }
 
+const isAdminLoggedIn = () => {
+    const userData = getKeyProfileLoc("token", true, true)
+    return userData ? true : false
+}
+
 
 export {
     getLocalStorageKey,
@@ -147,5 +151,6 @@ export {
     areAtLastPage,
     scrollToTop,
     exportToCsv,
-    scrollDetails
+    scrollDetails,
+    isAdminLoggedIn
 }

@@ -384,7 +384,7 @@ export default function CommentsGot(props) {
                                 </div>
                                 :
                                 (
-                                    <section className="col-lg-12 col-12 px-md-4 px-0">
+                                    <section className="col-lg-12 col-12 px-md-4 px-3">
                                         <div className='w-100 mb-3'>
 
                                             <Link to={`/dashboard`} className='backtoHome'>

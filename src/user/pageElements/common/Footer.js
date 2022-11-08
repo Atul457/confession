@@ -35,7 +35,6 @@ export default function Footer(props) {
                 </div>
 
                 <div className="linkBtns">
-                    {/* <NavLink to={auth() ? "/forums" : "/login"} className="linkBtnsAnchor"> */}
                     <NavLink to="/forums" className="linkBtnsAnchor">
                         <span className="headIconCont">
                             <img src={confessIconActive} alt="confessIconActive" className='active' />

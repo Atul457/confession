@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 // Custom components
 import ForumAdmin from '../forum/ForumAdmin'
@@ -21,22 +21,19 @@ import { getKeyProfileLoc } from '../../../../helpers/profileHelper'
 const WhatsNewAdmin = () => {
 
     // Hooks and vars
-    const location = useLocation()
     const {
         forums: forumsRed,
         categories,
         forumTypes,
         modals
     } = useSelector(state => state.forumsReducer)
-    // const cameBackfromSearch = location?.state?.cameFromDetailPage
-    // const scrollDetails = location?.state?.scrollDetails
     const cameback = scrollDetails.getScrollDetails()?.pageName === "forums"
     const { modalsReducer: { nfsw_modal } } = useSelector(state => state)
-    const { requestToJoinModal, reportForumModal } = modals
+    const { requestToJoinModal } = modals
     const dispatch = useDispatch()
     const { activeCategory } = categories
     const { handleForums } = forumHandlers
-    const { data: forums, status: forumsStatus, page, count = 0 } = forumsRed
+    const { data: forums, status: forumsStatus, page, hasMore } = forumsRed
 
 
     useEffect(() => {
@@ -72,7 +69,14 @@ const WhatsNewAdmin = () => {
             let res = await fetchData(obj)
             res = resHandler(res)
             const forums_from_api = res?.forums ?? []
-            dispatch(handleForums({ data: append ? [...forums, ...forums_from_api] : forums_from_api, status: apiStatus.FULFILLED, count: res?.count }))
+            dispatch(handleForums({
+                data: append ? [...forums, ...forums_from_api] : forums_from_api,
+                status: apiStatus.FULFILLED,
+                count: res?.count,
+                page,
+                hasMore: forums_from_api.length ? true : false
+            }))
+
         } catch (error) {
             console.log(error)
         }
@@ -104,8 +108,9 @@ const WhatsNewAdmin = () => {
     }
 
     const fetchMoreData = () => {
-        dispatch(handleForums({ page: page + 1 }))
-        getForums(page + 1, true)
+        if (cameback === false && hasMore) {
+            getForums(page + 1, true)
+        }
     }
 
     if (forumsStatus === apiStatus.LOADING)
@@ -119,13 +124,23 @@ const WhatsNewAdmin = () => {
 
     return (
         <div>
+            <Link
+                to="/dashboard"
+                className='backtoHome mb-3 d-block'>
+                <span className='mr-2'>
+                    <i className="fa fa-chevron-left" aria-hidden="true"></i>
+                    <i className="fa fa-chevron-left" aria-hidden="true"></i>
+                </span>
+                Go back to dashboard
+            </Link>
+
             {forums.length > 0 ?
                 <InfiniteScroll
                     scrollThreshold="80%"
                     endMessage={<div className=" text-center endListMessage mt-4 pb-3">End of Forums</div>}
                     dataLength={forums.length}
                     next={fetchMoreData}
-                    hasMore={forums.length < count}
+                    hasMore={hasMore}
                     loader={
                         <div className="text-center mb-5">
                             <div className="spinner-border pColor text-center" role="status">

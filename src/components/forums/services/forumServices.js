@@ -1,6 +1,7 @@
 // Helpers
+import { async } from "@firebase/util"
 import { fetchData } from "../../../commonApi"
-import { areAtLastPage, resHandler } from "../../../helpers/helpers"
+import { areAtLastPage, isAdminLoggedIn, resHandler } from "../../../helpers/helpers"
 import { getKeyProfileLoc } from "../../../helpers/profileHelper"
 import { apiStatus } from "../../../helpers/status"
 import { deleteForumAcFn, deleteForumCommSubcomAcFn, deleteForum_AcFn, forumHandlers, handleSingleForumCommAcFn, mutateForumFn, usersToTagAcFn } from "../../../redux/actions/forumsAc/forumsAc"
@@ -149,6 +150,28 @@ const doCommentService = async ({
             dispatch(postComment({ message: err?.message ?? 'Something went wrong', status: apiStatus.REJECTED }))
         }, 1000)
     }
+}
+
+const getCategoriesService = async ({ dispatch = () => { } }) => {
+    const isAdminLoginPage = isAdminLoggedIn()
+    return await new Promise(async (resolve, reject) => {
+        var token = "";
+        token = getKeyProfileLoc("token", true, true) ?? (getKeyProfileLoc("token", true, false) ?? "")
+        let obj = {
+            data: {},
+            token: token,
+            method: isAdminLoginPage ? "post" : "get",
+            url: isAdminLoginPage ? "admin/getcategories" : "getcategories"
+        }
+        try {
+            let res = await fetchData(obj)
+            res = resHandler(res)
+            dispatch(forumHandlers.handleForumCatsAcFn({ data: res?.categories }))
+            resolve(res);
+        } catch (err) {
+            reject(err);
+        }
+    })
 }
 
 const likeDislikeService = async ({
@@ -448,5 +471,6 @@ export {
     getForumsNConfessions,
     deleteForumCommService,
     deleteForumService,
-    getTagsService
+    getTagsService,
+    getCategoriesService
 }

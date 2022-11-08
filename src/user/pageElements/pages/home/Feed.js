@@ -542,20 +542,20 @@ export default function Feed(props) {
 
 
     // HANDLES SCROLL TO TOP BUTTON
-    useEffect(() => {
-        const scroll = () => {
-            let scroll = document.querySelector("html").scrollTop;
-            let secondPostElem = document.querySelector(".postCont:nth-child(1)")
-            secondPostElem = secondPostElem?.getBoundingClientRect()?.top + 500
-            if (secondPostElem < 0) heartCompRef?.current.classList.remove("hideHeartComp")
-            else heartCompRef?.current.classList.add("hideHeartComp")
-        }
+    // useEffect(() => {
+    //     const scroll = () => {
+    //         let scroll = document.querySelector("html").scrollTop;
+    //         let secondPostElem = document.querySelector(".postCont:nth-child(1)")
+    //         secondPostElem = secondPostElem?.getBoundingClientRect()?.top + 500
+    //         if (secondPostElem < 0) heartCompRef?.current.classList.remove("hideHeartComp")
+    //         else heartCompRef?.current.classList.add("hideHeartComp")
+    //     }
 
-        document.addEventListener("scroll", scroll);
-        return () => {
-            document.removeEventListener("scroll", scroll);
-        }
-    }, [])
+    //     document.addEventListener("scroll", scroll);
+    //     return () => {
+    //         document.removeEventListener("scroll", scroll);
+    //     }
+    // }, [])
 
     const updateConfessionData = (_viewcount, sharedBy, index) => {
         let updatedConfessionArray;
@@ -659,7 +659,7 @@ export default function Feed(props) {
                 handleCommentsModal={handleCommentsModal} />}
             <div className="row outerContWrapper">
 
-                <Header links={true} refreshFeed={refreshFeed}></Header>
+                <Header links={true} refreshFeed={refreshFeed} getConfessions={getConfessions}></Header>
 
                 <div className="leftColumn leftColumnFeed">
                     <div className="leftColumnWrapper">
@@ -761,13 +761,13 @@ export default function Feed(props) {
 
                                                     <div className="selectNpostBtnCont">
                                                         <div className="shareIconAndUpImgCont">
-                                                            <div
+                                                            {/* <div
                                                                 pulsate='28-10-22,pulsatingIcon mobile'
                                                                 className="heartCompCont hideHeartComp cursor_pointer"
                                                                 onClick={openSharewithLoveModal}
                                                                 ref={heartCompRef}>
                                                                 <HeartComponent />
-                                                            </div>
+                                                            </div> */}
 
                                                             <div className="wrapperBtnsImages">
                                                                 {/* Upload images cont */}
@@ -1044,7 +1044,7 @@ export default function Feed(props) {
             }
 
             {/* Appriciation Modal */}
-            <AppreciationModal />
+            {/* <AppreciationModal /> */}
             {/* Appriciation Modal */}
 
             {/* ReportCommentModal */}
@@ -1063,7 +1063,7 @@ export default function Feed(props) {
             {<AvatarsIntroModal />}
             {/* Avatar intro modal */}
 
-            <ShareWithLoveModal getConfessions={getConfessions} />
+            {/* <ShareWithLoveModal getConfessions={getConfessions} /> */}
         </div >
     );
 }

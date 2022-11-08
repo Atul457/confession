@@ -44,10 +44,17 @@ import { useNavigate } from 'react-router-dom';
 import { searchAcFn } from '../../../redux/actions/searchAc/searchAc';
 import { scrollToTop } from '../../../helpers/helpers';
 import { getKeyProfileLoc } from '../../../helpers/profileHelper';
+import { HeartComponent, ShareWithLoveModal, AppreciationModal } from '../components/sharepostwithlove/Sharepostwithlove';
+import { toggleShareWithLoveModal } from '../../../redux/actions/shareWithLoveAc/shareWithLoveAc';
+
 
 export default function Header(props) {
 
     const authContext = useContext(AuthContext)
+    const showShareWithLove = () => {
+        let elem = document.querySelector("html")
+        return elem?.scrollHeight < 1500
+    }
     const history = useNavigate()
     const ShareReducer = useSelector(store => store.ShareReducer);
     const SearchReducer = useSelector(store => store.SearchReducer);
@@ -58,6 +65,7 @@ export default function Header(props) {
     const dispatch = useDispatch();
     const params = useParams();
     const pathname = useLocation().pathname.replace("/", "");
+    const heartCompRef = useRef(null)
     const [profile] = useState(() => {
         if (auth()) {
             let profile = localStorage.getItem("userDetails");
@@ -290,10 +298,33 @@ export default function Header(props) {
 
     }
 
+    // HANDLES SCROLL TO TOP BUTTON
+    useEffect(() => {
+        const scroll = () => {
+            let secondPostElem = document.querySelector("html")
+            if (heartCompRef?.current) {
+                if (secondPostElem?.scrollTop > 600) heartCompRef?.current?.classList?.remove("hideHeartComp")
+                else heartCompRef?.current?.classList?.add("hideHeartComp")
+            }
+        }
+
+        document.addEventListener("scroll", scroll);
+        return () => {
+            window.removeEventListener("scroll", scroll);
+        }
+    }, [])
+
+
+    // Open share iwth love modal
+    const openSharewithLoveModal = () => {
+        dispatch(toggleShareWithLoveModal({
+            visible: true
+        }))
+    }
+
 
     const getNotiHtml = () => {
         let data, arr, html, count = 0, arrForums;
-        // console.log(notificationReducer.data)
         data = notificationReducer.data;
         arr = [{ iconClass: "fa fa-comments", label: "You have got a new comment on your post" },
         { iconClass: "fa fa-envelope", label: "You have got a new reply on your comment" },
@@ -683,6 +714,7 @@ export default function Header(props) {
                     </div>
                 </div>
                 <div className={`roundCorners ${props.hideRound ? "d-none" : ""}`}>__</div>
+
             </header>
 
 
@@ -691,8 +723,21 @@ export default function Header(props) {
                 visible={socialLinksModalReducer.visible}
             />
 
+            {/* Appriciation Modal */}
+            <AppreciationModal />
+            {/* Appriciation Modal */}
+
             {/* UPDATE PASSWORD MODAL */}
             <UpdatePasswordModal />
+
+            <ShareWithLoveModal getConfessions={props?.getConfessions ?? (() => { })} />
+            <div
+                pulsate='28-10-22,pulsatingIcon mobile'
+                className={`heartCompCont hideHeartComp cursor_pointer ${!props?.hideChat && showShareWithLove() ? "force_visible" : ""}`}
+                onClick={openSharewithLoveModal}
+                ref={heartCompRef}>
+                <HeartComponent />
+            </div>
         </>
     );
 }

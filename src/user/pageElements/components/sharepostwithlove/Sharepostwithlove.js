@@ -15,7 +15,7 @@ import { getKeyProfileLoc } from '../../../../helpers/profileHelper';
 import { useNavigate } from 'react-router-dom';
 
 
-const ShareWithLoveModal = ({ getConfessions }) => {
+const ShareWithLoveModal = ({ getConfessions, show = false }) => {
 
     // Hooks and vars
     const { shareWithLoveReducer } = useSelector(state => state)

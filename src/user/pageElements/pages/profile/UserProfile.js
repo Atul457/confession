@@ -291,7 +291,7 @@ export default function UserProfile() {
                                                             alt=""
                                                             className="loggedInUserPic" />
 
-                                                        {profile?.email_verified === 1 ?
+                                                        {profile?.profileDetails?.email_verified === 1 ?
                                                             <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                                                     </span>
 
@@ -392,6 +392,7 @@ export default function UserProfile() {
                                                         cover_image={post.cover_image ?? ''}
                                                         slug={post.slug}
                                                         post_as_anonymous={false}
+                                                        post={post}
                                                         viewcount={post.viewcount}
                                                         updateConfessionData={updateConfessionData}
                                                         handleCommentsModal={handleCommentsModal}

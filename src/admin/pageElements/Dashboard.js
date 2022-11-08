@@ -1,21 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from './common/Footer';
 import Header from './common/Header';
-import Category from './Categories';
 import InfiniteScroll from "react-infinite-scroll-component";
 import auth from '../behindScenes/Auth/AuthCheck';
 import Post from './Post';
 import SiteLoader from '../../user/pageElements/components/SiteLoader';
-import { Modal } from 'react-bootstrap';
-import Button from '@restart/ui/esm/Button';
 import { fetchData } from '../../commonApi';
 import { useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import useCommentsModal from '../utilities/useCommentsModal';
-import RefreshButton from '../../user/refreshButton/RefreshButton';
 import _ from "lodash"
 import AppLogo from '../../user/pageElements/components/AppLogo';
-import CommentGotModal from './modals/CommentsGotModal';
+import { getCategoriesService } from '../../components/forums/services/forumServices';
+import ForumCategoriesAdmin, { ExpandableForumCatsAdmin } from '../components/forums/forumCategories/ForumCategoriesAdmin';
 
 
 export default function Dashboard() {
@@ -25,6 +21,7 @@ export default function Dashboard() {
   }
 
   let actCategory = useLocation();
+  const dispatch = useDispatch()
 
   // HITS API WILL PRESELECTED CATEGORY ON THE BASIS OF COMMENTS PAGE
   const [AC2S, setAC2] = useState(() => {
@@ -41,105 +38,19 @@ export default function Dashboard() {
     window.location.href = "/talkplacepanel"
   }
 
-
-  const editCategorySelect = useRef(null);
-  const commentsModalReducer = useSelector(state => state.commentsModalReducer);
-  const [categoryShow, setCategoryShow] = useState(false);
-  const createCategorySelect = useRef(null);
+  const {
+    categories
+  } = useSelector(state => state.forumsReducer)
   const [goDownArrow, setGoDownArrow] = useState(false);
-  const [types, setTypes] = useState({
-    confession: false,
-    forum: false
-  })
   const [pageNo, setPageNo] = useState(1);
   const [confCount, setConfCount] = useState(0);
-  const [forceRender, setForceRender] = useState(false);
-  // SETS INITIAL CATEGORY ON WHICH THE API WILL GET HIT TO GET CONFESSIONS
-  const [activeCategory, setActiveCategory] = useState((AC2S) !== '' ? `${AC2S}` : `all`);
+  const { activeCategory } = categories
   const [confessions, setConfessions] = useState(false);
   const [confessionResults, setConfessionResults] = useState(true);
-  const [addNewCategory, setAddNewCategory] = useState({ isVisible: false, isLoading: false });
-  const [editCategoryModal, setEditCategoryModal] = useState(false);
-  const [updateCategory, setUpdateCategory] = useState(false);
-  const [deleteCategory, setDeleteCategory] = useState(false);
-  const [createdCategory, setCreatedCategory] = useState({
-    category_name: '',
-    status: '1',
-    id: ''
-  });
-  const [editedCategoryDetails, setEditedCategoryDetails] = useState({
-    category_name: '',
-    status: '',
-    id: ''
-  });
-  const [categories, setCategories] = useState({
-    isLoading: true,
-    isError: false,
-    data: []
-  });
-  const [token] = useState(() => {
-    if (auth()) {
-      let details = localStorage.getItem("adminDetails");
-      if (details) {
-        details = JSON.parse(details);
-        return details.token;
-      } else {
-        logout();
-      }
-    } else {
-      logout();
-    }
-  });
-
-  //CUSTOM HOOK
-  const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentsGotModal] = useCommentsModal();
-
 
   useEffect(() => {
-    async function getData() {
-
-      let obj = {
-        token: token,
-        data: {},
-        method: "post",
-        url: "admin/getcategories"
-      }
-      try {
-        const res = await fetchData(obj)
-        if (res.data.status === true) {
-          setCategories({
-            isLoading: false,
-            isError: false,
-            data: res.data.categories
-          })
-        } else {
-          setCategories({
-            ...categories,
-            isLoading: false,
-            isError: true,
-            message: res.data.message
-          })
-        }
-      } catch {
-        setCategories({
-          ...categories,
-          isLoading: false,
-          isError: true,
-          message: ""
-        })
-      }
-    }
-
-    getData();
+    getCategoriesService({ dispatch })
   }, [])
-
-
-  const handleTypes = (e) => {
-    setTypes({
-      ...types,
-      [e.target.name]: !types[e.target?.name]
-    })
-  }
 
 
   async function getConfessions(append, act, page) {
@@ -179,7 +90,7 @@ export default function Dashboard() {
 
   //HITS API TO GET CONFESSIONS
   useEffect(() => {
-    getConfessions(false, activeCategory, 1);
+    getConfessions(false, activeCategory === 0 ? "all" : activeCategory, 1);
     setPageNo(1);
   }, [activeCategory])
 
@@ -207,7 +118,6 @@ export default function Dashboard() {
   //Update Confessions
   const updateConfessions = (confessionId) => {
     setConfCount((prevState) => prevState - 1);
-    // setConfessions
     let newConfArr = confessions.filter((current) => {
       if (current.confession_id !== confessionId) {
         return current;
@@ -217,16 +127,6 @@ export default function Dashboard() {
     setConfessions(newConfArr);
     setConfCount((prevState) => prevState - 1);
   }
-
-
-  // UPDATES THE ACTIVECATEGORY
-  const updateActiveCategory = (activeCat) => {
-    setConfessions(false);
-    setConfCount(1);
-    setPageNo(1);
-    setActiveCategory(`${activeCat}`);
-  }
-
 
   const fetchMoreData = () => {
     let page = pageNo;
@@ -239,221 +139,6 @@ export default function Dashboard() {
   const goUp = () => {
     window.scrollTo({ top: "0px", behavior: "smooth" });
   }
-
-
-  // ADD CATEGORY MODAL
-
-  // OPENS ADD CATEGORIES MODAL
-  const openAddCategoriesModalFunc = () => {
-    setAddNewCategory({ ...addNewCategory, visible: true });
-  }
-
-  const addNewCategoryModalFunc = async () => {
-    let addNewCategoryErrCont = document.querySelector('.editModalError'), adminDetails;
-    addNewCategoryErrCont.innerText = '';
-
-    if (auth()) {
-      adminDetails = localStorage.getItem("adminDetails");
-      if (adminDetails) {
-        adminDetails = JSON.parse(adminDetails);
-      } else {
-        logout();
-      }
-    } else {
-      logout();
-    }
-
-    if (createdCategory.category_name.trim() === "") {
-      addNewCategoryErrCont.innerText = "Category Name is required";
-    } else if (types.confession === false && types.forum === false)
-      return addNewCategoryErrCont.innerHTML = "Please select either forum or confession"
-    else {
-      setAddNewCategory({ ...addNewCategory, isLoading: true });
-      addNewCategoryErrCont.innerHTML = ""
-      let data = {
-        "category_name": createdCategory.category_name,
-        "status": createdCategory.status,
-        "is_confession": types.confession ? 1 : 0,
-        "is_forum": types.forum ? 1 : 0,
-      }
-
-      let obj = {
-        data: data,
-        token: adminDetails.token,
-        method: "post",
-        url: "admin/createcategory"
-      }
-      try {
-        const res = await fetchData(obj);
-        if (res.data.status === true) {
-          setAddNewCategory({ isLoading: false, visible: false });
-          setCategories((prevState) => ({
-            ...prevState, data: [...prevState.data,
-            ...res.data.category
-            ]
-          }));
-          setCreatedCategory({
-            category_name: '',
-            status: '1',
-            id: ''
-          });
-        } else {
-          addNewCategoryErrCont.innerText = res.data.message;
-          setAddNewCategory({ ...addNewCategory, isLoading: false });
-        }
-      } catch {
-        setAddNewCategory({ ...addNewCategory, isLoading: false });
-        console.log("Some error occured");
-      }
-    }
-  }
-
-  const handleCreateCategoryDetails = ({ name, value }) => {
-    setCreatedCategory({ ...createdCategory, [name]: value });
-    createCategorySelect.current.click();
-  }
-
-  const closeAddCategoryModalFunc = () => {
-    setTypes({
-      confession: false,
-      forum: false
-    })
-    setAddNewCategory({ isLoading: false, visible: false });
-  }
-
-
-  // OPENS ADD EDIT MODAL
-  const openEditCategoriesModalFunc = (categoryObject) => {
-    setEditCategoryModal(true);
-    setEditedCategoryDetails({
-      category_name: categoryObject.category_name,
-      status: categoryObject.status,
-      id: categoryObject.id
-    })
-    setTypes({
-      confession: categoryObject.is_confession,
-      forum: categoryObject.is_forum
-    })
-  }
-
-  // UPDATES THE CATEGORY
-  const updateCategoryModalFunc = async () => {
-    let updateModalError = document.querySelector('.updateModalError');
-    if (types.confession === false && types.forum === false)
-      return updateModalError.innerHTML = "Please select either forum or confession"
-    updateModalError.innerHTML = ""
-
-    setUpdateCategory(true);
-    let data = {
-      category_name: editedCategoryDetails.category_name,
-      status: editedCategoryDetails.status,
-      category_id: editedCategoryDetails.id,
-      is_confession: types.confession ? 1 : 0,
-      is_forum: types.forum ? 1 : 0,
-    }
-
-    let obj = {
-      data: data,
-      token: token,
-      method: "post",
-      url: "admin/createcategory"
-    }
-
-
-    try {
-      let res = await fetchData(obj);
-      if (res.data.status === true) {
-        let newArr = categories.data.map((current) => {
-          if (current.id === editedCategoryDetails.id) {
-            return editedCategoryDetails;
-          } else {
-            return current;
-          }
-        })
-        setCategories({
-          ...categories,
-          data: newArr
-        });
-        setEditCategoryModal(false);
-        setTypes({
-          confession: false,
-          forum: false
-        })
-        setUpdateCategory(false);
-      } else {
-        setUpdateCategory(false);
-        updateModalError.innerText = res.data.message;
-      }
-    }
-    catch {
-      setUpdateCategory(false);
-      console.log("Some error occured");
-    }
-  }
-
-  const closeEditCategoryModalFunc = () => {
-    setEditCategoryModal(false);
-    setTypes({
-      confession: false,
-      forum: false
-    })
-    setEditedCategoryDetails({
-      category_name: "",
-      status: "",
-      category_id: ""
-    });
-    setUpdateCategory(false);
-    setDeleteCategory(false);
-  }
-
-  const deleteEditCategoryModalFunc = async () => {
-
-    let confirmation = window.confirm("Do you really want to delete the category?");
-    if (confirmation === true) {
-      let updateModalError = document.querySelector('.updateModalError');
-      setDeleteCategory(true);
-
-      let obj = {
-        data: {},
-        token: token,
-        method: "get",
-        url: `admin/deletecategory/${editedCategoryDetails.id}`
-      }
-
-      try {
-        let res = await fetchData(obj);
-        if (res.data.status === true) {
-          let newArr = categories.data.filter((current) => {
-            if (current.id !== editedCategoryDetails.id) {
-              return current;
-            }
-          });
-
-          setCategories({
-            ...categories,
-            data: newArr
-          });
-
-          setEditCategoryModal(false);
-          setDeleteCategory(false);
-        } else {
-          setDeleteCategory(false);
-          updateModalError.innerText = res.data.message;
-        }
-      }
-      catch {
-        setDeleteCategory(false);
-        console.log("Some error occured");
-      }
-    }
-  }
-
-
-  const handleEditCategoryDetails = ({ name, value }) => {
-    setEditedCategoryDetails({ ...editedCategoryDetails, [name]: value });
-    editCategorySelect.current.click();
-  }
-
 
   const updateConfessionData = (_viewcount, sharedBy, index) => {
     let updatedConfessionArray;
@@ -489,12 +174,6 @@ export default function Dashboard() {
       {
         auth() ?
           <div className="container-fluid">
-            {commentsModalReducer.visible && <CommentGotModal
-              handleChanges={handleChanges}
-              updateConfessionData={updateConfessionData}
-              updatedConfessions={updatedConfessions}
-              state={commentsModal}
-              handleCommentsModal={handleCommentsModal} />}
             <div className="row outerContWrapper">
 
               {/* Adds Header Component */}
@@ -508,8 +187,7 @@ export default function Dashboard() {
                   <div className="middleContLoginReg feedMiddleCont">
                     {/* CATEGORYCONT */}
                     <aside className="posSticky">
-                      {/* <Category categories={props.categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} /> */}
-                      <Category editVisible={true} openEditCategoriesModalFunc={openEditCategoriesModalFunc} openAddCategoriesModalFunc={openAddCategoriesModalFunc} categories={categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
+                      <ForumCategoriesAdmin />
                     </aside>
                     {/* CATEGORYCONT */}
                   </div>
@@ -529,31 +207,11 @@ export default function Dashboard() {
                         <div className="postsMainCont">
 
                           <div className="row mx-0">
-                            <div className="expandableCategory d-none">
-                              <div className="head" onClick={() => setCategoryShow(!categoryShow)}>
-                                Choose categories
-                                <span>
-                                  <i aria-hidden="true" className={`fa fa-chevron-down categoryDownIcon ${categoryShow ? "rotateUpsideDown" : ""}`}></i>
-                                </span>
-                              </div>
-                              {categoryShow && <div className="body">
-                                {/* CATEGORYCONT */}
-                                <aside className="col-12 col-md-4 posSticky mobileViewCategories d-none">
-                                  <Category hideHead={true} categories={categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
-                                </aside>
-                                {/* CATEGORYCONT */}
-                              </div>}
-                            </div>
+                            <ExpandableForumCatsAdmin isUsedOnConfessionPage={true} classNames="d-block d-md-none" />
 
                             <div className="filterVerbiage foot">
                               * Filter out posts by clicking on the categories above. Unselect the category to remove the filter.
                             </div>
-
-                            {/* CATEGORYCONT */}
-                            {/* <aside className="col-12 col-md-4 posSticky">
-                              <Category editVisible={true} openEditCategoriesModalFunc={openEditCategoriesModalFunc} openAddCategoriesModalFunc={openAddCategoriesModalFunc} categories={categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
-                            </aside> */}
-                            {/* CATEGORYCONT */}
 
                             {/* CONFESSIONS CONT */}
                             <div className="postsWrapperFeed col-12 px-0">
@@ -562,8 +220,8 @@ export default function Dashboard() {
                                 <InfiniteScroll
                                   scrollThreshold="80%"
                                   endMessage={
-                                    <div className="text-center endListMessage pb-0 mt-4">
-                                      {confessions.length === 0 ? "No confessions found" : "End of Confessions"}</div>}
+                                    <div className="text-center endListMessage pb-0 mt-4 noConfessions">
+                                      {confessions.length === 0 ? "No confessions found in this category" : "End of Confessions"}</div>}
                                   dataLength={confessions.length}
                                   next={fetchMoreData}
                                   hasMore={confessions.length < confCount}
@@ -589,7 +247,6 @@ export default function Dashboard() {
                                         key={`dashBoardPost${index}`}
                                         index={index}
                                         viewcount={post.viewcount}
-                                        handleCommentsModal={handleCommentsModal}
                                         updateConfessions={updateConfessions}
                                         updateConfessionData={updateConfessionData}
                                         createdAt={post.created_at}
@@ -632,155 +289,9 @@ export default function Dashboard() {
                 </div>
               </div>
 
-
-              {/* ADD CATEGORIES MODAL */}
-              <Modal show={addNewCategory.visible}>
-                <Modal.Header>
-                  <h6>Create a Category</h6>
-                </Modal.Header>
-                <Modal.Body className="privacyBody">
-
-                  <div className="addNewCategoryInput">
-                    <div className="errorCont text-danger mb-1"></div>
-                    <input type="text" name="category_name" maxLength="20" value={createdCategory.category_name} onChange={(e) => handleCreateCategoryDetails(e.target)} className="form-control" placeholder="Enter a Category" />
-
-                    <select ref={createCategorySelect} className="form-control mt-2" name="status" value={(createdCategory.status).toString()} onChange={(e) => handleCreateCategoryDetails(e.target)}>
-                      <option value="1">Active</option>
-                      <option value="2">Inactive</option>
-                    </select>
-                  </div>
-
-                  <div className="w-100 mt-2 d-flex justify-content-start flex-wrap type_checkboxes">
-                    <div className="d-flex flex-wrap align-items-center mr-3">
-                      <label className='mb-0 mr-1' htmlFor='confessionCCheckbox'>Confession</label>
-                      <input
-                        type="checkbox"
-                        id="confessionCCheckbox"
-                        name="confession"
-                        checked={types.confession}
-                        onChange={handleTypes} />
-                    </div>
-                    <div className="d-flex flex-wrap align-items-center">
-                      <label className='mb-0 mr-1' htmlFor='forumCCheckbox'>Forum</label>
-                      <input
-                        type="checkbox"
-                        id="forumCCheckbox"
-                        name="forum"
-                        checked={types.forum}
-                        onChange={handleTypes} />
-                    </div>
-                  </div>
-
-                  <div className="errorCont editModalError text-danger mt-1">
-                  </div>
-
-                </Modal.Body>
-                <Modal.Footer className="pt-0">
-                  <Button className="modalFootBtns btn" variant="primary" onClick={closeAddCategoryModalFunc}>
-                    Cancel
-                  </Button>
-                  <Button className="modalFootBtns btn" variant="primary" onClick={addNewCategoryModalFunc}>
-                    {addNewCategory.isLoading === true
-                      ?
-                      <div className="spinnerSizePost spinner-border text-white" role="status">
-                        <span className="sr-only">Loading...</span>
-                      </div>
-                      :
-                      "Create"}
-
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-              {/* ADD CATEGORIES MODAL */}
-
-
-
-              {/* EDIT CATEGORIES MODAL */}
-              <Modal show={editCategoryModal}>
-                <Modal.Header>
-                  <h6>Update Category</h6>
-                </Modal.Header>
-                <Modal.Body className="privacyBody">
-
-                  <div className="addNewCategoryInput">
-                    <div className="errorCont text-danger mb-1"></div>
-
-                    <input
-                      type="text"
-                      name="category_name"
-                      value={editedCategoryDetails.category_name}
-                      onChange={(e) => handleEditCategoryDetails(e.target)}
-                      className="form-control" placeholder="Enter a Category" />
-
-                    <select
-                      ref={editCategorySelect}
-                      className="form-control mt-2"
-                      name="status"
-                      value={(editedCategoryDetails.status).toString()}
-                      onChange={(e) => handleEditCategoryDetails(e.target)}>
-                      <option value="1">Active</option>
-                      <option value="2">Inactive</option>
-                    </select>
-
-                    <div className="w-100 mt-2 d-flex justify-content-start flex-wrap type_checkboxes">
-                      <div className="d-flex flex-wrap align-items-center mr-3">
-                        <label className='mb-0 mr-1' htmlFor='confessionUCheckbox'>Confession</label>
-                        <input
-                          type="checkbox"
-                          id="confessionUCheckbox"
-                          name="confession"
-                          checked={types.confession}
-                          onChange={handleTypes} />
-                      </div>
-                      <div className="d-flex flex-wrap align-items-center">
-                        <label className='mb-0 mr-1' htmlFor='forumUCheckbox'>Forum</label>
-                        <input
-                          type="checkbox"
-                          id="forumUCheckbox"
-                          name="forum"
-                          checked={types.forum}
-                          onChange={handleTypes} />
-                      </div>
-                    </div>
-
-                  </div>
-
-                  <div className="errorCont updateModalError text-danger mt-2">
-                  </div>
-
-                </Modal.Body>
-                <Modal.Footer className="pt-0">
-                  <Button className="modalFootBtns btn" variant="primary" onClick={closeEditCategoryModalFunc}>
-                    Cancel
-                  </Button>
-                  <Button className="modalFootBtns btn" variant="primary" disabled={updateCategory} onClick={deleteEditCategoryModalFunc}>
-                    {deleteCategory === true
-                      ?
-                      <div className="spinnerSizePost spinner-border text-white" role="status">
-                        <span className="sr-only">Loading...</span>
-                      </div>
-                      :
-                      "Delete"}
-
-                  </Button>
-                  <Button className="modalFootBtns btn" variant="primary" disabled={deleteCategory} onClick={updateCategoryModalFunc}>
-                    {updateCategory === true ?
-                      <div className="spinnerSizePost spinner-border text-white" role="status">
-                        <span className="sr-only">Loading...</span>
-                      </div>
-                      :
-                      "Update"}
-
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-              {/* ADD CATEGORIES MODAL */}
-
               <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
               <Footer />
 
-              {/* REFRESH BUTTON */}
-              {commentsModal.visibility === false && changes && <RefreshButton />}
             </div>
           </div>
           : <SiteLoader />

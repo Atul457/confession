@@ -17,7 +17,12 @@ const ReportCommentModal = () => {
     // Functions
 
     // Close modal
-    const closeModal = () => {
+    const closeModal = (args) => {
+        if (args?.mutateComments) {
+            reportModalReducer?.data?.mutateCommentsFn({
+                isReported: 1
+            }, reportModalReducer?.data?.comment_index)
+        }
         dispatch(resetReportModal(false))
         dispatch(reOpenCModal())
     }
@@ -39,7 +44,7 @@ const ReportCommentModal = () => {
             }))
             const res = await fetchData(obj)
             if (res.data.status === true) {
-                closeModal()
+                closeModal({ mutateComments: true })
             } else {
                 dispatch(toggleReportComModal({
                     status: apiStatus.REJECTED,
