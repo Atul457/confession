@@ -541,23 +541,24 @@ const Category = props => {
                     switchCategory(cindex)
             }}
             id={`forumCat${cindex}`}>
-            {!hideEditsAndStatus ?
-                <>
-                    <i className="fa fa-pencil categoryEditIcon adminCats"
-                        onClick={() => {
-                            openEditCategoriesModalFunc({
-                                id: category.id,
-                                status: category.status,
-                                category_name: category.category_name,
-                                is_confession: category.is_confession,
-                                is_forum: category.is_forum,
-                            })
-                        }}
-                        aria-hidden="true"
-                        type="button"></i>
+            {/* {!hideEditsAndStatus ? */}
+            <>
+                <i className="fa fa-pencil categoryEditIcon adminCats"
+                    onClick={() => {
+                        openEditCategoriesModalFunc({
+                            id: category.id,
+                            status: category.status,
+                            category_name: category.category_name,
+                            is_confession: category.is_confession,
+                            is_forum: category.is_forum,
+                        })
+                    }}
+                    aria-hidden="true"
+                    type="button"></i>
 
-                    <span className={`categoryStatus ${parseInt(category.status) === 1 ? "categoryStatusGreen" : "categoryStatusRed"}`}></span>
-                </> : null}
+                <span className={`categoryStatus ${parseInt(category.status) === 1 ? "categoryStatusGreen" : "categoryStatusRed"}`}></span>
+            </>
+            {/* : null} */}
 
             <span className="innerAdminCatName">{categoryName?.toLowerCase()}</span>
         </div>

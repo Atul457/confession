@@ -45,7 +45,8 @@ import ForumDetailPage from '../user/pageElements/pages/forums/ForumDetailPage';
 import Search from '../user/pageElements/pages/search/Search';
 import ForumDetailPageAdmin from '../admin/pageElements/pages/forums/ForumDetailPageAdmin';
 import ForumsAdmin from '../admin/pageElements/pages/forums/ForumsAdmin';
-import ConfessionDetailPageAdmin from '../admin/pageElements/modals/ConfessionDetailPageAdmin';
+import { ReportedForums } from '../admin/pageElements/ReportedForums';
+import { ReportedForumComments } from '../admin/pageElements/ReportedForumComments';
 
 
 const Routes = ({ categories }) => {
@@ -72,9 +73,17 @@ const Routes = ({ categories }) => {
                     {/* REPORTED USERS */}
                     <Route path="admin/reported" element={<ReportedUsers />} />
                     {/* REPORTED USERS */}
+                  
+                    {/* REPORTED FORUMS */}
+                    <Route path="admin/reported_forums" element={<ReportedForums />} />
+                    {/* REPORTED FORUMS */}
 
                     {/* REPORTED COMMENTS */}
                     <Route path="admin/reportedcomments" element={<ReportedComments />} />
+                    {/* REPORTED COMMENTS */}
+                  
+                    {/* REPORTED COMMENTS */}
+                    <Route path="admin/reported_forum_comments" element={<ReportedForumComments />} />
                     {/* REPORTED COMMENTS */}
 
                     {/* REPORTED COMMENTS */}

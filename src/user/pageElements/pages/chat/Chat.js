@@ -748,7 +748,7 @@ export default function Chat() {
             {
                 auth() ? <div className="row chatPageOuter">
                     {/* ADDS HEADER COMPONENT */}
-                    <Header links={true} fullWidth={true} hideChat={toggleView.messages} />
+                    <Header links={true} fullWidth={true} messagesVisible={toggleView.messages} />
                     {/* END OF ADDS HEADER COMPONENT */}
 
                     <div className="preventHeader preventHeaderChatSec">preventHead</div>

@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import userIcon from '../../images/userAcc.png';
+import verifiedIcon from '../../images/verifiedIcon.svg';
 import { Link } from "react-router-dom";
 import auth from '../behindScenes/Auth/AuthCheck';
 import forwardIcon from '../../images/forwardIcon.svg';
@@ -11,12 +12,14 @@ import commentReplyIcon from '../../images/creplyIcon.svg';
 import { fetchData } from '../../commonApi';
 import { getAdminToken } from '../../helpers/getToken';
 import _ from 'lodash';
+import Badge from '../../common/components/badges/Badge';
 
 
 const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
-    root_id, addNewSubComment, deleteSubComment, postId, isLastIndex }) => {
+    root_id, addNewSubComment, deleteSubComment, postId, isLastIndex,...rest }) => {
 
     let props = data;
+    const subcomment = rest?.subcomment
     const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
     const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
@@ -185,6 +188,8 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
                 <div className="postContHeader">
                     <span className="commentsGotProfileImg">
                         <img src={props.profile_image === "" ? userIcon : props.profile_image} alt="" />
+                        {subcomment?.email_verified === 1 ?
+                            <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                     </span>
 
                     {props.curid !== false ?
@@ -202,6 +207,8 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
                             {props.userName}
                         </span>)}
 
+                    <Badge classlist='ml-2' points={subcomment?.points} />
+
                     <span className="postCreatedTime">
                         {/* {props.created_at} */}
                         {DateConverter(props.created_at)}
@@ -215,6 +222,11 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
             </div>
             <div className="postBody">
                 <div className="postedPost mb-0">
+
+                    {subcomment?.is_edited === 1 ?
+                        <i className="fa fa-pencil pr-2" aria-hidden="true"></i> :
+                        null}
+
                     <pre className="preToNormal">
                         {commentsModalReducer.updateField.comment_id !== props.comment_id && props.comment}
                         {commentsModalReducer.updateField.comment_id === props.comment_id &&

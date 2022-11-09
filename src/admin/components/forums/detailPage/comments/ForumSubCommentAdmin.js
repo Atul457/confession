@@ -11,18 +11,18 @@ import userIcon from "../../../../../images/userAcc.svg"
 import commentReplyIcon from "../../../../../images/creplyIcon.svg"
 import upvoted from "../../../../../images/upvoted.svg"
 import upvote from "../../../../../images/upvote.svg"
-// import editCommentIcon from "../../../../../images/editCommentIcon.svg"
+import verifiedIcon from "../../../../../images/verifiedIcon.svg"
 
 // Redux
-import { forumHandlers, postComment, reportForumCommAcFn, usersToTagAcFn } from '../../../../../redux/actions/forumsAc/forumsAc';
+import { forumHandlers, postComment, usersToTagAcFn } from '../../../../../redux/actions/forumsAc/forumsAc';
 
 // Component imports
 import CommentBoxAdmin from '../CommentBoxAdmin';
 
 // Helpers
 import { apiStatus } from '../../../../../helpers/status';
-// import { reportedFormStatus } from './ForumCommProvider';
 import auth from '../../../../behindScenes/Auth/AuthCheck';
+import Badge from '../../../../../common/components/badges/Badge';
 
 
 const ForumSubCommentAdmin = (props) => {
@@ -218,6 +218,8 @@ const ForumSubCommentAdmin = (props) => {
             <div className="postContHeader commentsContHeader">
                 <span className="commentsGotProfileImg">
                     <img src={profile_image} alt="user_profile_image" />
+                    {currSubComment?.email_verified === 1 ?
+                        <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                 </span>
 
                 {user_id !== false ?
@@ -232,6 +234,8 @@ const ForumSubCommentAdmin = (props) => {
                         {comment_by}
                     </span>)
                 }
+
+                <Badge points={currSubComment?.points} classlist="ml-2" />
 
                 <span className="postCreatedTime">
                     {created_at ? DateConverter(created_at) : null}

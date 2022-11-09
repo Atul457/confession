@@ -7,7 +7,7 @@ import { fetchData } from '../../../commonApi';
 import { resetPRBModal } from '../../../redux/actions/postReportedBy';
 
 
-const PostReportedByModal = () => {
+const PostReportedByModal = (props) => {
 
     // Hooks
     const dispatch = useDispatch()
@@ -62,7 +62,7 @@ const PostReportedByModal = () => {
             data,
             token,
             method: "post",
-            url: `admin/getreportedconfessionusers/${postRBYModalReducer.data.confession_id
+            url: `admin/${props?.endPoint ?? "getreportedconfessionusers"}/${postRBYModalReducer.data.confession_id
                 }`
         }
         try {
@@ -104,7 +104,7 @@ const PostReportedByModal = () => {
 
             <Modal.Header className='justify-content-between'>
                 <h6>
-                    Post Reported By
+                    {props?.title ?? "Post Reported By"}
                 </h6>
                 <span type="button" onClick={closeModal}>
                     <i className="fa fa-times" aria-hidden="true"></i>

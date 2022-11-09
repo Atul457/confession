@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, NavLink } from "react-router-dom";
 import { useLocation } from 'react-router';
-import forumsAdminIcon from '../../../images/forumsAdminIcon.svg'
-import forumsAdminIconActive from '../../../images/forumsAdminIconActive.svg'
+import forumsAdminIcon from '../../../images/forumsAdminIconMob.svg'
+import forumsAdminIconActive from '../../../images/forumsAdminIconMobActive.svg';
 
 export default function Footer() {
 
@@ -12,7 +12,7 @@ export default function Footer() {
 
 
     return (
-        <footer className="col-12 d-block d-md-none footer">
+        <footer className="col-12 d-block d-md-none footer admin">
             <div className="linksCont container-fluid pt-2">
                 <div className="linkBtns">
                     <NavLink to="/admin/users" className="linkBtnsAnchor headerLinks">
@@ -25,12 +25,11 @@ export default function Footer() {
 
                 <div className="linkBtns dropdownLink">
                     <div className="linkBtnsAnchor headerLinks">
-                        <i className={`fa fa-circle-o-notch footLinkName moveABit adminHeaderIcons ${currentUrl.includes("forums") ? "oColor" : ""}`} />
-                        {/* <span className="headIconCont">
-                            <img src={!currentUrl.includes("forums") ? forumsAdminIcon : forumsAdminIconActive} alt="" />
-                        </span> */}
+                        <span className="footerIconCont">
+                            <img src={!currentUrl.includes("forum") ? forumsAdminIcon : forumsAdminIconActive} alt="" />
+                        </span>
                         <span
-                            className={`headLinkName footLinkName ${(currentUrl.includes("forums")) ? "activeLinkOfHeader" : ""}`}>Forums</span>
+                            className={`headLinkName footLinkName ${(currentUrl.includes("forum")) ? "activeLinkOfHeader" : ""}`}>Forums</span>
                         <div className="reportItems">
                             <div className="reportItem">
                                 <NavLink to="/admin/forums" className="headerNavLinks">
@@ -40,14 +39,14 @@ export default function Footer() {
                                 </NavLink>
                             </div>
                             <div className="reportItem">
-                                <NavLink to="/forums/reported_forums" className="headerNavLinks">
+                                <NavLink to="/admin/reported_forums" className="headerNavLinks">
                                     <i className={`fa fa-exclamation-triangle moveABit adminHeaderIcons  ${currentUrl === "/forums/reported_forums" ? "oColor" : ""}`} aria-hidden="true"></i>
                                     <span
                                         className={`headLinkName ${currentUrl === "/forums/reported_forums" ? "activeLinkOfHeader" : ""}`}>Reported Forums</span>
                                 </NavLink>
                             </div>
                             <div className="reportItem">
-                                <NavLink to="admin/reported_forum_comments" className="headerNavLinks">
+                                <NavLink to="/admin/reported_forum_comments" className="headerNavLinks">
                                     <i className={`fa fa-file moveABit adminHeaderIcons  ${currentUrl === "admin/reported_forum_comments" ? "oColor" : ""}`} aria-hidden="true"></i>
                                     <span className={`headLinkName ${currentUrl === "admin/reported_forum_comments" ? "activeLinkOfHeader" :
                                         ""}`}>Reported comments</span>

@@ -516,9 +516,7 @@ export default function ConfessionDetailPageAdmin({ categories, updatePost, ...r
                                                             {confessionData.created_by}
                                                         </span> :
                                                         <Link className={`textDecNone postUserName`}
-                                                            to={confessionData?.post_as_anonymous === 0 &&
-                                                                (auth() ? (userDetails.profile.user_id === confessionData.user_id ? `/profile` : `/userProfile?user=${confessionData.user_id}`) : `/userProfile?user=${confessionData.user_id}`)
-                                                            }>
+                                                            to={!confessionData.user_id ? `/#` : `/userProfile?user=${confessionData.user_id}`}>
                                                             <span className="userName removeElipses">
                                                                 {confessionData?.post_as_anonymous === 1 ? "Anonymous ." : confessionData.created_by}
                                                             </span>

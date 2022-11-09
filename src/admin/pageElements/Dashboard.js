@@ -194,8 +194,6 @@ export default function Dashboard() {
                 </div>
               </div>
 
-
-
               <div className="rightColumn rightColumnFeed">
                 <div className="rightMainFormCont rightMainFormContFeed p-0">
                   <div className="preventHeader">preventHead</div>
@@ -220,7 +218,7 @@ export default function Dashboard() {
                                 <InfiniteScroll
                                   scrollThreshold="80%"
                                   endMessage={
-                                    <div className="text-center endListMessage pb-0 mt-4 noConfessions">
+                                    <div className="text-center endListMessage pb-0 mt-4 noConfessionsw w-100">
                                       {confessions.length === 0 ? "No confessions found in this category" : "End of Confessions"}</div>}
                                   dataLength={confessions.length}
                                   next={fetchMoreData}
@@ -267,9 +265,11 @@ export default function Dashboard() {
                                 (
                                   confessionResults
                                     ?
-                                    (<div className="spinner-border pColor" role="status">
-                                      <span className="sr-only">Loading...</span>
-                                    </div>)
+                                    (<div className="text-center">
+                                        <div className="spinner-border pColor" role="status">
+                                          <span className="sr-only">Loading...</span>
+                                        </div>
+                                      </div>)
                                     :
                                     (<div className="alert alert-danger" role="alert">
                                       Unable to get confessions

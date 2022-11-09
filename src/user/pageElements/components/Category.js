@@ -29,6 +29,8 @@ export default function Category(props) {
             activeCatName = "all";
             props.updateActiveCategory(activeCatName);  //Updates the activeCategory state var in feed Comp
         }
+
+        props?.setCategoryShow(false)
     }
 
 

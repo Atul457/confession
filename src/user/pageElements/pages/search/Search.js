@@ -130,7 +130,7 @@ const Search = () => {
 
     return (
         <>
-            <ForumLayoutWrapper>
+            <ForumLayoutWrapper propToWatch={posts}>
                 <div className='search_page'>
 
                     {searchedWith?.trim().length > 0 ?

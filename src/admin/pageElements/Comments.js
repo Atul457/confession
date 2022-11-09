@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import userIcon from '../../images/userAcc.png';
 import { Link } from "react-router-dom";
-import auth from '../behindScenes/Auth/AuthCheck';
 import { useLocation, useNavigate } from 'react-router';
 import commentReplyIcon from '../../images/creplyIcon.svg';
+import verifiedIcon from '../../images/verifiedIcon.svg';
 import { fetchData } from '../../commonApi';
 import DateConverter from '../../helpers/DateConverter';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,6 +13,7 @@ import forwardIcon from '../../images/forwardIcon.svg';
 import _ from 'lodash';
 import { getAdminToken } from '../../helpers/getToken';
 import SubComments from './SubComments';
+import Badge from '../../common/components/badges/Badge';
 
 
 
@@ -21,6 +22,7 @@ export default function Comments(props) {
 
     let SLOMT = 3; // SHOW LATEST ON COMMENTS MORE THAN
     const dispatch = useDispatch();
+    const comment = props?.comment ?? {}
     const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
     const commentsModalReducer = useSelector(state => state.commentsModalReducer);
     const [subComments, setSubComments] = useState({ data: [], loading: false })
@@ -291,6 +293,8 @@ export default function Comments(props) {
                     <div className="postContHeader justifyContentInitial">
                         <span className="commentsGotProfileImg">
                             <img src={props.imgUrl === "" ? userIcon : props.imgUrl} alt="" />
+                            {comment?.email_verified === 1 ?
+                                <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                         </span>
 
                         {props.curid !== false ?
@@ -306,6 +310,8 @@ export default function Comments(props) {
                                 {props.userName}
                             </span>)}
 
+                        <Badge points={comment?.points} classlist="ml-2" />
+
                         <span className="postCreatedTime">
                             {DateConverter(props.created_at)}
                         </span>
@@ -319,6 +325,9 @@ export default function Comments(props) {
                 </div>
                 <div className="postBody">
                     <div className="postedPost">
+                        {comment?.is_edited === 1 ?
+                            <i className="fa fa-pencil pr-2" aria-hidden="true"></i> :
+                            null}
                         <pre className="preToNormal">
                             {props.postedComment}
                         </pre>
@@ -397,6 +406,7 @@ export default function Comments(props) {
                                     isLastIndex={subComments.data.length === index + 1}
                                     deleteSubComment={deleteSubComment}
                                     addNewSubComment={addNewSubComment}
+                                    subcomment={subcomment}
                                     index={index}
                                     postId={props.postId}
                                     root_id={props.commentId}

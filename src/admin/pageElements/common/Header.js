@@ -103,10 +103,6 @@ export default function Header(props) {
         }
     }
 
-    // useEffect(() => {
-
-    // }, [SearchReducer.data])
-
     useEffect(() => {
         if (ShareReducer.selectedPost?.value) {
             document.addEventListener("click", catchEvent2);
@@ -183,27 +179,27 @@ export default function Header(props) {
                                         <div className="linkBtns dropdownLink">
                                             <div className="headerNavLinks">
                                                 <span className="headIconCont">
-                                                    <img src={!currentUrl.includes("forums") ? forumsAdminIcon : forumsAdminIconActive} alt="" />
+                                                    <img src={!currentUrl.includes("forum") ? forumsAdminIcon : forumsAdminIconActive} alt="" />
                                                 </span>
                                                 <span
-                                                    className={`headLinkName ${(currentUrl.includes("forums")) ? "activeLinkOfHeader" : ""}`}>Forums</span>
+                                                    className={`headLinkName ${(currentUrl.includes("forum")) ? "activeLinkOfHeader" : ""}`}>Forums</span>
                                                 <div className="reportItems">
                                                     <div className="reportItem">
                                                         <NavLink to="/admin/forums" className="headerNavLinks">
-                                                            <i className={`fa fa-circle-o-notch moveABit adminHeaderIcons  ${currentUrl === "/admin/forums" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                            <i className={`fa fa-circle-o-notch moveABit adminHeaderIcons  ${currentUrl === "admin/forums" ? "oColor" : ""}`} aria-hidden="true"></i>
                                                             <span
-                                                                className={`headLinkName ${currentUrl === "/admin/forums" ? "activeLinkOfHeader" : ""}`}>All Forums</span>
+                                                                className={`headLinkName ${currentUrl === "admin/forums" ? "activeLinkOfHeader" : ""}`}>All Forums</span>
                                                         </NavLink>
                                                     </div>
                                                     <div className="reportItem">
-                                                        <NavLink to="/forums/reported_forums" className="headerNavLinks">
-                                                            <i className={`fa fa-exclamation-triangle moveABit adminHeaderIcons  ${currentUrl === "/forums/reported_forums" ? "oColor" : ""}`} aria-hidden="true"></i>
+                                                        <NavLink to="/admin/reported_forums" className="headerNavLinks">
+                                                            <i className={`fa fa-exclamation-triangle moveABit adminHeaderIcons  ${currentUrl === "admin/reported_forums" ? "oColor" : ""}`} aria-hidden="true"></i>
                                                             <span
-                                                                className={`headLinkName ${currentUrl === "/forums/reported_forums" ? "activeLinkOfHeader" : ""}`}>Reported Forums</span>
+                                                                className={`headLinkName ${currentUrl === "admin/reported_forums" ? "activeLinkOfHeader" : ""}`}>Reported Forums</span>
                                                         </NavLink>
                                                     </div>
                                                     <div className="reportItem">
-                                                        <NavLink to="admin/reported_forum_comments" className="headerNavLinks">
+                                                        <NavLink to="/admin/reported_forum_comments" className="headerNavLinks">
                                                             <i className={`fa fa-file moveABit adminHeaderIcons  ${currentUrl === "admin/reported_forum_comments" ? "oColor" : ""}`} aria-hidden="true"></i>
                                                             <span className={`headLinkName ${currentUrl === "admin/reported_forum_comments" ? "activeLinkOfHeader" :
                                                                 ""}`}>Reported comments</span>

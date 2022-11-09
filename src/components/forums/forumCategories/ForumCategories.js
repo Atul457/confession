@@ -13,6 +13,7 @@ import { searchTypes } from '../detailPage/comments/ForumCommProvider'
 
 
 const ForumCategories = ({
+    setShowCat = () => { },
     isExpandable = false,
     classNames = "",
     onlyForForums = false,
@@ -67,6 +68,7 @@ const ForumCategories = ({
                     if (isSearchPage === true && SearchReducer.type === searchTypes.FORUM && category.is_confession === 1 && category.is_forum === 0) return
                     if (isSearchPage === true && SearchReducer.type === searchTypes.POST && category.is_confession === 0 && category.is_forum === 1) return
                     return <Category
+                        setShowCat={setShowCat}
                         SearchReducer={SearchReducer}
                         location={location}
                         activeCategory={activeCategory}
@@ -101,6 +103,7 @@ const ExpandableForumCats = ({ classNames = "", onlyForForums = false, isSearchP
                 {/* CATEGORYCONT */}
                 <aside className="col-12 col-md-4 posSticky mobileViewCategories d-none">
                     <ForumCategories
+                        setShowCat={setShowCat}
                         isSearchPage={isSearchPage}
                         isExpandable={true}
                         onlyForForums={onlyForForums}
@@ -121,7 +124,8 @@ const Category = props => {
         activeCategory,
         location,
         navigate,
-        SearchReducer
+        SearchReducer,
+        setShowCat = () => { }
     } = props;
     const dispatch = useDispatch(),
         isActiveCategory = activeCategory === cindex,
@@ -131,6 +135,8 @@ const Category = props => {
         isSearchPage = location === searchPageLink
 
     const switchCategory = categoryToActivate => {
+        // Closes the expanded category box
+        setShowCat(false)
         let isSameCatClicked = activeCategory === categoryToActivate,
             allCategories = 0;
         categoryToActivate = isSameCatClicked ? allCategories : categoryToActivate

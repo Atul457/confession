@@ -11,7 +11,7 @@ import RightSideAdComp from '../../sidebarAds/RightSideAdComp';
 import { useLocation } from 'react-router-dom';
 
 
-const ForumLayoutWrapper = ({ children }) => {
+const ForumLayoutWrapper = ({ children, propToWatch = Math.floor(Math.random() * 1000) }) => {
 
     const location = useLocation()?.pathname.replace("/", "")
     const isForumPage = location.startsWith("forum")
@@ -19,9 +19,8 @@ const ForumLayoutWrapper = ({ children }) => {
 
     return (
         <div className="container-fluid forums_page feed_page">
-            {/* <div className="container-fluid forums_page"> */}
             <div className="row outerContWrapper">
-                <Header links={true}></Header>
+                <Header links={true} propToWatch={propToWatch}></Header>
 
                 {/* LeftSideCont */}
                 <aside className="leftColumn leftColumnFeed">

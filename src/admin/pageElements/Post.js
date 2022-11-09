@@ -13,10 +13,11 @@ import TextareaAutosize from 'react-textarea-autosize';
 import DateConverter from '../../helpers/DateConverter';
 import { useDispatch } from 'react-redux';
 import viewsCountIcon from '../../images/viewsCountIcon.svg';
+import verifiedIcon from '../../images/verifiedIcon.svg';
 import commentCountIcon from '../../images/commentCountIcon.svg';
 import upvote from '../../images/upvote.svg';
-// import upvoted from '../../images/upvoted.svg';
 import { openCModal as openCommentsModalFn } from '../../redux/actions/commentsModal';
+import Badge from '../../common/components/badges/Badge';
 
 
 export default function Post(props) {
@@ -28,14 +29,9 @@ export default function Post(props) {
     const noOfWords = useState(200);    //IN POST AFTER THESE MUCH CHARACTERS SHOWS VIEWMORE BUTTON
     const [requiredError, setRequiredError] = useState('');
 
-    const [confessionData] = useState({
-        confession_id: props.postId,
-        description: props.postedComment,
-    });
     const [comment, setComment] = useState('');
     const [lightBox, setLightBox] = useState(false);
     const [adminDetails] = useState(auth() ? JSON.parse(localStorage.getItem("adminDetails")) : '');
-    const [deleteConfession, setDeleteConfession] = useState(false);
     const isCoverTypePost = props.category_id === 0
     const postBg = isCoverTypePost ? {
         backgroundImage: `url('${props?.cover_image}')`,
@@ -80,7 +76,7 @@ export default function Post(props) {
     const deleteConfessionFunc = async () => {
         let confirmation = window.confirm("Do you really want to delete the Confession ?");
         if (confirmation === true) {
-            setDeleteConfession(true);
+            // setDeleteConfession(true);
 
             let obj = {
                 data: {},
@@ -93,10 +89,10 @@ export default function Post(props) {
                 if (res.data.status === true) {
                     props.updateConfessions(props.postId);  //UPDATE CONFESSIONS 
                 }
-                setDeleteConfession(false);
+                // setDeleteConfession(false);
             } catch {
                 console.log("Some error occured");
-                setDeleteConfession(false);
+                // setDeleteConfession(false);
             }
         }
     }
@@ -210,6 +206,8 @@ export default function Post(props) {
                 )}
                 <span className="userImage userImageFeed">
                     <img src={props.profileImg !== '' ? props.profileImg : userIcon} className="userAccIcon" alt="" />
+                    {post?.email_verified === 1 ?
+                        < img src={verifiedIcon} title="Verified user" className="verified_user_icon" alt="verified_user_icon" /> : null}
                 </span>
 
 
@@ -226,6 +224,8 @@ export default function Post(props) {
                         {props.userName}
                     </span>
                 </Link>
+
+                <Badge points={post?.points} />
 
                 {!isCoverTypePost && <span className="catCommentBtnCont">
                     <div className="categoryOfUser">{(props.category).charAt(0) + (props.category).slice(1).toLowerCase()}</div>

@@ -371,10 +371,11 @@ export default function CommentsGot(props) {
 
                         {/* MIDDLECONTAINER */}
 
-                        {comDetailPage.status === apiStatus.LOADING
-                            ?
-                            <div className="spinner-border pColor spinnerSizeFeed" role="status">
-                                <span className="sr-only">Loading...</span>
+                        {comDetailPage.status === apiStatus.LOADING ?
+                            <div className="text-center">
+                                <div className="spinner-border pColor spinnerSizeFeed" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
                             </div>
                             :
                             (comDetailPage.status === apiStatus.REJECTED
@@ -417,7 +418,11 @@ export default function CommentsGot(props) {
                         <Footer />
                     </div>
                     :
-                    <SiteLoader />}
+                    <div className="text-center">
+                        <div className="spinner-border text-warning pColor" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div>}
 
             </div>
         </ForumLayoutWrapperAdmin>

@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import parse from 'html-react-parser';
 
 // Helpers
-// import DateConverter from '../../../../helpers/DateConverter'
 
 // Image imports
 import userIcon from "../../../../../images/userAcc.svg"
 import commentReplyIcon from "../../../../../images/creplyIcon.svg"
+import verifiedIcon from "../../../../../images/verifiedIcon.svg"
 import upvoted from '../../../../../images/upvoted.svg';
 import upvote from '../../../../../images/upvote.svg';
 
@@ -22,12 +22,10 @@ import { apiStatus } from '../../../../../helpers/status';
 import { deleteForumCommService, doCommentService, getUsersToTagService, likeDislikeService } from '../../services/adminforumServices';
 import { reportedFormStatus } from './ForumCommProvider';
 
-// Custom components
-// import CommentBoxAdmin from '../CommentBoxAdmin';
-
 // Redux
 import { forumHandlers, postComment, reportForumCommAcFn, usersToTagAcFn } from '../../../../../redux/actions/forumsAc/forumsAc';
 import auth from '../../../../behindScenes/Auth/AuthCheck';
+import Badge from '../../../../../common/components/badges/Badge';
 
 
 const ForumCommentAdmin = (props) => {
@@ -318,6 +316,8 @@ const ForumCommentAdmin = (props) => {
         <div className="postContHeader commentsContHeader">
           <span className="commentsGotProfileImg">
             <img src={profile_image} alt="user_profile_image" />
+            {currComment?.email_verified === 1 ?
+              <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
           </span>
 
           {user_id !== false ?
@@ -333,6 +333,8 @@ const ForumCommentAdmin = (props) => {
             </span>)
           }
 
+          <Badge points={currComment?.points} classlist="ml-2" />
+
           <span className="postCreatedTime">
             {created_at ? DateConverter(created_at) : null}
           </span>
@@ -343,18 +345,6 @@ const ForumCommentAdmin = (props) => {
             <pre className="preToNormal">
               {parse(currComment?.comment)}
             </pre>
-
-            {/* Update box */}
-            {/* {isUpdateComBoxVisible ? <CommentBoxAdmin
-              toSearch={toSearch}
-              dispatch={dispatch}
-              usedById={commentId}
-              getUsersToTag={getUsersToTag}
-              usersToTag={usersToTag}
-              isForUpdateCom={true}
-              postCommentReducer={postCommentReducer}
-              doComment={doComment} /> : null} */}
-            {/* Update box */}
 
             {isAllowedToComment &&
               <div className="replyCont">

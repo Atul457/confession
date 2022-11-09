@@ -104,6 +104,9 @@ export const GetReportedCommentsData = () => {
             }
         },
         {
+            selector: row => (row.top_at), name: "Reported on", sortable: true
+        },
+        {
             name: "Action",
             width: "150px",
             cell: (row) => <button className="btn btn-danger mx-auto pl-1 btn-sm w-100" onClick={() => deleteCommentFunc(row.confession_id, row.comment_id)}>Delete comment</button>,

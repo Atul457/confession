@@ -104,12 +104,7 @@ export const GetReportedPostsData = () => {
             }
         },
         {
-            name: "Reported on",
-            cell: row => {
-                return <span onClick={() => openReportedByModal(row.confession_id, row.comment_id)} className="viewReportedComment">
-                    <i className="fa fa-eye" aria-hidden="true"></i>
-                </span>
-            }
+            selector: row => (row.top_at), name: "Reported on", sortable: true
         },
         {
             name: "Action",

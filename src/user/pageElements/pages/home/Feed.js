@@ -659,7 +659,11 @@ export default function Feed(props) {
                 handleCommentsModal={handleCommentsModal} />}
             <div className="row outerContWrapper">
 
-                <Header links={true} refreshFeed={refreshFeed} getConfessions={getConfessions}></Header>
+                <Header
+                    links={true}
+                    refreshFeed={refreshFeed}
+                    propToWatch={confessions}
+                    getConfessions={getConfessions} />
 
                 <div className="leftColumn leftColumnFeed">
                     <div className="leftColumnWrapper">
@@ -890,7 +894,7 @@ export default function Feed(props) {
                                                 {categoryShow && <div className="body">
                                                     {/* CATEGORYCONT */}
                                                     <aside className="col-12 col-md-4 posSticky mobileViewCategories d-none">
-                                                        <Category hideHead={true} categories={props.categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
+                                                        <Category setCategoryShow={setCategoryShow} hideHead={true} categories={props.categories} activeCatIndex={AC2S} updateActiveCategory={updateActiveCategory} />
                                                     </aside>
                                                     {/* CATEGORYCONT */}
                                                 </div>}

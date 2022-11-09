@@ -516,6 +516,7 @@ input:focus-visible {
     display: flex;
     justify-content: space-around;
     padding: 0px;
+    align-items: flex-end;
 }
 
 .linkBtns {
@@ -1988,8 +1989,9 @@ span.offlineColor {
 }
 
 .requesterDesc img {
-    width: 40px;
-    height: 40px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .friendRequestsHeaderImg {
@@ -2056,7 +2058,7 @@ span.offlineColor {
 .friendRequestsHImgCont {
     all: unset;
     width: 40px;
-    object-fit: cover;
+    height: 40px;
     position: relative;
     border-radius: 50%;
 }
@@ -3034,6 +3036,7 @@ span.facebookMobIcon {
     position: fixed;
     display: flex;
     align-items: center;
+    cursor: pointer;
     top: calc(100vh - 100px);
     right: 30px;
     z-index: 99;
@@ -3524,6 +3527,7 @@ span.facebookMobIcon {
     font-size: 10px;
     position: absolute;
     right: 13px;
+    z-index: 9;
     top: 43px;
 }
 
@@ -3838,11 +3842,16 @@ span.facebookMobIcon {
     align-items: center;
 }
 
+
 .dataTableSelectNsearchCont {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 5px;
+    flex-wrap: wrap;
+}
+
+.dataTableSelectNsearchCont>* {
+    margin-bottom: 10px;
 }
 
 .page-item.active .page-link {
@@ -7338,16 +7347,12 @@ button.modalFootBtns.btn a:hover {
     }
 
     .unreadPostCommentCount {
-        top: 29px;
+        top: 43px;
     }
 
     .noConfessions {
         font-size: 19px;
     }
-
-    /* .shareReqCont {
-        right: 45px;
-    } */
 
     .shareKitSpace {
         height: 40px;
@@ -7756,7 +7761,7 @@ button.modalFootBtns.btn a:hover {
 
     .reportItems {
         left: -40px;
-        top: -119px;
+        top: -100px;
     }
 
     .commentsGot .reportPost {
@@ -8011,6 +8016,43 @@ button.modalFootBtns.btn a:hover {
     .admin .postCont .postUserName {
         max-width: 30%;
     }
+
+    .footerIconCont>img {
+        width: 18px;
+        height: 20px;
+    }
+
+    .linkBtns i {
+        font-size: 17px !important;
+    }
+
+    .linksCont>* {
+        max-width: 25%;
+    }
+
+    .admin .linkBtns span {
+        font-size: 12px !important;
+    }
+
+    .linkBtns span {
+        font-size: 15px !important;
+    }
+
+    .categoryEditIcon.adminCats {
+        right: 8px;
+        font-size: 17px;
+        top: 6px;
+    }
+
+    .admin .category {
+        padding-right: 30px;
+    }
+
+    /* .search_type {
+        font-size: 11px !important;
+        padding: 8px !important;
+        min-width: 73px !important;
+    } */
 }
 
 @media(max-width:575px) {
@@ -8018,6 +8060,14 @@ button.modalFootBtns.btn a:hover {
         max-width: 90%;
         margin-left: auto;
         right: auto;
+    }
+
+    .search_types_cont {
+        display: flex;
+        width: 100%;
+        flex-wrap: unset;
+        overflow-x: auto;
+        margin-bottom: 20px;
     }
 }
 

@@ -88,7 +88,6 @@ const ForumHeaderAdmin = props => {
             ...(rememberScrollPos === true && {
                 onClick: () => {
                     scrollDetails.setScrollDetails({ pageName, scrollPosition: window.scrollY })
-                    console.log({ pageName, scrollPosition: window.scrollY })
                 }
             })
         }

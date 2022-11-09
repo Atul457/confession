@@ -552,7 +552,7 @@ export default function Profile() {
 
 
                     {/* ADDS HEADER COMPONENT */}
-                    <Header links={true} hideRound={true} getConfessions={getData} />
+                    <Header links={true} hideRound={true} getConfessions={getData} propToWatch={myConfession} />
                     <div className="leftColumn leftColumnFeed mypriflelocc profileSidebar">
                         <div className="leftColumnWrapper">
                             <AppLogo />
@@ -719,6 +719,7 @@ export default function Profile() {
                                                         {((myRequests.requests && myRequests.requests.length) ? (myRequests.requests).map((requester, index) => {
                                                             return index < maxRequestsToshow && (
                                                                 <Requests
+                                                                    requester={requester}
                                                                     updateFriendCount={updateFriendCount}
                                                                     request_id={requester.request_id}
                                                                     key={`${index}${requester.image}${requester.name}${requester.no_of_confessions}`}

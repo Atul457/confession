@@ -25,6 +25,7 @@ const PofileModal = (props) => {
                         {((props.myRequests.requests && props.myRequests.requests.length) ? (props.myRequests.requests).map((requester, index) => {
                             return index < props.maxRequestsToshow && (
                                 <Requests
+                                    requester={requester}
                                     updateFriendCount={props.updateFriendCount}
                                     request_id={requester.request_id}
                                     key={`${index}${requester.image}${requester.name}${requester.no_of_confessions}`}

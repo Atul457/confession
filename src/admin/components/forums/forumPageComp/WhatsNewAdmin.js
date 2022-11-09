@@ -131,7 +131,7 @@ const WhatsNewAdmin = () => {
                     <i className="fa fa-chevron-left" aria-hidden="true"></i>
                     <i className="fa fa-chevron-left" aria-hidden="true"></i>
                 </span>
-                Go back to dashboard
+                Go back to home
             </Link>
 
             {forums.length > 0 ?

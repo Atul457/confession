@@ -7,7 +7,7 @@ import auth from '../../behindScenes/Auth/AuthCheck';
 import { fetchData } from '../../../commonApi';
 
 
-const CommReportedByModal = () => {
+const CommReportedByModal = (props) => {
 
     // Hooks
     const dispatch = useDispatch()
@@ -66,13 +66,12 @@ const CommReportedByModal = () => {
             data,
             token,
             method: "post",
-            url: `admin/getreportedcommentusers/${commRBYModalReducer.data.confession_id
+            url: `admin/${props?.endPoint ?? "getreportedcommentusers"}/${commRBYModalReducer.data.confession_id
                 }/${commRBYModalReducer.data.comment_id}`
         }
         try {
             const res = await fetchData(obj)
             if (res.data.status === true) {
-                console.log(res.data)
                 if (append === true) {
                     let newConf = [...reportsArr, ...res.data.users];
                     setReportsData({ page: pageNo })
@@ -92,10 +91,6 @@ const CommReportedByModal = () => {
     useEffect(() => {
         reportedBy();
     }, [])
-
-    useEffect(() => {
-        console.log(reportsData)
-    }, [reportsData])
 
 
     // Fetches more users

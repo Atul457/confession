@@ -1,9 +1,3 @@
-// const MONTH_NAMES = [
-//     'January', 'February', 'March', 'April', 'May', 'June',
-//     'July', 'August', 'September', 'October', 'November', 'December'
-// ];
-
-
 function getFormattedDate(date, format) {
     const day = date.getDate();
     const month = date.getMonth();

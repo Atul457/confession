@@ -268,7 +268,7 @@ export default function UserProfile() {
                         handleCommentsModal={handleCommentsModal} />}
 
                     {/* Adds Header Component */}
-                    <Header links={true} hideRound={true} />
+                    <Header links={true} hideRound={true} propToWatch={conf.confDetails} />
 
                     <div className="leftColumn leftColumnFeed mypriflelocc profileSidebar">
                         <div className="leftColumnWrapper">

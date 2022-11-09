@@ -51,10 +51,8 @@ import { toggleShareWithLoveModal } from '../../../redux/actions/shareWithLoveAc
 export default function Header(props) {
 
     const authContext = useContext(AuthContext)
-    const showShareWithLove = () => {
-        let elem = document.querySelector("html")
-        return elem?.scrollHeight < 1500
-    }
+    const messagesVisible = props?.messagesVisible
+    let forceVisible
     const history = useNavigate()
     const ShareReducer = useSelector(store => store.ShareReducer);
     const SearchReducer = useSelector(store => store.SearchReducer);
@@ -81,6 +79,11 @@ export default function Header(props) {
         if (auth()) authContext()
     }, [])
 
+    useEffect(() => {
+        forceVisible = document.querySelector("html")?.scrollHeight < 1500 ?? false
+        if (forceVisible === false) heartCompRef?.current?.classList?.remove("force_visible")
+        else if (props?.propToWatch !== "") heartCompRef?.current?.classList?.add("force_visible")
+    }, [props?.propToWatch])
 
     const [token] = useState(() => {
         if (auth()) {
@@ -313,6 +316,11 @@ export default function Header(props) {
             window.removeEventListener("scroll", scroll);
         }
     }, [])
+
+    useEffect(() => {
+        if (messagesVisible === true) heartCompRef?.current?.classList?.remove("force_visible")
+        if (messagesVisible === false) heartCompRef?.current?.classList?.add("force_visible")
+    }, [messagesVisible])
 
 
     // Open share iwth love modal
@@ -733,7 +741,7 @@ export default function Header(props) {
             <ShareWithLoveModal getConfessions={props?.getConfessions ?? (() => { })} />
             <div
                 pulsate='28-10-22,pulsatingIcon mobile'
-                className={`heartCompCont hideHeartComp cursor_pointer ${!props?.hideChat && showShareWithLove() ? "force_visible" : ""}`}
+                className={`heartCompCont hideHeartComp cursor_pointer}`}
                 onClick={openSharewithLoveModal}
                 ref={heartCompRef}>
                 <HeartComponent />
