@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
-// import AdSense from 'react-adsense';
-
-// ads with no set-up
-
+import { envConfig } from '../../../configs/envConfig';
 
 const AdSense_ = () => {
     useEffect(() => {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
     }, [])
+
+    if (!envConfig.isProdMode) return null
 
     return (
         <ins className="adsbygoogle"
@@ -39,6 +38,8 @@ const AdSenseSideAd = () => {
             window.removeEventListener("resize", handleShowAd)
         }
     }, [])
+
+    if (!envConfig.isProdMode) return null
 
     if (showAd)
         return (

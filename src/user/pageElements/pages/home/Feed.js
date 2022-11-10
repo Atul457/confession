@@ -35,11 +35,12 @@ import { pulsationHelper } from '../../../../helpers/pulsationHelper';
 import ReportCommentModal from '../../Modals/ReportCommentModal';
 import AvatarsIntroModal from '../../Modals/AvatarsIntroModal';
 import { toggleAvatarIntroModal } from '../../../../redux/actions/avatarsIntroModalAc/avatarsIntroModalAc';
-import { AppreciationModal, HeartComponent, ShareWithLoveModal } from '../../components/sharepostwithlove/Sharepostwithlove';
 import ReportPostModal from '../../Modals/ReportPostModal';
 import { getLocalStorageKey, isAvatarSelectedCurr } from "../../../../helpers/helpers"
 import RightSideAdComp from '../../../../components/sidebarAds/RightSideAdComp';
 import { toggleShareWithLoveModal } from '../../../../redux/actions/shareWithLoveAc/shareWithLoveAc';
+import { envConfig } from '../../../../configs/envConfig';
+import AdSense_ from '../../components/AdSense';
 
 
 export default function Feed(props) {
@@ -89,12 +90,7 @@ export default function Feed(props) {
     const [imgPathArr, setImgPathArr] = useState([]);
     const [isImgLoading, setIsImgLoading] = useState(false);
     const heartCompRef = useRef(null)
-    // const goDownArrowRef = useRef(null)
-    // let commentCountReqToPost = 1;
-    // let isCondStatified = auth() ? getKeyProfileLoc("comments") > commentCountReqToPost : false
     let fs = 1024; //Sets the max file size that can be sent
-    // Upload img box states
-
 
     //CUSTOM HOOK
     const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal();
@@ -208,8 +204,6 @@ export default function Feed(props) {
                     setConfessions(response.data.confessions);
                 }
 
-                // console.table(response.data.confessions);
-
             } else {
                 setConfessions(false);
                 setConfessionResults(false);
@@ -267,14 +261,12 @@ export default function Feed(props) {
                 responseCont.forEach(singleResCont => {
                     singleResCont.innerText = "Supported file types are gif, jpg, jpeg, png";
                 })
-                // responseCont.innerText = "Supported file types are gif, jpg, jpeg, png";
                 return false;
             }
 
             setIsImgLoading(true);
             setSubmittable(false);
             let fileSize = parseInt(e.target.files[0].size / 2000);
-            // responseCont.innerHTML = '';
             responseCont.forEach(singleResCont => {
                 singleResCont.innerText = "";
             })
@@ -283,7 +275,6 @@ export default function Feed(props) {
                 responseCont.forEach(singleResCont => {
                     singleResCont.innerText = "[Max FileSize: 2000KB], No file selected";
                 })
-                // responseCont.innerHTML = '[Max FileSize: 2000KB], No file selected';
                 setIsImgLoading(false);
                 setSelectedFile('');
                 setErrorOrSuccess(false);
@@ -375,10 +366,6 @@ export default function Feed(props) {
             const executePostConfession = async () => {
 
                 if (description.value.trim() !== '') {
-                    // responseCont.forEach(singleResCont => {
-                    //     feedDescErrorCont.innerText = "";
-                    // })
-                    // feedDescErrorCont.innerText = "";
                     responseCont.forEach(singleResCont => {
                         singleResCont.innerText = "";
                     })
@@ -394,7 +381,6 @@ export default function Feed(props) {
                         responseCont.forEach(singleResCont => {
                             singleResCont.innerText = "Recaptcha is required";
                         })
-                        // feedDescErrorCont.innerText = "Recaptcha is required";
                         return false;
                     }
 
@@ -405,7 +391,6 @@ export default function Feed(props) {
                         responseCont.forEach(singleResCont => {
                             singleResCont.innerText = "Please select a category";
                         })
-                        // feedDescErrorCont.innerText = "Please select a category";
                         return false;
                     }
 
@@ -451,7 +436,6 @@ export default function Feed(props) {
                             responseCont.forEach(singleResCont => {
                                 singleResCont.innerText = "";
                             })
-                            // feedDescErrorCont.innerText = "";
                             setErrorOrSuccess(true);
                             description.value = '';
                             setSelectedCat("");
@@ -498,7 +482,6 @@ export default function Feed(props) {
                     responseCont.forEach(singleResCont => {
                         singleResCont.innerText = "Comment field is required";
                     })
-                    // feedDescErrorCont.innerText = "Comment field is required";
                     setErrorOrSuccess(false);
                     updatePostBtn(false);
                     setIsLoading(false);
@@ -515,7 +498,6 @@ export default function Feed(props) {
 
 
     //PREVENTS DOUBLE POST
-    // const postConfession = _.debounce(_postConfession, 200);
 
     const fetchMoreData = () => {
         let page = pageNo;
@@ -529,7 +511,6 @@ export default function Feed(props) {
         destroySlots();
         getConfessions(false, activeCategory, 1);
         setAC2(activeCategory)
-        // console.log({ activeCategory })
         setPageNo(1);
     }, [activeCategory])
 
@@ -540,22 +521,6 @@ export default function Feed(props) {
         }
     }, [pageNo])
 
-
-    // HANDLES SCROLL TO TOP BUTTON
-    // useEffect(() => {
-    //     const scroll = () => {
-    //         let scroll = document.querySelector("html").scrollTop;
-    //         let secondPostElem = document.querySelector(".postCont:nth-child(1)")
-    //         secondPostElem = secondPostElem?.getBoundingClientRect()?.top + 500
-    //         if (secondPostElem < 0) heartCompRef?.current.classList.remove("hideHeartComp")
-    //         else heartCompRef?.current.classList.add("hideHeartComp")
-    //     }
-
-    //     document.addEventListener("scroll", scroll);
-    //     return () => {
-    //         document.removeEventListener("scroll", scroll);
-    //     }
-    // }, [])
 
     const updateConfessionData = (_viewcount, sharedBy, index) => {
         let updatedConfessionArray;
@@ -607,8 +572,7 @@ export default function Feed(props) {
         const firstPost = document.querySelector('.postCont[index="0"]')
         if (firstPost) {
             firstPost.scrollIntoView({
-                block: "center",
-                // behavior: "smooth"
+                block: "center"
             })
         }
     }
@@ -681,11 +645,6 @@ export default function Feed(props) {
                             </aside>
                             {/* CATEGORYCONT */}
                         </div>
-
-                        {/* <div className="leftSidebarAdd">
-                            <LeftSideAdComp />
-                        </div> */}
-
 
                         {/* SOCIAL LINKS PANEL */}
                         <div className="leftSidebarFooter">
@@ -765,13 +724,6 @@ export default function Feed(props) {
 
                                                     <div className="selectNpostBtnCont">
                                                         <div className="shareIconAndUpImgCont">
-                                                            {/* <div
-                                                                pulsate='28-10-22,pulsatingIcon mobile'
-                                                                className="heartCompCont hideHeartComp cursor_pointer"
-                                                                onClick={openSharewithLoveModal}
-                                                                ref={heartCompRef}>
-                                                                <HeartComponent />
-                                                            </div> */}
 
                                                             <div className="wrapperBtnsImages">
                                                                 {/* Upload images cont */}
@@ -821,8 +773,6 @@ export default function Feed(props) {
                                                         {/* error view in mobile */}
                                                         <div className="w-100 errorFieldsCPost p-0 text-center d-block d-md-none">
                                                             <div className={`responseCont mt-0 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="responseCont"></div>
-                                                            {/* <span className="d-block errorCont text-danger" id="descErrorCont"></span>
-                                                            <span className="errorCont text-danger" id="catErrorCont"></span> */}
                                                         </div>
                                                         {/* error view in mobile */}
 
@@ -873,8 +823,6 @@ export default function Feed(props) {
                                                 {/* Error view in Web */}
                                                 <div className="d-none d-md-block w-100 errorFieldsCPost p-0">
                                                     <div className={`responseCont mt-0 ${errorOrSuccess ? 'text-success' : 'text-danger'}`} id="responseCont"></div>
-                                                    {/* <span className="d-block errorCont text-danger" id="descErrorCont"></span>
-                                                    <span className="errorCont text-danger" id="catErrorCont"></span> */}
                                                 </div>
                                                 {/* Error view in Web */}
                                             </div>
@@ -954,7 +902,8 @@ export default function Feed(props) {
 
                                                                 {((index + 1) % afterHowManyShowAdd === 0) &&
                                                                     <div className="mb-4">
-                                                                        <AdMob mainContId={`adIndex${index}`} setAddSlots={setAdSlots} slots={adSlots} />
+                                                                        {envConfig?.isProdMode ? <AdSense_ /> :
+                                                                            <AdMob mainContId={`adIndex${index}`} setAddSlots={setAdSlots} slots={adSlots} />}
                                                                     </div>
                                                                 }
                                                             </div>)
@@ -1011,13 +960,6 @@ export default function Feed(props) {
 
 
                 <Footer refreshFeed={refreshFeed} />
-                {/* <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i> */}
-                {/* <i
-                    ref={goDownArrowRef}
-                    className={`fa fa-refresh goUpArrow refreshIcon`}
-                    aria-hidden="true"
-                    type="button"
-                    onClick={refreshFeed}></i> */}
 
                 {/* REFRESH BUTTON */}
                 {commentsModal.visibility === false && changes && <RefreshButton />}
@@ -1047,10 +989,6 @@ export default function Feed(props) {
                 </>
             }
 
-            {/* Appriciation Modal */}
-            {/* <AppreciationModal /> */}
-            {/* Appriciation Modal */}
-
             {/* ReportCommentModal */}
             {reportModalReducer.visible && <ReportCommentModal />}
             {/* ReportCommentModal */}
@@ -1066,8 +1004,6 @@ export default function Feed(props) {
             {/* Avatar intro modal */}
             {<AvatarsIntroModal />}
             {/* Avatar intro modal */}
-
-            {/* <ShareWithLoveModal getConfessions={getConfessions} /> */}
         </div >
     );
 }

@@ -28,18 +28,18 @@ import ReactPixel from 'react-facebook-pixel';
 import forumTypes from "./components/forums/forumTypes.json"
 import { getCategoriesService, getTagsService } from './components/forums/services/forumServices';
 import { apiStatus } from './helpers/status';
-import { isAdminLoggedIn } from './helpers/helpers';
-import { getKeyProfileLoc } from './helpers/profileHelper';
+import { envConfig } from './configs/envConfig';
 
 //GOOGLE TAG MANAGER
-const tagManagerArgs = { gtmId: 'GTM-WP65TWC' }  //DEV
-// const tagManagerArgs = { gtmId: 'GTM-KKNFBVT' }  //LIVE
+const tagManagerArgs = { gtmId: envConfig.isProdMode ? envConfig.tagManagerLiveKey : envConfig.tagManagerDevKey }
 TagManager.initialize(tagManagerArgs);
 
 //META-PIXEL	
-// const options = { autoConfig: true, debug: false, };
-// ReactPixel.init('1638738963149766', null, options);
-// ReactPixel.fbq('track', 'PageView');
+if (envConfig.isProdMode) {
+  const options = { autoConfig: true, debug: false, };
+  ReactPixel.init(envConfig.pixelId, null, options);
+  ReactPixel.fbq('track', 'PageView');
+}
 
 export const AuthContext = createContext(auth())
 
@@ -53,7 +53,6 @@ function App() {
 
   const [categories, setCategories] = useState(false);
   const tagsReducer = useSelector(store => store?.forumsReducer?.tags)
-  // const [tags, setTags] = useState(false);
   const dispatch = useDispatch()
   const [toggle, setToggle] = useState(false)
   const [categoriesResults, setCategoriesResults] = useState(true);
@@ -94,7 +93,6 @@ function App() {
           if (res.data.status === true) {
             setFCMToken(token)
             setTokenSentFlag(true)
-            // console.log("token saved")
           } else {
             setUserDetails(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '')
             setTokenSentFlag(false)
@@ -180,7 +178,6 @@ function App() {
     }
 
     loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=6LcFvPEfAAAAAL7pDU8PGSIvTJfysBDrXlBRMWgt`, function () {
-      // console.log("V3 loaded!");
     })
     //END OF LOAD RECAPTCHA V3
     let { handleForumsTypesAcFn } = forumHandlers

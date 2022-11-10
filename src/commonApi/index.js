@@ -1,13 +1,12 @@
 import axios from "axios";
+import { envConfig } from "../configs/envConfig";
 
-
-let live = "https://cloudart.com.au:3235/api/";
-// let live = "https://apis.thetalkplace.com:3235/api/";
+const baseURL = envConfig.isProdMode ? envConfig.liveBaseUrl : envConfig.devBaseUrl
 
 export const fetchData = async (props) => {
 
     let config = {
-        baseURL: `${live}${props.url}`,
+        baseURL: `${baseURL}${props.url}`,
         method: props.method,
         headers: {
             'Content-Type': 'application/json',

@@ -7,6 +7,7 @@ import SendRequestModal from '../../modals/SendJoinRequestModal'
 import ReportForumModal from '../../../user/pageElements/Modals/ReportForumModal'
 import NfswAlertModal from '../../modals/NfswAlertModal'
 import { WhatsNewAds } from '../../../user/pageElements/components/AdMob'
+import AdSense_ from '../../../user/pageElements/components/AdSense'
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,6 +18,7 @@ import { apiStatus } from '../../../helpers/status'
 import { fetchData } from '../../../commonApi'
 import { resHandler, scrollDetails, scrollToTop } from '../../../helpers/helpers'
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
+import { envConfig } from '../../../configs/envConfig'
 
 const WhatsNew = () => {
 
@@ -99,12 +101,11 @@ const WhatsNew = () => {
                         pageName="forums"
                         currForum={currForum} />
 
-                    {
-                        ((cfIndex + 1) % afterHowManyShowAdd === 0) &&
-                        <div className="mb-4">
-                            <WhatsNewAds mainContId={`whatsNewPage${cfIndex}`} />
-                        </div>
-                    }
+                    {((cfIndex + 1) % afterHowManyShowAdd === 0) ? <div className="mb-4">
+                        {envConfig?.isProdMode ? <AdSense_ /> :
+                            <WhatsNewAds mainContId={`whatsNewPage${cfIndex}`} />}
+                    </div> : null}
+
                 </div>)
             })
         )
@@ -153,11 +154,6 @@ const WhatsNew = () => {
                     No forums found in this category
                 </h5>}
 
-
-
-            {/* <div className="rightsideBarAdd">
-                <RightSideAdComp />
-            </div> */}
 
             {/* Modals */}
 

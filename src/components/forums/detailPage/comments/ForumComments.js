@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // Component imports
 import ForumComment from './ForumComment'
+import AdSense_ from '../../../../user/pageElements/components/AdSense'
 
 // Helpers
 import auth from '../../../../user/behindScenes/Auth/AuthCheck'
@@ -23,8 +24,7 @@ import {
   showSubCommentsFn
 } from './ForumCommProvider'
 import { WhatsNewAds } from '../../../../user/pageElements/components/AdMob'
-
-
+import { envConfig } from '../../../../configs/envConfig'
 
 const ForumComments = props => {
 
@@ -46,7 +46,6 @@ const ForumComments = props => {
     } = commentsRed,
     loggedInUserId = getKeyProfileLoc("user_id"),
     SLOMT = 3  // Show subcomments if count is less than
-  // console.log(postComment)
   const forumCommentProps = {
     usersToTag,
     toSearch: usersToTag?.strToSearch ?? "",
@@ -151,9 +150,14 @@ const ForumComments = props => {
             <div className="endListMessage w-100 mt-2 pb-0 text-center">
               End of Comments
             </div>
-            <div className='w-100 mt-2 mb-3'>
-              <WhatsNewAds mainContId={"dr99"}/>
-          </div>
+
+            {/* Ad, is shown after last comment */}
+            <div className="w-100 mt-2 mb-3">
+              {envConfig?.isProdMode ? <AdSense_ /> :
+                <WhatsNewAds mainContId={"dr99"} />}
+            </div>
+            {/* Ad, is shown after last comment */}
+
           </>
         }
         dataLength={comments.length}

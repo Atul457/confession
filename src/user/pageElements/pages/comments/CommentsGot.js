@@ -319,11 +319,7 @@ export default function CommentsGot(props) {
                     <Footer />
                 </div>
                 :
-                <div className="text-center">
-                    <div className="spinner-border pColor spinnerSizeFeed" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>}
+                <SiteLoader />}
 
             {/* ReportPostsModal */}
             {

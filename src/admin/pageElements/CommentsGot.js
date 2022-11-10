@@ -407,7 +407,6 @@ export default function CommentsGot(props) {
                                             categories={props.categories}
                                             handleCommentsModal={() => { }}
                                         />
-
                                     </section>
                                 )
                             )}

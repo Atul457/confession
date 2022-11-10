@@ -5,6 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import Forum from '../forum/Forum'
 import SendRequestModal from '../../modals/SendJoinRequestModal'
 import ReportForumModal from '../../../user/pageElements/Modals/ReportForumModal'
+import AdSense_ from '../../../user/pageElements/components/AdSense'
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,6 +18,7 @@ import { resHandler, scrollDetails, scrollToTop } from '../../../helpers/helpers
 import { getKeyProfileLoc } from '../../../helpers/profileHelper'
 import DeleteForumModal from '../../modals/DeleteForumModal'
 import { WhatsNewAds } from '../../../user/pageElements/components/AdMob'
+import { envConfig } from '../../../configs/envConfig'
 
 
 const MyForums = () => {
@@ -106,12 +108,11 @@ const MyForums = () => {
             pageName="myforums"
             currForum={currForum} />
 
-          {
-            ((cfIndex + 1) % afterHowManyShowAdd === 0) &&
-            <div className="mb-4">
-              <WhatsNewAds mainContId={`whatsNewPage${cfIndex}`} />
-            </div>
-          }
+          {((cfIndex + 1) % afterHowManyShowAdd === 0) ? <div className="mb-4">
+            {envConfig?.isProdMode ? <AdSense_ /> :
+              <WhatsNewAds mainContId={`whatsNewPage${cfIndex}`} />}
+          </div> : null}
+
         </div>)
       })
     )
