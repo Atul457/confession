@@ -6,7 +6,7 @@ import styles from "./SidebarAdComp.module.css"
 const RightSideAdComp = () => {
     return (
         <>
-            <div className={styles.outerAdCont}>
+            <div className={`${styles.outerAdCont} ${!envConfig?.isProdMode ? styles.bgAdGray : ""}`}>
                 <div className={styles.rightSideAdCont}>
                     {envConfig?.isProdMode ? <AdSenseSideAd /> : null}
                 </div>

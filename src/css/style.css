@@ -2345,6 +2345,7 @@ span.offlineColor {
     flex-direction: column;
     display: flex;
     justify-content: center;
+    text-decoration: none !important;
     align-items: center;
 }
 

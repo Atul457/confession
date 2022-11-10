@@ -239,7 +239,7 @@ const ForumHeader = props => {
                                                     <div className='shareReqDivider'></div>
                                                 </> : null)}
 
-                                            <div onClick={openReportModal} className={`shareReqRows ${!auth() && !showShareBlock ? "pt-3" : ""} user w-100`} type="button">
+                                            <div onClick={openReportModal} className={`shareReqRows ${(!showShareBlock && hideJoinDiv) || (!auth() && !showShareBlock) ? "pt-3" : ""} user w-100`} type="button">
                                                 <img src={reportForumIcon} className="report_forum_icon" />
                                                 <span>Report</span>
                                             </div>
