@@ -104,14 +104,20 @@ export default function UserProfile() {
 
     // HANDLES SCROLL TO TOP BUTTON
     useEffect(() => {
-        document.addEventListener("scroll", () => {
+        const handleArrow = () => {
             let scroll = document.querySelector("html").scrollTop;
             if (scroll > 1000) {
                 setGoDownArrow(true);
             } else {
                 setGoDownArrow(false);
             }
-        })
+        }
+
+        document.addEventListener("scroll", handleArrow)
+
+        return () => {
+            document.removeEventListener("scroll", handleArrow)
+        }
     }, [])
 
 
@@ -125,7 +131,8 @@ export default function UserProfile() {
 
         let pageNo = page;
         let data = {
-            profile_id: conf.confData.profile_id,
+            // profile_id: conf.confData.profile_id,
+            profile_id: profile?.profileDetails?.profile_id,
             page: pageNo
         }
 
@@ -176,14 +183,16 @@ export default function UserProfile() {
 
     //GETS CONFESSIONS
     useEffect(() => {
-        getConfessionsFunc();
-    }, [])
+        if (profile.profileDetails?.profile_id)
+            getConfessionsFunc();
+    }, [profile.profileDetails?.profile_id])
 
 
     const sendFriendRequest = async (isCancelling = 0) => {
+        console.log(profile.profileDetails)
 
         let data = {
-            friend_id: profile.profileData.profile_id,
+            friend_id: profile.profileDetails?.profile_id,
             is_cancelled: isCancelling
         }
 
@@ -256,7 +265,7 @@ export default function UserProfile() {
 
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid toUp">
 
             {!profile.isProfileLoading ?
                 <div className="row">

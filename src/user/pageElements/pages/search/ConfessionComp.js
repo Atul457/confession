@@ -17,6 +17,7 @@ import DateConverter from '../../../../helpers/DateConverter';
 const ConfessionComp = (props) => {
 
   const authenticated = useState(auth());
+  const { currPost } = props
   const noOfWords = useState(200);    //IN POST AFTER THESE MUCH CHARACTERS SHOWS VIEWMORE BUTTON
   const [lightBox, setLightBox] = useState(false);
   const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
@@ -127,7 +128,7 @@ const ConfessionComp = (props) => {
   }
 
 
-  const visitePrevilage = (creatorId, isAnonymous) => {
+  const visitePrevilage = (isAnonymous) => {
     let isMyProfile = false;
     let isUserProfile = false;
     let isMyPost = false;
@@ -135,16 +136,16 @@ const ConfessionComp = (props) => {
     let html = "";
 
     if (auth()) {
-      isMyPost = userDetails.profile.user_id === creatorId
+      isMyPost = userDetails.profile.user_id === currPost.user_id
     }
 
     isMyProfile = isMyPost && isAnonymous === 0;
-    isUserProfile = creatorId && isAnonymous === 0 && !isMyPost;
+    isUserProfile = currPost?.userslug && isAnonymous === 0 && !isMyPost;
 
     if (isMyProfile)
       linkToVisit = "/profile"
     if (isUserProfile)
-      linkToVisit = `/userProfile/${creatorId}`
+      linkToVisit = `/userProfile/${currPost?.userslug}`
 
     html = <Link className={`textDecNone postUserName`}
       to={linkToVisit}>

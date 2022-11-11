@@ -1,9 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-// Helpers
-import DateConverter from '../../../../helpers/DateConverter';
-
 // Image imports
 import actionIcon from '../../../../images/actionIcon.svg';
 
@@ -12,9 +9,13 @@ import { forumHandlers } from '../../../../redux/actions/forumsAc/forumsAc';
 import { useDispatch } from 'react-redux';
 import { deleteForumService } from '../services/adminforumServices';
 
-import { requestedStatus } from '../detailPage/comments/ForumCommProvider';
-import auth from '../../../behindScenes/Auth/AuthCheck';
+// Custom imports
 import ShareKit from '../../../../user/shareKit/ShareKit';
+
+// Helpers
+import DateConverter from '../../../../helpers/DateConverter';
+// import { requestedStatus } from '../detailPage/comments/ForumCommProvider';
+import auth from '../../../behindScenes/Auth/AuthCheck';
 import { scrollDetails } from '../../../../helpers/helpers';
 
 const ForumHeaderAdmin = props => {
@@ -34,22 +35,13 @@ const ForumHeaderAdmin = props => {
         forum_index,
         actionBox,
         forum_id,
-        type,
-        is_requested,
-        is_calledfrom_detailPage = false,
-        // isReported,
-        // is_for_post = true,
+        is_calledfrom_detailPage = false
     } = props
 
     const isActionBoxVisible = actionBox?.forum_id === forum_id
     const isShareBoxVisible = shareBox?.forum_id === forum_id
     const dispatch = useDispatch()
-    // const hideJoinDiv = true
-    // const requested = is_requested === requestedStatus.is_requested
-    const joined = currForum?.is_requested === requestedStatus.approved
-    // const isPrivateForum = currForum?.type === forum_types.private
     const postData = { is_forum: 1, forum_id, ...currForum }
-    // const showShareBlock = type !== forum_types.closed && (isPrivateForum ? joined : true)
 
     // Functions
     const toggleForumAcboxFn = () => {
@@ -160,7 +152,6 @@ const ForumHeaderAdmin = props => {
                 : null
 
             }
-
         </div >
     )
 }

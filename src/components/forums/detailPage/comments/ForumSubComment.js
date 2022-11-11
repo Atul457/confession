@@ -5,6 +5,7 @@ import parse from 'html-react-parser';
 // Helpers
 import DateConverter from '../../../../helpers/DateConverter'
 import { deleteForumCommService, doCommentService, getUsersToTagService, likeDislikeService } from '../../services/forumServices'
+import { profileLinkToVisit } from '../../../../helpers/helpers';
 
 // Image imports
 import userIcon from "../../../../images/userAcc.svg"
@@ -22,7 +23,6 @@ import CommentBox from '../CommentBox'
 import { apiStatus } from '../../../../helpers/status'
 import { reportedFormStatus } from './ForumCommProvider'
 import Badge from '../../../../common/components/badges/Badge';
-
 
 
 const ForumSubComment = (props) => {
@@ -231,7 +231,7 @@ const ForumSubComment = (props) => {
 
                 {user_id !== false ?
                     <Link className={`forum_com_p_link`}
-                        to={(auth ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `/userProfile/${user_id}`)}>
+                        to={profileLinkToVisit(currSubComment)}>
                         <span className="userName">
                             {comment_by}
                         </span>

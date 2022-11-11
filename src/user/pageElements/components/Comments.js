@@ -19,6 +19,7 @@ import { toggleReportComModal } from "../../../redux/actions/reportcommentModal"
 import { closeCModal } from "../../../redux/actions/commentsModal"
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
 import Badge from '../../../common/components/badges/Badge';
+import { profileLinkToVisit } from '../../../helpers/helpers';
 
 
 export default function Comments(props) {
@@ -116,13 +117,8 @@ export default function Comments(props) {
     const updateSingleCommentData = (data, index) => {
         let updatedNode, originalArray;
         originalArray = [...subComments?.data];
-        console.log({ originalArray, subComments })
         updatedNode = { ...updatedNode, ...subComments?.data[index], ...data };
         originalArray.splice(index, 1, updatedNode);
-        console.log({
-            ...subComments,
-            data: [...originalArray]
-        })
         setSubComments({
             ...subComments,
             data: [...originalArray]
@@ -222,8 +218,6 @@ export default function Comments(props) {
         }
     }
 
-
-
     const sendSubComment = _.debounce(handleSubComment, 500);
 
     function getShowSubComments() {
@@ -304,8 +298,6 @@ export default function Comments(props) {
             console.log(err);
         }
     }
-
-
 
     // SUBMITS THE DATA ON ENTER AND CREATES A NEW PARA ON SHIFT+ENTER KEY
     const checkKeyPressed = (event, comment) => {
@@ -413,9 +405,7 @@ export default function Comments(props) {
                         {props.curid !== false ?
 
                             (<Link className={`textDecNon comment cutDown`}
-                                to={props.curid ?
-                                    (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
-                                    : ''}>
+                                to={profileLinkToVisit(comment)}>
                                 <span className="userName">
                                     {props.userName}
                                 </span>

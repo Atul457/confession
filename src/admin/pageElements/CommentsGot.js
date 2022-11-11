@@ -132,14 +132,21 @@ export default function CommentsGot(props) {
 
     // HANDLES SCROLL TO TOP BUTTON
     useEffect(() => {
-        document.addEventListener("scroll", () => {
+
+        const listner = () => {
             let scroll = document.querySelector("html").scrollTop;
             if (scroll > 1000) {
                 setGoDownArrow(true);
             } else {
                 setGoDownArrow(false);
             }
-        })
+        }
+
+        document.addEventListener("scroll", listner)
+
+        return () => {
+            document.removeEventListener("scroll", listner)
+        }
     }, [])
 
 
@@ -417,7 +424,7 @@ export default function CommentsGot(props) {
                         <Footer />
                     </div>
                     :
-                    <div className="text-center">
+                    <div className="text-center w-100">
                         <div className="spinner-border text-warning pColor" role="status">
                             <span className="sr-only">Loading...</span>
                         </div>

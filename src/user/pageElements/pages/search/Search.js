@@ -48,6 +48,7 @@ const Search = () => {
                 if (currPost?.pType === confessionType)
                     return <ConfessionComp
                         index={index}
+                        currPost={currPost}
                         cover_image={currPost.cover_image ?? ''}
                         is_viewed={currPost.is_viewed}
                         isRegistered={currPost.isRegistered}

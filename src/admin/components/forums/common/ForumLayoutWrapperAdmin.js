@@ -2,9 +2,8 @@ import React from 'react'
 
 // Custom components
 import ForumCategoriesAdmin from "../forumCategories/ForumCategoriesAdmin"
-
-import AppLogo from '../../../../user/pageElements/components/AppLogo';
 import Header from '../../../pageElements/common/Header';
+import AppLogo from '../../../../user/pageElements/components/AppLogo';
 import ForumPageWrapperAdmin from '../ForumPageWrapperAdmin';
 
 

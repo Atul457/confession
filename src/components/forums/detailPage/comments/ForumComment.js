@@ -24,6 +24,7 @@ import { apiStatus } from '../../../../helpers/status'
 import { deleteForumCommService, doCommentService, getUsersToTagService, likeDislikeService } from '../../services/forumServices'
 import CommentBox from '../CommentBox'
 import { reportedFormStatus } from './ForumCommProvider'
+import { profileLinkToVisit } from '../../../../helpers/helpers';
 
 // Redux
 import { forumHandlers, postComment, reportForumCommAcFn, usersToTagAcFn } from '../../../../redux/actions/forumsAc/forumsAc'
@@ -323,7 +324,7 @@ const ForumComment = (props) => {
 
           {user_id !== false ?
             <Link className={`forum_com_p_link`}
-              to={((auth() && user_id !== "") ? (isMyComment ? `/profile` : `/userProfile/${user_id}`) : `#`)}>
+              to={profileLinkToVisit(currComment)}>
               <span className="userName">
                 {comment_by}
               </span>

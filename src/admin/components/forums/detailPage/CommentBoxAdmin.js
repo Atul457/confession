@@ -1,8 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 
-// Third party
-// import TextareaAutosize from 'react-textarea-autosize';
-
 // Image imports
 import forwardIcon from '../../../../images/forwardIcon.svg'
 

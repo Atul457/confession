@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { apiStatus } from '../../helpers/status'
 import { createForumModalFnAc, forumHandlers } from '../../redux/actions/forumsAc/forumsAc'
@@ -9,7 +9,6 @@ import CreateFormModal from "../modals/CreateFormModal"
 import auth from '../../user/behindScenes/Auth/AuthCheck'
 import { useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom"
-
 
 
 const RightSideComp = () => {
@@ -78,12 +77,14 @@ const Tabs = ({ activeTab, setActiveTab }) => {
             <div className="links_cont">
                 {tabs.map((currTab, ctIndex) => {
                     if (!auth() && ctIndex === 1) {
-                        return <Link Link to="/login" className='forums_tab' key={`forumsTab${ctIndex}`}>
+                        return (
                             <span
+                                key={`forumsTab${ctIndex}`}
+                                onClick={() => navigate("/login")}
                                 className={`forums_tab ${activeTab === ctIndex ? "active" : ''}`}>
                                 {currTab}
                             </span>
-                        </Link>
+                        )
                     }
                     return (
                         <span
@@ -105,10 +106,12 @@ const Tabs = ({ activeTab, setActiveTab }) => {
                         <i className="fa fa-plus text-white pr-1 d-md-inline-block d-none" aria-hidden="true"></i>
                         Add New <span className='d-md-inline-block d-none pl-1'>Forums</span>
                     </div>)
-                    : (<Link to="/login" className="doPostBtn create_forum_btn" >
-                        <i className="fa fa-plus text-white pr-1 d-md-inline-block d-none" aria-hidden="true"></i>
-                        Add New <span className='d-md-inline-block d-none pl-1'>Forums</span>
-                    </Link>)
+                    : (
+                        <Link to="/login" className="doPostBtn create_forum_btn" >
+                            <i className="fa fa-plus text-white pr-1 d-md-inline-block d-none" aria-hidden="true"></i>
+                            Add New <span className='d-md-inline-block d-none pl-1'>Forums</span>
+                        </Link>
+                    )
             }
 
         </div >

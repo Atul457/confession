@@ -252,21 +252,31 @@ export default function Profile() {
 
     // HANDLES SCROLL TO TOP BUTTON
     useEffect(() => {
-        let ref = document.getElementById("postsWrapper");
-        ref.addEventListener("scroll", () => {
-            let scroll = document.querySelector("#postsWrapper").scrollTop;
+        const isMobile = window.innerWidth < 768
+        const ref = isMobile ? document.getElementById("postsWrapper") : document;
+
+        const handleArrow = () => {
+            let scroll = isMobile ? document.querySelector("#postsWrapper").scrollTop : window?.scrollY;
             if (scroll > 1000) {
                 setGoDownArrow(true);
             } else {
                 setGoDownArrow(false);
             }
-        })
-    }, [])
+        }
+
+        ref.addEventListener("scroll", handleArrow)
+
+        return () => {
+            ref.removeEventListener("scroll", handleArrow)
+        }
+        
+    }, [window.innerWidth])
 
 
     //SCROLLS TO BOTTOM
     const goUp = () => {
-        let ref = document.getElementById("postsWrapper");
+        const isMobile = window?.innerWidth < 768
+        let ref = document.getElementById("rightColumnFeed");
         ref.scrollTo({ top: "0px", behavior: "smooth" });
     }
 
@@ -531,7 +541,7 @@ export default function Profile() {
 
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid toUp">
             {auth() ?
                 <div className="row">
 
@@ -815,10 +825,7 @@ export default function Profile() {
                         </div>
                     </div>
                     <div className="preventHeader profile">preventHead</div>
-                    <div className="rightColumn rightColumnFeed rightColumnFeedppage profile">
-
-
-
+                    <div className="rightColumn rightColumnFeed rightColumnFeedppage profile" id="rightColumnFeed">
 
                         <div className="roundCorners">__</div>
                         <div className="postsHeadingProfile profile">
@@ -938,9 +945,9 @@ export default function Profile() {
                         fetchMoreFriends={fetchMoreFriends}
                         visible={profileModal.visible} />
 
-                    {/* <i className={`fa d-none fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-md-block" : "d-none"}`} aria-hidden="true" type="button"
-                     onClick={goUp}
-                     ></i> */}
+                    <i className={`fa fa-arrow-circle-o-up d-none goUpArrow ${goDownArrow === true ? "d-block" : ""}`} aria-hidden="true" type="button"
+                        onClick={goUp}
+                    ></i>
 
                     <Footer />
                 </div>

@@ -24,7 +24,7 @@ import useShareRequestPopUp from '../../utilities/useShareRequestPopUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
 import DateConverter from '../../../helpers/DateConverter';
-import { openCModal as openCommentsModalFn } from '../../../redux/actions/commentsModal';
+// import { openCModal as openCommentsModalFn } from '../../../redux/actions/commentsModal';
 import { openCFRModal } from '../../../redux/actions/friendReqModal';
 import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
@@ -35,6 +35,7 @@ export default function Post(props) {
 
     let history = useNavigate();
     const post = props?.post ?? {}
+    // console.log(post)
     let maxChar = 2000;
     const dispatch = useDispatch();
     const ShareReducer = useSelector(store => store.ShareReducer);
@@ -320,6 +321,7 @@ export default function Post(props) {
         let isMyPost = false;
         let linkToVisit = "#";
         let html = "";
+        const slug = post?.userslug
 
         if (auth()) {
             isMyPost = userDetails.profile.user_id === creatorId
@@ -331,7 +333,7 @@ export default function Post(props) {
         if (isMyProfile)
             linkToVisit = "/profile"
         if (isUserProfile)
-            linkToVisit = `/userProfile/${creatorId}`
+            linkToVisit = `/userProfile/${slug}`
 
         html = <Link className={`textDecNone postUserName`}
             to={linkToVisit}>

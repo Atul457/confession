@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // Custom components
-// import CommentBox from './CommentBoxAdmin';
 import ForumFooterAdmin from '../forum/ForumFooterAdmin';
 import ForumHeaderAdmin from '../forum/ForumHeaderAdmin';
 
 // Redux
 import { forumHandlers, postComment, usersToTagAcFn } from '../../../../redux/actions/forumsAc/forumsAc';
-import { toggleNfswModal } from '../../../../redux/actions/modals/ModalsAc';
 
 // Helpers
 import { doCommentService, getUsersToTagService } from '../services/adminforumServices';
@@ -28,7 +26,6 @@ const SingleForumAdmin = props => {
         postCommentReducer,
         comments: { count: commentsCount, page = 1 }
     } = props
-    const location = useLocation()
 
     // cameFromSearch
     const navigate = useNavigate()
@@ -73,19 +70,9 @@ const SingleForumAdmin = props => {
         dispatch
     }
 
-    // useEffect(() => {
-    //     dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
-    //     if (is_nsw) {
-    //         dispatch(toggleNfswModal({
-    //             forum_index,
-    //             forum_id: currForum?.forum_id,
-    //             isVisible: true, forum_link: `/forums/${currForum?.slug}`
-    //         }))
-    //     }
-    // }, [])
-
     // Functions
 
+    // Do comment Function
     const doComment = commentBoxRef => {
         doCommentService({
             commentBoxRef,
@@ -99,6 +86,7 @@ const SingleForumAdmin = props => {
         })
     }
 
+    // Fetches users to tag
     const getUsersToTag = async string => {
         let strToSearch = null;
         const regex = /(^@|(\s@))((\w+)?)$/;
@@ -123,34 +111,32 @@ const SingleForumAdmin = props => {
         }
     }
 
-    const commentBoxProps = {
-        isCalledByParent: true,
-        postCommentReducer,
-        usedById: forum_id,
-        dispatch,
-        id: forum_id,
-        doComment,
-        usersToTag,
-        toSearch: usersToTag?.strToSearch ?? "",
-        getUsersToTag
-    }
+    // const commentBoxProps = {
+    //     isCalledByParent: true,
+    //     postCommentReducer,
+    //     usedById: forum_id,
+    //     dispatch,
+    //     id: forum_id,
+    //     doComment,
+    //     usersToTag,
+    //     toSearch: usersToTag?.strToSearch ?? "",
+    //     getUsersToTag
+    // }
 
-    const resetTagList = () => {
-        dispatch(usersToTagAcFn({
-            data: [],
-            status: apiStatus.IDLE,
-            toSearch: ""
-        }))
-        dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
-    }
+    // const resetTagList = () => {
+    //     dispatch(usersToTagAcFn({
+    //         data: [],
+    //         status: apiStatus.IDLE,
+    //         toSearch: ""
+    //     }))
+    //     dispatch(forumHandlers.handleForums({ shareBox: {}, actionBox: {} }))
+    // }
 
     return (
         <>
             <div className='w-100 mb-3'>
                 <Link
                     to="/admin/forums"
-                    // onClick={resetTagList}
-                    // state={{ cameFromDetailPage: true, scrollDetails: location?.state?.scrollDetails }}
                     className='backtoHome'>
                     <span className='mr-2'>
                         <i className="fa fa-chevron-left" aria-hidden="true"></i>
@@ -169,8 +155,6 @@ const SingleForumAdmin = props => {
                 </div>
                 {/* {isAllowedToComment && <CommentBox {...commentBoxProps} />} */}
                 <ForumFooterAdmin {...forumFooterProps} />
-
-                {/* {nfsw_modal?.isVisible && <NfswAlertModal nfsw_modal={nfsw_modal} isForumDetailPage={true} />} */}
             </div>
         </>
     )

@@ -264,7 +264,7 @@ export default function CommentsGot(props) {
                         <div className="rightMainFormCont rightMainFormContFeed p-0">
                             <div className="preventHeader">preventHead</div>
                             <div className="py-md-4 preventFooter w-100">
-                                <div className="row forPosSticky">
+                                <div className="row forPosSticky mx-0">
 
                                     {/* MIDDLECONTAINER */}
 
@@ -278,7 +278,7 @@ export default function CommentsGot(props) {
                                         :
                                         (comDetailPage.status === apiStatus.REJECTED
                                             ?
-                                            <div className="alert alert-danger w-100" role="alert">
+                                            <div className="alert alert-danger w-100 mx-3" role="alert">
                                                 {comDetailPage.message}
                                             </div>
                                             :

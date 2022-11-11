@@ -104,14 +104,21 @@ export default function Dashboard() {
 
   // HANDLES SCROLL TO TOP BUTTON
   useEffect(() => {
-    document.addEventListener("scroll", () => {
+
+    const listener = () => {
       let scroll = document.querySelector("html").scrollTop;
       if (scroll > 3000) {
         setGoDownArrow(true);
       } else {
         setGoDownArrow(false);
       }
-    })
+    }
+
+    document.addEventListener("scroll", listener)
+    
+    return () => {
+      document.removeEventListener("scroll", listener)
+    }
   }, [])
 
 
@@ -266,10 +273,10 @@ export default function Dashboard() {
                                   confessionResults
                                     ?
                                     (<div className="text-center">
-                                        <div className="spinner-border pColor" role="status">
-                                          <span className="sr-only">Loading...</span>
-                                        </div>
-                                      </div>)
+                                      <div className="spinner-border pColor" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                      </div>
+                                    </div>)
                                     :
                                     (<div className="alert alert-danger" role="alert">
                                       Unable to get confessions

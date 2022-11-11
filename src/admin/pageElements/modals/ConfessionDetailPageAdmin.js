@@ -7,7 +7,6 @@ import userIcon from '../../../images/userAcc.png';
 import commentCountIcon from '../../../images/commentCountIcon.svg';
 import forwardIcon from '../../../images/forwardIcon.svg';
 import InfiniteScroll from "react-infinite-scroll-component";
-// import Comments from '../../pageElements/components/Comments';
 import Comments from '../Comments';
 import useShareKit from '../../utilities/useShareKit';
 import _ from 'lodash';
@@ -174,16 +173,17 @@ export default function ConfessionDetailPageAdmin({ categories, updatePost, ...r
             if (res.data.status === true) {
                 if (append === true) {
                     let newConf = [...commentsArr, ...res.data.body.comments];
-                    setCommentsData({ page: pageNo });
+                    setCommentsData({ page: pageNo, loading: false });
                     setCommentsArr(newConf);
-                    // console.log({ newConf })
                 } else {
                     setCommentsCount(res.data.body.count);
                     setCommentsArr(res.data.body.comments);
+                    setCommentsData({ ...commentsData, loading: false });
                 }
             }
         } catch {
             console.log("something went wrong");
+            setCommentsData({ ...commentsData, loading: false });
         }
     }
 
@@ -628,7 +628,6 @@ export default function ConfessionDetailPageAdmin({ categories, updatePost, ...r
                                                     <InfiniteScroll
                                                         onScroll={handleScrollTo}
                                                         className="commentsModalIscroll"
-                                                        // scrollableTarget="postsMainCont"
                                                         endMessage={
                                                             <div className="endListMessage mt-2 pb-0 w-100 text-center">
                                                                 End of Comments
@@ -686,7 +685,7 @@ export default function ConfessionDetailPageAdmin({ categories, updatePost, ...r
                         <i className={`fa fa-arrow-circle-o-up commentsModalGoUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
                     </div>
                     :
-                    <div className="w-100 text-center d-none">
+                    <div className="w-100 text-center">
                         <div className="spinner-border pColor mt-4" role="status">
                             <span className="sr-only">Loading...</span>
                         </div>

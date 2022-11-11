@@ -16,6 +16,7 @@ import _ from 'lodash';
 import { toggleReportComModal } from '../../../redux/actions/reportcommentModal';
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
 import Badge from '../../../common/components/badges/Badge';
+import { profileLinkToVisit } from '../../../helpers/helpers';
 
 
 const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
@@ -23,7 +24,6 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
 
     let props = data;
     const subcomment = rest?.subcomment
-    const [userDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
     const [editedComment, setEditedComment] = useState("");
     const [requiredError, setRequiredError] = useState({ updateError: '', replyError: '' });
     const editCommentField = useRef(null);
@@ -210,9 +210,7 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
                     {props.curid !== false ?
 
                         (<Link className={`textDecNone commentsUserName`}
-                            to={props.curid ?
-                                (auth() ? (userDetails.profile.user_id === props.curid ? `/profile` : `/userProfile/${props.curid}`) : `/userProfile/${props.curid}`)
-                                : ''}>
+                            to={profileLinkToVisit()}>
                             <span className="userName">
                                 {props.comment_by}
                             </span>
@@ -225,7 +223,6 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
                     <Badge classlist='ml-2' points={subcomment?.points} />
 
                     <span className="postCreatedTime">
-                        {/* {props.created_at} */}
                         {DateConverter(props.created_at)}
                     </span>
                 </div>

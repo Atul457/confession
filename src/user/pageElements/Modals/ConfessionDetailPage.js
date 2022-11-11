@@ -44,7 +44,7 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
     const [isServerErr] = useState(false);
     const [isValidPost, setIsValidPost] = useState(true);   //MEANS STATUS IS OK BUT GOT NO RES
     const [comment, setComment] = useState('');
-    const [commentsData, setCommentsData] = useState({ page: 1 });
+    const [commentsData, setCommentsData] = useState({ page: 1, loading: true });
     const [postId, setPostId] = useState('');
     const [requiredError, setRequiredError] = useState('');
     const [commentsArr, setCommentsArr] = useState([]);
@@ -202,15 +202,17 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
             if (res.data.status === true) {
                 if (append === true) {
                     let newConf = [...commentsArr, ...res.data.body.comments];
-                    setCommentsData({ page: pageNo });
+                    setCommentsData({ page: pageNo, loading: false });
                     setCommentsArr(newConf);
                 } else {
                     setCommentsCount(res.data.body.count);
                     setCommentsArr(res.data.body.comments);
+                    setCommentsData({ ...commentsData, loading: false });
                 }
             }
         } catch {
             console.log("something went wrong");
+            setCommentsData({ ...commentsData, loading: false });
         }
     }
 
@@ -666,11 +668,16 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                                                     <InfiniteScroll
                                                         onScroll={handleScrollTo}
                                                         className="commentsModalIscroll"
-                                                        // scrollableTarget="postsMainCont"
                                                         endMessage={
-                                                            <div className="endListMessage mt-2 pb-0 w-100 text-center">
-                                                                End of Comments
-                                                            </div>
+                                                            commentsData.loading ?
+                                                                <div className="w-100 text-center ">
+                                                                    <div className="spinner-border pColor mt-4" role="status">
+                                                                        <span className="sr-only">Loading...</span>
+                                                                    </div>
+                                                                </div> :
+                                                                <div className="endListMessage mt-2 pb-0 w-100 text-center">
+                                                                    End of Comments
+                                                                </div>
                                                         }
                                                         dataLength={commentsArr.length}
                                                         next={fetchMoreComments}
@@ -709,8 +716,16 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
 
                                                         })}
                                                     </InfiniteScroll>
-                                                    : <div className="endListMessage m-0 pb-1 w-100 text-center">End of Comments
-                                                    </div>}
+                                                    : (
+                                                        commentsData.loading ? <div className="w-100 text-center">
+                                                            <div className="spinner-border pColor mt-4" role="status">
+                                                                <span className="sr-only">Loading...</span>
+                                                            </div>
+                                                        </div> :
+                                                            <div className="endListMessage m-0 pb-1 w-100 text-center">
+                                                                End of Comments
+                                                            </div>
+                                                    )}
 
                                             </div>}
 
@@ -722,13 +737,7 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
 
                         </div>
                         <i className={`fa fa-arrow-circle-o-up commentsModalGoUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
-                    </div>
-                    :
-                    <div className="w-100 text-center d-none">
-                        <div className="spinner-border pColor mt-4" role="status">
-                            <span className="sr-only">Loading...</span>
-                        </div>
-                    </div>
+                    </div> : null
                 }
 
             </div>

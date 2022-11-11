@@ -2500,6 +2500,10 @@ span.offlineColor {
     text-decoration: none;
 }
 
+.textDecNon:hover {
+    text-decoration: none;
+}
+
 .spinnerSizeFeed {
     width: 15px !important;
     height: 15px !important;
@@ -3467,6 +3471,11 @@ span.facebookMobIcon {
     font-size: 50px !important;
     color: var(--primaryColor);
     border-radius: 50%;
+}
+
+.toUp .goUpArrow {
+    bottom: 48px;
+    right: 253px;
 }
 
 .commentsModalGoUpArrow {
@@ -6625,6 +6634,11 @@ button.modalFootBtns.btn a:hover {
         bottom: 100px;
         right: 20px;
         font-size: 40px !important;
+    }
+
+    .toUp .goUpArrow {
+        right: 190px;
+        bottom: 95px;
     }
 
     .postsWrapperFeed {
