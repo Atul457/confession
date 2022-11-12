@@ -27,7 +27,7 @@ const Badge = ({ points = 0, classlist = "" }) => {
                 if (points >= 5 && points < 10) return bronzeBadge
                 if (points >= 10 && points < 15) return silverBadge
                 if (points >= 15 && points < 20) return goldBadge
-                if (points >= 25) return platinumBadge
+                if (points >= 20) return platinumBadge
             }
             return false
         }

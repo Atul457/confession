@@ -210,7 +210,7 @@ const SubComments = ({ data, subcommentId, updatePost, updatSubComments, index,
                     {props.curid !== false ?
 
                         (<Link className={`textDecNone commentsUserName`}
-                            to={profileLinkToVisit()}>
+                            to={profileLinkToVisit(subcomment)}>
                             <span className="userName">
                                 {props.comment_by}
                             </span>

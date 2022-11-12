@@ -6,25 +6,25 @@ const baseURL = envConfig.isProdMode ? envConfig.liveBaseUrl : envConfig.devBase
 export const fetchData = async (props) => {
 
     let config = {
-        baseURL: `${baseURL}${props.url}`,
-        method: props.method,
+        baseURL: `${baseURL}${props?.url}`,
+        method: props?.method,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-            token: props.token,
+            token: props?.token,
             ip_address: localStorage.getItem("ip"),
         },
-        data: props.data,
+        data: props?.data,
     }
 
     try {
         const response = await axios(config);
-        if (response.data.status === true) {
+        if (response?.data?.status === true) {
             return response;
         } else {
-            if (response.data.logout === true) {
+            if (response?.data?.logout === true) {
                 localStorage.removeItem("authenticated");
                 localStorage.removeItem("userDetails");
                 window.location.href = "/login?message=1";

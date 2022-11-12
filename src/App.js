@@ -29,6 +29,7 @@ import forumTypes from "./components/forums/forumTypes.json"
 import { getCategoriesService, getTagsService } from './components/forums/services/forumServices';
 import { apiStatus } from './helpers/status';
 import { envConfig } from './configs/envConfig';
+import { getKeyProfileLoc } from './helpers/profileHelper';
 
 //GOOGLE TAG MANAGER
 const tagManagerArgs = { gtmId: envConfig.isProdMode ? envConfig.tagManagerLiveKey : envConfig.tagManagerDevKey }
@@ -140,7 +141,7 @@ function App() {
       if (auth()) {
         let obj = {
           data: {},
-          token: token,
+          token: getKeyProfileLoc("token", true),
           method: "get",
           url: "getprofile"
         }

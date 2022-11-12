@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/confessionNew/static/css/main.798a534d.css",
-    "main.js": "/confessionNew/static/js/main.5b58aa28.js",
+    "main.js": "/confessionNew/static/js/main.738b9e93.js",
     "static/js/787.7b2783aa.chunk.js": "/confessionNew/static/js/787.7b2783aa.chunk.js",
     "static/media/loginLogo.svg": "/confessionNew/static/media/loginLogo.2727c5bf82b4d2c7dd6632a328467d72.svg",
     "static/media/avatarGroup.png": "/confessionNew/static/media/avatarGroup.ccd9bdedebafb3c1ee2e.png",
@@ -81,11 +81,11 @@
     "static/media/actionIcon.svg": "/confessionNew/static/media/actionIcon.d7eb451f87851b6a53f09840bbb75f7b.svg",
     "static/media/actionIconImg.svg": "/confessionNew/static/media/actionIconImg.817b8fb076c3ae8c2b63db380aa3d31e.svg",
     "main.798a534d.css.map": "/confessionNew/static/css/main.798a534d.css.map",
-    "main.5b58aa28.js.map": "/confessionNew/static/js/main.5b58aa28.js.map",
+    "main.738b9e93.js.map": "/confessionNew/static/js/main.738b9e93.js.map",
     "787.7b2783aa.chunk.js.map": "/confessionNew/static/js/787.7b2783aa.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.798a534d.css",
-    "static/js/main.5b58aa28.js"
+    "static/js/main.738b9e93.js"
   ]
 }

@@ -865,8 +865,10 @@ export default function Feed(props) {
                                                         next={fetchMoreData}
                                                         hasMore={confessions.length < confCount}
                                                         loader={
-                                                            <div className="spinner-border pColor text-center" role="status">
-                                                                <span className="sr-only">Loading...</span>
+                                                            <div className="text-center w-100">
+                                                                <div className="spinner-border pColor text-center" role="status">
+                                                                    <span className="sr-only">Loading...</span>
+                                                                </div>
                                                             </div>
                                                         }
                                                     >

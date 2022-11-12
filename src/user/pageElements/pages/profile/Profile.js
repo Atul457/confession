@@ -269,14 +269,14 @@ export default function Profile() {
         return () => {
             ref.removeEventListener("scroll", handleArrow)
         }
-        
+
     }, [window.innerWidth])
 
 
     //SCROLLS TO BOTTOM
     const goUp = () => {
         const isMobile = window?.innerWidth < 768
-        let ref = document.getElementById("rightColumnFeed");
+        let ref = isMobile ? document.getElementById("rightColumnFeed") : window;
         ref.scrollTo({ top: "0px", behavior: "smooth" });
     }
 
