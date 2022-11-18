@@ -17,8 +17,7 @@ import ReportPostModal from '../../Modals/ReportPostModal';
 import ReportCommentModal from '../../Modals/ReportCommentModal';
 import ConfessionDetailPage from '../../Modals/ConfessionDetailPage';
 import { apiStatus } from '../../../../helpers/status';
-
-
+import RightSideAdComp from '../../../../components/sidebarAds/RightSideAdComp';
 
 export default function CommentsGot(props) {
 
@@ -227,7 +226,7 @@ export default function CommentsGot(props) {
 
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid confession_detail_page">
 
             {confessionData
                 ?
@@ -305,7 +304,6 @@ export default function CommentsGot(props) {
                                                         categories={props.categories}
                                                         handleCommentsModal={() => { }}
                                                     />
-
                                                 </section>
                                             )
                                         )}
@@ -314,6 +312,9 @@ export default function CommentsGot(props) {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="rightsideBarAdd">
+                        <RightSideAdComp />
                     </div>
 
                     <Footer />

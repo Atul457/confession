@@ -203,7 +203,7 @@ const CreateFormModal = () => {
         size="lg"
         className='send_joinreq_modal'>
         <Modal.Header>
-          <h6>Add New Forums</h6>
+          <h6>Add Forum</h6>
           <span onClick={closeModal} type="button">
             <i className="fa fa-times" aria-hidden="true"></i>
           </span>

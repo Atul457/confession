@@ -15,6 +15,10 @@ import { fetchData } from './commonApi';
 import auth from './user/behindScenes/Auth/AuthCheck';
 import getIP from './helpers/getIP';
 import toastMethods from './helpers/components/Toaster';
+import { getCategoriesService, getTagsService } from './components/forums/services/forumServices';
+import { envConfig } from './configs/envConfig';
+import { apiStatus } from './helpers/status';
+import { getKeyProfileLoc } from './helpers/profileHelper';
 
 // Firebase
 import { getMyToken, onMessageListener } from './configs/firebaseconfig';
@@ -26,10 +30,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ReactPixel from 'react-facebook-pixel';
 import forumTypes from "./components/forums/forumTypes.json"
-import { getCategoriesService, getTagsService } from './components/forums/services/forumServices';
-import { apiStatus } from './helpers/status';
-import { envConfig } from './configs/envConfig';
-import { getKeyProfileLoc } from './helpers/profileHelper';
 
 //GOOGLE TAG MANAGER
 const tagManagerArgs = { gtmId: envConfig.isProdMode ? envConfig.tagManagerLiveKey : envConfig.tagManagerDevKey }
@@ -44,6 +44,7 @@ if (envConfig.isProdMode) {
 
 export const AuthContext = createContext(auth())
 
+// Set the ip to localstorage by fetching it from third party
 getIP()
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
     event: 'pageview'
   });
 
+  // Hooks and vars
   const [categories, setCategories] = useState(false);
   const tagsReducer = useSelector(store => store?.forumsReducer?.tags)
   const dispatch = useDispatch()
@@ -60,6 +62,8 @@ function App() {
   const [token, setToken] = useState("")
   const [userDetails, setUserDetails] = useState(auth() ? JSON.parse(localStorage.getItem("userDetails")) : '');
 
+
+  // Functions
   const setAuth = () => {
     setUserDetails(() => {
       if (auth() && userDetails !== "") return userDetails
@@ -68,17 +72,17 @@ function App() {
   }
 
   useEffect(() => {
+    // Checks the permission for notification, if is not given, asks to give.
     const getPermission = async () => {
       if (Notification.permission !== "granted")
         await Notification.requestPermission()
     }
     getPermission()
-    if (auth()) {
-      getMyToken(setToken)
-    }
+    if (auth()) getMyToken(setToken)
   }, [userDetails])
 
   useEffect(() => {
+    // Update the device token, whenever the token changes on client side
     if (token !== "") {
       const saveDeviceId = async () => {
         let obj = {
@@ -108,9 +112,8 @@ function App() {
     }
   }, [token])
 
-
-
   useEffect(() => {
+    // runFbOrNot check whether firebase functions are available or not, if available, then on uses it, prevents side from being crash due to firebase
     if (auth() && runFbOrNot) {
       onMessageListener().then(payload => {
         toastMethods.info(payload.data["gcm.notification.text"] ?? "A new message arrived", payload.data)
@@ -119,7 +122,7 @@ function App() {
     }
   }, [userDetails, toggle])
 
-
+  // Retrieves the categories from the backend, and if authenticated fetches the userDetails also
   useEffect(() => {
     async function getData() {
       try {
@@ -160,10 +163,10 @@ function App() {
     }
     getProfileData();
 
-    //LOAD RECAPTCHA V3
+    // Loads recaptcha v3
     const loadScriptByURL = (id, url, callback) => {
+      
       const isScriptExist = document.getElementById(id);
-
       if (!isScriptExist) {
         var script = document.createElement("script");
         script.type = "text/javascript";
@@ -174,13 +177,13 @@ function App() {
         };
         document.body.appendChild(script);
       }
-
       if (isScriptExist && callback) callback();
+
     }
 
-    loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=6LcFvPEfAAAAAL7pDU8PGSIvTJfysBDrXlBRMWgt`, function () {
-    })
-    //END OF LOAD RECAPTCHA V3
+    loadScriptByURL("recaptcha-key", envConfig.recaptchaKey, function () {})
+
+    // End of load recaptcha v3
     let { handleForumsTypesAcFn } = forumHandlers
     dispatch(handleForumsTypesAcFn({ data: forumTypes }))
 

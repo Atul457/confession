@@ -505,7 +505,6 @@ export default function Header(props) {
                                         </div>
 
                                         <div className="linkBtns">
-                                            {/* <NavLink to={auth() ? "/forums" : "/login"} className="headerNavLinks"> */}
                                             <NavLink to="/forums" className="headerNavLinks">
                                                 <span className="headIconCont">
                                                     <img src={confessIconActive} alt="confessIconActive" className='active' />
@@ -741,7 +740,7 @@ export default function Header(props) {
             <ShareWithLoveModal getConfessions={props?.getConfessions ?? (() => { })} />
             <div
                 pulsate='28-10-22,pulsatingIcon mobile'
-                className={`heartCompCont hideHeartComp cursor_pointer}`}
+                className={`heartCompCont hideHeartComp cursor_pointer`}
                 onClick={openSharewithLoveModal}
                 ref={heartCompRef}>
                 <HeartComponent />

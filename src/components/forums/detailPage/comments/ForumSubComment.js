@@ -229,7 +229,7 @@ const ForumSubComment = (props) => {
                         <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
                 </span>
 
-                {user_id !== false ?
+                {currSubComment?.userslug && currSubComment?.userslug !== "" ?
                     <Link className={`forum_com_p_link`}
                         to={profileLinkToVisit(currSubComment)}>
                         <span className="userName">

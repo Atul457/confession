@@ -35,7 +35,7 @@ const Badge = ({ points = 0, classlist = "" }) => {
         const badgeResult = getBadgeImage()
 
         // Currently badges are hidden from live
-        if (envConfig?.isProdMode) return null
+        // if (envConfig?.isProdMode) return null
 
         return (
             badgeResult !== false

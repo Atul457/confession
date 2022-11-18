@@ -11,54 +11,36 @@ import rejectRequest from '../../../../images/friendsAl.png';
 import verifiedIcon from '../../../../images/verifiedIcon.svg';
 import { fetchData } from '../../../../commonApi';
 import InfiniteScroll from "react-infinite-scroll-component";
-import useCommentsModal from '../../../utilities/useCommentsModal';
-import RefreshButton from '../../../refreshButton/RefreshButton';
 import AppLogo from '../../components/AppLogo';
 import { useSelector } from 'react-redux';
 import ReportCommentModal from '../../Modals/ReportCommentModal';
 import ReportPostModal from '../../Modals/ReportPostModal';
 import Badge from '../../../../common/components/badges/Badge';
+import { getKeyProfileLoc } from '../../../../helpers/profileHelper';
 
 
 export default function UserProfile() {
 
-    let token;
-    if (auth()) {
-        token = JSON.parse(localStorage.getItem("userDetails"));
-        token = token.token;
-    }
-
-    let params = useParams();
-
+    // Hooks and vars
+    const params = useParams();
     const [profile, setProfile] = useState({
         isProfileLoading: true, isProfileErr: false,
-        profileData: {
-            page: 1,
-            profile_id: params.userId
-        },
+        profileData: { page: 1, profile_id: params.userId },
         profileDetails: false
     })
-
-    //CUSTOM HOOK
-    const [commentsModalRun, commentsModal, changes, handleChanges, handleCommentsModal, CommentGotModal] = useCommentsModal()
-
-    const { commentsModalReducer, reportPostModalReducer } = useSelector(state => state)
-
-
+    const { reportPostModalReducer } = useSelector(state => state)
     const [conf, setConf] = useState({
         isConfLoading: true, isConfErr: false,
-        confData: {
-            token: '',
-            profile_id: params.userId
-        },
+        confData: { token: '', profile_id: params.userId },
         confDetails: false
     })
     const [goDownArrow, setGoDownArrow] = useState(false);
     const [confCount, setConfCount] = useState(0);
     const [confPage, setConfPage] = useState(1);
 
+    // Functions
 
-    // GETS PROFILE DATA
+    // Gets profile data
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         async function getData() {
@@ -67,7 +49,7 @@ export default function UserProfile() {
 
             let obj = {
                 data: data,
-                token: auth() ? token : "",
+                token: getKeyProfileLoc("token", true) ?? "",
                 method: "post",
                 url: "getotherprofile"
             }
@@ -101,8 +83,7 @@ export default function UserProfile() {
         getData();
     }, [])
 
-
-    // HANDLES SCROLL TO TOP BUTTON
+    // Handles scroll to top button
     useEffect(() => {
         const handleArrow = () => {
             let scroll = document.querySelector("html").scrollTop;
@@ -121,24 +102,23 @@ export default function UserProfile() {
     }, [])
 
 
-    //SCROLLS TO BOTTOM
+    // Scrolls to top
     const goUp = () => {
         window.scrollTo({ top: "0px", behavior: "smooth" });
     }
 
-
+    // Fetches the confessions of the user, whose profile is visited
     async function getConfessionsFunc(page = 1, append = false) {
 
         let pageNo = page;
         let data = {
-            // profile_id: conf.confData.profile_id,
             profile_id: profile?.profileDetails?.profile_id,
             page: pageNo
         }
 
         let obj = {
             data: data,
-            token: auth() ? token : "",
+            token: getKeyProfileLoc("token", true),
             method: "post",
             url: "getmyconfessions"
         }
@@ -181,13 +161,14 @@ export default function UserProfile() {
         }
     }
 
-    //GETS CONFESSIONS
+    // Gets confessions
     useEffect(() => {
         if (profile.profileDetails?.profile_id)
             getConfessionsFunc();
     }, [profile.profileDetails?.profile_id])
 
 
+    // Sends friend request
     const sendFriendRequest = async (isCancelling = 0) => {
         console.log(profile.profileDetails)
 
@@ -198,7 +179,7 @@ export default function UserProfile() {
 
         let obj = {
             data: data,
-            token: token,
+            token: getKeyProfileLoc("token", true),
             method: "post",
             url: "sendfriendrequest"
         }
@@ -269,12 +250,12 @@ export default function UserProfile() {
 
             {!profile.isProfileLoading ?
                 <div className="row">
-                    {commentsModalReducer.visible && <CommentGotModal
+                    {/* {commentsModalReducer.visible && <CommentGotModal
                         handleChanges={handleChanges}
                         updateConfessionData={updateConfessionData}
                         updatedConfessions={updatedConfessions}
                         state={commentsModal}
-                        handleCommentsModal={handleCommentsModal} />}
+                        handleCommentsModal={handleCommentsModal} />} */}
 
                     {/* Adds Header Component */}
                     <Header links={true} hideRound={true} propToWatch={conf.confDetails} />
@@ -404,7 +385,6 @@ export default function UserProfile() {
                                                         post={post}
                                                         viewcount={post.viewcount}
                                                         updateConfessionData={updateConfessionData}
-                                                        handleCommentsModal={handleCommentsModal}
                                                         createdAt={post.created_at}
                                                         updatedConfessions={updatedConfessions}
                                                         is_viewed={post.is_viewed}
@@ -444,7 +424,6 @@ export default function UserProfile() {
                     </div>
 
                     {/* REFRESH BUTTON */}
-                    {commentsModal.visibility === false && changes && <RefreshButton />}
 
                     <i className={`fa fa-arrow-circle-o-up goUpArrow ${goDownArrow === true ? "d-block" : "d-none"}`} aria-hidden="true" type="button" onClick={goUp}></i>
 

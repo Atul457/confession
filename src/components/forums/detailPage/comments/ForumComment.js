@@ -51,7 +51,6 @@ const ForumComment = (props) => {
     updateBox,
     commentBox
   } = props
-  // console.log(currComment)
   let {
     comment_by,
     created_at,
@@ -321,8 +320,8 @@ const ForumComment = (props) => {
             {currComment?.email_verified === 1 ?
               <img src={verifiedIcon} title="Verified user" alt="verified_user_icon" className='verified_user_icon' /> : null}
           </span>
-
-          {user_id !== false ?
+          
+          {currComment?.userslug && currComment?.userslug !== "" ?
             <Link className={`forum_com_p_link`}
               to={profileLinkToVisit(currComment)}>
               <span className="userName">

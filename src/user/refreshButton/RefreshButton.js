@@ -1,9 +1,16 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 export default function RefreshButton() {
 
+    // Hooks and vars
+    const navigate = useNavigate()
+
+    // Functions
+
+    // Reloads the page
     const reloadPage = () => {
-        window.location.href = window.location.href;
+        navigate(0);
     }
 
     return (

@@ -83,6 +83,8 @@ const Search = () => {
                         actionBox={{}}
                         forumTypes={forumTypes}
                         currForum={currPost} />
+
+                return null
             })
         )
     }

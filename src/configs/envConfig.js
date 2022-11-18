@@ -5,6 +5,7 @@ const envConfig = {
     pixelId: process.env.REACT_APP_PIXELID,
     devBaseUrl: process.env.REACT_APP_DEV_BASEURL,
     liveBaseUrl: process.env.REACT_APP_LIVE_BASEURL,
+    recaptchaKey: process.env.REACT_APP_RECAPTCHA_KEY,
 }
 
 export { envConfig }

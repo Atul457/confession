@@ -3989,7 +3989,8 @@ span.facebookMobIcon {
     border-radius: 25px 0px 0px 25px;
 }
 
-.feed_page .rightColumn {
+.feed_page .rightColumn,
+.confession_detail_page .rightColumn {
     width: calc(100% - 600px);
 }
 
@@ -5633,9 +5634,14 @@ button.modalFootBtns.btn a:hover {
 .forum_tabs_cont {
     width: 100%;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+}
+
+.shareKitButtonsMainCont.parent {
+    position: relative;
+    top: -10px;
 }
 
 .forum_tabs_cont .forums_tab {
@@ -5682,6 +5688,9 @@ button.modalFootBtns.btn a:hover {
 
 .links_cont {
     height: 50px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .forum_tabs_cont .doPostBtn.create_forum_btn {

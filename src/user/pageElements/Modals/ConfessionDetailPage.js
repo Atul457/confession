@@ -29,6 +29,9 @@ import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
 import { apiStatus } from '../../../helpers/status';
 import Badge from '../../../common/components/badges/Badge';
+import { envConfig } from '../../../configs/envConfig';
+import AdSense_ from '../components/AdSense';
+import { WhatsNewAds } from '../components/AdMob';
 
 
 export default function ConfessionDetailPage({ categories, updatePost, ...rest }) {
@@ -675,9 +678,11 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                                                                         <span className="sr-only">Loading...</span>
                                                                     </div>
                                                                 </div> :
-                                                                <div className="endListMessage mt-2 pb-0 w-100 text-center">
-                                                                    End of Comments
-                                                                </div>
+                                                                (<>
+                                                                    <div className="endListMessage mt-2 pb-0 w-100 text-center">
+                                                                        End of Comments
+                                                                    </div>
+                                                                </>)
                                                         }
                                                         dataLength={commentsArr.length}
                                                         next={fetchMoreComments}
@@ -728,6 +733,13 @@ export default function ConfessionDetailPage({ categories, updatePost, ...rest }
                                                     )}
 
                                             </div>}
+
+                                            {/* Ad, is shown after last comment */}
+                                            <div className="w-100 mt-2 mb-3">
+                                                {envConfig?.isProdMode ? <AdSense_ /> :
+                                                    <WhatsNewAds mainContId={"confession_detail_page_lsc_add"} />}
+                                            </div>
+                                            {/* Ad, is shown after last comment */}
 
                                         </section>
                                     )

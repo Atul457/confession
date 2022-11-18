@@ -24,7 +24,6 @@ import useShareRequestPopUp from '../../utilities/useShareRequestPopUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { togglemenu, toggleSharekitMenu } from '../../../redux/actions/share';
 import DateConverter from '../../../helpers/DateConverter';
-// import { openCModal as openCommentsModalFn } from '../../../redux/actions/commentsModal';
 import { openCFRModal } from '../../../redux/actions/friendReqModal';
 import { toggleReportPostModal } from '../../../redux/actions/reportPostModal';
 import { getKeyProfileLoc, updateKeyProfileLoc } from '../../../helpers/profileHelper';
@@ -35,7 +34,6 @@ export default function Post(props) {
 
     let history = useNavigate();
     const post = props?.post ?? {}
-    // console.log(post)
     let maxChar = 2000;
     const dispatch = useDispatch();
     const ShareReducer = useSelector(store => store.ShareReducer);
@@ -335,12 +333,21 @@ export default function Post(props) {
         if (isUserProfile)
             linkToVisit = `/userProfile/${slug}`
 
-        html = <Link className={`textDecNone postUserName`}
-            to={linkToVisit}>
-            <span className="userName">
-                {props.userName}
-            </span>
-        </Link>
+        if (!isMyProfile && !isUserProfile) {
+            html = (
+                <span className='postUserName'>
+                    <span className="userName">
+                        {props.userName}
+                    </span>
+                </span>)
+        } else {
+            html = (<Link className={`textDecNone postUserName`}
+                to={linkToVisit}>
+                <span className="userName">
+                    {props.userName}
+                </span>
+            </Link>)
+        }
 
         return html;
     }
