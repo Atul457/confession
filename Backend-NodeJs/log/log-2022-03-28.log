@@ -1,6 +1,0 @@
-Mon Mar 28 2022 16:17:55 GMT+0000 (Coordinated Universal Time) updateprofile
-update `users` set `name` = 'Penguin 🐧 Dance', `post_as_anonymous` = 0, `updated_at` = '2022-03-28 16:17:55.802' where `id` = 21 - Incorrect string value: '\xF0\x9F\x90\xA7 D...' for column 'name' at row 1
-
-Mon Mar 28 2022 16:17:55 GMT+0000 (Coordinated Universal Time) updateprofile
-update `users` set `name` = 'Penguin 🐧 Dance', `post_as_anonymous` = 1, `updated_at` = '2022-03-28 16:17:55.809' where `id` = 21 - Incorrect string value: '\xF0\x9F\x90\xA7 D...' for column 'name' at row 1
-
